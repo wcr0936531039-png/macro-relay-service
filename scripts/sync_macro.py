@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from html.parser import HTMLParser
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urljoin, urlparse
 from urllib.request import Request, urlopen
 
 SCHEMA_VERSION = 1
@@ -23,6 +23,7 @@ SNAPSHOT_KEY = "market_snapshot"
 USER_AGENT = "TaiwanStockMaster-MacroRelay/1.0 (scheduled official-data snapshot)"
 FRED_API = "https://api.stlouisfed.org/fred/series/observations"
 MOEA_URL = "https://service.moea.gov.tw/EE521/common/Common.aspx?code=B&no=1"
+NDC_NEWS_URL = "https://www.ndc.gov.tw/News9_1.aspx?n=257D28E6C2DCC0F8&sms=EC9205F763E2A607"
 NDC_URL = "https://index.ndc.gov.tw/n/json/lightscore"
 TPEX_URL = "https://www.tpex.org.tw/openapi/v1/tpex_mainborad_highlight"
 
@@ -180,6 +181,60 @@ def ndc_metric(payload: dict[str, Any]) -> dict[str, Any]:
                   source=NDC_URL, method="官方綜合判斷分數及對應燈號", light=light)
 
 
+class NdcNewsParser(HTMLParser):
+    def __init__(self):
+        super().__init__(); self.links = []; self.href = None; self.label = []; self.text = []
+    def handle_starttag(self, tag, attrs):
+        if tag == "a": self.href = dict(attrs).get("href"); self.label = []
+    def handle_data(self, data):
+        self.text.append(data)
+        if self.href: self.label.append(data)
+    def handle_endtag(self, tag):
+        if tag == "a" and self.href:
+            self.links.append((self.href, "".join(self.label)))
+            self.href = None
+
+
+def ndc_news_metric(html, source):
+    parser = NdcNewsParser(); parser.feed(html)
+    text = re.sub(r"\s+", "", "".join(parser.text))
+    pattern = r"(\d{3})年(\d{1,2})月(?:份)?景氣對策信號綜合判斷分數為(\d{1,2})分"
+    candidates = []
+    for year, month, score in re.findall(pattern, text):
+        if 1 <= int(month) <= 12 and 9 <= int(score) <= 45:
+            candidates.append((f"{int(year)+1911}{int(month):02d}", int(score)))
+    if not candidates: raise ValueError("官方新聞稿沒有可確認的觀測月份及綜合分數")
+    period, score = max(candidates)
+    row = ndc_metric({"line": [{"x": period, "y": score}]})
+    row.update(provider="國家發展委員會｜官方景氣概況新聞稿", source=source,
+               method="從官方新聞稿正文擷取觀測月份及綜合判斷分數；非發布月份")
+    return row
+
+
+def fetch_ndc():
+    try:
+        payload = http_json(NDC_URL, method="POST", data=b"", headers={"Origin": "https://index.ndc.gov.tw", "Referer": "https://index.ndc.gov.tw/n/zh_tw", "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"})
+        return ndc_metric(payload)
+    except Exception as primary:
+        primary_error = str(primary)
+    try:
+        html = http_text(NDC_NEWS_URL)
+        parser = NdcNewsParser(); parser.feed(html)
+        links = []
+        for href, label in parser.links:
+            match = re.search(r"(\d{3})年(\d{1,2})月份景氣概況新聞稿", label)
+            url = urljoin(NDC_NEWS_URL, href)
+            if match and urlparse(url).hostname == "www.ndc.gov.tw" and urlparse(url).scheme == "https":
+                links.append((int(match[1])*12+int(match[2]), url))
+        if not links: raise ValueError("國發會列表沒有可確認的月度新聞稿連結")
+        _, url = max(links)
+        row = ndc_news_metric(http_text(url), url)
+        row["upstream_warning"] = "主要 JSON 來源失敗：" + primary_error
+        return row
+    except Exception as secondary:
+        raise ValueError(f"NDC JSON: {primary_error}; 官方新聞稿備援: {secondary}") from secondary
+
+
 def parse_roc_date(raw: Any) -> str | None:
     text = str(raw or "").strip()
     m = re.fullmatch(r"(\d{3})(\d{2})(\d{2})", text)
@@ -313,8 +368,7 @@ def build_snapshot(api_key: str, previous: dict[str, Any] | None) -> dict[str, A
     except Exception as exc:
         indicators["TW_EXPORT_ORDERS"] = {"value": None, "date": None, "unit": "%", "status": "missing", "error": str(exc), "provider": "經濟部統計處", "source": MOEA_URL}
     try:
-        payload = http_json(NDC_URL, method="POST", data=b"", headers={"Origin": "https://index.ndc.gov.tw", "Referer": "https://index.ndc.gov.tw/n/zh_tw", "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"})
-        indicators["TW_NDC_SIGNAL"] = ndc_metric(payload)
+        indicators["TW_NDC_SIGNAL"] = fetch_ndc()
     except Exception as exc:
         indicators["TW_NDC_SIGNAL"] = {"value": None, "date": None, "unit": "分", "status": "missing", "error": str(exc), "provider": "國家發展委員會", "source": NDC_URL}
     try:
@@ -350,6 +404,7 @@ def build_snapshot(api_key: str, previous: dict[str, Any] | None) -> dict[str, A
 
 def main() -> int:
     parser = argparse.ArgumentParser(); parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--output", help="Write diagnostic snapshot JSON locally")
     parser.add_argument("--previous", help="Dry-run only: local prior snapshot JSON")
     args = parser.parse_args()
     if args.previous and not args.dry_run:
@@ -369,6 +424,9 @@ def main() -> int:
     snapshot = build_snapshot(api_key, previous)
     encoded = json.dumps(snapshot, ensure_ascii=False, indent=2)
     print(encoded)
+    if args.output:
+        with open(args.output, "w", encoding="utf-8") as handle:
+            handle.write(encoded + "\n")
     if not args.dry_run: put_snapshot(account, namespace, token, snapshot)
     return 0
 

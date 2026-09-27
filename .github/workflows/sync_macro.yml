@@ -46,7 +46,17 @@ jobs:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
           if [ "$DRY_RUN" = "true" ]; then
-            python scripts/sync_macro.py --dry-run
+            python scripts/sync_macro.py --dry-run --output snapshot.json
           else
-            python scripts/sync_macro.py
+            python scripts/sync_macro.py --output snapshot.json
           fi
+      - name: Report per-indicator data coverage
+        if: always()
+        run: python scripts/report_snapshot.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macro-dry-run-snapshot
+          path: snapshot.json
+          if-no-files-found: ignore
+          retention-days: 7

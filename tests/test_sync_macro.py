@@ -119,5 +119,22 @@ class RelayValidationTests(unittest.TestCase):
             write.assert_not_called()
 
 
+    def test_ndc_news_uses_observation_month(self):
+        row = relay.ndc_news_metric("<p>發布日期：115年8月27日</p><p>115年7月景氣對策信號綜合判斷分數為41分，與上月持平。</p>", "https://www.ndc.gov.tw/test")
+        self.assertEqual(row["date"], "2026-07-01")
+        self.assertEqual(row["value"], 41)
+        self.assertEqual(row["light"], "紅燈")
+        with self.assertRaises(ValueError):
+            relay.ndc_news_metric("<h1>Access denied</h1>", "https://www.ndc.gov.tw/test")
+
+    def test_ndc_news_fallback_discovers_latest_release(self):
+        listing = '<a href="/old">115年6月份景氣概況新聞稿</a><a href="/latest">115年7月份景氣概況新聞稿</a>'
+        article = '<p>115年7月景氣對策信號綜合判斷分數為41分</p>'
+        with patch.object(relay, "http_json", side_effect=ValueError("403")), patch.object(relay, "http_text", side_effect=[listing, article]):
+            row = relay.fetch_ndc()
+        self.assertEqual(row["source"], "https://www.ndc.gov.tw/latest")
+        self.assertIn("403", row["upstream_warning"])
+
+
 if __name__ == "__main__":
     unittest.main()
