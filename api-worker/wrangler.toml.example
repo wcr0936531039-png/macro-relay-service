@@ -1,0 +1,11 @@
+# Only for a separately owned Cloudflare Worker, never the managed Sites checkout.
+name = "macro-api-worker"
+main = "index.mjs"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[[kv_namespaces]]
+binding = "MACRO_KV"
+id = "REPLACE_WITH_REAL_NAMESPACE_ID"
+
+# Set SNAPSHOT_READ_TOKEN via wrangler secret put, never here.

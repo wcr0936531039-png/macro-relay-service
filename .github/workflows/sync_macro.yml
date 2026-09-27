@@ -1,0 +1,52 @@
+name: Sync macro snapshot
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "只抓取及驗證，不讀寫 Cloudflare KV"
+        type: boolean
+        default: true
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: macro-snapshot
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate relay logic
+        run: python -m unittest discover -s tests -v
+      - name: Validate Worker snapshot adapter
+        run: node tests/test_worker_reader.mjs
+      - name: Validate standalone API Worker
+        run: node tests/test_api_worker.mjs
+      - name: Fetch, validate and publish snapshot
+        env:
+          DRY_RUN: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_KV_NAMESPACE_ID: ${{ secrets.CF_KV_NAMESPACE_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            python scripts/sync_macro.py --dry-run
+          else
+            python scripts/sync_macro.py
+          fi
