@@ -1,0 +1,34 @@
+name: Verified no-key macro data
+on:
+  push:
+    branches: [main]
+    paths: ['scripts/**', '.github/workflows/keyless.yml']
+  workflow_dispatch:
+  schedule:
+    - cron: '23 */6 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: keyless-publisher
+  cancel-in-progress: false
+jobs:
+  verify-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sequential official no-key verification
+        run: python scripts/sync_keyless.py
+      - name: Publish validated observations only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/keyless_snapshot.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update verified official no-key observations'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
