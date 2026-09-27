@@ -13,10 +13,11 @@ import re
 import sys
 from datetime import datetime, timezone
 from html.parser import HTMLParser
+from http.cookiejar import CookieJar
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode, urljoin, urlparse
-from urllib.request import Request, urlopen
+from urllib.request import Request, urlopen, build_opener, HTTPCookieProcessor
 
 SCHEMA_VERSION = 1
 SNAPSHOT_KEY = "market_snapshot"
@@ -211,12 +212,39 @@ def ndc_news_metric(html, source):
     return row
 
 
+def ndc_session_payload():
+    """Use the official site's normal session/CSRF flow, with no challenge bypass."""
+    home = "https://index.ndc.gov.tw/n/zh_tw"
+    opener = build_opener(HTTPCookieProcessor(CookieJar()))
+    with opener.open(Request(home, headers={"User-Agent": USER_AGENT, "Accept": "text/html"}), timeout=25) as response:
+        html = response.read(5_000_001).decode("utf-8", errors="replace")
+    class Tokens(HTMLParser):
+        token = None
+        def handle_starttag(self, tag, attrs):
+            attrs = dict(attrs)
+            if tag == "meta" and attrs.get("name") == "csrf-token": self.token = attrs.get("content")
+    tokens = Tokens(); tokens.feed(html)
+    if not tokens.token: raise ValueError("官方頁面沒有 CSRF Token；不繞過驗證頁")
+    req = Request(NDC_URL, data=b"", method="POST", headers={"User-Agent": USER_AGENT,
+        "Accept": "application/json", "Referer": home, "Origin": "https://index.ndc.gov.tw",
+        "X-CSRF-TOKEN": tokens.token, "X-Requested-With": "XMLHttpRequest"})
+    with opener.open(req, timeout=25) as response:
+        body = response.read(8_000_001)
+    if len(body)>8_000_000: raise ValueError("NDC response too large")
+    return json.loads(body)
+
+
 def fetch_ndc():
     try:
         payload = http_json(NDC_URL, method="POST", data=b"", headers={"Origin": "https://index.ndc.gov.tw", "Referer": "https://index.ndc.gov.tw/n/zh_tw", "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"})
         return ndc_metric(payload)
     except Exception as primary:
         primary_error = str(primary)
+    if "419" in primary_error:
+        try:
+            return ndc_metric(ndc_session_payload())
+        except Exception as session_error:
+            primary_error += "; 官方工作階段: " + str(session_error)
     try:
         html = http_text(NDC_NEWS_URL)
         parser = NdcNewsParser(); parser.feed(html)
