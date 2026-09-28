@@ -141,6 +141,43 @@ def ecb_usd_jpy_cross():
         'source':jpy_url+' | '+usd_url,
         'method':'ECB 同日 JPY/EUR ÷ USD/EUR；這是官方參考匯率交叉換算，不是即時外匯成交價。'}
 
+def marketwatch_dxy_metric():
+    """Read the public delayed ICE DXY quote from MarketWatch's structured page data."""
+    import html as html_lib
+    url='https://www.marketwatch.com/investing/index/dxy'
+    request=Request(url,headers={
+        'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/128 Safari/537.36',
+        'Accept':'text/html,application/xhtml+xml'
+    })
+    with urlopen(request,timeout=30) as response:
+        status=response.status;content_type=response.headers.get('Content-Type','').lower()
+        body=response.read(1_500_001);final_url=response.geturl()
+    if status!=200 or 'html' not in content_type or len(body)>1_500_000:
+        raise ValueError(f'MarketWatch DXY page response invalid: HTTP {status}, {content_type}, {len(body)} bytes')
+    if final_url.rstrip('/')!='https://www.marketwatch.com/investing/index/dxy':
+        raise ValueError(f'MarketWatch redirected to unexpected URL: {final_url}')
+    page=html_lib.unescape(body.decode('utf-8','replace'))
+    blocks=__import__('re').findall(r'<script\\b[^>]*type=["\\']application/ld\\+json["\\'][^>]*>(.*?)</script>',page,__import__('re').I|__import__('re').S)
+    quote=None
+    for block in blocks:
+        try:item=json.loads(block)
+        except (json.JSONDecodeError,TypeError):continue
+        if isinstance(item,dict) and item.get('tickerSymbol')=='DXY' and 'ICE Futures' in str(item.get('exchange','')) and 'Dollar Index' in str(item.get('name','')):
+            quote=item;break
+    if quote is None:
+        raise ValueError('MarketWatch structured data did not identify ICE U.S. Dollar Index (DXY)')
+    value=float(quote.get('price'))
+    if not math.isfinite(value) or value<=0:raise ValueError('MarketWatch DXY quote is not a positive finite number')
+    raw_time=str(quote.get('quoteTime','')).strip()
+    date_parts=raw_time.split()[:3]
+    if len(date_parts)!=3:raise ValueError('MarketWatch DXY quote timestamp is missing')
+    date=datetime.strptime(' '.join(date_parts),'%b %d, %Y').date().isoformat()
+    latest={'date':date,'value':value}
+    return {'history':[latest],'date':date,'value':value,'unit':'指數點',
+        'provider':'MarketWatch／FactSet｜ICE Futures U.S. DXY 延遲報價（非結算值）',
+        'source':url,
+        'method':f'讀取 MarketWatch 結構化報價，逐項核對名稱={quote.get("name")}、代碼={quote.get("tickerSymbol")}、交易所={quote.get("exchange")}；來源時間={raw_time}（美東頁面時間），頁面標示延遲報價。僅為延遲市場報價，不是 ICE 官方結算值。'}
+
 def yahoo_chart_metric(sid):
     """Fetch a keyless Yahoo chart series without changing its market definition."""
     symbols={'ICE_DXY':([('^NYICDX','query1.finance.yahoo.com'),('DX-Y.NYB','query2.finance.yahoo.com'),('^NYICDX','query2.finance.yahoo.com')],'指數點'),
@@ -161,7 +198,12 @@ def yahoo_chart_metric(sid):
             symbol=symbol_candidate;url=candidate_url;break
         except Exception as error:
             failures.append(f'{host}/{symbol_candidate}: {error}')
-    if response_data is None:raise ValueError('All Yahoo no-key endpoints failed: '+'; '.join(failures))
+    if response_data is None:
+        failure='All Yahoo no-key endpoints failed: '+'; '.join(failures)
+        if sid=='ICE_DXY':
+            try:return marketwatch_dxy_metric()
+            except Exception as error:failure+=f'; MarketWatch DXY fallback failed: {error}'
+        raise ValueError(failure)
     result=(response_data.get('chart') or {}).get('result')
     item=result[0];timestamps=item.get('timestamp') or [];quotes=((item.get('indicators') or {}).get('quote') or [{}])[0];closes=quotes.get('close') or []
     points=[]
