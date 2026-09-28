@@ -141,6 +141,31 @@ def ecb_usd_jpy_cross():
         'source':jpy_url+' | '+usd_url,
         'method':'ECB 同日 JPY/EUR ÷ USD/EUR；這是官方參考匯率交叉換算，不是即時外匯成交價。'}
 
+def eia_commercial_crude_stocks():
+    """Parse the public EIA history table; keep the dashboard's million-barrel unit."""
+    url='https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=W&n=PET&s=WCESTUS1'
+    parser=legacy.TableParser();parser.feed(legacy.http_text(url))
+    months={'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+    points=[]
+    for cells in parser.rows:
+        if not cells:continue
+        match=__import__('re').search(r'\b(20\d{2})-([A-Za-z]{3})\b',cells[0])
+        if not match or match[2] not in months:continue
+        year=int(match[1])
+        for i in range(1,len(cells)-1,2):
+            day=__import__('re').fullmatch(r'\s*(\d{2})/(\d{2})\s*',cells[i])
+            value=cells[i+1].strip().replace(',','')
+            if not day or not legacy.valid_number(value):continue
+            month,dom=map(int,day.groups())
+            try:date=f'{year:04d}-{month:02d}-{dom:02d}';datetime.strptime(date,'%Y-%m-%d')
+            except ValueError:continue
+            points.append({'date':date,'value':float(value)/1000})
+    points=sorted({p['date']:p for p in points}.values(),key=lambda p:p['date'])
+    if not points:raise ValueError('EIA WCESTUS1 history table contains no weekly observations')
+    return {'history':points[-20:],'date':points[-1]['date'],'value':points[-1]['value'],'unit':'百萬桶',
+        'provider':'U.S. Energy Information Administration｜WCESTUS1',
+        'source':url,'method':'EIA 官方週資料表；原始千桶除以 1,000 轉為百萬桶，不含 SPR。'}
+
 def main():
     old=json.loads(OUT.read_text()) if OUT.exists() else {'series':{}}
     if not isinstance(old,dict) or not isinstance(old.get('series'),dict):raise ValueError('Invalid prior snapshot')
@@ -156,7 +181,11 @@ def main():
     tasks += [('TW_EXPORT_ORDERS',85,lambda:legacy.taiwan_export_metric(legacy.http_text(legacy.MOEA_URL))),
               ('TPEX_BREADTH',5,lambda:legacy.tpex_metric(legacy.http_json(legacy.TPEX_URL))),
               ('TW_NDC_SIGNAL',120,get_ndc)]
-    tasks += [(sid,days,(lambda:ecb_usd_jpy_cross()) if sid=='DEXJPUS' else (lambda sid=sid:fred_csv(sid))) for sid,days in MORE_SPECS]
+    def additional_source(sid):
+        if sid=='DEXJPUS':return ecb_usd_jpy_cross()
+        if sid=='WCESTUS1':return eia_commercial_crude_stocks()
+        return fred_csv(sid)
+    tasks += [(sid,days,lambda sid=sid:additional_source(sid)) for sid,days in MORE_SPECS]
     failed=None
     for sid,days,fetcher in tasks:
         try:
