@@ -230,6 +230,45 @@ def nyfed_repo_metric():
         'provider':'紐約聯邦準備銀行｜Repo Operations 官方 JSON','source':url,
         'method':f'同一操作日已公布 Repo 操作 accepted amount 合計 ÷ 1,000,000,000；觀測日 {latest["date"]}；與單一 RPONTSYD 序列口徑分開。'}
 
+def nyfed_srp_metric():
+    """Select the New York Fed's overnight full-allotment Standing Repo operations."""
+    url='https://markets.newyorkfed.org/api/rp/repo/all/results/last/8.json'
+    request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'application/json'})
+    with urlopen(request,timeout=25) as response:
+        content_type=response.headers.get('Content-Type','').lower();body=response.read(1_000_001)
+    if len(body)>1_000_000:raise ValueError('NY Fed repo response too large')
+    if 'json' not in content_type:raise ValueError(f'NY Fed repo expected JSON; got {content_type or "unknown content type"}')
+    payload=json.loads(body.decode('utf-8-sig'));operations=(payload.get('repo') or {}).get('operations')
+    if not isinstance(operations,list):raise ValueError('NY Fed repo response has no operations array')
+    totals={}
+    for op in operations:
+        if (not isinstance(op,dict) or op.get('auctionStatus')!='Results'
+                or op.get('operationMethod')!='Full Allotment' or op.get('term')!='Overnight'
+                or not isinstance(op.get('operationDate'),str) or op['operationDate']<'2025-12-11'):
+            continue
+        date=op['operationDate']
+        try:datetime.strptime(date,'%Y-%m-%d')
+        except ValueError:continue
+        raw=op.get('totalAmtAccepted')
+        if legacy.valid_number(str(raw if raw is not None else '')):
+            accepted=float(raw)
+        elif isinstance(op.get('details'),list):
+            pieces=[float(d['amtAccepted']) for d in op['details'] if isinstance(d,dict)
+                    and legacy.valid_number(str(d.get('amtAccepted') if d.get('amtAccepted') is not None else ''))]
+            if not pieces:continue
+            accepted=sum(pieces)
+        else:
+            continue
+        if not math.isfinite(accepted) or accepted<0:continue
+        totals[date]=totals.get(date,0)+accepted
+    history=[{'date':date,'value':amount/1e9} for date,amount in sorted(totals.items())]
+    if not history:raise ValueError('NY Fed results contain no identifiable overnight Full Allotment Standing Repo operations')
+    latest=history[-1]
+    return {'history':history[-8:],'date':latest['date'],'value':latest['value'],'unit':'十億美元',
+        'provider':'紐約聯邦準備銀行｜Standing Repo（Full Allotment 隔夜操作）官方 JSON',
+        'source':url,
+        'method':f'僅合計 operationMethod=Full Allotment、term=Overnight 且已公布 Results 的操作；原始 accepted 美元 ÷ 1,000,000,000；觀測日 {latest["date"]}。零承作仍保留為有效 0；不含一般 Repo／Reverse Repo。'}
+
 def eia_commercial_crude_stocks():
     """Parse the public EIA history table; keep the dashboard's million-barrel unit."""
     url='https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=W&n=PET&s=WCESTUS1'
@@ -479,6 +518,7 @@ def main():
               ('TWSE_SHORT_CHANGE',5,lambda:twse_credit_metric('TWSE_SHORT_CHANGE',current['TWSE_TAIEX']['history'][-1]['date'])),
               ('XAU',3,lambda:gold_api_metric()),
               ('NYFED_REPO',5,lambda:nyfed_repo_metric()),
+              ('NYFED_SRP',5,lambda:nyfed_srp_metric()),
               ('ICE_DXY',3,lambda:yahoo_chart_metric('ICE_DXY'))]
     failed=None
     for sid,days,fetcher in tasks:
