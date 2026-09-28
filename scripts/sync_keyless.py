@@ -188,17 +188,21 @@ def twse_taiex_open_data():
         if date_col is not None and index_col is not None:
             header_index=i;break
     if header_index is None:raise ValueError('TWSE FMTQIK CSV lacks date and TAIEX columns')
+    points=[]
     for cells in rows[header_index+1:]:
         if max(date_col,index_col)>=len(cells):continue
         raw_date=clean(cells[date_col]);raw_value=clean(cells[index_col])
         if not legacy.valid_number(raw_value):continue
-        match=__import__('re').search(r'(\d{3,4})[/-](\d{1,2})[/-](\d{1,2})',raw_date)
-        if not match:continue
-        year,month,day=map(int,match.groups());year=year+1911 if year<1000 else year
-        date=f'{year:04d}-{month:02d}-{day:02d}';datetime.strptime(date,'%Y-%m-%d')
+        date=legacy.parse_roc_date(raw_date)
+        if not date:continue
+        datetime.strptime(date,'%Y-%m-%d')
         value=float(raw_value)
         if value<=0:continue
-        return {'history':[{'date':date,'value':value}],'date':date,'value':value,'unit':'點',
+        points.append({'date':date,'value':value})
+    points.sort(key=lambda point:point['date'])
+    if points:
+        latest=points[-1]
+        return {'history':points[-20:],'date':latest['date'],'value':latest['value'],'unit':'點',
             'provider':'臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV',
             'source':url,'method':'TWSE 官方每日市場統計原始 CSV；直接讀取發行量加權股價指數。'}
     sample=repr(rows[:6])[:1000]
