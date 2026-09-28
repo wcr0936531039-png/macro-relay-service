@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-28T05:31:31.047866+00:00",
+  "generated_at": "2026-09-28T05:39:24.150900+00:00",
   "series": {
     "SOFR": {
       "history": [
@@ -88,7 +88,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SOFR&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜SOFR",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 7
     },
     "RRPONTSYD": {
@@ -177,7 +177,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RRPONTSYD&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜RRPONTSYD",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 8
     },
     "RPONTSYD": {
@@ -266,7 +266,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RPONTSYD&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜RPONTSYD",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 8
     },
     "UNRATE": {
@@ -355,7 +355,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜UNRATE",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 85
     },
     "SAHMREALTIME": {
@@ -444,7 +444,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SAHMREALTIME&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜SAHMREALTIME",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 85
     },
     "T10Y2Y": {
@@ -533,7 +533,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y2Y&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜T10Y2Y",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 7
     },
     "DFII10": {
@@ -622,7 +622,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜DFII10",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 7
     },
     "T5YIE": {
@@ -711,7 +711,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T5YIE&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜T5YIE",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 7
     },
     "RSAFS": {
@@ -800,7 +800,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RSAFS&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜RSAFS",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 85
     },
     "PAYEMS": {
@@ -889,7 +889,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜PAYEMS",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 85
     },
     "TW_EXPORT_ORDERS": {
@@ -906,7 +906,7 @@
           "value": 71.35
         }
       ],
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 85
     },
     "TPEX_BREADTH": {
@@ -925,7 +925,7 @@
           "value": 50.585175552665795
         }
       ],
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 5
     },
     "TW_NDC_SIGNAL": {
@@ -943,13 +943,2063 @@
       "source": "https://data.gov.tw/dataset/6099",
       "method": "國發會原始月資料 ZIP，欄位「景氣對策信號綜合分數」及燈號；檔案 景氣指標與燈號.csv",
       "status": "ok",
-      "fetched_at": "2026-09-28T05:31:31.047866+00:00",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
       "max_age_days": 120
+    },
+    "SP500": {
+      "history": [
+        {
+          "date": "2026-08-28",
+          "value": 7711.76
+        },
+        {
+          "date": "2026-08-31",
+          "value": 7686.14
+        },
+        {
+          "date": "2026-09-01",
+          "value": 7631.47
+        },
+        {
+          "date": "2026-09-02",
+          "value": 7666.6
+        },
+        {
+          "date": "2026-09-03",
+          "value": 7747.71
+        },
+        {
+          "date": "2026-09-04",
+          "value": 7718.6
+        },
+        {
+          "date": "2026-09-08",
+          "value": 7673.52
+        },
+        {
+          "date": "2026-09-09",
+          "value": 7636.36
+        },
+        {
+          "date": "2026-09-10",
+          "value": 7591.7
+        },
+        {
+          "date": "2026-09-11",
+          "value": 7656.98
+        },
+        {
+          "date": "2026-09-14",
+          "value": 7619.98
+        },
+        {
+          "date": "2026-09-15",
+          "value": 7585.73
+        },
+        {
+          "date": "2026-09-16",
+          "value": 7551.81
+        },
+        {
+          "date": "2026-09-17",
+          "value": 7637.76
+        },
+        {
+          "date": "2026-09-18",
+          "value": 7650.5
+        },
+        {
+          "date": "2026-09-21",
+          "value": 7764.7
+        },
+        {
+          "date": "2026-09-22",
+          "value": 7764.64
+        },
+        {
+          "date": "2026-09-23",
+          "value": 7706.03
+        },
+        {
+          "date": "2026-09-24",
+          "value": 7704.13
+        },
+        {
+          "date": "2026-09-25",
+          "value": 7743.41
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜SP500",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "DJIA": {
+      "history": [
+        {
+          "date": "2026-08-28",
+          "value": 53559.99
+        },
+        {
+          "date": "2026-08-31",
+          "value": 53185.9
+        },
+        {
+          "date": "2026-09-01",
+          "value": 52766.88
+        },
+        {
+          "date": "2026-09-02",
+          "value": 53061.95
+        },
+        {
+          "date": "2026-09-03",
+          "value": 53686.11
+        },
+        {
+          "date": "2026-09-04",
+          "value": 53414.25
+        },
+        {
+          "date": "2026-09-08",
+          "value": 52786.07
+        },
+        {
+          "date": "2026-09-09",
+          "value": 52380.66
+        },
+        {
+          "date": "2026-09-10",
+          "value": 52064.1
+        },
+        {
+          "date": "2026-09-11",
+          "value": 52573.29
+        },
+        {
+          "date": "2026-09-14",
+          "value": 52421.2
+        },
+        {
+          "date": "2026-09-15",
+          "value": 52093.11
+        },
+        {
+          "date": "2026-09-16",
+          "value": 51461.9
+        },
+        {
+          "date": "2026-09-17",
+          "value": 51778.04
+        },
+        {
+          "date": "2026-09-18",
+          "value": 51682.64
+        },
+        {
+          "date": "2026-09-21",
+          "value": 52048.83
+        },
+        {
+          "date": "2026-09-22",
+          "value": 51863.69
+        },
+        {
+          "date": "2026-09-23",
+          "value": 51511.59
+        },
+        {
+          "date": "2026-09-24",
+          "value": 51349.98
+        },
+        {
+          "date": "2026-09-25",
+          "value": 51828.62
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DJIA&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜DJIA",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "NASDAQCOM": {
+      "history": [
+        {
+          "date": "2026-08-28",
+          "value": 26402.42
+        },
+        {
+          "date": "2026-08-31",
+          "value": 26370.89
+        },
+        {
+          "date": "2026-09-01",
+          "value": 26099.77
+        },
+        {
+          "date": "2026-09-02",
+          "value": 26217.83
+        },
+        {
+          "date": "2026-09-03",
+          "value": 26584.06
+        },
+        {
+          "date": "2026-09-04",
+          "value": 26506.99
+        },
+        {
+          "date": "2026-09-08",
+          "value": 26421.41
+        },
+        {
+          "date": "2026-09-09",
+          "value": 26253.34
+        },
+        {
+          "date": "2026-09-10",
+          "value": 26081.72
+        },
+        {
+          "date": "2026-09-11",
+          "value": 26333.04
+        },
+        {
+          "date": "2026-09-14",
+          "value": 26186.41
+        },
+        {
+          "date": "2026-09-15",
+          "value": 25981.57
+        },
+        {
+          "date": "2026-09-16",
+          "value": 25978.42
+        },
+        {
+          "date": "2026-09-17",
+          "value": 26418.3
+        },
+        {
+          "date": "2026-09-18",
+          "value": 26522.55
+        },
+        {
+          "date": "2026-09-21",
+          "value": 27122.09
+        },
+        {
+          "date": "2026-09-22",
+          "value": 27244.28
+        },
+        {
+          "date": "2026-09-23",
+          "value": 26936.04
+        },
+        {
+          "date": "2026-09-24",
+          "value": 26939.37
+        },
+        {
+          "date": "2026-09-25",
+          "value": 27068.72
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜NASDAQCOM",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "DCOILWTICO": {
+      "history": [
+        {
+          "date": "2026-08-25",
+          "value": 83.9
+        },
+        {
+          "date": "2026-08-26",
+          "value": 83.46
+        },
+        {
+          "date": "2026-08-27",
+          "value": 84.81
+        },
+        {
+          "date": "2026-08-28",
+          "value": 84.57
+        },
+        {
+          "date": "2026-08-31",
+          "value": 87.03
+        },
+        {
+          "date": "2026-09-01",
+          "value": 91.48
+        },
+        {
+          "date": "2026-09-02",
+          "value": 92.15
+        },
+        {
+          "date": "2026-09-03",
+          "value": 92.55
+        },
+        {
+          "date": "2026-09-04",
+          "value": 92.69
+        },
+        {
+          "date": "2026-09-08",
+          "value": 94.21
+        },
+        {
+          "date": "2026-09-09",
+          "value": 97.26
+        },
+        {
+          "date": "2026-09-10",
+          "value": 103.57
+        },
+        {
+          "date": "2026-09-11",
+          "value": 101.27
+        },
+        {
+          "date": "2026-09-14",
+          "value": 102.42
+        },
+        {
+          "date": "2026-09-15",
+          "value": 107.02
+        },
+        {
+          "date": "2026-09-16",
+          "value": 103.62
+        },
+        {
+          "date": "2026-09-17",
+          "value": 103.21
+        },
+        {
+          "date": "2026-09-18",
+          "value": 101.44
+        },
+        {
+          "date": "2026-09-21",
+          "value": 96.97
+        },
+        {
+          "date": "2026-09-22",
+          "value": 96.41
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILWTICO&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜DCOILWTICO",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "DCOILBRENTEU": {
+      "history": [
+        {
+          "date": "2026-08-25",
+          "value": 88.24
+        },
+        {
+          "date": "2026-08-26",
+          "value": 87.77
+        },
+        {
+          "date": "2026-08-27",
+          "value": 90.18
+        },
+        {
+          "date": "2026-08-28",
+          "value": 89.75
+        },
+        {
+          "date": "2026-09-01",
+          "value": 96.02
+        },
+        {
+          "date": "2026-09-02",
+          "value": 97.59
+        },
+        {
+          "date": "2026-09-03",
+          "value": 100.52
+        },
+        {
+          "date": "2026-09-04",
+          "value": 102.24
+        },
+        {
+          "date": "2026-09-07",
+          "value": 104.47
+        },
+        {
+          "date": "2026-09-08",
+          "value": 106.12
+        },
+        {
+          "date": "2026-09-09",
+          "value": 109.51
+        },
+        {
+          "date": "2026-09-10",
+          "value": 120.98
+        },
+        {
+          "date": "2026-09-11",
+          "value": 118.06
+        },
+        {
+          "date": "2026-09-14",
+          "value": 121.25
+        },
+        {
+          "date": "2026-09-15",
+          "value": 130.8
+        },
+        {
+          "date": "2026-09-16",
+          "value": 127.84
+        },
+        {
+          "date": "2026-09-17",
+          "value": 121.18
+        },
+        {
+          "date": "2026-09-18",
+          "value": 119.66
+        },
+        {
+          "date": "2026-09-21",
+          "value": 116.15
+        },
+        {
+          "date": "2026-09-22",
+          "value": 114.89
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILBRENTEU&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜DCOILBRENTEU",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "DHHNGSP": {
+      "history": [
+        {
+          "date": "2026-08-25",
+          "value": 2.7
+        },
+        {
+          "date": "2026-08-26",
+          "value": 2.81
+        },
+        {
+          "date": "2026-08-27",
+          "value": 2.89
+        },
+        {
+          "date": "2026-08-28",
+          "value": 2.82
+        },
+        {
+          "date": "2026-08-31",
+          "value": 2.9
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.9
+        },
+        {
+          "date": "2026-09-02",
+          "value": 2.88
+        },
+        {
+          "date": "2026-09-03",
+          "value": 2.95
+        },
+        {
+          "date": "2026-09-04",
+          "value": 2.92
+        },
+        {
+          "date": "2026-09-08",
+          "value": 2.9
+        },
+        {
+          "date": "2026-09-09",
+          "value": 2.81
+        },
+        {
+          "date": "2026-09-10",
+          "value": 2.76
+        },
+        {
+          "date": "2026-09-11",
+          "value": 2.71
+        },
+        {
+          "date": "2026-09-14",
+          "value": 2.85
+        },
+        {
+          "date": "2026-09-15",
+          "value": 2.97
+        },
+        {
+          "date": "2026-09-16",
+          "value": 3.0
+        },
+        {
+          "date": "2026-09-17",
+          "value": 2.9
+        },
+        {
+          "date": "2026-09-18",
+          "value": 2.97
+        },
+        {
+          "date": "2026-09-21",
+          "value": 2.93
+        },
+        {
+          "date": "2026-09-22",
+          "value": 2.9
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DHHNGSP&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜DHHNGSP",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "T10YIE": {
+      "history": [
+        {
+          "date": "2026-08-28",
+          "value": 2.31
+        },
+        {
+          "date": "2026-08-31",
+          "value": 2.31
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.35
+        },
+        {
+          "date": "2026-09-02",
+          "value": 2.34
+        },
+        {
+          "date": "2026-09-03",
+          "value": 2.35
+        },
+        {
+          "date": "2026-09-04",
+          "value": 2.35
+        },
+        {
+          "date": "2026-09-08",
+          "value": 2.37
+        },
+        {
+          "date": "2026-09-09",
+          "value": 2.37
+        },
+        {
+          "date": "2026-09-10",
+          "value": 2.4
+        },
+        {
+          "date": "2026-09-11",
+          "value": 2.36
+        },
+        {
+          "date": "2026-09-14",
+          "value": 2.37
+        },
+        {
+          "date": "2026-09-15",
+          "value": 2.38
+        },
+        {
+          "date": "2026-09-16",
+          "value": 2.33
+        },
+        {
+          "date": "2026-09-17",
+          "value": 2.33
+        },
+        {
+          "date": "2026-09-18",
+          "value": 2.33
+        },
+        {
+          "date": "2026-09-21",
+          "value": 2.34
+        },
+        {
+          "date": "2026-09-22",
+          "value": 2.33
+        },
+        {
+          "date": "2026-09-23",
+          "value": 2.35
+        },
+        {
+          "date": "2026-09-24",
+          "value": 2.33
+        },
+        {
+          "date": "2026-09-25",
+          "value": 2.34
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜T10YIE",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "CPILFESL": {
+      "history": [
+        {
+          "date": "2024-12-01",
+          "value": 323.259
+        },
+        {
+          "date": "2025-01-01",
+          "value": 324.638
+        },
+        {
+          "date": "2025-02-01",
+          "value": 325.465
+        },
+        {
+          "date": "2025-03-01",
+          "value": 325.69
+        },
+        {
+          "date": "2025-04-01",
+          "value": 326.467
+        },
+        {
+          "date": "2025-05-01",
+          "value": 326.893
+        },
+        {
+          "date": "2025-06-01",
+          "value": 327.658
+        },
+        {
+          "date": "2025-07-01",
+          "value": 328.682
+        },
+        {
+          "date": "2025-08-01",
+          "value": 329.7
+        },
+        {
+          "date": "2025-09-01",
+          "value": 330.418
+        },
+        {
+          "date": "2025-11-01",
+          "value": 331.043
+        },
+        {
+          "date": "2025-12-01",
+          "value": 331.814
+        },
+        {
+          "date": "2026-01-01",
+          "value": 332.793
+        },
+        {
+          "date": "2026-02-01",
+          "value": 333.512
+        },
+        {
+          "date": "2026-03-01",
+          "value": 334.165
+        },
+        {
+          "date": "2026-04-01",
+          "value": 335.423
+        },
+        {
+          "date": "2026-05-01",
+          "value": 336.121
+        },
+        {
+          "date": "2026-06-01",
+          "value": 336.065
+        },
+        {
+          "date": "2026-07-01",
+          "value": 336.789
+        },
+        {
+          "date": "2026-08-01",
+          "value": 337.765
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPILFESL&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜CPILFESL",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 95
+    },
+    "PCEPILFE": {
+      "history": [
+        {
+          "date": "2024-12-01",
+          "value": 124.196
+        },
+        {
+          "date": "2025-01-01",
+          "value": 124.587
+        },
+        {
+          "date": "2025-02-01",
+          "value": 125.145
+        },
+        {
+          "date": "2025-03-01",
+          "value": 125.267
+        },
+        {
+          "date": "2025-04-01",
+          "value": 125.502
+        },
+        {
+          "date": "2025-05-01",
+          "value": 125.79
+        },
+        {
+          "date": "2025-06-01",
+          "value": 126.121
+        },
+        {
+          "date": "2025-07-01",
+          "value": 126.43
+        },
+        {
+          "date": "2025-08-01",
+          "value": 126.714
+        },
+        {
+          "date": "2025-09-01",
+          "value": 126.954
+        },
+        {
+          "date": "2025-10-01",
+          "value": 127.243
+        },
+        {
+          "date": "2025-11-01",
+          "value": 127.469
+        },
+        {
+          "date": "2025-12-01",
+          "value": 127.886
+        },
+        {
+          "date": "2026-01-01",
+          "value": 128.455
+        },
+        {
+          "date": "2026-02-01",
+          "value": 128.961
+        },
+        {
+          "date": "2026-03-01",
+          "value": 129.343
+        },
+        {
+          "date": "2026-04-01",
+          "value": 129.681
+        },
+        {
+          "date": "2026-05-01",
+          "value": 130.147
+        },
+        {
+          "date": "2026-06-01",
+          "value": 130.338
+        },
+        {
+          "date": "2026-07-01",
+          "value": 130.658
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCEPILFE&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜PCEPILFE",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 95
+    },
+    "BAMLH0A0HYM2": {
+      "history": [
+        {
+          "date": "2026-08-28",
+          "value": 2.6
+        },
+        {
+          "date": "2026-08-31",
+          "value": 2.63
+        },
+        {
+          "date": "2026-09-01",
+          "value": 2.65
+        },
+        {
+          "date": "2026-09-02",
+          "value": 2.66
+        },
+        {
+          "date": "2026-09-03",
+          "value": 2.65
+        },
+        {
+          "date": "2026-09-04",
+          "value": 2.68
+        },
+        {
+          "date": "2026-09-07",
+          "value": 2.68
+        },
+        {
+          "date": "2026-09-08",
+          "value": 2.67
+        },
+        {
+          "date": "2026-09-09",
+          "value": 2.71
+        },
+        {
+          "date": "2026-09-10",
+          "value": 2.7
+        },
+        {
+          "date": "2026-09-11",
+          "value": 2.65
+        },
+        {
+          "date": "2026-09-14",
+          "value": 2.71
+        },
+        {
+          "date": "2026-09-15",
+          "value": 2.76
+        },
+        {
+          "date": "2026-09-16",
+          "value": 2.7
+        },
+        {
+          "date": "2026-09-17",
+          "value": 2.7
+        },
+        {
+          "date": "2026-09-18",
+          "value": 2.68
+        },
+        {
+          "date": "2026-09-21",
+          "value": 2.66
+        },
+        {
+          "date": "2026-09-22",
+          "value": 2.68
+        },
+        {
+          "date": "2026-09-23",
+          "value": 2.73
+        },
+        {
+          "date": "2026-09-24",
+          "value": 2.8
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜BAMLH0A0HYM2",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "BAMLC0A0CM": {
+      "history": [
+        {
+          "date": "2026-08-28",
+          "value": 0.79
+        },
+        {
+          "date": "2026-08-31",
+          "value": 0.8
+        },
+        {
+          "date": "2026-09-01",
+          "value": 0.81
+        },
+        {
+          "date": "2026-09-02",
+          "value": 0.81
+        },
+        {
+          "date": "2026-09-03",
+          "value": 0.81
+        },
+        {
+          "date": "2026-09-04",
+          "value": 0.81
+        },
+        {
+          "date": "2026-09-07",
+          "value": 0.81
+        },
+        {
+          "date": "2026-09-08",
+          "value": 0.81
+        },
+        {
+          "date": "2026-09-09",
+          "value": 0.81
+        },
+        {
+          "date": "2026-09-10",
+          "value": 0.8
+        },
+        {
+          "date": "2026-09-11",
+          "value": 0.8
+        },
+        {
+          "date": "2026-09-14",
+          "value": 0.8
+        },
+        {
+          "date": "2026-09-15",
+          "value": 0.8
+        },
+        {
+          "date": "2026-09-16",
+          "value": 0.78
+        },
+        {
+          "date": "2026-09-17",
+          "value": 0.78
+        },
+        {
+          "date": "2026-09-18",
+          "value": 0.77
+        },
+        {
+          "date": "2026-09-21",
+          "value": 0.77
+        },
+        {
+          "date": "2026-09-22",
+          "value": 0.77
+        },
+        {
+          "date": "2026-09-23",
+          "value": 0.77
+        },
+        {
+          "date": "2026-09-24",
+          "value": 0.79
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜BAMLC0A0CM",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "IORB": {
+      "history": [
+        {
+          "date": "2026-09-09",
+          "value": 3.65
+        },
+        {
+          "date": "2026-09-10",
+          "value": 3.65
+        },
+        {
+          "date": "2026-09-11",
+          "value": 3.65
+        },
+        {
+          "date": "2026-09-12",
+          "value": 3.65
+        },
+        {
+          "date": "2026-09-13",
+          "value": 3.65
+        },
+        {
+          "date": "2026-09-14",
+          "value": 3.65
+        },
+        {
+          "date": "2026-09-15",
+          "value": 3.65
+        },
+        {
+          "date": "2026-09-16",
+          "value": 3.65
+        },
+        {
+          "date": "2026-09-17",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-18",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-19",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-20",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-21",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-22",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-23",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-24",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-25",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-26",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-27",
+          "value": 3.9
+        },
+        {
+          "date": "2026-09-28",
+          "value": 3.9
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=IORB&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜IORB",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "STLFSI4": {
+      "history": [
+        {
+          "date": "2026-05-08",
+          "value": -0.7562
+        },
+        {
+          "date": "2026-05-15",
+          "value": -0.7379
+        },
+        {
+          "date": "2026-05-22",
+          "value": -0.7588
+        },
+        {
+          "date": "2026-05-29",
+          "value": -0.6741
+        },
+        {
+          "date": "2026-06-05",
+          "value": -0.8636
+        },
+        {
+          "date": "2026-06-12",
+          "value": -0.7661
+        },
+        {
+          "date": "2026-06-19",
+          "value": -0.9485
+        },
+        {
+          "date": "2026-06-26",
+          "value": -0.6412
+        },
+        {
+          "date": "2026-07-03",
+          "value": -0.7218
+        },
+        {
+          "date": "2026-07-10",
+          "value": -0.8829
+        },
+        {
+          "date": "2026-07-17",
+          "value": -0.6992
+        },
+        {
+          "date": "2026-07-24",
+          "value": -0.8267
+        },
+        {
+          "date": "2026-07-31",
+          "value": -0.5039
+        },
+        {
+          "date": "2026-08-07",
+          "value": -0.7675
+        },
+        {
+          "date": "2026-08-14",
+          "value": -0.827
+        },
+        {
+          "date": "2026-08-21",
+          "value": -0.8095
+        },
+        {
+          "date": "2026-08-28",
+          "value": -0.85
+        },
+        {
+          "date": "2026-09-04",
+          "value": -0.7901
+        },
+        {
+          "date": "2026-09-11",
+          "value": -0.8486
+        },
+        {
+          "date": "2026-09-18",
+          "value": -0.9075
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=STLFSI4&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜STLFSI4",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 14
+    },
+    "ICSA": {
+      "history": [
+        {
+          "date": "2026-05-09",
+          "value": 212000.0
+        },
+        {
+          "date": "2026-05-16",
+          "value": 210000.0
+        },
+        {
+          "date": "2026-05-23",
+          "value": 212000.0
+        },
+        {
+          "date": "2026-05-30",
+          "value": 225000.0
+        },
+        {
+          "date": "2026-06-06",
+          "value": 230000.0
+        },
+        {
+          "date": "2026-06-13",
+          "value": 227000.0
+        },
+        {
+          "date": "2026-06-20",
+          "value": 216000.0
+        },
+        {
+          "date": "2026-06-27",
+          "value": 217000.0
+        },
+        {
+          "date": "2026-07-04",
+          "value": 217000.0
+        },
+        {
+          "date": "2026-07-11",
+          "value": 209000.0
+        },
+        {
+          "date": "2026-07-18",
+          "value": 189000.0
+        },
+        {
+          "date": "2026-07-25",
+          "value": 198000.0
+        },
+        {
+          "date": "2026-08-01",
+          "value": 200000.0
+        },
+        {
+          "date": "2026-08-08",
+          "value": 212000.0
+        },
+        {
+          "date": "2026-08-15",
+          "value": 207000.0
+        },
+        {
+          "date": "2026-08-22",
+          "value": 204000.0
+        },
+        {
+          "date": "2026-08-29",
+          "value": 207000.0
+        },
+        {
+          "date": "2026-09-05",
+          "value": 207000.0
+        },
+        {
+          "date": "2026-09-12",
+          "value": 198000.0
+        },
+        {
+          "date": "2026-09-19",
+          "value": 197000.0
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=ICSA&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜ICSA",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 14
+    },
+    "CCSA": {
+      "history": [
+        {
+          "date": "2026-05-02",
+          "value": 1776000.0
+        },
+        {
+          "date": "2026-05-09",
+          "value": 1771000.0
+        },
+        {
+          "date": "2026-05-16",
+          "value": 1785000.0
+        },
+        {
+          "date": "2026-05-23",
+          "value": 1771000.0
+        },
+        {
+          "date": "2026-05-30",
+          "value": 1786000.0
+        },
+        {
+          "date": "2026-06-06",
+          "value": 1800000.0
+        },
+        {
+          "date": "2026-06-13",
+          "value": 1812000.0
+        },
+        {
+          "date": "2026-06-20",
+          "value": 1806000.0
+        },
+        {
+          "date": "2026-06-27",
+          "value": 1821000.0
+        },
+        {
+          "date": "2026-07-04",
+          "value": 1798000.0
+        },
+        {
+          "date": "2026-07-11",
+          "value": 1789000.0
+        },
+        {
+          "date": "2026-07-18",
+          "value": 1777000.0
+        },
+        {
+          "date": "2026-07-25",
+          "value": 1799000.0
+        },
+        {
+          "date": "2026-08-01",
+          "value": 1781000.0
+        },
+        {
+          "date": "2026-08-08",
+          "value": 1796000.0
+        },
+        {
+          "date": "2026-08-15",
+          "value": 1771000.0
+        },
+        {
+          "date": "2026-08-22",
+          "value": 1775000.0
+        },
+        {
+          "date": "2026-08-29",
+          "value": 1765000.0
+        },
+        {
+          "date": "2026-09-05",
+          "value": 1717000.0
+        },
+        {
+          "date": "2026-09-12",
+          "value": 1719000.0
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CCSA&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜CCSA",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 21
+    },
+    "IC4WSA": {
+      "history": [
+        {
+          "date": "2026-05-09",
+          "value": 204000.0
+        },
+        {
+          "date": "2026-05-16",
+          "value": 202750.0
+        },
+        {
+          "date": "2026-05-23",
+          "value": 208250.0
+        },
+        {
+          "date": "2026-05-30",
+          "value": 214750.0
+        },
+        {
+          "date": "2026-06-06",
+          "value": 219250.0
+        },
+        {
+          "date": "2026-06-13",
+          "value": 223500.0
+        },
+        {
+          "date": "2026-06-20",
+          "value": 224500.0
+        },
+        {
+          "date": "2026-06-27",
+          "value": 222500.0
+        },
+        {
+          "date": "2026-07-04",
+          "value": 219250.0
+        },
+        {
+          "date": "2026-07-11",
+          "value": 214750.0
+        },
+        {
+          "date": "2026-07-18",
+          "value": 208000.0
+        },
+        {
+          "date": "2026-07-25",
+          "value": 203250.0
+        },
+        {
+          "date": "2026-08-01",
+          "value": 199000.0
+        },
+        {
+          "date": "2026-08-08",
+          "value": 199750.0
+        },
+        {
+          "date": "2026-08-15",
+          "value": 204250.0
+        },
+        {
+          "date": "2026-08-22",
+          "value": 205750.0
+        },
+        {
+          "date": "2026-08-29",
+          "value": 207500.0
+        },
+        {
+          "date": "2026-09-05",
+          "value": 206250.0
+        },
+        {
+          "date": "2026-09-12",
+          "value": 204000.0
+        },
+        {
+          "date": "2026-09-19",
+          "value": 202250.0
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=IC4WSA&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜IC4WSA",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 14
+    },
+    "INDPRO": {
+      "history": [
+        {
+          "date": "2025-01-01",
+          "value": 100.0647
+        },
+        {
+          "date": "2025-02-01",
+          "value": 101.0993
+        },
+        {
+          "date": "2025-03-01",
+          "value": 101.0404
+        },
+        {
+          "date": "2025-04-01",
+          "value": 101.1279
+        },
+        {
+          "date": "2025-05-01",
+          "value": 100.9655
+        },
+        {
+          "date": "2025-06-01",
+          "value": 101.4785
+        },
+        {
+          "date": "2025-07-01",
+          "value": 101.894
+        },
+        {
+          "date": "2025-08-01",
+          "value": 101.6247
+        },
+        {
+          "date": "2025-09-01",
+          "value": 101.668
+        },
+        {
+          "date": "2025-10-01",
+          "value": 101.2195
+        },
+        {
+          "date": "2025-11-01",
+          "value": 101.0344
+        },
+        {
+          "date": "2025-12-01",
+          "value": 101.4941
+        },
+        {
+          "date": "2026-01-01",
+          "value": 101.0388
+        },
+        {
+          "date": "2026-02-01",
+          "value": 101.9053
+        },
+        {
+          "date": "2026-03-01",
+          "value": 101.7336
+        },
+        {
+          "date": "2026-04-01",
+          "value": 102.5783
+        },
+        {
+          "date": "2026-05-01",
+          "value": 102.6396
+        },
+        {
+          "date": "2026-06-01",
+          "value": 102.842
+        },
+        {
+          "date": "2026-07-01",
+          "value": 103.0454
+        },
+        {
+          "date": "2026-08-01",
+          "value": 103.0682
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=INDPRO&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜INDPRO",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 95
+    },
+    "RRSFS": {
+      "history": [
+        {
+          "date": "2024-12-01",
+          "value": 225836.0
+        },
+        {
+          "date": "2025-01-01",
+          "value": 222993.0
+        },
+        {
+          "date": "2025-02-01",
+          "value": 222590.0
+        },
+        {
+          "date": "2025-03-01",
+          "value": 226195.0
+        },
+        {
+          "date": "2025-04-01",
+          "value": 225550.0
+        },
+        {
+          "date": "2025-05-01",
+          "value": 222854.0
+        },
+        {
+          "date": "2025-06-01",
+          "value": 223835.0
+        },
+        {
+          "date": "2025-07-01",
+          "value": 225918.0
+        },
+        {
+          "date": "2025-08-01",
+          "value": 225814.0
+        },
+        {
+          "date": "2025-09-01",
+          "value": 225814.0
+        },
+        {
+          "date": "2025-11-01",
+          "value": 226023.0
+        },
+        {
+          "date": "2025-12-01",
+          "value": 225352.0
+        },
+        {
+          "date": "2026-01-01",
+          "value": 224902.0
+        },
+        {
+          "date": "2026-02-01",
+          "value": 226372.0
+        },
+        {
+          "date": "2026-03-01",
+          "value": 228286.0
+        },
+        {
+          "date": "2026-04-01",
+          "value": 228364.0
+        },
+        {
+          "date": "2026-05-01",
+          "value": 229413.0
+        },
+        {
+          "date": "2026-06-01",
+          "value": 231107.0
+        },
+        {
+          "date": "2026-07-01",
+          "value": 229697.0
+        },
+        {
+          "date": "2026-08-01",
+          "value": 231630.0
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RRSFS&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜RRSFS",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 95
+    },
+    "DTB3": {
+      "history": [
+        {
+          "date": "2026-08-27",
+          "value": 3.69
+        },
+        {
+          "date": "2026-08-28",
+          "value": 3.74
+        },
+        {
+          "date": "2026-08-31",
+          "value": 3.78
+        },
+        {
+          "date": "2026-09-01",
+          "value": 3.78
+        },
+        {
+          "date": "2026-09-02",
+          "value": 3.78
+        },
+        {
+          "date": "2026-09-03",
+          "value": 3.75
+        },
+        {
+          "date": "2026-09-04",
+          "value": 3.77
+        },
+        {
+          "date": "2026-09-08",
+          "value": 3.8
+        },
+        {
+          "date": "2026-09-09",
+          "value": 3.81
+        },
+        {
+          "date": "2026-09-10",
+          "value": 3.86
+        },
+        {
+          "date": "2026-09-11",
+          "value": 3.92
+        },
+        {
+          "date": "2026-09-14",
+          "value": 3.97
+        },
+        {
+          "date": "2026-09-15",
+          "value": 3.97
+        },
+        {
+          "date": "2026-09-16",
+          "value": 3.99
+        },
+        {
+          "date": "2026-09-17",
+          "value": 3.97
+        },
+        {
+          "date": "2026-09-18",
+          "value": 3.99
+        },
+        {
+          "date": "2026-09-21",
+          "value": 4.02
+        },
+        {
+          "date": "2026-09-22",
+          "value": 4.01
+        },
+        {
+          "date": "2026-09-23",
+          "value": 4.04
+        },
+        {
+          "date": "2026-09-24",
+          "value": 4.08
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜DTB3",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "DGS10": {
+      "history": [
+        {
+          "date": "2026-08-27",
+          "value": 4.67
+        },
+        {
+          "date": "2026-08-28",
+          "value": 4.73
+        },
+        {
+          "date": "2026-08-31",
+          "value": 4.75
+        },
+        {
+          "date": "2026-09-01",
+          "value": 4.79
+        },
+        {
+          "date": "2026-09-02",
+          "value": 4.79
+        },
+        {
+          "date": "2026-09-03",
+          "value": 4.77
+        },
+        {
+          "date": "2026-09-04",
+          "value": 4.78
+        },
+        {
+          "date": "2026-09-08",
+          "value": 4.8
+        },
+        {
+          "date": "2026-09-09",
+          "value": 4.83
+        },
+        {
+          "date": "2026-09-10",
+          "value": 4.95
+        },
+        {
+          "date": "2026-09-11",
+          "value": 4.96
+        },
+        {
+          "date": "2026-09-14",
+          "value": 4.97
+        },
+        {
+          "date": "2026-09-15",
+          "value": 5.0
+        },
+        {
+          "date": "2026-09-16",
+          "value": 5.01
+        },
+        {
+          "date": "2026-09-17",
+          "value": 4.94
+        },
+        {
+          "date": "2026-09-18",
+          "value": 5.01
+        },
+        {
+          "date": "2026-09-21",
+          "value": 4.96
+        },
+        {
+          "date": "2026-09-22",
+          "value": 4.96
+        },
+        {
+          "date": "2026-09-23",
+          "value": 5.11
+        },
+        {
+          "date": "2026-09-24",
+          "value": 5.18
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜DGS10",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "DGS30": {
+      "history": [
+        {
+          "date": "2026-08-27",
+          "value": 5.19
+        },
+        {
+          "date": "2026-08-28",
+          "value": 5.22
+        },
+        {
+          "date": "2026-08-31",
+          "value": 5.25
+        },
+        {
+          "date": "2026-09-01",
+          "value": 5.27
+        },
+        {
+          "date": "2026-09-02",
+          "value": 5.27
+        },
+        {
+          "date": "2026-09-03",
+          "value": 5.25
+        },
+        {
+          "date": "2026-09-04",
+          "value": 5.24
+        },
+        {
+          "date": "2026-09-08",
+          "value": 5.25
+        },
+        {
+          "date": "2026-09-09",
+          "value": 5.28
+        },
+        {
+          "date": "2026-09-10",
+          "value": 5.37
+        },
+        {
+          "date": "2026-09-11",
+          "value": 5.35
+        },
+        {
+          "date": "2026-09-14",
+          "value": 5.34
+        },
+        {
+          "date": "2026-09-15",
+          "value": 5.36
+        },
+        {
+          "date": "2026-09-16",
+          "value": 5.35
+        },
+        {
+          "date": "2026-09-17",
+          "value": 5.29
+        },
+        {
+          "date": "2026-09-18",
+          "value": 5.34
+        },
+        {
+          "date": "2026-09-21",
+          "value": 5.29
+        },
+        {
+          "date": "2026-09-22",
+          "value": 5.29
+        },
+        {
+          "date": "2026-09-23",
+          "value": 5.4
+        },
+        {
+          "date": "2026-09-24",
+          "value": 5.47
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS30&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜DGS30",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "T10Y3M": {
+      "history": [
+        {
+          "date": "2026-08-28",
+          "value": 0.83
+        },
+        {
+          "date": "2026-08-31",
+          "value": 0.84
+        },
+        {
+          "date": "2026-09-01",
+          "value": 0.87
+        },
+        {
+          "date": "2026-09-02",
+          "value": 0.87
+        },
+        {
+          "date": "2026-09-03",
+          "value": 0.88
+        },
+        {
+          "date": "2026-09-04",
+          "value": 0.87
+        },
+        {
+          "date": "2026-09-08",
+          "value": 0.86
+        },
+        {
+          "date": "2026-09-09",
+          "value": 0.88
+        },
+        {
+          "date": "2026-09-10",
+          "value": 0.95
+        },
+        {
+          "date": "2026-09-11",
+          "value": 0.89
+        },
+        {
+          "date": "2026-09-14",
+          "value": 0.86
+        },
+        {
+          "date": "2026-09-15",
+          "value": 0.89
+        },
+        {
+          "date": "2026-09-16",
+          "value": 0.87
+        },
+        {
+          "date": "2026-09-17",
+          "value": 0.82
+        },
+        {
+          "date": "2026-09-18",
+          "value": 0.87
+        },
+        {
+          "date": "2026-09-21",
+          "value": 0.79
+        },
+        {
+          "date": "2026-09-22",
+          "value": 0.8
+        },
+        {
+          "date": "2026-09-23",
+          "value": 0.92
+        },
+        {
+          "date": "2026-09-24",
+          "value": 0.94
+        },
+        {
+          "date": "2026-09-25",
+          "value": 0.93
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y3M&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜T10Y3M",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
+    },
+    "VIXCLS": {
+      "history": [
+        {
+          "date": "2026-08-26",
+          "value": 15.21
+        },
+        {
+          "date": "2026-08-27",
+          "value": 14.51
+        },
+        {
+          "date": "2026-08-28",
+          "value": 14.43
+        },
+        {
+          "date": "2026-08-31",
+          "value": 14.92
+        },
+        {
+          "date": "2026-09-01",
+          "value": 16.34
+        },
+        {
+          "date": "2026-09-02",
+          "value": 15.2
+        },
+        {
+          "date": "2026-09-03",
+          "value": 14.32
+        },
+        {
+          "date": "2026-09-04",
+          "value": 14.53
+        },
+        {
+          "date": "2026-09-07",
+          "value": 15.3
+        },
+        {
+          "date": "2026-09-08",
+          "value": 15.72
+        },
+        {
+          "date": "2026-09-09",
+          "value": 16.46
+        },
+        {
+          "date": "2026-09-10",
+          "value": 17.84
+        },
+        {
+          "date": "2026-09-11",
+          "value": 15.84
+        },
+        {
+          "date": "2026-09-14",
+          "value": 17.1
+        },
+        {
+          "date": "2026-09-15",
+          "value": 17.2
+        },
+        {
+          "date": "2026-09-16",
+          "value": 17.71
+        },
+        {
+          "date": "2026-09-17",
+          "value": 15.44
+        },
+        {
+          "date": "2026-09-18",
+          "value": 14.81
+        },
+        {
+          "date": "2026-09-21",
+          "value": 14.87
+        },
+        {
+          "date": "2026-09-22",
+          "value": 14.21
+        }
+      ],
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS&cosd=2024-12-17",
+      "provider": "FRED 官方公開 CSV｜VIXCLS",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:39:24.150900+00:00",
+      "max_age_days": 7
     }
   },
-  "blocked_at": null,
+  "blocked_at": {
+    "id": "DEXJPUS",
+    "reason": "Observation outside freshness window: 2026-09-18"
+  },
   "coverage": {
-    "usable": 13,
-    "expected": 13
+    "usable": 36,
+    "expected": 40
   }
 }
