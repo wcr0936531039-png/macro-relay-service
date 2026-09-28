@@ -141,6 +141,47 @@ def ecb_usd_jpy_cross():
         'source':jpy_url+' | '+usd_url,
         'method':'ECB 同日 JPY/EUR ÷ USD/EUR；這是官方參考匯率交叉換算，不是即時外匯成交價。'}
 
+def google_finance_dxy_metric():
+    """Read the exact NYICDX ICE Dollar Index quote from Google's public quote page."""
+    import html as html_lib
+    url='https://www.google.com/finance/quote/NYICDX:INDEXNYSEGIS?hl=en'
+    request=Request(url,headers={
+        'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/128 Safari/537.36',
+        'Accept':'text/html'
+    })
+    with urlopen(request,timeout=30) as response:
+        status=response.status;content_type=response.headers.get('Content-Type','').lower()
+        body=response.read(1_800_001);final_url=response.geturl()
+    if status!=200 or 'html' not in content_type or len(body)>1_800_000:
+        raise ValueError(f'Google Finance DXY page response invalid: HTTP {status}, {content_type}, {len(body)} bytes')
+    if final_url.split('?')[0].rstrip('/')!='https://www.google.com/finance/quote/NYICDX:INDEXNYSEGIS':
+        raise ValueError(f'Google Finance redirected to unexpected URL: {final_url}')
+    page=html_lib.unescape(body.decode('utf-8','replace'))
+    canonical=__import__('re').search(r'<link rel="canonical" href="([^"]+)"',page,__import__('re').I)
+    if not canonical or canonical.group(1).rstrip('/')!='https://www.google.com/finance/quote/NYICDX:INDEXNYSEGIS':
+        raise ValueError('Google Finance canonical symbol is not NYICDX:INDEXNYSEGIS')
+    quote_match=__import__('re').search(r"""<div class="gO24Ff">ICE U\.S\. Dollar Index</div>(.{0,4000}?)<span jsname="Pdsbrc"[^>]*><span>([0-9,]+(?:\.[0-9]+)?)</span>""",page,__import__('re').I|__import__('re').S)
+    if not quote_match:raise ValueError('Google Finance ICE DXY quote/value pair is absent')
+    value=float(quote_match.group(2).replace(',',''))
+    if not math.isfinite(value) or not 50<=value<=200:raise ValueError(f'Google Finance DXY value outside sanity range: {value}')
+    tail=page[quote_match.end():quote_match.end()+12000]
+    time_match=__import__('re').search(r"""<div class="jZZ2de">([^<]+)</div>""",tail,__import__('re').I)
+    if not time_match:raise ValueError('Google Finance ICE DXY timestamp is absent')
+    raw_time=' '.join(time_match.group(1).replace('\u202f',' ').split())
+    parsed=__import__('re').search(r'([A-Za-z]{3})\s+(\d{1,2}),\s*(?:(20\d{2})\s*,?\s*)?(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)\s+GMT([+-]\d{1,2})',raw_time)
+    if not parsed:raise ValueError(f'Google Finance DXY timestamp format unrecognized: {raw_time}')
+    current=datetime.now(timezone.utc).date()
+    year=int(parsed.group(3) or current.year)
+    date=datetime.strptime(f'{parsed.group(1)} {parsed.group(2)} {year}','%b %d %Y').date()
+    if (date-current).days>1:date=date.replace(year=year-1)
+    elif (current-date).days>330:date=date.replace(year=year+1)
+    if (current-date).days<0 or (current-date).days>3:raise ValueError(f'Google Finance ICE DXY quote is stale/future: {date.isoformat()}')
+    point={'date':date.isoformat(),'value':value}
+    return {'history':[point],'date':point['date'],'value':value,'unit':'指數點',
+        'provider':'Google Finance｜NYICDX:INDEXNYSEGIS（ICE U.S. Dollar Index 市場報價）',
+        'source':url,
+        'method':f'核對 Google Finance canonical NYICDX:INDEXNYSEGIS、頁面名稱 ICE U.S. Dollar Index；頁面報價時間 {raw_time}。這是該指數市場報價，不標作 ICE 官方結算值。'}
+
 def marketwatch_dxy_metric():
     """Read the public delayed ICE DXY quote from MarketWatch's structured page data."""
     import html as html_lib
@@ -201,8 +242,9 @@ def yahoo_chart_metric(sid):
     if response_data is None:
         failure='All Yahoo no-key endpoints failed: '+'; '.join(failures)
         if sid=='ICE_DXY':
-            try:return marketwatch_dxy_metric()
-            except Exception as error:failure+=f'; MarketWatch DXY fallback failed: {error}'
+            for fallback in (google_finance_dxy_metric,marketwatch_dxy_metric):
+                try:return fallback()
+                except Exception as error:failure+=f'; {fallback.__name__} failed: {error}'
         raise ValueError(failure)
     result=(response_data.get('chart') or {}).get('result')
     item=result[0];timestamps=item.get('timestamp') or [];quotes=((item.get('indicators') or {}).get('quote') or [{}])[0];closes=quotes.get('close') or []
