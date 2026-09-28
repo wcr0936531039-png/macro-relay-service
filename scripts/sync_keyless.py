@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Sequential official public-feed ingestion; no provider API keys."""
-import csv, io, json, math, os, sys
+import csv, io, json, math, os, sys, zipfile
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -10,6 +10,8 @@ import sync_macro as legacy
 SPECS = [('SOFR',7),('RRPONTSYD',8),('RPONTSYD',8),('UNRATE',85),('SAHMREALTIME',85),
  ('T10Y2Y',7),('DFII10',7),('T5YIE',7),('RSAFS',85),('PAYEMS',85)]
 OUT=Path('data/keyless_snapshot.json')
+NDC_OPEN_DATA_ZIP=('https://ws.ndc.gov.tw/Download.ashx?icon=.zip&n=5pmv5rCj5oyH5qiZ5Y%2BK54eI6JmfLnppcA%3D%3D'
+ '&u=LzAwMS9hZG1pbmlzdHJhdG9yLzEwL3JlbGZpbGUvNTc4MS82MzkyL2VhMjM1YmQ5LWQwNTItNGE2OS1hYmZjLWQ1Yzc4NWQzZDBlMi56aXA%3D')
 
 def fred_csv(sid):
     since=(datetime.now(timezone.utc)-timedelta(days=650)).date().isoformat()
@@ -43,15 +45,79 @@ def validate(entry,days):
     if any(type(p['value']) not in (int,float) or not math.isfinite(p['value']) for p in history):raise ValueError('Invalid numeric history')
     return entry
 
+def ndc_open_data_metric():
+    """Use NDC's no-key government open-data ZIP when its live chart API blocks CI."""
+    request=Request(NDC_OPEN_DATA_ZIP,headers={'User-Agent':legacy.USER_AGENT,'Accept':'application/zip,application/octet-stream,*/*'})
+    with urlopen(request,timeout=30) as response:
+        raw=response.read(15_000_001)
+    if len(raw)>15_000_000 or not raw.startswith(b'PK'):
+        raise ValueError('data.gov.tw linked NDC resource is not a valid ZIP')
+    archive=zipfile.ZipFile(io.BytesIO(raw))
+    names=[name for name in archive.namelist() if name.lower().endswith(('.csv','.txt')) and not name.startswith('__MACOSX/')]
+    if not names:
+        raise ValueError('NDC open-data ZIP contains no CSV/TXT table')
+    def parse_period(raw_date):
+        raw_date=str(raw_date).strip().replace('年','/').replace('月','').replace('-','/').replace('.','/')
+        m=__import__('re').search(r'(?<!\d)(\d{3,4})\s*/?\s*(\d{1,2})(?!\d)',raw_date)
+        if not m:return None
+        year,month=map(int,m.groups())
+        if year<1000:year+=1911
+        if not 1<=month<=12:return None
+        return f'{year}-{month:02d}-01'
+    candidates=[]
+    for name in names:
+        payload=archive.read(name)
+        text=None
+        for encoding in ('utf-8-sig','cp950','big5'):
+            try:text=payload.decode(encoding);break
+            except UnicodeDecodeError:continue
+        if text is None:continue
+        sample=text[:4096]
+        try:dialect=csv.Sniffer().sniff(sample,delimiters=',\t;')
+        except csv.Error:dialect=csv.excel
+        reader=csv.DictReader(io.StringIO(text),dialect=dialect)
+        fields=[str(x or '').strip().lstrip('\ufeff') for x in (reader.fieldnames or [])]
+        if not fields:continue
+        score_key=next((f for f in fields if '景氣對策信號' in f and '分數' in f),None)
+        light_key=next((f for f in fields if '景氣對策信號' in f and '分數' not in f),None)
+        date_key=next((f for f in fields if f.lower() in ('date','年月','日期','資料年月','資料日期') or '年月' in f or '日期' in f),None)
+        if not score_key or not date_key:continue
+        # DictReader keys keep original BOM/spacing; normalize only for lookup.
+        for row in reader:
+            normalized={str(k or '').strip().lstrip('\ufeff'):v for k,v in row.items()}
+            date=parse_period(normalized.get(date_key,''));value=normalized.get(score_key,'')
+            if date is None or not legacy.valid_number(value):continue
+            score=float(value)
+            if not score.is_integer() or not 9<=score<=45:continue
+            light=str(normalized.get(light_key,'')).strip() if light_key else ''
+            if light:
+                for short,standard in (('黃藍','黃藍燈'),('黃紅','黃紅燈'),('藍','藍燈'),('綠','綠燈'),('紅','紅燈')):
+                    if light==short or light==standard:
+                        light=standard;break
+            if not light:
+                light='紅燈' if score>=38 else '黃紅燈' if score>=32 else '綠燈' if score>=23 else '黃藍燈' if score>=17 else '藍燈'
+            candidates.append((date,int(score),light,name))
+    if not candidates:raise ValueError('NDC open-data ZIP lacks recognizable date and composite-signal score columns')
+    date,score,light,name=max(candidates)
+    return {'history':[{'date':date,'value':score}],'date':date,'value':score,'unit':'分','light':light,
+        'provider':'國家發展委員會｜政府資料開放平台「景氣指標及燈號」',
+        'source':'https://data.gov.tw/dataset/6099','method':f'國發會原始月資料 ZIP，欄位「景氣對策信號綜合分數」及燈號；檔案 {name}'}
+
 def main():
     old=json.loads(OUT.read_text()) if OUT.exists() else {'series':{}}
     if not isinstance(old,dict) or not isinstance(old.get('series'),dict):raise ValueError('Invalid prior snapshot')
     now=datetime.now(timezone.utc).isoformat(); current={}
     for key,entry in old['series'].items():current[key]={**entry,'status':'stale','error':'本輪尚未驗證'}
     tasks=[(sid,days,lambda sid=sid:fred_csv(sid)) for sid,days in SPECS]
+    def get_ndc():
+        try:return legacy.fetch_ndc()
+        except Exception as live_error:
+            try:return ndc_open_data_metric()
+            except Exception as dataset_error:
+                raise ValueError(f'NDC JSON/chart unavailable ({live_error}); official open-data ZIP unavailable ({dataset_error})') from dataset_error
     tasks += [('TW_EXPORT_ORDERS',85,lambda:legacy.taiwan_export_metric(legacy.http_text(legacy.MOEA_URL))),
               ('TPEX_BREADTH',5,lambda:legacy.tpex_metric(legacy.http_json(legacy.TPEX_URL))),
-              ('TW_NDC_SIGNAL',120,legacy.fetch_ndc)]
+              ('TW_NDC_SIGNAL',120,get_ndc)]
     failed=None
     for sid,days,fetcher in tasks:
         try:
