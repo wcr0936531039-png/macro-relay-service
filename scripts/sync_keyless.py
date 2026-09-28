@@ -213,39 +213,23 @@ def twse_open_data_metric(metric):
     raise ValueError(f'TWSE FMTQIK CSV has no valid TAIEX observation; sample={sample}')
 
 def twse_credit_metric(metric,date):
-    """Read one official aggregate field from the TWSE daily JSON report."""
+    """Read one official aggregate field from the TWSE daily summary HTML."""
     compact=date.replace('-','')
-    url=f'https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date={compact}&selectType=MS'
-    request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'application/json,text/plain;q=0.9,*/*;q=0.8'})
-    with urlopen(request,timeout=25) as response:
-        content_type=response.headers.get('Content-Type','').lower();body=response.read(2_000_001)
-    if len(body)>2_000_000:raise ValueError('TWSE credit JSON too large')
-    if 'json' not in content_type:raise ValueError(f'TWSE expected JSON; got {content_type or "unknown content type"}')
-    payload=json.loads(body.decode('utf-8-sig'))
-    if not isinstance(payload,dict) or payload.get('stat') not in ('OK','ok'):raise ValueError(f'TWSE credit report rejected: {payload.get("stat") if isinstance(payload,dict) else "invalid JSON"}')
-    raw_date=str(payload.get('date') or '').strip()
-    observed=legacy.parse_roc_date(raw_date)
-    title=str(payload.get('title') or '')
-    if observed is None:
-        match=__import__('re').search(r'(\d{3})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日',title)
-        if match:observed=f'{int(match[1])+1911:04d}-{int(match[2]):02d}-{int(match[3]):02d}'
+    url=f'https://www.twse.com.tw/exchangeReport/MI_MARGN?date={compact}&response=html'
+    html=legacy.http_text(url)
+    date_match=__import__('re').search(r'(\d{3})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日',html)
+    observed=f'{int(date_match[1])+1911:04d}-{int(date_match[2]):02d}-{int(date_match[3]):02d}' if date_match else None
     if observed!=date:raise ValueError(f'TWSE credit observation date mismatch: requested {date}, returned {observed or "missing"}')
-    def find_key(node,key):
-        if isinstance(node,dict):
-            if key in node:return node[key]
-            for child in node.values():
-                found=find_key(child,key)
-                if found is not None:return found
-        elif isinstance(node,list):
-            for child in node:
-                found=find_key(child,key)
-                if found is not None:return found
-        return None
-    def values(raw):
-        if not isinstance(raw,list):return []
-        return [float(str(x).replace(',','')) for x in raw if legacy.valid_number(str(x).replace(',',''))]
-    margin_amount=values(find_key(payload,'tfootData_two'))
-    margin_short=values(find_key(payload,'tfootData_one'))
+    parser=legacy.TableParser();parser.feed(html)
+    data={}
+    for cells in parser.rows:
+        if not cells:continue
+        label=''.join(str(cells[0]).split())
+        numbers=[]
+        for cell in cells[1:]:
+            raw=str(cell).replace(',','').strip()
+            if legacy.valid_number(raw):numbers.append(float(raw))
+        if label and len(numbers)>=5:data[label]=numbers
     mapping={
       'TWSE_MARGIN_BALANCE_NTD':('融資金額(仟元)', '億元', lambda p:p[-1]/100000),
       'TWSE_MARGIN_CHANGE_NTD':('融資金額(仟元)', '億元', lambda p:(p[-1]-p[-2])/100000),
@@ -255,13 +239,12 @@ def twse_credit_metric(metric,date):
     }
     if metric not in mapping:raise ValueError(f'unsupported TWSE credit metric: {metric}')
     label,unit,calculate=mapping[metric]
-    selected=margin_amount if metric in ('TWSE_MARGIN_BALANCE_NTD','TWSE_MARGIN_CHANGE_NTD') else margin_short
-    if len(selected)<5 or (selected is margin_short and len(selected)<10):
-        raise ValueError(f'TWSE credit JSON missing aggregate arrays for {label}; keys={list(payload)[:20]}')
+    selected=next((values for key,values in data.items() if key==label),None)
+    if not selected:raise ValueError(f'TWSE credit HTML lacks aggregate row {label}; sample={repr(parser.rows[:12])[:1200]}')
     value=calculate(selected)
-    if not math.isfinite(value):raise ValueError(f'TWSE credit CSV produced nonfinite {metric}')
+    if not math.isfinite(value):raise ValueError(f'TWSE credit HTML produced nonfinite {metric}')
     return {'history':[{'date':date,'value':value}],'date':date,'value':value,'unit':unit,
-        'provider':'臺灣證券交易所｜信用交易統計（MI_MARGN）官方 CSV',
+        'provider':'臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面',
         'source':url,'method':f'{label} 欄位；{unit}；日增減以今日餘額減前日餘額計算。'}
 
 def main():
