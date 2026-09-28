@@ -212,6 +212,50 @@ def twse_open_data_metric(metric):
     sample=repr(rows[:6])[:1000]
     raise ValueError(f'TWSE FMTQIK CSV has no valid TAIEX observation; sample={sample}')
 
+def twse_credit_metric(metric):
+    """Read one exact aggregate field from the official TWSE margin CSV."""
+    url='https://www.twse.com.tw/exchangeReport/MI_MARGN?response=open_data&selectType=MS'
+    request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'text/csv,application/csv;q=0.9,*/*;q=0.8'})
+    with urlopen(request,timeout=25) as response:
+        content_type=response.headers.get('Content-Type','').lower();body=response.read(2_000_001)
+    if len(body)>2_000_000:raise ValueError('TWSE credit CSV too large')
+    if 'csv' not in content_type:raise ValueError(f'TWSE expected credit CSV; got {content_type or "unknown content type"}')
+    try:text=body.decode('utf-8-sig')
+    except UnicodeDecodeError:text=body.decode('cp950')
+    if '<html' in text[:1000].lower():raise ValueError('TWSE returned HTML challenge, not CSV')
+    rows=list(csv.reader(io.StringIO(text)))
+    clean=lambda value:str(value or '').strip().lstrip('\ufeff').replace(',','')
+    date=None
+    for match in __import__('re').finditer(r'(\d{3})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日',text):
+        candidate=f'{int(match[1])+1911:04d}-{int(match[2]):02d}-{int(match[3]):02d}'
+        try:datetime.strptime(candidate,'%Y-%m-%d');date=candidate;break
+        except ValueError:continue
+    data={}
+    for cells in rows:
+        if not cells:continue
+        label=clean(cells[0]).replace(' ','')
+        nums=[]
+        for cell in cells[1:]:
+            raw=clean(cell)
+            if legacy.valid_number(raw):nums.append(float(raw))
+        if label and len(nums)>=5:data[label]=nums
+    mapping={
+      'TWSE_MARGIN_BALANCE_NTD':('融資金額(仟元)', '億元', lambda p:p[-1]/100000),
+      'TWSE_MARGIN_CHANGE_NTD':('融資金額(仟元)', '億元', lambda p:(p[-1]-p[-2])/100000),
+      'TWSE_MARGIN_BALANCE_UNITS':('融資(交易單位)', '張', lambda p:p[-1]),
+      'TWSE_SHORT_BALANCE':('融券(交易單位)', '張', lambda p:p[-1]),
+      'TWSE_SHORT_CHANGE':('融券(交易單位)', '張', lambda p:p[-1]-p[-2]),
+    }
+    if metric not in mapping:raise ValueError(f'unsupported TWSE credit metric: {metric}')
+    label,unit,calculate=mapping[metric]
+    key=next((key for key in data if key.replace(' ','')==label.replace(' ','')),None)
+    if not date or key is None:raise ValueError(f'TWSE credit CSV missing date or {label}; sample={repr(rows[:8])[:1200]}')
+    value=calculate(data[key])
+    if not math.isfinite(value):raise ValueError(f'TWSE credit CSV produced nonfinite {metric}')
+    return {'history':[{'date':date,'value':value}],'date':date,'value':value,'unit':unit,
+        'provider':'臺灣證券交易所｜信用交易統計（MI_MARGN）官方 CSV',
+        'source':url,'method':f'{label} 欄位；{unit}；日增減以今日餘額減前日餘額計算。'}
+
 def main():
     old=json.loads(OUT.read_text()) if OUT.exists() else {'series':{}}
     if not isinstance(old,dict) or not isinstance(old.get('series'),dict):raise ValueError('Invalid prior snapshot')
@@ -233,7 +277,8 @@ def main():
         return fred_csv(sid)
     tasks += [(sid,days,lambda sid=sid:additional_source(sid)) for sid,days in MORE_SPECS]
     tasks += [('TWSE_TAIEX',5,lambda:twse_open_data_metric('TWSE_TAIEX')),
-              ('TWSE_TOTAL_TRADE_VALUE',5,lambda:twse_open_data_metric('TWSE_TOTAL_TRADE_VALUE'))]
+              ('TWSE_TOTAL_TRADE_VALUE',5,lambda:twse_open_data_metric('TWSE_TOTAL_TRADE_VALUE')),
+              ('TWSE_MARGIN_BALANCE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_NTD'))]
     failed=None
     for sid,days,fetcher in tasks:
         try:
