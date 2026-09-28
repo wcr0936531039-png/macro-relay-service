@@ -345,6 +345,72 @@ def twse_market_breadth(reference_date):
         'provider':'臺灣證券交易所｜政府資料開放平台 STOCK_DAY_ALL CSV',
         'source':url,'method':f'上市證券上漲占比 = 上漲 {advances} ÷（上漲 {advances} + 下跌 {declines}）× 100%；平盤 {unchanged} 家不放入分母。交易日與同日官方 FMTQIK 核對。'}
 
+def twse_sector_metric(metric,reference_date):
+    """Read a TWSE official sector-index close and require the TAIEX date."""
+    labels={'TWSE_ELECTRONIC':'電子工業類指數','TWSE_SEMICONDUCTOR':'半導體類指數',
+            'TWSE_FINANCIAL':'金融保險類指數','TWSE_SHIPPING':'航運類指數','TWSE_STEEL':'鋼鐵類指數'}
+    if metric not in labels:raise ValueError(f'unsupported TWSE sector metric: {metric}')
+    url='https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX'
+    request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'application/json'})
+    with urlopen(request,timeout=25) as response:
+        content_type=response.headers.get('Content-Type','').lower();body=response.read(2_000_001)
+    if len(body)>2_000_000:raise ValueError('TWSE sector response too large')
+    if 'json' not in content_type:raise ValueError(f'TWSE sector expected JSON; got {content_type or "unknown content type"}')
+    payload=json.loads(body.decode('utf-8-sig'))
+    if not isinstance(payload,list):raise ValueError('TWSE sector response is not a JSON list')
+    target=labels[metric]
+    for item in payload:
+        if not isinstance(item,dict) or item.get('指數')!=target:continue
+        date=legacy.parse_roc_date(item.get('日期'))
+        raw=str(item.get('收盤指數','')).replace(',','').strip()
+        if date!=reference_date:raise ValueError(f'TWSE {target} date {date or "missing"} does not match TAIEX {reference_date}')
+        if not legacy.valid_number(raw):raise ValueError(f'TWSE {target} has no numeric close')
+        value=float(raw)
+        if value<=0:raise ValueError(f'TWSE {target} close is not positive')
+        return {'history':[{'date':date,'value':value}],'date':date,'value':value,'unit':'點',
+            'provider':f'臺灣證券交易所｜{target} 官方日指數','source':url,
+            'method':f'TWSE MI_INDEX 官方日指數收盤值；觀測日 {date}，與加權指數同日。'}
+    raise ValueError(f'TWSE MI_INDEX has no {target} row')
+
+def twse_daytrade_metric(reference_date):
+    """Read the TWSE TWTB4U market turnover share for an already verified session."""
+    compact=reference_date.replace('-','')
+    url=f'https://www.twse.com.tw/exchangeReport/TWTB4U?response=json&date={compact}&selectType=All'
+    request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'application/json','Referer':'https://www.twse.com.tw/zh/trading/day-trading.html'})
+    with urlopen(request,timeout=25) as response:
+        content_type=response.headers.get('Content-Type','').lower();body=response.read(2_000_001)
+    if len(body)>2_000_000:raise ValueError('TWSE TWTB4U response too large')
+    if 'json' not in content_type:raise ValueError(f'TWSE TWTB4U expected JSON; got {content_type or "unknown content type"}')
+    payload=json.loads(body.decode('utf-8-sig'))
+    if not isinstance(payload,dict) or (payload.get('stat') and payload.get('stat')!='OK'):
+        raise ValueError(f'TWSE TWTB4U status: {payload.get("stat") if isinstance(payload,dict) else "invalid JSON object"}')
+    tables=payload.get('tables') if isinstance(payload.get('tables'),list) else []
+    table=next((t for t in tables if isinstance(t,dict) and isinstance(t.get('fields'),list)
+                and any('當日沖銷交易總成交股數占市場比重' in str(field) for field in t['fields'])),None)
+    fields=table.get('fields') if table else payload.get('fields')
+    records=table.get('data') if table else payload.get('data')
+    if not isinstance(fields,list) or not isinstance(records,list) or not records:
+        raise ValueError('TWSE TWTB4U summary table/fields/data missing')
+    record=records[0]
+    if isinstance(record,list):record=dict(zip(map(str,fields),record))
+    if not isinstance(record,dict):raise ValueError('TWSE TWTB4U summary row format mismatch')
+    def value_for(fragment):
+        key=next((str(k) for k in record if fragment in str(k)),None)
+        if key is None:return None
+        raw=str(record[key]).replace(',','').replace('%','').strip()
+        return float(raw) if legacy.valid_number(raw) else None
+    share=value_for('當日沖銷交易總成交股數占市場比重')
+    day_shares=value_for('當日沖銷交易總成交股數')
+    if share is None or not 0<=share<=100:raise ValueError('TWSE TWTB4U day-trade market share invalid')
+    if day_shares is None or day_shares<=0:raise ValueError('TWSE TWTB4U day-trade share volume invalid')
+    observed=payload.get('date')
+    if observed:
+        parsed=legacy.parse_roc_date(observed)
+        if parsed and parsed!=reference_date:raise ValueError(f'TWSE TWTB4U date mismatch: {parsed} vs {reference_date}')
+    return {'history':[{'date':reference_date,'value':share}],'date':reference_date,'value':share,'unit':'%',
+        'dayTradeShares':day_shares,'provider':'臺灣證券交易所｜TWTB4U 官方當沖統計','source':url,
+        'method':f'TWTB4U 官方當沖成交量占市場比重 {share:.2f}%；當沖成交股數 {day_shares:.0f}；觀測日 {reference_date}。'}
+
 def main():
     old=json.loads(OUT.read_text()) if OUT.exists() else {'series':{}}
     if not isinstance(old,dict) or not isinstance(old.get('series'),dict):raise ValueError('Invalid prior snapshot')
@@ -369,6 +435,12 @@ def main():
     tasks += [('TWSE_TAIEX',5,lambda:twse_open_data_metric('TWSE_TAIEX')),
               ('TWSE_TOTAL_TRADE_VALUE',5,lambda:twse_open_data_metric('TWSE_TOTAL_TRADE_VALUE')),
               ('TWSE_BREADTH',5,lambda:twse_market_breadth(current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_ELECTRONIC',5,lambda:twse_sector_metric('TWSE_ELECTRONIC',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_SEMICONDUCTOR',5,lambda:twse_sector_metric('TWSE_SEMICONDUCTOR',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_FINANCIAL',5,lambda:twse_sector_metric('TWSE_FINANCIAL',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_SHIPPING',5,lambda:twse_sector_metric('TWSE_SHIPPING',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_STEEL',5,lambda:twse_sector_metric('TWSE_STEEL',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_DAYTRADE',5,lambda:twse_daytrade_metric(current['TWSE_TAIEX']['history'][-1]['date'])),
               ('TWSE_MARGIN_BALANCE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_NTD',current['TWSE_TAIEX']['history'][-1]['date'])),
               ('TWSE_MARGIN_CHANGE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_CHANGE_NTD',current['TWSE_TAIEX']['history'][-1]['date'])),
               ('TWSE_MARGIN_BALANCE_UNITS',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_UNITS',current['TWSE_TAIEX']['history'][-1]['date'])),
