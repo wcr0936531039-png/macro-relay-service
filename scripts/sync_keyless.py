@@ -17,7 +17,7 @@ MORE_SPECS = [
  ('CPILFESL',95),('PCEPILFE',95),('BAMLH0A0HYM2',7),('BAMLC0A0CM',7),('IORB',7),
  ('STLFSI4',14),('ICSA',14),('CCSA',21),('IC4WSA',14),('INDPRO',95),('RRSFS',95),
  ('DTB3',7),('DGS10',7),('DGS30',7),('T10Y3M',7),('VIXCLS',7),('DEXJPUS',7),
- ('WALCL',14),('WCESTUS1',14),('NOCDFSA066MSFRBPHI',45)
+ ('WALCL',14),('WCESTUS1',14),('NOCDFSA066MSFRBPHI',45),('DRTSCILM',120)
 ]
 OUT=Path('data/keyless_snapshot.json')
 NDC_OPEN_DATA_ZIP=('https://ws.ndc.gov.tw/Download.ashx?icon=.zip&n=5pmv5rCj5oyH5qiZ5Y%2BK54eI6JmfLnppcA%3D%3D'
@@ -140,6 +140,31 @@ def ecb_usd_jpy_cross():
         'provider':'歐洲中央銀行 ECB｜USD/EUR 與 JPY/EUR 參考匯率同日交叉換算',
         'source':jpy_url+' | '+usd_url,
         'method':'ECB 同日 JPY/EUR ÷ USD/EUR；這是官方參考匯率交叉換算，不是即時外匯成交價。'}
+
+def yahoo_chart_metric(sid):
+    """Fetch a keyless Yahoo chart series without changing its market definition."""
+    symbols={'ICE_DXY':('DX-Y.NYB','指數點'),'XAU':('XAUUSD=X','美元/金衡盎司')}
+    if sid not in symbols:raise ValueError(f'unsupported Yahoo chart metric: {sid}')
+    symbol,unit=symbols[sid]
+    url=f'https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=1mo'
+    request=Request(url,headers={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/128 Safari/537.36','Accept':'application/json'})
+    with urlopen(request,timeout=25) as response:
+        content_type=response.headers.get('Content-Type','').lower();body=response.read(500_001)
+    if len(body)>500_000:raise ValueError('Yahoo chart response too large')
+    if 'json' not in content_type:raise ValueError(f'Yahoo chart expected JSON; got {content_type or "unknown content type"}')
+    payload=json.loads(body.decode('utf-8-sig'));result=(payload.get('chart') or {}).get('result')
+    if not isinstance(result,list) or not result:raise ValueError(f'Yahoo chart has no {symbol} observations')
+    item=result[0];timestamps=item.get('timestamp') or [];quotes=((item.get('indicators') or {}).get('quote') or [{}])[0];closes=quotes.get('close') or []
+    points=[]
+    for timestamp,value in zip(timestamps,closes):
+        if not isinstance(timestamp,(int,float)) or not isinstance(value,(int,float)) or not math.isfinite(value) or value<=0:continue
+        date=datetime.fromtimestamp(timestamp,timezone.utc).date().isoformat();points.append({'date':date,'value':float(value)})
+    points=sorted({p['date']:p for p in points}.values(),key=lambda p:p['date'])
+    if not points:raise ValueError(f'Yahoo chart returned no numeric close for {symbol}')
+    latest=points[-1]
+    return {'history':points[-20:],'date':latest['date'],'value':latest['value'],'unit':unit,
+        'provider':f'Yahoo Finance｜{symbol} 日資料（延遲行情）','source':url,
+        'method':'Yahoo Finance chart 最後一筆有效日收盤；觀測日為原始 Unix timestamp 的 UTC 日期，並依序列時效門檻驗證。'}
 
 def eia_commercial_crude_stocks():
     """Parse the public EIA history table; keep the dashboard's million-barrel unit."""
@@ -265,11 +290,18 @@ def main():
     def additional_source(sid):
         if sid=='DEXJPUS':return ecb_usd_jpy_cross()
         if sid=='WCESTUS1':return eia_commercial_crude_stocks()
+        if sid in ('ICE_DXY','XAU'):return yahoo_chart_metric(sid)
         return fred_csv(sid)
     tasks += [(sid,days,lambda sid=sid:additional_source(sid)) for sid,days in MORE_SPECS]
     tasks += [('TWSE_TAIEX',5,lambda:twse_open_data_metric('TWSE_TAIEX')),
               ('TWSE_TOTAL_TRADE_VALUE',5,lambda:twse_open_data_metric('TWSE_TOTAL_TRADE_VALUE')),
-              ('TWSE_MARGIN_BALANCE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_NTD',current['TWSE_TAIEX']['history'][-1]['date']))]
+              ('TWSE_MARGIN_BALANCE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_NTD',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_MARGIN_CHANGE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_CHANGE_NTD',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_MARGIN_BALANCE_UNITS',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_UNITS',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_SHORT_BALANCE',5,lambda:twse_credit_metric('TWSE_SHORT_BALANCE',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_SHORT_CHANGE',5,lambda:twse_credit_metric('TWSE_SHORT_CHANGE',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('ICE_DXY',3,lambda:yahoo_chart_metric('ICE_DXY')),
+              ('XAU',3,lambda:yahoo_chart_metric('XAU'))]
     failed=None
     for sid,days,fetcher in tasks:
         try:
