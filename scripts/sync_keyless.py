@@ -166,9 +166,13 @@ def eia_commercial_crude_stocks():
         'provider':'U.S. Energy Information Administration｜WCESTUS1',
         'source':url,'method':'EIA 官方週資料表；原始千桶除以 1,000 轉為百萬桶，不含 SPR。'}
 
-def twse_taiex_open_data():
-    """Read the exchange's no-key daily market-statistics CSV published as open data."""
+def twse_open_data_metric(metric):
+    """Read one validated field from the exchange's no-key daily market CSV."""
     url='https://www.twse.com.tw/exchangeReport/FMTQIK?response=open_data'
+    fields={'TWSE_TAIEX':('發行量加權股價指數','點',1.0),
+            'TWSE_TOTAL_TRADE_VALUE':('成交金額','億元',100_000_000.0)}
+    if metric not in fields:raise ValueError(f'unsupported TWSE market metric: {metric}')
+    token,unit,divisor=fields[metric]
     request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'text/csv,application/csv;q=0.9,*/*;q=0.8'})
     with urlopen(request,timeout=25) as response:
         content_type=response.headers.get('Content-Type','').lower()
@@ -184,19 +188,19 @@ def twse_taiex_open_data():
     for i,cells in enumerate(rows):
         normalized=[clean(cell) for cell in cells]
         date_col=next((j for j,v in enumerate(normalized) if v in ('日期','資料日期','Date')),None)
-        index_col=next((j for j,v in enumerate(normalized) if '發行量加權股價指數' in v),None)
-        if date_col is not None and index_col is not None:
+        value_col=next((j for j,v in enumerate(normalized) if token in v),None)
+        if date_col is not None and value_col is not None:
             header_index=i;break
-    if header_index is None:raise ValueError('TWSE FMTQIK CSV lacks date and TAIEX columns')
+    if header_index is None:raise ValueError(f'TWSE FMTQIK CSV lacks date and {token} columns')
     points=[]
     for cells in rows[header_index+1:]:
-        if max(date_col,index_col)>=len(cells):continue
-        raw_date=clean(cells[date_col]);raw_value=clean(cells[index_col])
+        if max(date_col,value_col)>=len(cells):continue
+        raw_date=clean(cells[date_col]);raw_value=clean(cells[value_col])
         if not legacy.valid_number(raw_value):continue
         date=legacy.parse_roc_date(raw_date)
         if not date:continue
         datetime.strptime(date,'%Y-%m-%d')
-        value=float(raw_value)
+        value=float(raw_value)/divisor
         if value<=0:continue
         points.append({'date':date,'value':value})
     points.sort(key=lambda point:point['date'])
@@ -204,7 +208,7 @@ def twse_taiex_open_data():
         latest=points[-1]
         return {'history':points[-20:],'date':latest['date'],'value':latest['value'],'unit':'點',
             'provider':'臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV',
-            'source':url,'method':'TWSE 官方每日市場統計原始 CSV；直接讀取發行量加權股價指數。'}
+            'source':url,'method':f'TWSE 官方每日市場統計原始 CSV；直接讀取「{token}」欄位，成交金額以新臺幣元換算億元。'}
     sample=repr(rows[:6])[:1000]
     raise ValueError(f'TWSE FMTQIK CSV has no valid TAIEX observation; sample={sample}')
 
@@ -228,7 +232,8 @@ def main():
         if sid=='WCESTUS1':return eia_commercial_crude_stocks()
         return fred_csv(sid)
     tasks += [(sid,days,lambda sid=sid:additional_source(sid)) for sid,days in MORE_SPECS]
-    tasks += [('TWSE_TAIEX',5,twse_taiex_open_data)]
+    tasks += [('TWSE_TAIEX',5,lambda:twse_open_data_metric('TWSE_TAIEX')),
+              ('TWSE_TOTAL_TRADE_VALUE',5,lambda:twse_open_data_metric('TWSE_TOTAL_TRADE_VALUE'))]
     failed=None
     for sid,days,fetcher in tasks:
         try:
