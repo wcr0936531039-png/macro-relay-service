@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-27T18:24:03.726913+00:00",
+  "generated_at": "2026-09-28T05:26:58.017972+00:00",
   "series": {
     "SOFR": {
       "history": [
@@ -85,10 +85,10 @@
           "value": 3.88
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SOFR&cosd=2024-12-16",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SOFR&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜SOFR",
       "status": "ok",
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 7
     },
     "RRPONTSYD": {
@@ -174,10 +174,10 @@
           "value": 0.576
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RRPONTSYD&cosd=2024-12-16",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RRPONTSYD&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜RRPONTSYD",
       "status": "ok",
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 8
     },
     "RPONTSYD": {
@@ -263,10 +263,10 @@
           "value": 0.0
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RPONTSYD&cosd=2024-12-16",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RPONTSYD&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜RPONTSYD",
       "status": "ok",
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 8
     },
     "UNRATE": {
@@ -352,10 +352,10 @@
           "value": 4.1
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE&cosd=2024-12-16",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜UNRATE",
       "status": "ok",
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 85
     },
     "SAHMREALTIME": {
@@ -441,10 +441,10 @@
           "value": -0.07
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SAHMREALTIME&cosd=2024-12-16",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SAHMREALTIME&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜SAHMREALTIME",
       "status": "ok",
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 85
     },
     "T10Y2Y": {
@@ -530,10 +530,10 @@
           "value": 0.36
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y2Y&cosd=2024-12-16",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y2Y&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜T10Y2Y",
       "status": "ok",
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 7
     },
     "DFII10": {
@@ -619,10 +619,10 @@
           "value": 2.85
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10&cosd=2024-12-16",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜DFII10",
       "status": "ok",
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 7
     },
     "T5YIE": {
@@ -708,10 +708,10 @@
           "value": 2.34
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T5YIE&cosd=2024-12-16",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T5YIE&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜T5YIE",
       "status": "ok",
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 7
     },
     "RSAFS": {
@@ -797,10 +797,10 @@
           "value": 773947.0
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RSAFS&cosd=2024-12-16",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RSAFS&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜RSAFS",
       "status": "ok",
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 85
     },
     "PAYEMS": {
@@ -886,10 +886,10 @@
           "value": 159075.0
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS&cosd=2024-12-16",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS&cosd=2024-12-17",
       "provider": "FRED 官方公開 CSV｜PAYEMS",
       "status": "ok",
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 85
     },
     "TW_EXPORT_ORDERS": {
@@ -906,7 +906,7 @@
           "value": 71.35
         }
       ],
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 85
     },
     "TPEX_BREADTH": {
@@ -925,16 +925,31 @@
           "value": 50.585175552665795
         }
       ],
-      "fetched_at": "2026-09-27T18:24:03.726913+00:00",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
       "max_age_days": 5
+    },
+    "TW_NDC_SIGNAL": {
+      "history": [
+        {
+          "date": "2026-07-01",
+          "value": 41
+        }
+      ],
+      "date": "2026-07-01",
+      "value": 41,
+      "unit": "分",
+      "light": "紅燈",
+      "provider": "國家發展委員會｜政府資料開放平台「景氣指標及燈號」",
+      "source": "https://data.gov.tw/dataset/6099",
+      "method": "國發會原始月資料 ZIP，欄位「景氣對策信號綜合分數」及燈號；檔案 景氣指標與燈號.csv",
+      "status": "ok",
+      "fetched_at": "2026-09-28T05:26:58.017972+00:00",
+      "max_age_days": 120
     }
   },
-  "blocked_at": {
-    "id": "TW_NDC_SIGNAL",
-    "reason": "NDC JSON: HTTP Error 419: <none>; 官方工作階段: HTTP Error 403: Forbidden; 官方新聞稿備援: HTTP Error 403: Forbidden"
-  },
+  "blocked_at": null,
   "coverage": {
-    "usable": 12,
+    "usable": 13,
     "expected": 13
   }
 }
