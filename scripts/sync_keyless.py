@@ -166,6 +166,35 @@ def eia_commercial_crude_stocks():
         'provider':'U.S. Energy Information Administration｜WCESTUS1',
         'source':url,'method':'EIA 官方週資料表；原始千桶除以 1,000 轉為百萬桶，不含 SPR。'}
 
+def twse_taiex_open_data():
+    """Read the exchange's no-key daily market-statistics CSV published as open data."""
+    url='https://www.twse.com.tw/exchangeReport/FMTQIK?response=open_data'
+    text=legacy.http_text(url,headers={'Accept':'text/csv,application/csv;q=0.9,*/*;q=0.8'})
+    rows=list(csv.reader(io.StringIO(text)))
+    def clean(value):return str(value or '').strip().lstrip('\ufeff').replace(',','')
+    header_index=None;date_col=index_col=None
+    for i,cells in enumerate(rows):
+        normalized=[clean(cell) for cell in cells]
+        date_col=next((j for j,v in enumerate(normalized) if v in ('日期','資料日期','Date')),None)
+        index_col=next((j for j,v in enumerate(normalized) if '發行量加權股價指數' in v),None)
+        if date_col is not None and index_col is not None:
+            header_index=i;break
+    if header_index is None:raise ValueError('TWSE FMTQIK CSV lacks date and TAIEX columns')
+    for cells in rows[header_index+1:]:
+        if max(date_col,index_col)>=len(cells):continue
+        raw_date=clean(cells[date_col]);raw_value=clean(cells[index_col])
+        if not legacy.valid_number(raw_value):continue
+        match=__import__('re').search(r'(\d{3,4})[/-](\d{1,2})[/-](\d{1,2})',raw_date)
+        if not match:continue
+        year,month,day=map(int,match.groups());year=year+1911 if year<1000 else year
+        date=f'{year:04d}-{month:02d}-{day:02d}';datetime.strptime(date,'%Y-%m-%d')
+        value=float(raw_value)
+        if value<=0:continue
+        return {'history':[{'date':date,'value':value}],'date':date,'value':value,'unit':'點',
+            'provider':'臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV',
+            'source':url,'method':'TWSE 官方每日市場統計原始 CSV；直接讀取發行量加權股價指數。'}
+    raise ValueError('TWSE FMTQIK CSV has no valid TAIEX observation')
+
 def main():
     old=json.loads(OUT.read_text()) if OUT.exists() else {'series':{}}
     if not isinstance(old,dict) or not isinstance(old.get('series'),dict):raise ValueError('Invalid prior snapshot')
@@ -186,6 +215,7 @@ def main():
         if sid=='WCESTUS1':return eia_commercial_crude_stocks()
         return fred_csv(sid)
     tasks += [(sid,days,lambda sid=sid:additional_source(sid)) for sid,days in MORE_SPECS]
+    tasks += [('TWSE_TAIEX',5,twse_taiex_open_data)]
     failed=None
     for sid,days,fetcher in tasks:
         try:
