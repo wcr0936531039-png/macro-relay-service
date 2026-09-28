@@ -113,6 +113,34 @@ def ndc_open_data_metric():
         'provider':'國家發展委員會｜政府資料開放平台「景氣指標及燈號」',
         'source':'https://data.gov.tw/dataset/6099','method':f'國發會原始月資料 ZIP，欄位「景氣對策信號綜合分數」及燈號；檔案 {name}'}
 
+def ecb_reference_rate(currency):
+    url=f'https://data-api.ecb.europa.eu/service/data/EXR/D.{currency}.EUR.SP00.A?lastNObservations=25&format=csvdata'
+    with urlopen(Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'text/csv'}),timeout=25) as response:
+        raw=response.read(500_001)
+    if len(raw)>500_000:raise ValueError('ECB response too large')
+    reader=csv.DictReader(io.StringIO(raw.decode('utf-8-sig')))
+    rows={}
+    for row in reader:
+        date=row.get('TIME_PERIOD','').strip();value=row.get('OBS_VALUE','').strip()
+        if row.get('OBS_STATUS','A') not in ('A',''):continue
+        if not date or not legacy.valid_number(value):continue
+        datetime.strptime(date,'%Y-%m-%d');rows[date]=float(value)
+    if not rows:raise ValueError(f'ECB {currency}/EUR reference-rate table has no valid observations')
+    return rows,url
+
+def ecb_usd_jpy_cross():
+    """USD/JPY reference cross from ECB JPY/EUR divided by USD/EUR, same date only."""
+    jpy,jpy_url=ecb_reference_rate('JPY');usd,usd_url=ecb_reference_rate('USD')
+    dates=sorted(set(jpy)&set(usd))
+    if not dates:raise ValueError('ECB USD and JPY reference observations do not share a date')
+    history=[{'date':date,'value':jpy[date]/usd[date]} for date in dates if usd[date]>0]
+    if not history:raise ValueError('ECB USD/EUR denominator is not positive')
+    latest=history[-1]
+    return {'history':history[-20:],'date':latest['date'],'value':latest['value'],'unit':'JPY per USD',
+        'provider':'歐洲中央銀行 ECB｜USD/EUR 與 JPY/EUR 參考匯率同日交叉換算',
+        'source':jpy_url+' | '+usd_url,
+        'method':'ECB 同日 JPY/EUR ÷ USD/EUR；這是官方參考匯率交叉換算，不是即時外匯成交價。'}
+
 def main():
     old=json.loads(OUT.read_text()) if OUT.exists() else {'series':{}}
     if not isinstance(old,dict) or not isinstance(old.get('series'),dict):raise ValueError('Invalid prior snapshot')
@@ -128,7 +156,7 @@ def main():
     tasks += [('TW_EXPORT_ORDERS',85,lambda:legacy.taiwan_export_metric(legacy.http_text(legacy.MOEA_URL))),
               ('TPEX_BREADTH',5,lambda:legacy.tpex_metric(legacy.http_json(legacy.TPEX_URL))),
               ('TW_NDC_SIGNAL',120,get_ndc)]
-    tasks += [(sid,days,lambda sid=sid:fred_csv(sid)) for sid,days in MORE_SPECS]
+    tasks += [(sid,days,(lambda:ecb_usd_jpy_cross()) if sid=='DEXJPUS' else (lambda sid=sid:fred_csv(sid))) for sid,days in MORE_SPECS]
     failed=None
     for sid,days,fetcher in tasks:
         try:
