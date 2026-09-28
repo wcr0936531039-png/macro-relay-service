@@ -9,6 +9,16 @@ import sync_macro as legacy
 # Match the dashboard's original series, units and formulas; never substitute proxies.
 SPECS = [('SOFR',7),('RRPONTSYD',8),('RPONTSYD',8),('UNRATE',85),('SAHMREALTIME',85),
  ('T10Y2Y',7),('DFII10',7),('T5YIE',7),('RSAFS',85),('PAYEMS',85)]
+# Additional indicators already represented in the dashboard. Every series is
+# fetched serially after the initial Taiwan/U.S. acceptance set below.
+MORE_SPECS = [
+ ('SP500',7),('DJIA',7),('NASDAQCOM',7),
+ ('DCOILWTICO',7),('DCOILBRENTEU',7),('DHHNGSP',7),('T10YIE',7),
+ ('CPILFESL',95),('PCEPILFE',95),('BAMLH0A0HYM2',7),('BAMLC0A0CM',7),('IORB',7),
+ ('STLFSI4',14),('ICSA',14),('CCSA',21),('IC4WSA',14),('INDPRO',95),('RRSFS',95),
+ ('DTB3',7),('DGS10',7),('DGS30',7),('T10Y3M',7),('VIXCLS',7),('DEXJPUS',7),
+ ('WALCL',14),('WCESTUS1',14),('NOCDFSA066MSFRBPHI',45)
+]
 OUT=Path('data/keyless_snapshot.json')
 NDC_OPEN_DATA_ZIP=('https://ws.ndc.gov.tw/Download.ashx?icon=.zip&n=5pmv5rCj5oyH5qiZ5Y%2BK54eI6JmfLnppcA%3D%3D'
  '&u=LzAwMS9hZG1pbmlzdHJhdG9yLzEwL3JlbGZpbGUvNTc4MS82MzkyL2VhMjM1YmQ5LWQwNTItNGE2OS1hYmZjLWQ1Yzc4NWQzZDBlMi56aXA%3D')
@@ -118,6 +128,7 @@ def main():
     tasks += [('TW_EXPORT_ORDERS',85,lambda:legacy.taiwan_export_metric(legacy.http_text(legacy.MOEA_URL))),
               ('TPEX_BREADTH',5,lambda:legacy.tpex_metric(legacy.http_json(legacy.TPEX_URL))),
               ('TW_NDC_SIGNAL',120,get_ndc)]
+    tasks += [(sid,days,lambda sid=sid:fred_csv(sid)) for sid,days in MORE_SPECS]
     failed=None
     for sid,days,fetcher in tasks:
         try:
