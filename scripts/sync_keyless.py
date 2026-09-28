@@ -157,7 +157,7 @@ def marketwatch_dxy_metric():
     if final_url.rstrip('/')!='https://www.marketwatch.com/investing/index/dxy':
         raise ValueError(f'MarketWatch redirected to unexpected URL: {final_url}')
     page=html_lib.unescape(body.decode('utf-8','replace'))
-    blocks=__import__('re').findall(r'<script\\b[^>]*type=["\\']application/ld\\+json["\\'][^>]*>(.*?)</script>',page,__import__('re').I|__import__('re').S)
+    blocks=__import__('re').findall(r"""<script\b[^>]*type=["']application/ld\+json["'][^>]*>(.*?)</script>""",page,__import__('re').I|__import__('re').S)
     quote=None
     for block in blocks:
         try:item=json.loads(block)
