@@ -17,7 +17,7 @@ MORE_SPECS = [
  ('CPILFESL',95),('PCEPILFE',95),('BAMLH0A0HYM2',7),('BAMLC0A0CM',7),('IORB',7),
  ('STLFSI4',14),('ICSA',14),('CCSA',21),('IC4WSA',14),('INDPRO',95),('RRSFS',95),
  ('DTB3',7),('DGS10',7),('DGS30',7),('T10Y3M',7),('VIXCLS',7),('DEXJPUS',7),
- ('WALCL',14),('WCESTUS1',14),('NOCDFSA066MSFRBPHI',45),('DRTSCILM',120)
+ ('WALCL',14),('WCESTUS1',14),('NOCDFSA066MSFRBPHI',45),('DRTSCILM',120),('DTWEXBGS',10)
 ]
 OUT=Path('data/keyless_snapshot.json')
 NDC_OPEN_DATA_ZIP=('https://ws.ndc.gov.tw/Download.ashx?icon=.zip&n=5pmv5rCj5oyH5qiZ5Y%2BK54eI6JmfLnppcA%3D%3D'
@@ -175,6 +175,30 @@ def yahoo_chart_metric(sid):
         'provider':f'Yahoo Finance｜{symbol} ICE 日資料（延遲行情）' if sid=='ICE_DXY' else f'Yahoo Finance｜{symbol} 日資料（延遲行情）','source':url,
         'method':'Yahoo Finance chart 最後一筆有效日收盤；觀測日為原始 Unix timestamp 的 UTC 日期，並依序列時效門檻驗證。'}
 
+def gold_api_metric():
+    """Fetch the public USD/XAU spot quote; keep provider and timestamp explicit."""
+    url='https://api.gold-api.com/price/XAU'
+    request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'application/json'})
+    with urlopen(request,timeout=25) as response:
+        content_type=response.headers.get('Content-Type','').lower();body=response.read(200_001)
+    if len(body)>200_000:raise ValueError('Gold API response too large')
+    if 'json' not in content_type:raise ValueError(f'Gold API expected JSON; got {content_type or "unknown content type"}')
+    data=json.loads(body.decode('utf-8-sig'))
+    if data.get('symbol')!='XAU' or (data.get('currency') and data.get('currency')!='USD'):
+        raise ValueError('Gold API symbol/currency mismatch; expected XAU quoted in USD')
+    value=data.get('price')
+    if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or value<=0:
+        raise ValueError('Gold API price is not a positive numeric value')
+    updated=data.get('updatedAt') or data.get('updated_at') or data.get('timestamp')
+    if not isinstance(updated,str):raise ValueError('Gold API has no ISO timestamp')
+    try:stamp=datetime.fromisoformat(updated.replace('Z','+00:00'))
+    except ValueError as error:raise ValueError('Gold API timestamp is not ISO format') from error
+    if stamp.tzinfo is None:raise ValueError('Gold API timestamp has no timezone')
+    date=stamp.astimezone(timezone.utc).date().isoformat()
+    return {'history':[{'date':date,'value':float(value)}],'date':date,'value':float(value),'unit':'美元/金衡盎司',
+        'provider':'Gold API｜XAU/USD 現貨參考價（第三方；非官方定盤價）','source':url,
+        'method':f'來源回傳 XAU/USD 報價 {value}，更新時間 {stamp.isoformat()}；不是 LBMA 定盤價或即時交易所成交價。'}
+
 def eia_commercial_crude_stocks():
     """Parse the public EIA history table; keep the dashboard's million-barrel unit."""
     url='https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=W&n=PET&s=WCESTUS1'
@@ -240,7 +264,7 @@ def twse_open_data_metric(metric):
     points.sort(key=lambda point:point['date'])
     if points:
         latest=points[-1]
-        return {'history':points[-20:],'date':latest['date'],'value':latest['value'],'unit':'點',
+        return {'history':points[-20:],'date':latest['date'],'value':latest['value'],'unit':unit,
             'provider':'臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV',
             'source':url,'method':f'TWSE 官方每日市場統計原始 CSV；直接讀取「{token}」欄位，成交金額以新臺幣元換算億元。'}
     sample=repr(rows[:6])[:1000]
@@ -350,8 +374,8 @@ def main():
               ('TWSE_MARGIN_BALANCE_UNITS',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_UNITS',current['TWSE_TAIEX']['history'][-1]['date'])),
               ('TWSE_SHORT_BALANCE',5,lambda:twse_credit_metric('TWSE_SHORT_BALANCE',current['TWSE_TAIEX']['history'][-1]['date'])),
               ('TWSE_SHORT_CHANGE',5,lambda:twse_credit_metric('TWSE_SHORT_CHANGE',current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('ICE_DXY',3,lambda:yahoo_chart_metric('ICE_DXY')),
-              ('XAU',3,lambda:yahoo_chart_metric('XAU'))]
+              ('XAU',3,lambda:gold_api_metric()),
+              ('ICE_DXY',3,lambda:yahoo_chart_metric('ICE_DXY'))]
     failed=None
     for sid,days,fetcher in tasks:
         try:
