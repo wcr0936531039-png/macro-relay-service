@@ -169,7 +169,15 @@ def eia_commercial_crude_stocks():
 def twse_taiex_open_data():
     """Read the exchange's no-key daily market-statistics CSV published as open data."""
     url='https://www.twse.com.tw/exchangeReport/FMTQIK?response=open_data'
-    text=legacy.http_text(url,headers={'Accept':'text/csv,application/csv;q=0.9,*/*;q=0.8'})
+    request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'text/csv,application/csv;q=0.9,*/*;q=0.8'})
+    with urlopen(request,timeout=25) as response:
+        content_type=response.headers.get('Content-Type','').lower()
+        body=response.read(1_000_001)
+    if len(body)>1_000_000:raise ValueError('TWSE market CSV too large')
+    if 'csv' not in content_type:raise ValueError(f'TWSE expected CSV; got {content_type or "unknown content type"}')
+    try:text=body.decode('utf-8-sig')
+    except UnicodeDecodeError:text=body.decode('cp950')
+    if '<html' in text[:1000].lower():raise ValueError('TWSE returned HTML challenge, not CSV')
     rows=list(csv.reader(io.StringIO(text)))
     def clean(value):return str(value or '').strip().lstrip('\ufeff').replace(',','')
     header_index=None;date_col=index_col=None
