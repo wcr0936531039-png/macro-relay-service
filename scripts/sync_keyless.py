@@ -143,17 +143,26 @@ def ecb_usd_jpy_cross():
 
 def yahoo_chart_metric(sid):
     """Fetch a keyless Yahoo chart series without changing its market definition."""
-    symbols={'ICE_DXY':('DX-Y.NYB','指數點'),'XAU':('XAUUSD=X','美元/金衡盎司')}
+    symbols={'ICE_DXY':([('^NYICDX','query1.finance.yahoo.com'),('DX-Y.NYB','query2.finance.yahoo.com'),('^NYICDX','query2.finance.yahoo.com')],'指數點'),
+             'XAU':([('XAUUSD=X','query1.finance.yahoo.com'),('XAUUSD=X','query2.finance.yahoo.com')],'美元/金衡盎司')}
     if sid not in symbols:raise ValueError(f'unsupported Yahoo chart metric: {sid}')
-    symbol,unit=symbols[sid]
-    url=f'https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=1mo'
-    request=Request(url,headers={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/128 Safari/537.36','Accept':'application/json'})
-    with urlopen(request,timeout=25) as response:
-        content_type=response.headers.get('Content-Type','').lower();body=response.read(500_001)
-    if len(body)>500_000:raise ValueError('Yahoo chart response too large')
-    if 'json' not in content_type:raise ValueError(f'Yahoo chart expected JSON; got {content_type or "unknown content type"}')
-    payload=json.loads(body.decode('utf-8-sig'));result=(payload.get('chart') or {}).get('result')
-    if not isinstance(result,list) or not result:raise ValueError(f'Yahoo chart has no {symbol} observations')
+    candidates,unit=symbols[sid];failures=[];response_data=None;symbol=None;url=None
+    for symbol_candidate,host in candidates:
+        candidate_url=f'https://{host}/v8/finance/chart/{symbol_candidate}?interval=1d&range=1mo'
+        request=Request(candidate_url,headers={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/128 Safari/537.36','Accept':'application/json'})
+        try:
+            with urlopen(request,timeout=25) as response:
+                content_type=response.headers.get('Content-Type','').lower();body=response.read(500_001)
+            if len(body)>500_000:raise ValueError('Yahoo chart response too large')
+            if 'json' not in content_type:raise ValueError(f'Yahoo chart expected JSON; got {content_type or "unknown content type"}')
+            response_data=json.loads(body.decode('utf-8-sig'))
+            result=(response_data.get('chart') or {}).get('result')
+            if not isinstance(result,list) or not result:raise ValueError(f'Yahoo chart has no {symbol_candidate} observations')
+            symbol=symbol_candidate;url=candidate_url;break
+        except Exception as error:
+            failures.append(f'{host}/{symbol_candidate}: {error}')
+    if response_data is None:raise ValueError('All Yahoo no-key endpoints failed: '+'; '.join(failures))
+    result=(response_data.get('chart') or {}).get('result')
     item=result[0];timestamps=item.get('timestamp') or [];quotes=((item.get('indicators') or {}).get('quote') or [{}])[0];closes=quotes.get('close') or []
     points=[]
     for timestamp,value in zip(timestamps,closes):
@@ -163,7 +172,7 @@ def yahoo_chart_metric(sid):
     if not points:raise ValueError(f'Yahoo chart returned no numeric close for {symbol}')
     latest=points[-1]
     return {'history':points[-20:],'date':latest['date'],'value':latest['value'],'unit':unit,
-        'provider':f'Yahoo Finance｜{symbol} 日資料（延遲行情）','source':url,
+        'provider':f'Yahoo Finance｜{symbol} ICE 日資料（延遲行情）' if sid=='ICE_DXY' else f'Yahoo Finance｜{symbol} 日資料（延遲行情）','source':url,
         'method':'Yahoo Finance chart 最後一筆有效日收盤；觀測日為原始 Unix timestamp 的 UTC 日期，並依序列時效門檻驗證。'}
 
 def eia_commercial_crude_stocks():
@@ -272,6 +281,46 @@ def twse_credit_metric(metric,date):
         'provider':'臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面',
         'source':url,'method':f'{label} 欄位；{unit}；日增減以今日餘額減前日餘額計算。'}
 
+def twse_market_breadth(reference_date):
+    """Calculate TWSE-listed advance share from the official no-key daily stock CSV."""
+    url='https://www.twse.com.tw/exchangeReport/STOCK_DAY_ALL?response=open_data'
+    request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'text/csv,application/csv;q=0.9,*/*;q=0.8'})
+    with urlopen(request,timeout=25) as response:
+        content_type=response.headers.get('Content-Type','').lower();body=response.read(8_000_001)
+    if len(body)>8_000_000:raise ValueError('TWSE daily stock CSV too large')
+    if 'csv' not in content_type:raise ValueError(f'TWSE expected daily-stock CSV; got {content_type or "unknown content type"}')
+    try:text=body.decode('utf-8-sig')
+    except UnicodeDecodeError:text=body.decode('cp950')
+    if '<html' in text[:1000].lower():raise ValueError('TWSE returned HTML challenge, not CSV')
+    rows=list(csv.reader(io.StringIO(text)))
+    clean=lambda x:str(x or '').strip().lstrip('\ufeff')
+    header=None;date_col=change_col=None
+    for i,cells in enumerate(rows):
+        fields=[clean(x) for x in cells]
+        date_col=next((j for j,x in enumerate(fields) if x in ('Date','日期','資料日期')),None)
+        change_col=next((j for j,x in enumerate(fields) if x in ('Change','漲跌價差','漲跌')),None)
+        code_col=next((j for j,x in enumerate(fields) if x in ('Code','證券代號','股票代號')),None)
+        if date_col is not None and change_col is not None and code_col is not None:header=i;break
+    if header is None:raise ValueError(f'TWSE stock CSV lacks date/code/change columns; sample={repr(rows[:5])[:1000]}')
+    observations=[]
+    for cells in rows[header+1:]:
+        if max(date_col,change_col,code_col)>=len(cells):continue
+        code=clean(cells[code_col]);date=legacy.parse_roc_date(clean(cells[date_col]))
+        raw=clean(cells[change_col]).replace(',','').replace('＋','+').replace('－','-').replace('−','-')
+        if not code or not date:continue
+        if date!=reference_date:continue
+        try:value=float(raw.replace('+',''))
+        except ValueError:continue
+        if math.isfinite(value):observations.append(value)
+    if not observations:raise ValueError('TWSE stock CSV has no parseable rows for the official market date')
+    advances=sum(value>0 for value in observations);declines=sum(value<0 for value in observations);unchanged=sum(value==0 for value in observations);moving=advances+declines
+    if moving<100:raise ValueError(f'TWSE market breadth sample too small: {len(observations)} securities')
+    value=advances/moving*100
+    return {'history':[{'date':reference_date,'value':value}],'date':reference_date,'value':value,'unit':'%',
+        'advancers':advances,'decliners':declines,'unchanged':unchanged,'included':len(observations),
+        'provider':'臺灣證券交易所｜政府資料開放平台 STOCK_DAY_ALL CSV',
+        'source':url,'method':f'上市證券上漲占比 = 上漲 {advances} ÷（上漲 {advances} + 下跌 {declines}）× 100%；平盤 {unchanged} 家不放入分母。交易日與同日官方 FMTQIK 核對。'}
+
 def main():
     old=json.loads(OUT.read_text()) if OUT.exists() else {'series':{}}
     if not isinstance(old,dict) or not isinstance(old.get('series'),dict):raise ValueError('Invalid prior snapshot')
@@ -295,6 +344,7 @@ def main():
     tasks += [(sid,days,lambda sid=sid:additional_source(sid)) for sid,days in MORE_SPECS]
     tasks += [('TWSE_TAIEX',5,lambda:twse_open_data_metric('TWSE_TAIEX')),
               ('TWSE_TOTAL_TRADE_VALUE',5,lambda:twse_open_data_metric('TWSE_TOTAL_TRADE_VALUE')),
+              ('TWSE_BREADTH',5,lambda:twse_market_breadth(current['TWSE_TAIEX']['history'][-1]['date'])),
               ('TWSE_MARGIN_BALANCE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_NTD',current['TWSE_TAIEX']['history'][-1]['date'])),
               ('TWSE_MARGIN_CHANGE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_CHANGE_NTD',current['TWSE_TAIEX']['history'][-1]['date'])),
               ('TWSE_MARGIN_BALANCE_UNITS',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_UNITS',current['TWSE_TAIEX']['history'][-1]['date'])),
