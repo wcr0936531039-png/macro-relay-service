@@ -154,7 +154,9 @@ def google_finance_dxy_metric():
         body=response.read(1_800_001);final_url=response.geturl()
     if status!=200 or 'html' not in content_type or len(body)>1_800_000:
         raise ValueError(f'Google Finance DXY page response invalid: HTTP {status}, {content_type}, {len(body)} bytes')
-    if final_url.split('?')[0].rstrip('/')!='https://www.google.com/finance/quote/NYICDX:INDEXNYSEGIS':
+    final_page=final_url.split('?')[0].rstrip('/')
+    allowed_pages={'https://www.google.com/finance/quote/NYICDX:INDEXNYSEGIS','https://www.google.com/finance/beta/quote/NYICDX:INDEXNYSEGIS'}
+    if final_page not in allowed_pages:
         raise ValueError(f'Google Finance redirected to unexpected URL: {final_url}')
     page=html_lib.unescape(body.decode('utf-8','replace'))
     canonical=__import__('re').search(r'<link rel="canonical" href="([^"]+)"',page,__import__('re').I)
