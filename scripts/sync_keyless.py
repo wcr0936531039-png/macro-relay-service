@@ -201,7 +201,8 @@ def twse_taiex_open_data():
         return {'history':[{'date':date,'value':value}],'date':date,'value':value,'unit':'點',
             'provider':'臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV',
             'source':url,'method':'TWSE 官方每日市場統計原始 CSV；直接讀取發行量加權股價指數。'}
-    raise ValueError('TWSE FMTQIK CSV has no valid TAIEX observation')
+    sample=repr(rows[:6])[:1000]
+    raise ValueError(f'TWSE FMTQIK CSV has no valid TAIEX observation; sample={sample}')
 
 def main():
     old=json.loads(OUT.read_text()) if OUT.exists() else {'series':{}}
