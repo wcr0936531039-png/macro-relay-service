@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-29T22:21:04.361402+00:00",
+  "generated_at": "2026-09-30T05:39:33.621591+00:00",
   "series": {
     "SOFR": {
       "history": [
@@ -85,10 +85,10 @@
           "value": 3.9
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SOFR&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SOFR&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜SOFR",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 7
     },
     "RRPONTSYD": {
@@ -174,10 +174,10 @@
           "value": 11.446
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RRPONTSYD&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RRPONTSYD&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜RRPONTSYD",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 8
     },
     "RPONTSYD": {
@@ -263,10 +263,10 @@
           "value": 0.002
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RPONTSYD&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RPONTSYD&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜RPONTSYD",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 8
     },
     "UNRATE": {
@@ -352,10 +352,10 @@
           "value": 4.1
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜UNRATE",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 85
     },
     "SAHMREALTIME": {
@@ -441,10 +441,10 @@
           "value": -0.07
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SAHMREALTIME&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SAHMREALTIME&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜SAHMREALTIME",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 85
     },
     "T10Y2Y": {
@@ -530,10 +530,10 @@
           "value": 0.37
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y2Y&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y2Y&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜T10Y2Y",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 7
     },
     "DFII10": {
@@ -619,10 +619,10 @@
           "value": 2.9
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜DFII10",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 7
     },
     "T5YIE": {
@@ -708,10 +708,10 @@
           "value": 2.34
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T5YIE&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T5YIE&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜T5YIE",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 7
     },
     "RSAFS": {
@@ -797,10 +797,10 @@
           "value": 737763.0
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RSAFS&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RSAFS&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜RSAFS",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 85
     },
     "PAYEMS": {
@@ -886,10 +886,10 @@
           "value": 159075.0
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜PAYEMS",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 85
     },
     "TW_EXPORT_ORDERS": {
@@ -906,7 +906,7 @@
           "value": 71.35
         }
       ],
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 85
     },
     "TPEX_BREADTH": {
@@ -925,7 +925,7 @@
           "value": 49.36548223350254
         }
       ],
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 5
     },
     "TW_NDC_SIGNAL": {
@@ -943,15 +943,11 @@
       "source": "https://data.gov.tw/dataset/6099",
       "method": "國發會原始月資料 ZIP，欄位「景氣對策信號綜合分數」及燈號；檔案 景氣指標與燈號.csv",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 120
     },
     "SP500": {
       "history": [
-        {
-          "date": "2026-08-31",
-          "value": 7686.14
-        },
         {
           "date": "2026-09-01",
           "value": 7631.47
@@ -1027,12 +1023,16 @@
         {
           "date": "2026-09-28",
           "value": 7683.69
+        },
+        {
+          "date": "2026-09-29",
+          "value": 7670.84
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜SP500",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 7
     },
     "DJIA": {
@@ -1118,18 +1118,14 @@
           "value": 51349.92
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DJIA&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DJIA&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜DJIA",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 7
     },
     "NASDAQCOM": {
       "history": [
-        {
-          "date": "2026-08-31",
-          "value": 26370.89
-        },
         {
           "date": "2026-09-01",
           "value": 26099.77
@@ -1205,12 +1201,16 @@
         {
           "date": "2026-09-28",
           "value": 26820.38
+        },
+        {
+          "date": "2026-09-29",
+          "value": 26797.54
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2024-12-18",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2024-12-19",
       "provider": "FRED 官方公開 CSV｜NASDAQCOM",
       "status": "ok",
-      "fetched_at": "2026-09-29T22:21:04.361402+00:00",
+      "fetched_at": "2026-09-30T05:39:33.621591+00:00",
       "max_age_days": 7
     },
     "DCOILWTICO": {
@@ -1298,9 +1298,10 @@
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILWTICO&cosd=2024-12-18",
       "provider": "FRED 官方公開 CSV｜DCOILWTICO",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-09-29T22:21:04.361402+00:00",
-      "max_age_days": 7
+      "max_age_days": 7,
+      "error": "Observation outside freshness window: 2026-09-22"
     },
     "DCOILBRENTEU": {
       "history": [
@@ -1387,9 +1388,10 @@
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILBRENTEU&cosd=2024-12-18",
       "provider": "FRED 官方公開 CSV｜DCOILBRENTEU",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-09-29T22:21:04.361402+00:00",
-      "max_age_days": 7
+      "max_age_days": 7,
+      "error": "本輪尚未驗證"
     },
     "DHHNGSP": {
       "history": [
@@ -1476,9 +1478,10 @@
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DHHNGSP&cosd=2024-12-18",
       "provider": "FRED 官方公開 CSV｜DHHNGSP",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-09-29T22:21:04.361402+00:00",
-      "max_age_days": 7
+      "max_age_days": 7,
+      "error": "本輪尚未驗證"
     },
     "T10YIE": {
       "history": [
@@ -1565,9 +1568,10 @@
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE&cosd=2024-12-18",
       "provider": "FRED 官方公開 CSV｜T10YIE",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-09-29T22:21:04.361402+00:00",
-      "max_age_days": 7
+      "max_age_days": 7,
+      "error": "本輪尚未驗證"
     },
     "CPILFESL": {
       "history": [
@@ -1654,9 +1658,10 @@
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPILFESL&cosd=2024-12-18",
       "provider": "FRED 官方公開 CSV｜CPILFESL",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-09-29T22:21:04.361402+00:00",
-      "max_age_days": 95
+      "max_age_days": 95,
+      "error": "本輪尚未驗證"
     },
     "PCEPILFE": {
       "history": [
@@ -1743,9 +1748,10 @@
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCEPILFE&cosd=2024-12-18",
       "provider": "FRED 官方公開 CSV｜PCEPILFE",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-09-29T22:21:04.361402+00:00",
-      "max_age_days": 95
+      "max_age_days": 95,
+      "error": "本輪尚未驗證"
     },
     "BAMLH0A0HYM2": {
       "history": [
@@ -1832,9 +1838,10 @@
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=2024-12-18",
       "provider": "FRED 官方公開 CSV｜BAMLH0A0HYM2",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-09-29T22:21:04.361402+00:00",
-      "max_age_days": 7
+      "max_age_days": 7,
+      "error": "本輪尚未驗證"
     },
     "BAMLC0A0CM": {
       "history": [
@@ -1921,9 +1928,10 @@
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=2024-12-18",
       "provider": "FRED 官方公開 CSV｜BAMLC0A0CM",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-09-29T22:21:04.361402+00:00",
-      "max_age_days": 7
+      "max_age_days": 7,
+      "error": "本輪尚未驗證"
     },
     "IORB": {
       "history": [
@@ -2013,7 +2021,7 @@
       "status": "stale",
       "fetched_at": "2026-09-29T13:00:53.644810+00:00",
       "max_age_days": 7,
-      "error": "Observation outside freshness window: 2026-09-30"
+      "error": "本輪尚未驗證"
     },
     "STLFSI4": {
       "history": [
@@ -4000,11 +4008,11 @@
     }
   },
   "blocked_at": {
-    "id": "IORB",
-    "reason": "Observation outside freshness window: 2026-09-30"
+    "id": "DCOILWTICO",
+    "reason": "Observation outside freshness window: 2026-09-22"
   },
   "coverage": {
-    "usable": 24,
+    "usable": 16,
     "expected": 60
   }
 }
