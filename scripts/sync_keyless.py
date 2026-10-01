@@ -567,6 +567,32 @@ def twse_daytrade_metric(reference_date):
         'dayTradeShares':day_shares,'provider':'臺灣證券交易所｜TWTB4U 官方當沖統計','source':url,
         'method':f'TWTB4U 官方當沖成交量占市場比重 {share:.2f}%；當沖成交股數 {day_shares:.0f}；觀測日 {reference_date}。'}
 
+def process_tasks(tasks,current,now):
+    """Fetch every independent metric; keep failed fields missing/stale and report each one."""
+    failures=[]
+    for sid,days,fetcher in tasks:
+        try:
+            item=fetcher()
+            if 'history' not in item:item['history']=[{'date':item['date'],'value':item['value']}]
+            validate(item,days)
+            prior=current.get(sid)
+            if prior and prior.get('history') and prior['history'][-1]['date']>item['history'][-1]['date']:
+                raise ValueError('Refuse backward observation')
+            current[sid]={**item,'status':'ok','fetched_at':now,'max_age_days':days}
+            point=item['history'][-1]
+            print(f"PASS {sid} {point['date']} {point['value']}",flush=True)
+        except Exception as exc:
+            failure={'id':sid,'reason':str(exc)}
+            failures.append(failure)
+            if sid in current and current[sid].get('history'):
+                current[sid].update(status='stale',error=str(exc))
+            else:
+                current[sid]={'history':[],'status':'missing','fetched_at':now,
+                              'max_age_days':days,'error':str(exc)}
+            print(f"BLOCK {sid}: {exc}",flush=True)
+    return failures
+
+
 def main():
     old=json.loads(OUT.read_text()) if OUT.exists() else {'series':{}}
     if not isinstance(old,dict) or not isinstance(old.get('series'),dict):raise ValueError('Invalid prior snapshot')
@@ -588,40 +614,32 @@ def main():
         if sid in ('ICE_DXY','XAU'):return yahoo_chart_metric(sid)
         return fred_csv(sid)
     tasks += [(sid,days,lambda sid=sid:additional_source(sid)) for sid,days in MORE_SPECS]
+    def current_market_date():
+        anchor=current.get('TWSE_TAIEX')
+        if not anchor or anchor.get('status')!='ok' or anchor.get('fetched_at')!=now:
+            raise ValueError('same-session TWSE metric blocked: TAIEX anchor was not validated in this run')
+        return anchor['history'][-1]['date']
     tasks += [('TWSE_TAIEX',5,lambda:twse_open_data_metric('TWSE_TAIEX')),
               ('TWSE_TOTAL_TRADE_VALUE',5,lambda:twse_open_data_metric('TWSE_TOTAL_TRADE_VALUE')),
-              ('TWSE_BREADTH',5,lambda:twse_market_breadth(current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_ELECTRONIC',5,lambda:twse_sector_metric('TWSE_ELECTRONIC',current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_SEMICONDUCTOR',5,lambda:twse_sector_metric('TWSE_SEMICONDUCTOR',current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_FINANCIAL',5,lambda:twse_sector_metric('TWSE_FINANCIAL',current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_SHIPPING',5,lambda:twse_sector_metric('TWSE_SHIPPING',current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_STEEL',5,lambda:twse_sector_metric('TWSE_STEEL',current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_DAYTRADE',5,lambda:twse_daytrade_metric(current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_MARGIN_BALANCE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_NTD',current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_MARGIN_CHANGE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_CHANGE_NTD',current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_MARGIN_BALANCE_UNITS',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_UNITS',current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_SHORT_BALANCE',5,lambda:twse_credit_metric('TWSE_SHORT_BALANCE',current['TWSE_TAIEX']['history'][-1]['date'])),
-              ('TWSE_SHORT_CHANGE',5,lambda:twse_credit_metric('TWSE_SHORT_CHANGE',current['TWSE_TAIEX']['history'][-1]['date'])),
+              ('TWSE_BREADTH',5,lambda:twse_market_breadth(current_market_date())),
+              ('TWSE_ELECTRONIC',5,lambda:twse_sector_metric('TWSE_ELECTRONIC',current_market_date())),
+              ('TWSE_SEMICONDUCTOR',5,lambda:twse_sector_metric('TWSE_SEMICONDUCTOR',current_market_date())),
+              ('TWSE_FINANCIAL',5,lambda:twse_sector_metric('TWSE_FINANCIAL',current_market_date())),
+              ('TWSE_SHIPPING',5,lambda:twse_sector_metric('TWSE_SHIPPING',current_market_date())),
+              ('TWSE_STEEL',5,lambda:twse_sector_metric('TWSE_STEEL',current_market_date())),
+              ('TWSE_DAYTRADE',5,lambda:twse_daytrade_metric(current_market_date())),
+              ('TWSE_MARGIN_BALANCE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_NTD',current_market_date())),
+              ('TWSE_MARGIN_CHANGE_NTD',5,lambda:twse_credit_metric('TWSE_MARGIN_CHANGE_NTD',current_market_date())),
+              ('TWSE_MARGIN_BALANCE_UNITS',5,lambda:twse_credit_metric('TWSE_MARGIN_BALANCE_UNITS',current_market_date())),
+              ('TWSE_SHORT_BALANCE',5,lambda:twse_credit_metric('TWSE_SHORT_BALANCE',current_market_date())),
+              ('TWSE_SHORT_CHANGE',5,lambda:twse_credit_metric('TWSE_SHORT_CHANGE',current_market_date())),
               ('XAU',3,lambda:gold_api_metric()),
               ('NYFED_REPO',5,lambda:nyfed_repo_metric()),
               ('NYFED_SRP',5,lambda:nyfed_srp_metric()),
               ('ICE_DXY',3,lambda:yahoo_chart_metric('ICE_DXY'))]
-    failed=None
-    for sid,days,fetcher in tasks:
-        try:
-            item=fetcher()
-            if 'history' not in item:item['history']=[{'date':item['date'],'value':item['value']}]
-            validate(item,days)
-            prior=current.get(sid)
-            if prior and prior.get('history') and prior['history'][-1]['date']>item['history'][-1]['date']:raise ValueError('Refuse backward observation')
-            current[sid]={**item,'status':'ok','fetched_at':now,'max_age_days':days}
-            point=item['history'][-1];print(f"PASS {sid} {point['date']} {point['value']}",flush=True)
-        except Exception as exc:
-            failed={'id':sid,'reason':str(exc)}
-            if sid in current:current[sid].update(status='stale',error=str(exc))
-            print(f"STOP {sid}: {exc}",flush=True)
-            break  # User requires each series to pass before proceeding.
-    snapshot={'schema_version':1,'generated_at':now,'series':current,'blocked_at':failed,
+    failures=process_tasks(tasks,current,now)
+    snapshot={'schema_version':1,'generated_at':now,'series':current,
+        'blocked_at':failures[0] if failures else None,'failures':failures,
         'coverage':{'usable':sum(x['status']=='ok' for x in current.values()),'expected':len(tasks)}}
     OUT.parent.mkdir(exist_ok=True)
     if any(x.get('history') for x in current.values()):OUT.write_text(json.dumps(snapshot,ensure_ascii=False,indent=2))
@@ -629,8 +647,13 @@ def main():
     if os.environ.get('GITHUB_STEP_SUMMARY'):
         with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as h:
             h.write(f"## No-key sequential verification\nUsable: {snapshot['coverage']['usable']}/{len(tasks)}\n\n")
-            for sid,e in current.items():h.write(f"- {sid}: {e['history'][-1]['date']} = {e['history'][-1]['value']} ({e['status']})\n")
-            if failed:h.write(f"\nStopped at {failed['id']}: {failed['reason']}\n")
-    if failed:print('::warning::Sequential gate stopped; later indicators were not fetched.')
+            for sid,e in current.items():
+                point=e['history'][-1] if e.get('history') else None
+                rendered=f"{point['date']} = {point['value']}" if point else "無有效觀測"
+                h.write(f"- {sid}: {rendered} ({e['status']}){'; '+e.get('error','') if e.get('error') else ''}\n")
+            if failures:
+                h.write(f"\nBlocked indicators: {len(failures)}; later independent indicators were still checked.\n")
+                for failure in failures:h.write(f"- {failure['id']}: {failure['reason']}\n")
+    if failures:print(f"::warning::{len(failures)} indicator(s) remain missing or stale; other independent sources continued.")
 
 if __name__=='__main__':main()
