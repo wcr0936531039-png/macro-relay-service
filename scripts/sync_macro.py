@@ -333,6 +333,87 @@ def current_metric_set(api_key: str) -> dict[str, dict[str, Any]]:
     return result
 
 
+
+def apply_keyless_fallback(indicators: dict[str, dict[str, Any]], snapshot: Any) -> dict[str, dict[str, Any]]:
+    """Fill missing macro fields from the same repo's validated official no-key snapshot."""
+    if not isinstance(snapshot, dict) or not isinstance(snapshot.get("series"), dict):
+        return indicators
+    series = snapshot["series"]
+
+    def latest_rows(series_id: str) -> tuple[dict[str, Any], list[dict[str, Any]]] | None:
+        entry = series.get(series_id)
+        if not isinstance(entry, dict) or entry.get("status") not in ("ok", "stale"):
+            return None
+        rows = entry.get("history")
+        if not isinstance(rows, list):
+            rows = [{"date": entry.get("date"), "value": entry.get("value")}]
+        valid = [row for row in rows if isinstance(row, dict)
+                 and re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", str(row.get("date", "")))
+                 and valid_number(row.get("value"))]
+        valid.sort(key=lambda row: row["date"])
+        return (entry, valid) if valid else None
+
+    def make_row(series_id: str, unit: str) -> dict[str, Any] | None:
+        found = latest_rows(series_id)
+        if not found: return None
+        entry, rows = found
+        point = rows[-1]
+        status = "stale" if entry.get("status") == "stale" else "ok"
+        return metric(float(point["value"]), point["date"], unit=unit,
+                      provider=entry.get("provider", f"官方免金鑰快照｜{series_id}"),
+                      source=entry.get("source", f"https://fred.stlouisfed.org/series/{series_id}"),
+                      method=f"沿用同一更新器已驗證的免金鑰快照（{series_id}）",
+                      status=status, is_stale=status == "stale",
+                      last_success=entry.get("fetched_at"))
+
+    mapping = {
+        "SOFR": ("SOFR", "%"), "ON_RRP": ("RRPONTSYD", "十億美元"),
+        "REPO_TEMPORARY_OPERATIONS": ("RPONTSYD", "十億美元"),
+        "UNRATE": ("UNRATE", "%"), "SAHMREALTIME": ("SAHMREALTIME", "百分點"),
+        "T10Y2Y": ("T10Y2Y", "%"), "DFII10": ("DFII10", "%"),
+        "T5YIE": ("T5YIE", "%"), "TW_EXPORT_ORDERS": ("TW_EXPORT_ORDERS", "%"),
+        "TW_NDC_SIGNAL": ("TW_NDC_SIGNAL", "分"), "TPEX_BREADTH": ("TPEX_BREADTH", "%"),
+    }
+    for target, (series_id, unit) in mapping.items():
+        candidate = make_row(series_id, unit)
+        if candidate is None: continue
+        current = indicators.get(target, {})
+        current_date = str(current.get("date") or "")
+        candidate_date = str(candidate.get("date") or "")
+        current_valid = current.get("status") in ("ok", "stale") and valid_number(current.get("value"))
+        if not current_valid or candidate_date > current_date:
+            indicators[target] = candidate
+
+    for target, series_id in (("RETAIL_SALES_MOM", "RSAFS"), ("NFP_CHANGE", "PAYEMS")):
+        found = latest_rows(series_id)
+        if not found: continue
+        entry, rows = found
+        if len(rows) < 2 or month_number(rows[-1]["date"]) - month_number(rows[-2]["date"]) != 1:
+            continue
+        current = indicators.get(target, {})
+        if current.get("status") in ("ok", "stale") and valid_number(current.get("value")):
+            if str(current.get("date") or "") >= rows[-1]["date"]: continue
+        prior, latest = rows[-2], rows[-1]
+        if target == "RETAIL_SALES_MOM":
+            if float(prior["value"]) <= 0: continue
+            value = (float(latest["value"]) / float(prior["value"]) - 1) * 100
+            unit = "%"
+            method = "(FRED RSAFS 本月 ÷ 前月 − 1) × 100%；來源採已驗證免金鑰歷史"
+            extra = {"prior_date": prior["date"], "prior_value": float(prior["value"]),
+                     "raw_current": float(latest["value"])}
+        else:
+            value = float(latest["value"]) - float(prior["value"])
+            unit = "千人"
+            method = "FRED PAYEMS 本月減前月；兩筆均採已驗證免金鑰歷史"
+            extra = {"prior_date": prior["date"], "prior_value": float(prior["value"])}
+        status = "stale" if entry.get("status") == "stale" else "ok"
+        indicators[target] = metric(value, latest["date"], unit=unit,
+            provider=entry.get("provider", f"官方免金鑰快照｜{series_id}"),
+            source=entry.get("source", f"https://fred.stlouisfed.org/series/{series_id}"),
+            method=method, status=status, is_stale=status == "stale",
+            last_success=entry.get("fetched_at"), **extra)
+    return indicators
+
 def previous_snapshot(account_id: str, namespace_id: str, token: str) -> dict[str, Any] | None:
     url = f"https://api.cloudflare.com/client/v4/accounts/{quote(account_id)}/storage/kv/namespaces/{quote(namespace_id)}/values/{quote(SNAPSHOT_KEY)}"
     req = Request(url, headers={"Authorization": f"Bearer {token}", "Accept": "application/json", "User-Agent": USER_AGENT})
@@ -388,7 +469,7 @@ def put_snapshot(account_id: str, namespace_id: str, token: str, snapshot: dict[
         raise RuntimeError("Cloudflare KV 未確認寫入成功")
 
 
-def build_snapshot(api_key: str, previous: dict[str, Any] | None) -> dict[str, Any]:
+def build_snapshot(api_key: str, previous: dict[str, Any] | None, keyless_snapshot: Any = None) -> dict[str, Any]:
     indicators = current_metric_set(api_key)
     # These official sources are fetched independently; one failure never drops other rows.
     try:
@@ -404,6 +485,7 @@ def build_snapshot(api_key: str, previous: dict[str, Any] | None) -> dict[str, A
         indicators["TPEX_BREADTH"] = tpex_metric(payload)
     except Exception as exc:
         indicators["TPEX_BREADTH"] = {"value": None, "date": None, "unit": "%", "status": "missing", "error": str(exc), "provider": "櫃買中心 TPEx OpenAPI", "source": TPEX_URL}
+    indicators = apply_keyless_fallback(indicators, keyless_snapshot)
     freshness_days = {"SOFR": 7, "ON_RRP": 7, "REPO_TEMPORARY_OPERATIONS": 7,
                       "UNRATE": 100, "SAHMREALTIME": 120, "NFP_CHANGE": 100,
                       "T10Y2Y": 7, "DFII10": 7, "T5YIE": 7, "RETAIL_SALES_MOM": 75,
@@ -434,6 +516,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(); parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--output", help="Write diagnostic snapshot JSON locally")
     parser.add_argument("--previous", help="Dry-run only: local prior snapshot JSON")
+    parser.add_argument("--keyless-snapshot", default="data/keyless_snapshot.json", help="Validated no-key snapshot used as a fallback")
     args = parser.parse_args()
     if args.previous and not args.dry_run:
         parser.error("--previous 只可搭配 --dry-run；發布必須讀取遠端底本")
@@ -449,7 +532,14 @@ def main() -> int:
             previous = json.load(handle)
         if not isinstance(previous, dict) or previous.get("schema_version") != SCHEMA_VERSION or not isinstance(previous.get("indicators"), dict):
             raise ValueError("本地底本結構不符")
-    snapshot = build_snapshot(api_key, previous)
+    keyless_snapshot = None
+    if args.keyless_snapshot and os.path.isfile(args.keyless_snapshot):
+        try:
+            with open(args.keyless_snapshot, encoding="utf-8") as handle:
+                keyless_snapshot = json.load(handle)
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"免金鑰備援快照無法讀取，繼續使用即時來源：{exc}", file=sys.stderr)
+    snapshot = build_snapshot(api_key, previous, keyless_snapshot)
     encoded = json.dumps(snapshot, ensure_ascii=False, indent=2)
     print(encoded)
     if args.output:

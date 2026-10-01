@@ -136,5 +136,39 @@ class RelayValidationTests(unittest.TestCase):
         self.assertIn("403", row["upstream_warning"])
 
 
+    def test_keyless_snapshot_fills_missing_fred_and_ndc_fields(self):
+        indicators = {
+            "SOFR": {"value": None, "date": None, "unit": "%", "status": "missing", "error": "missing key"},
+            "TW_NDC_SIGNAL": {"value": None, "date": None, "unit": "分", "status": "missing", "error": "403"},
+            "RETAIL_SALES_MOM": {"value": None, "date": None, "unit": "%", "status": "missing"},
+            "NFP_CHANGE": {"value": None, "date": None, "unit": "千人", "status": "missing"},
+        }
+        snapshot = {"series": {
+            "SOFR": {"status": "ok", "history": [{"date": "2026-09-30", "value": 3.9}],
+                     "source": "https://fred.stlouisfed.org/series/SOFR", "provider": "FRED CSV"},
+            "TW_NDC_SIGNAL": {"status": "ok", "date": "2026-08-01", "value": 41,
+                              "source": "https://data.gov.tw/dataset/6099", "provider": "NDC open data"},
+            "RSAFS": {"status": "ok", "history": [
+                {"date": "2026-07-01", "value": 100}, {"date": "2026-08-01", "value": 102}]},
+            "PAYEMS": {"status": "ok", "history": [
+                {"date": "2026-07-01", "value": 158000}, {"date": "2026-08-01", "value": 158150}]},
+        }}
+        relay.apply_keyless_fallback(indicators, snapshot)
+        self.assertEqual(indicators["SOFR"]["value"], 3.9)
+        self.assertEqual(indicators["TW_NDC_SIGNAL"]["date"], "2026-08-01")
+        self.assertAlmostEqual(indicators["RETAIL_SALES_MOM"]["value"], 2)
+        self.assertEqual(indicators["NFP_CHANGE"]["value"], 150)
+        self.assertEqual(indicators["TW_NDC_SIGNAL"]["source"], "https://data.gov.tw/dataset/6099")
+
+    def test_keyless_snapshot_preserves_newer_direct_value(self):
+        indicators = {"SOFR": {"value": 4.0, "date": "2026-10-01", "unit": "%",
+                               "status": "ok", "provider": "direct"}}
+        snapshot = {"series": {"SOFR": {"status": "ok", "history": [
+            {"date": "2026-09-30", "value": 3.9}]}}}
+        relay.apply_keyless_fallback(indicators, snapshot)
+        self.assertEqual(indicators["SOFR"]["value"], 4.0)
+        self.assertEqual(indicators["SOFR"]["provider"], "direct")
+
+
 if __name__ == "__main__":
     unittest.main()
