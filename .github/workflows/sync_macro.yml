@@ -1,16 +1,14 @@
-name: Sync macro snapshot
+name: Optional Cloudflare KV mirror (manual)
 
+# Optional KV exporter. The Site reads data/keyless_snapshot.json instead.
+# Keep this workflow manual until Cloudflare credentials and a Site consumer are configured.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       dry_run:
         description: "只抓取及驗證，不讀寫 Cloudflare KV"
         type: boolean
         default: true
-  schedule:
-    - cron: "17 */6 * * *"
 
 permissions:
   contents: read
