@@ -348,7 +348,7 @@ def apply_keyless_fallback(indicators: dict[str, dict[str, Any]], snapshot: Any)
         if not isinstance(rows, list):
             rows = [{"date": entry.get("date"), "value": entry.get("value")}]
         valid = [row for row in rows if isinstance(row, dict)
-                 and re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", str(row.get("date", "")))
+                 and re.fullmatch(r"\d{4}-\\d{2}-\\d{2}", str(row.get("date", "")))
                  and valid_number(row.get("value"))]
         valid.sort(key=lambda row: row["date"])
         return (entry, valid) if valid else None
