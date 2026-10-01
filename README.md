@@ -23,7 +23,7 @@
 - `CF_KV_NAMESPACE_ID`
 - `CF_API_TOKEN`：僅需該 Cloudflare 帳戶的 Workers KV 讀寫權限。
 
-工作流程每 6 小時執行一次，也可手動執行。缺少 FRED 金鑰時，美國序列會標成缺值／保留舊值；台灣官方來源仍會獨立更新。缺少 Cloudflare 寫入 Secrets 時不會寫入 KV。
+工作流程可手動執行；程式、測試或免金鑰快照更新時會自動執行 dry-run 與覆蓋檢查，不寫入 Cloudflare KV。手動執行預設 dry_run=true。缺少 FRED 金鑰時，美國序列會優先採用同一倉庫內已驗證的官方免金鑰快照；缺少 Cloudflare 寫入 Secrets 時不會寫入 KV。
 
 ## Worker 讀取契約
 

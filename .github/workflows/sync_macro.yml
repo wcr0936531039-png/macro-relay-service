@@ -3,6 +3,13 @@ name: Optional Cloudflare KV mirror (manual)
 # Optional KV exporter. The Site reads data/keyless_snapshot.json instead.
 # Keep this workflow manual until Cloudflare credentials and a Site consumer are configured.
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/**'
+      - 'tests/**'
+      - 'data/keyless_snapshot.json'
+      - '.github/workflows/sync_macro.yml'
   workflow_dispatch:
     inputs:
       dry_run:
