@@ -37,9 +37,31 @@ jobs:
         run: node tests/test_worker_reader.mjs
       - name: Validate standalone API Worker
         run: node tests/test_api_worker.mjs
+      - name: Resolve sync mode
+        id: sync_mode
+        env:
+          REQUESTED_DRY_RUN: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_KV_NAMESPACE_ID: ${{ secrets.CF_KV_NAMESPACE_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          if [ "$REQUESTED_DRY_RUN" = "true" ]; then
+            echo "dry_run=true" >> "$GITHUB_OUTPUT"
+          elif [ -z "$CF_ACCOUNT_ID" ] || [ -z "$CF_KV_NAMESPACE_ID" ] || [ -z "$CF_API_TOKEN" ]; then
+            echo "dry_run=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::Cloudflare publish skipped: configure CF_ACCOUNT_ID, CF_KV_NAMESPACE_ID, and CF_API_TOKEN in repository Actions secrets. This run will fetch and validate only; it will not update KV."
+            {
+              echo "### Cloudflare publish skipped"
+              echo
+              echo "One or more required Cloudflare Actions secrets are missing. This run will fetch and validate data only; no KV write was attempted."
+              echo "Configure `CF_ACCOUNT_ID`, `CF_KV_NAMESPACE_ID`, and `CF_API_TOKEN` to enable scheduled publication."
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Fetch, validate and publish snapshot
         env:
-          DRY_RUN: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+          DRY_RUN: ${{ steps.sync_mode.outputs.dry_run }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_KV_NAMESPACE_ID: ${{ secrets.CF_KV_NAMESPACE_ID }}
@@ -52,6 +74,8 @@ jobs:
           fi
       - name: Report per-indicator data coverage
         if: always()
+        env:
+          DRY_RUN: ${{ steps.sync_mode.outputs.dry_run }}
         run: python scripts/report_snapshot.py
       - uses: actions/upload-artifact@v4
         if: always()
