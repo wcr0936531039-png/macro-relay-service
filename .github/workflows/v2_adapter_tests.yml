@@ -19,3 +19,4 @@ jobs:
           node-version: '22'
       - run: node tests/test_report_state.mjs
       - run: node tests/test_stock_source.mjs
+      - run: node tests/test_assemble_report.mjs
