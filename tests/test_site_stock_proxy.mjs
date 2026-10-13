@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {siteStockProxy} from '../site-contract/site-stock-proxy.mjs';
+const req=(ticker)=>new Request('https://site.invalid/api/site-stock-report?ticker='+ticker);
+const env={RELAY_ORIGIN:'https://relay.example',SNAPSHOT_READ_TOKEN:'server-only'};
+assert.equal((await siteStockProxy(req('bad'),env)).status,400);
+assert.equal((await siteStockProxy(req('8299'),{})).status,503);
+let seen;
+const result=await siteStockProxy(req('8299'),env,async(url,opts)=>{seen={url,opts};return {ok:true,json:async()=>({report:{ticker:'8299',final_rating:null},status:'partial'})};});
+assert.equal(result.status,200);
+assert.equal((await result.json()).report.final_rating,null);
+assert.match(seen.url,/ticker=8299/);
+assert.equal(seen.opts.headers.Authorization,'Bearer server-only');
+assert.equal((await siteStockProxy(req('8299'),env,async()=>({ok:false,status:401}))).status,503);
+console.log('Sites proxy contract passed');
