@@ -1,0 +1,10 @@
+import { evaluateCrossMarket } from '../site-embed/cross-market-divergence.js';
+import assert from 'node:assert/strict';
+const base={twReturn5d:2,usReturn5d:-1,twReturn10d:4,usReturn10d:-2,breadthRatio:1.2,foreignNetTwd:10,nonDayTradeTrend:1,earningsRevision:0.1,creditStress:false};
+assert.equal(evaluateCrossMarket(base).status,'GREEN');
+assert.equal(evaluateCrossMarket({...base,breadthRatio:0.7,foreignNetTwd:-20,nonDayTradeTrend:-1,creditStress:true}).status,'RED');
+assert.equal(evaluateCrossMarket({...base,breadthRatio:0.7}).status,'YELLOW');
+assert.equal(evaluateCrossMarket({...base,earningsRevision:null}).status,'UNKNOWN');
+assert.equal(evaluateCrossMarket({...base,twReturn5d:null}).status,'UNKNOWN');
+assert.equal(evaluateCrossMarket({...base,usReturn5d:3}).status,'NEUTRAL');
+console.log('Cross-market divergence tests passed');
