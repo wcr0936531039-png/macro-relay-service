@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {buildSectorReport} from './us-sector-report.js';
+const empty=buildSectorReport();
+assert.equal(empty.status,'UNKNOWN');
+assert.deepEqual(empty.warnings,['DATA_INCOMPLETE','NO_TRADING_DECISION']);
+assert.equal(empty.macroGateOverride,null);
+assert.equal(empty.vetoOverride,null);
+assert.equal(empty.scoreContribution,0);
+assert.equal(empty.coverage.valid,0);
+console.log('sector report contract passed');
