@@ -9,7 +9,7 @@ assert.ok(Math.abs(result.return20d-20)<1e-10);
 assert.equal(returnsFromCloses([...rows.slice(0,20),{date:'2026-09-31',close:120}]).status,'UNKNOWN');
 console.log('history calculations passed');
 
-assert.equal(returnsFromCloses([...rows,{date:'2026-09-22',close:122}]).reason,'DUPLICATE_DATES');
+assert.equal(returnsFromCloses([...rows,{date:'2026-09-21',close:122}]).reason,'DUPLICATE_DATES');
 assert.equal(returnsFromCloses([...rows.slice(0,20),{date:'2026-09-21',close:NaN}]).reason,'INVALID_HISTORY');
 assert.equal(returnsFromCloses([...rows.slice(0,20),null]).reason,'INVALID_HISTORY');
 assert.equal(rows.length,21);
