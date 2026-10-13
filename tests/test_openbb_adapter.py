@@ -35,10 +35,10 @@ class FakeFrame:
 
 class OpenBBAdapterTests(unittest.TestCase):
     def test_latest_date_not_response_order(self):
-        obb = types.SimpleNamespace(economy=types.SimpleNamespace(
+        obb = types.SimpleNamespace(fred=types.SimpleNamespace(economy=types.SimpleNamespace(
             fred_series=lambda **kwargs: types.SimpleNamespace(
-                to_df=lambda: FakeFrame([("2026-10-10", {"DGS10": 4.1}),
-                                         ("2026-10-09", {"DGS10": 4.0})]))))
+                to_dataframe=lambda: FakeFrame([("2026-10-10", {"DGS10": 4.1}),
+                                         ("2026-10-09", {"DGS10": 4.0})])))))
         with patch.dict(sys.modules, {"openbb": types.SimpleNamespace(obb=obb)}):
             row = fetch_fred_series("DGS10")
         self.assertEqual(row["status"], "ok")
@@ -47,7 +47,7 @@ class OpenBBAdapterTests(unittest.TestCase):
 
     def test_provider_failure_never_invents_data(self):
         obb = types.SimpleNamespace(economy=types.SimpleNamespace(
-            fred_series=lambda **kwargs: (_ for _ in ()).throw(RuntimeError("offline"))))
+            fred_series=lambda **kwargs: (_ for _ in ()).throw(RuntimeError("offline")))))
         with patch.dict(sys.modules, {"openbb": types.SimpleNamespace(obb=obb)}):
             row = fetch_fred_series("DGS10")
         self.assertEqual(row["status"], "missing")
