@@ -11,6 +11,8 @@ class FakeFrame:
     columns = ["DGS10"]
     def __init__(self, rows):
         self.rows = rows
+    def iterrows(self):
+        return iter(self.rows)
     def __getitem__(self, keys):
         return self
     def dropna(self):
