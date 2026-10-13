@@ -29,19 +29,19 @@ jobs:
           const snapshot=JSON.parse(readFileSync('data/stock_snapshots_v2.json','utf8'));
           const html=readFileSync('site-embed/index.html','utf8');
           const js=readFileSync('site-embed/quotes.js','utf8');
-          const pageHtml=html.replace('<script type="module" src="./quotes.js"></script>','<script type="module">'+js+'</script>');
+          const pageHtml=html;
           const browser=await chromium.launch({headless:true});
           try{
             const page=await browser.newPage();
             await page.route('https://raw.githubusercontent.com/**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(snapshot),headers:{'access-control-allow-origin':'*'}}));
-            await page.goto('about:blank');
-            await page.setContent(pageHtml,{waitUntil:'load'});
+            await page.route('http://local.test/**',r=>r.fulfill({status:200,contentType:r.request().url().endsWith('/quotes.js')?'text/javascript':'text/html',body:r.request().url().endsWith('/quotes.js')?js:pageHtml}));
+            await page.goto('http://local.test/');
             await page.waitForFunction(()=>document.querySelectorAll('#master-model-quotes section').length===4,{timeout:15000});
             const body=await page.locator('#master-model-quotes').innerText();
             for(const name of ['群聯','宜鼎','漢唐','榮鋼','收盤價','成交股數','成交金額'])if(!body.includes(name))throw Error('Missing '+name);
             console.log('PASS: four stock cards rendered with validated snapshot');
             await page.route('https://raw.githubusercontent.com/**',r=>r.fulfill({status:503,body:'unavailable',headers:{'access-control-allow-origin':'*'}}));
-            await page.setContent(pageHtml,{waitUntil:'load'});
+            await page.goto('http://local.test/');
             await page.waitForFunction(()=>document.querySelector('#master-model-quotes')?.textContent?.includes('行情暫時無法讀取'),{timeout:15000});
             console.log('PASS: fetch failure displays explicit fallback');
           }finally{await browser.close();}
