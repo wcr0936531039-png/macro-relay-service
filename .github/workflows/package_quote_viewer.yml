@@ -1,0 +1,38 @@
+name: Package offline-capable Master Model quote viewer
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-embed/**'
+      - 'data/stock_snapshots_v2.json'
+      - '.github/workflows/package_quote_viewer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build self-contained HTML snapshot
+        run: |
+          node --input-type=module <<'EOF'
+          import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+          const json=JSON.parse(readFileSync('data/stock_snapshots_v2.json','utf8'));
+          if(json.schema_version!==2)throw Error('Schema mismatch');
+          const safe=JSON.stringify(json).replaceAll('<','\\u003c');
+          const html=readFileSync('site-embed/index.html','utf8');
+          const js=readFileSync('site-embed/quotes.js','utf8');
+          mkdirSync('dist',{recursive:true});
+          writeFileSync('dist/index.html',html.replace('<script type="module" src="./quotes.js"></script>', '<script type="application/json" id="embedded-quotes">'+safe+'</script><script type="module">'+js.replace("const data=await response.json();","const data=JSON.parse(document.getElementById('embedded-quotes').textContent);")+'</script>'));
+          writeFileSync('dist/stock_snapshots_v2.json',JSON.stringify(json,null,2));
+          EOF
+      - name: Upload downloadable browser page
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-model-quote-viewer
+          path: dist/
+          retention-days: 30
