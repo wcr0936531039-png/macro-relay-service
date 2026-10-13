@@ -46,6 +46,18 @@ for(const ticker of tickers){
       const snapshot={schema_version:2,ticker,updated_at:new Date().toISOString(),observations:[...combined.values()]};
       const response=await fetch(endpoint,{method:'PUT',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(snapshot)});
       if(!response.ok)throw new Error('KV_HTTP_'+response.status);
+      // Verify persistence: an HTTP 2xx PUT alone does not prove the value is readable.
+      let verified=false;
+      for(let attempt=0;attempt<4;attempt++){
+        const check=await fetch(endpoint,{headers:{Authorization:'Bearer '+token,'Cache-Control':'no-cache'}});
+        if(check.ok){
+          const persisted=await check.json();
+          const actual=new Set((persisted?.observations||[]).map(x=>x.metric+'|'+x.observed_at));
+          if(persisted?.schema_version===2&&persisted.ticker===ticker&&valid.every(x=>actual.has(x.metric+'|'+x.observed_at))){verified=true;break;}
+        }
+        await new Promise(resolve=>setTimeout(resolve,750*(attempt+1)));
+      }
+      if(!verified)throw new Error('KV_WRITE_NOT_VERIFIED');
     }
     summary.push({ticker,market:OTC.has(ticker)?'TPEx':'TWSE',provider,status:dryRun?'validated':'published',count:valid.length,last_observed:valid.at(-1).observed_at});
   }catch(error){summary.push({ticker,status:'error',reason:String(error?.message||error)});}
