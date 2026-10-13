@@ -17,7 +17,9 @@ def _valid(row):
     try:
         if not isfinite(float(value)):
             return False
-        date.fromisoformat(row["date"])
+        observed = date.fromisoformat(row["date"])
+        if observed > date.today():
+            return False
     except (TypeError, ValueError, KeyError, OverflowError):
         return False
     return True
