@@ -13,8 +13,12 @@ export async function handle(request, env, now=Date.now(), fetchImpl=fetch) {
   const path=new URL(request.url).pathname;
   if (path === '/api/us-sector-report') {
     if (request.method !== 'GET') return new Response(null,{status:405,headers:{Allow:'GET'}});
-    const report=await loadUSSectorReport(fetchImpl,undefined,new Date(now));
-    return json(report);
+    try {
+      const report=await loadUSSectorReport(fetchImpl,undefined,new Date(now));
+      return json(report);
+    } catch {
+      return json({module:'US_SECTOR_ROTATION_V1',status:'UNKNOWN',errorCode:'DATA_UNAVAILABLE',scoreContribution:0,macroGateOverride:null,vetoOverride:null,warnings:['NO_TRADING_DECISION']});
+    }
   }
   if (path !== '/api/market-snapshot') return json({error:'NOT_FOUND'},404);
   if (request.method !== 'GET') return new Response(null,{status:405,headers:{Allow:'GET'}});
