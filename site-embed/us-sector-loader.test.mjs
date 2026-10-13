@@ -9,3 +9,14 @@ assert.equal(mismatch.status,'UNKNOWN');
 const empty=await loadUSSectorReport(async()=>({ok:true,json:async()=>({schema_version:1,histories:{},status:{}})}));
 assert.equal(empty.status,'UNKNOWN');
 console.log('sector loader fallbacks passed');
+
+const validRows=Array.from({length:21},(_,i)=>({date:new Date(Date.UTC(2026,8,23+i)).toISOString().slice(0,10),close:100+i}));
+const tickers=['SPY','XLK','XLC','XLY','XLP','XLF','XLI','XLV','XLE','XLB','XLU','XLRE'];
+const complete={schema_version:1,source:'test',generated_at:'2026-10-13T00:00:00Z',histories:Object.fromEntries(tickers.map(t=>[t,validRows])),status:Object.fromEntries(tickers.map(t=>[t,{status:'ok',observed_at:'2026-10-13'}]))};
+const fresh=await loadUSSectorReport(async()=>({ok:true,json:async()=>complete}),'test-url',new Date('2026-10-14T12:00:00Z'));
+assert.equal(fresh.status,'OK');
+const stale=await loadUSSectorReport(async()=>({ok:true,json:async()=>complete}),'test-url',new Date('2026-10-20T12:00:00Z'));
+assert.equal(stale.status,'UNKNOWN');
+assert.equal(stale.errorCode,'STALE_DATA');
+assert.equal(stale.scoreContribution,0);
+console.log('sector loader freshness gate passed');
