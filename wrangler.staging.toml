@@ -1,0 +1,9 @@
+name = "macro-relay-v2-staging"
+main = "api-worker/index.mjs"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+# Before deployment, replace the placeholder with the actual KV namespace ID.
+[[kv_namespaces]]
+binding = "MACRO_KV"
+id = "REPLACE_WITH_STAGING_KV_NAMESPACE_ID"
