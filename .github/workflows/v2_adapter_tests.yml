@@ -23,6 +23,7 @@ jobs:
       - run: node tests/test_stock_source.mjs
       - run: node tests/test_assemble_report.mjs
       - run: node tests/test_twse_stock_day.mjs
+      - run: node tests/test_tpex_quotes.mjs
       - run: node tests/test_stock_store.mjs
       - run: node tests/test_stock_report_endpoint.mjs
       - run: node tests/test_api_worker.mjs
