@@ -1,0 +1,43 @@
+name: US Sector Live Smoke
+on:
+  pull_request:
+    paths:
+      - 'scripts/us_sector_feed.py'
+      - 'scripts/check_us_sector_snapshot.py'
+      - '.github/workflows/us-sector-live-smoke.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live-fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch real market data
+        run: python scripts/us_sector_feed.py
+      - name: Validate all 12 symbols and freshness
+        run: python scripts/check_us_sector_snapshot.py data/us_sector_history.json
+      - name: Upload validated snapshot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: us-sector-validated-snapshot
+          path: data/us_sector_history.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Print coverage only
+        if: always()
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('data/us_sector_history.json')
+          if p.exists():
+              d=json.loads(p.read_text())
+              for t,v in sorted(d.get('status',{}).items()):
+                  print(t,v.get('status'),v.get('observed_at',''),v.get('reason',''))
+          else:
+              print('No snapshot produced')
+          PY
