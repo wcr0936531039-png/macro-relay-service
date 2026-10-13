@@ -1,0 +1,37 @@
+name: Live public feed integration
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-embed/**'
+      - '.github/workflows/live_public_feed.yml'
+  schedule:
+    - cron: '15 14 * * 1-5'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-public-url:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify actual public raw GitHub feed
+        run: |
+          node --input-type=module <<'EOF'
+          const url='https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/stock_snapshots_v2.json';
+          const r=await fetch(url,{signal:AbortSignal.timeout(15000),headers:{'Cache-Control':'no-cache'}});
+          if(!r.ok)throw Error('Public feed HTTP '+r.status);
+          const data=await r.json();
+          if(data.schema_version!==2)throw Error('Invalid schema');
+          for(const ticker of ['2404','5009','5289','8299']){
+            const rows=data.stocks?.[ticker]?.observations;
+            if(!Array.isArray(rows))throw Error('Missing '+ticker);
+            for(const metric of ['close','volume_shares','turnover_twd']){
+              const v=rows.find(x=>x.ticker===ticker&&x.metric===metric&&x.status==='ok'&&Number.isFinite(x.value));
+              if(!v||!v.observed_at||!v.source_url)throw Error('Invalid '+ticker+' '+metric);
+            }
+          }
+          console.log('PASS public GitHub raw URL',data.generated_at);
+          EOF
