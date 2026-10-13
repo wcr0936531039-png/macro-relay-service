@@ -31,4 +31,4 @@ for(const ticker of tickers){
   }catch(error){summary.push({ticker,status:'error',reason:String(error?.message||error)});}
 }
 console.log(JSON.stringify({month,dry_run:dryRun,summary},null,2));
-if(summary.every(x=>x.status==='error'))process.exitCode=1;
+if(summary.some(x=>x.status==='error'||x.status==='missing'))process.exitCode=1;
