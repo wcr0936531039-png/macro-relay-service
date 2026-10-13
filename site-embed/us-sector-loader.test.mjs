@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {loadUSSectorReport} from './us-sector-loader.js';
+const bad=await loadUSSectorReport(async()=>({ok:false,status:503}));
+assert.equal(bad.status,'UNKNOWN');
+assert.equal(bad.errorCode,'DATA_UNAVAILABLE');
+assert.equal(bad.scoreContribution,0);
+const mismatch=await loadUSSectorReport(async()=>({ok:true,json:async()=>({schema_version:9})}));
+assert.equal(mismatch.status,'UNKNOWN');
+const empty=await loadUSSectorReport(async()=>({ok:true,json:async()=>({schema_version:1,histories:{},status:{}})}));
+assert.equal(empty.status,'UNKNOWN');
+console.log('sector loader fallbacks passed');
