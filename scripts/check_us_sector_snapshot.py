@@ -35,7 +35,7 @@ def validate(data, now=None):
                 parsed.append(day)
             except (AttributeError,KeyError,TypeError,ValueError):issues.append(ticker+':INVALID_ROW_DATE');break
         if parsed and (parsed!=sorted(set(parsed))):issues.append(ticker+':NON_MONOTONIC_DATES')
-        if ticker!='SPY' and spy_dates is not None and len(parsed)>=21 and [row['date'] for row in rows[-21:]]!=spy_dates:
+        if ticker!='SPY' and spy_dates is not None and len(parsed)==len(rows) and len(parsed)>=21 and [row['date'] for row in rows[-21:]]!=spy_dates:
             issues.append(ticker+':TRADING_SESSIONS_MISMATCH')
     if len(dates)!=1:issues.append('DATES_NOT_ALIGNED')
     observed=next(iter(dates)) if len(dates)==1 else None
