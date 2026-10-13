@@ -13,6 +13,8 @@ from integrations.openbb_adapter import fetch_fred_series
 class ExplicitDateFrame:
     empty = False
     columns = ["date", "value"]
+    def iterrows(self):
+        return iter(enumerate(self.rows))
     def __init__(self):
         self.rows = [
             {"date": "2026-10-09", "value": 4.0},
