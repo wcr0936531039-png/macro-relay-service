@@ -1,3 +1,4 @@
+import { loadUSSectorReport } from '../site-embed/us-sector-loader.js';
 import { adaptSnapshotRows, validateSnapshot } from '../worker/read_macro_snapshot.js';
 
 // Private server-to-server endpoint. Never embed SNAPSHOT_READ_TOKEN in browser code.
@@ -8,8 +9,14 @@ const json = (body, status=200) => new Response(JSON.stringify(body), {
   status, headers: {'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff'}
 });
 
-export async function handle(request, env, now=Date.now()) {
-  if (new URL(request.url).pathname !== '/api/market-snapshot') return json({error:'NOT_FOUND'},404);
+export async function handle(request, env, now=Date.now(), fetchImpl=fetch) {
+  const path=new URL(request.url).pathname;
+  if (path === '/api/us-sector-report') {
+    if (request.method !== 'GET') return new Response(null,{status:405,headers:{Allow:'GET'}});
+    const report=await loadUSSectorReport(fetchImpl,undefined,new Date(now));
+    return json(report);
+  }
+  if (path !== '/api/market-snapshot') return json({error:'NOT_FOUND'},404);
   if (request.method !== 'GET') return new Response(null,{status:405,headers:{Allow:'GET'}});
   if (!env?.SNAPSHOT_READ_TOKEN || !env?.MACRO_KV?.get) return json({error:'NOT_CONFIGURED'},503);
   if (request.headers.get('Authorization') !== `Bearer ${env.SNAPSHOT_READ_TOKEN}`) return json({error:'UNAUTHORIZED'},401);
