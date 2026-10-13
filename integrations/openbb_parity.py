@@ -17,7 +17,12 @@ def compare(series_id, official_fetch, candidate_fetch=fetch_fred_series):
         official = official_fetch(series_id)
     except Exception as exc:
         return {"status": "unknown", "reason": "official_fetch_failed", "error_type": type(exc).__name__}
-    candidate = candidate_fetch(series_id)
+    try:
+        candidate = candidate_fetch(series_id)
+    except Exception as exc:
+        return {'status': 'unknown', 'reason': 'candidate_fetch_failed', 'error_type': type(exc).__name__}
+    if not isinstance(candidate, dict):
+        return {'status': 'unknown', 'reason': 'candidate_invalid_response'}
     chosen, reason = choose_observation(official, candidate)
     if chosen is None:
         return {"status": "unknown", "reason": reason,
