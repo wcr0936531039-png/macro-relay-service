@@ -12,6 +12,8 @@ on:
       - 'tests/test_openbb_candidate_safety.py'
       - 'tests/test_openbb_date_column.py'
       - 'tests/test_openbb_parity_validation.py'
+      - 'integrations/openbb_preflight.py'
+      - 'tests/test_openbb_preflight.py'
       - '.github/workflows/openbb-validation.yml'
   workflow_dispatch:
     # GitHub only discovers manual dispatch workflows from the default branch.
@@ -42,6 +44,8 @@ jobs:
           python -m unittest discover -s tests -p 'test_openbb_candidate_safety.py' -v
           python -m unittest discover -s tests -p 'test_openbb_date_column.py' -v
           python -m unittest discover -s tests -p 'test_openbb_parity_validation.py' -v
+          python -m unittest discover -s tests -p 'test_openbb_preflight.py' -v
+          python -m integrations.openbb_preflight
 
   live-smoke:
     if: github.event_name == 'workflow_dispatch' && inputs.live_smoke
