@@ -20,7 +20,7 @@ jobs:
       - name: Check out pinned experimental code (never default production)
         uses: actions/checkout@v4
         with:
-          ref: b6f95905a6fd4c88a7c92eaf26015f4ee955c3ca
+          ref: 0ec2d4dc08c72986ee3b892edff2307b3e0f5018
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
