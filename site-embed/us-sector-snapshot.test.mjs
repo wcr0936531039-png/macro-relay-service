@@ -34,7 +34,7 @@ console.log('sector metadata alignment tests passed');
 const gapHistories={SPY:rows};
 const gapStatus={SPY:{status:'ok',observed_at:'2026-09-21'}};
 for(const symbol of SECTORS){gapHistories[symbol]=rows;gapStatus[symbol]={status:'ok',observed_at:'2026-09-21'};}
-gapHistories.XLK=[...rows.slice(0,8),...rows.slice(9),{date:'2026-09-22',close:121}];
+gapHistories.XLK=[{date:'2026-08-31',close:99},...rows.slice(0,8),...rows.slice(9)];
 const tradingCalendarMismatch=evaluateSectorSnapshot({histories:gapHistories,status:gapStatus});
 assert.equal(tradingCalendarMismatch.status,'UNKNOWN');
 assert.equal(tradingCalendarMismatch.sectors.XLK.status,'UNKNOWN');
