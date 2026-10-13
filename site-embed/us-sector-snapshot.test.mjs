@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {evaluateSectorSnapshot} from './us-sector-snapshot.js';
 import {SECTORS} from './us-sector-rotation.js';
 assert.equal(evaluateSectorSnapshot().status,'UNKNOWN');
-const rows=Array.from({length:21},(_,i)=>({date:'2026-09-'+String(i+1).padStart(2,'0'),close:100+i}));
+const rows=Array.from({length:21},(_,i)=>({date:new Date(Date.UTC(2026,8,i+1)).toISOString().slice(0,10),close:100+i}));
 const histories={SPY:rows};
 const status={SPY:{status:'ok'}};
 for(const s of SECTORS){histories[s]=rows;status[s]={status:'ok'};}
