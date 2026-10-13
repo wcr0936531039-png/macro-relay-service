@@ -19,7 +19,6 @@ jobs:
           node-version: '22'
       - name: Probe TWSE public API (no credentials, no writes)
         id: probe
-        continue-on-error: true
         env:
           DRY_RUN: 'true'
           STOCK_TICKERS: '8299,5289,2404,5009'
@@ -30,4 +29,4 @@ jobs:
           RESULT: ${{ steps.probe.outcome }}
         run: |
           echo "TWSE probe outcome: $RESULT" >> "$GITHUB_STEP_SUMMARY"
-          echo "A passing workflow does not imply TWSE availability: inspect the probe step and per-ticker JSON."
+          echo "This workflow fails when any requested ticker is unavailable; inspect per-ticker JSON for details."
