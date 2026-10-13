@@ -20,3 +20,10 @@ assert.equal(stale.status,'UNKNOWN');
 assert.equal(stale.errorCode,'STALE_DATA');
 assert.equal(stale.scoreContribution,0);
 console.log('sector loader freshness gate passed');
+
+let observedSignal;
+const aborted=await loadUSSectorReport(async(_url,opts)=>{observedSignal=opts.signal;throw Object.assign(new Error('aborted'),{name:'AbortError'});});
+assert.equal(observedSignal instanceof AbortSignal,true);
+assert.equal(aborted.status,'UNKNOWN');
+assert.equal(aborted.errorCode,'DATA_UNAVAILABLE');
+console.log('sector fetch abort fallback passed');
