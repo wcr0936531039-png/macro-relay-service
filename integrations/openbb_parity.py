@@ -28,6 +28,10 @@ def compare(series_id, official_fetch, candidate_fetch=fetch_fred_series):
         return {"status": "unknown", "reason": reason,
                 "official_status": official.get("status") if isinstance(official, dict) else None,
                 "candidate_status": candidate.get("status") if isinstance(candidate, dict) else None}
+    if candidate.get("status") == "ok":
+        from integrations.openbb_arbitration import valid_observation
+        if not valid_observation(candidate):
+            return {"status": "unknown", "reason": "candidate_invalid_observation"}
     if candidate.get("status") != "ok":
         return {"status": "unknown", "reason": "candidate_unavailable",
                 "official_date": chosen["date"], "candidate_error": candidate.get("error")}
