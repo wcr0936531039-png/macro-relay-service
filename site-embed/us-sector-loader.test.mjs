@@ -8,6 +8,7 @@ const mismatch=await loadUSSectorReport(async()=>({ok:true,json:async()=>({schem
 assert.equal(mismatch.status,'UNKNOWN');
 const empty=await loadUSSectorReport(async()=>({ok:true,json:async()=>({schema_version:1,histories:{},status:{}})}));
 assert.equal(empty.status,'UNKNOWN');
+assert.equal(empty.errorCode,'DATA_INCOMPLETE');
 console.log('sector loader fallbacks passed');
 
 const validRows=Array.from({length:21},(_,i)=>({date:new Date(Date.UTC(2026,8,23+i)).toISOString().slice(0,10),close:100+i}));
@@ -27,3 +28,11 @@ assert.equal(observedSignal instanceof AbortSignal,true);
 assert.equal(aborted.status,'UNKNOWN');
 assert.equal(aborted.errorCode,'DATA_UNAVAILABLE');
 console.log('sector fetch abort fallback passed');
+
+const incomplete={...complete,histories:{...complete.histories,XLK:complete.histories.XLK.slice(0,20)}};
+const incompleteResult=await loadUSSectorReport(async()=>({ok:true,json:async()=>incomplete}),'test-url',new Date('2026-10-14T12:00:00Z'));
+assert.equal(incompleteResult.status,'UNKNOWN');
+assert.equal(incompleteResult.errorCode,'DATA_INCOMPLETE');
+assert.equal(incompleteResult.scoreContribution,0);
+assert.equal(incompleteResult.vetoOverride,null);
+console.log('incomplete report explicit status passed');
