@@ -31,6 +31,9 @@ jobs:
           git add data/keyless_snapshot.json
           if ! git diff --cached --quiet; then
             git commit -m 'Update verified official no-key observations'
-            git pull --rebase origin main
+            git fetch origin main
+            git reset --soft origin/main
+            git add data/keyless_snapshot.json
+            git commit -m 'Update verified official no-key observations' || true
             git push origin HEAD:main
           fi
