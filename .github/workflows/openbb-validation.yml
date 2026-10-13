@@ -39,7 +39,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install OpenBB for isolated test
-        run: python -m pip install 'openbb>=4,<6'
+        run: python -m pip install 'openbb-fred>=5,<6'\n          openbb-build
       - name: Verify OpenBB API and FRED observation
         run: |
           python - <<'PY'
