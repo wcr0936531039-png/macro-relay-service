@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {evaluateSectorRotation,SECTORS} from './us-sector-rotation.js';
+const empty=evaluateSectorRotation();
+assert.equal(empty.status,'UNKNOWN');
+assert.equal(empty.coverage,0);
+assert.equal(empty.sectors.XLK.relative.return5d,null);
+const benchmark={return5d:1,return10d:2,return20d:3};
+const sectors=Object.fromEntries(SECTORS.map(symbol=>[symbol,{return5d:2,return10d:3,return20d:4,observedAt:'2026-10-13'}]));
+const complete=evaluateSectorRotation({benchmark,sectors});
+assert.equal(complete.status,'OK');
+assert.equal(complete.coverage,11);
+assert.equal(complete.sectors.XLK.relative.return5d,1);
+assert.equal(complete.scoreContribution,0);
+assert.equal(complete.veto,false);
+console.log('sector rotation smoke tests passed');
