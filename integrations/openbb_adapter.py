@@ -1,7 +1,7 @@
 """Optional OpenBB adapter. No changes to existing snapshot writer.
 
 Install OpenBB separately in the scheduled Python environment:
-    pip install openbb-fred
+    pip install openbb-fred\n    openbb-build
 This adapter does not require OpenBB for imports or for existing ETL jobs.
 """
 from datetime import datetime, timezone
@@ -19,7 +19,7 @@ def fetch_fred_series(series_id: str, provider: str = "fred") -> dict[str, Any]:
         if not re.fullmatch(r"[A-Za-z0-9_.-]{1,64}", series_id):
             raise ValueError("invalid_series_id")
         from openbb import obb
-        response = obb.fred.economy.fred_series(symbol=series_id, provider=provider)
+        response = obb.fred.economy.fred_series(symbol=series_id, provider=provider, limit=12)
         records = response.to_dataframe()
         if records.empty:
             raise ValueError("empty_response")
