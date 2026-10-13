@@ -1,0 +1,36 @@
+name: Cross-market completed-close snapshot
+on:
+  push:
+    branches: [main]
+    paths: ['scripts/sync_cross_market.py', 'tests/test_cross_market.py', '.github/workflows/cross_market.yml']
+  workflow_dispatch:
+  schedule:
+    - cron: '43 6,22 * * 1-5'
+permissions:
+  contents: write
+concurrency:
+  group: cross-market-publisher
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate history and amount contracts
+        run: python -m unittest discover -s tests -p test_cross_market.py -v
+      - name: Collect independent completed-close histories and funding
+        run: python scripts/sync_cross_market.py
+      - name: Publish observations with explicit gaps
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/cross_market_snapshot.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update completed-close cross-market observations'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
