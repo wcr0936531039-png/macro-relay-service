@@ -14,10 +14,13 @@ def fetch(ticker):
     offset=chart.get('meta',{}).get('gmtoffset',0)
     closes=chart['indicators']['quote'][0]['close']
     dates=chart['timestamp']
+    if not isinstance(dates,list) or not isinstance(closes,list) or len(dates)!=len(closes):
+        raise ValueError('CHART_LENGTH_MISMATCH')
     rows={}
     for ts,price in zip(dates,closes):
-        if isinstance(price,(int,float)) and 0<price<float('inf'):
+        if not isinstance(price,bool) and isinstance(price,(int,float)) and 0<price<float('inf'):
             day=(dt.datetime.fromtimestamp(ts,dt.timezone.utc)+dt.timedelta(seconds=offset)).date().isoformat()
+            if day in rows: raise ValueError('DUPLICATE_TRADING_DATE')
             rows[day]={'date':day,'close':round(price,6)}
     return [rows[k] for k in sorted(rows)]
 def build(fetcher=fetch):
