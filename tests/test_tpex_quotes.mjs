@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {parseTpexQuotes,fetchTpexQuotes} from '../site-contract/tpex-quotes.mjs';
+const payload=[{Date:'1151012',SecuritiesCompanyCode:' 8299 ',Close:'2,050',TradingShares:'10,000',TransactionAmount:'20,500,000'}];
+const rows=parseTpexQuotes(payload,'8299');
+assert.equal(rows.length,3);
+assert.equal(rows[0].value,2050);
+assert.equal(rows[0].observed_at,'2026-10-12');
+assert.equal(rows[2].value,20500000);
+assert.equal((await fetchTpexQuotes({ticker:'8299',fetchImpl:async()=>({ok:true,json:async()=>payload})})).length,3);
+assert.throws(()=>parseTpexQuotes(payload,'5289'),/TPEX_TICKER_NOT_FOUND/);
+assert.throws(()=>parseTpexQuotes([{...payload[0],TransactionAmount:undefined,Date:'1151332'}],'8299'),/INVALID_TPEX_DATE/);
+console.log('tpex quotes tests passed');
