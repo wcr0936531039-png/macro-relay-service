@@ -24,6 +24,10 @@ jobs:
         run: python -m unittest discover -s tests -p test_cross_market.py -v
       - name: Collect independent completed-close histories and funding
         run: python scripts/sync_cross_market.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cross-market-source-snapshot
+          path: data/cross_market_snapshot.json
       - name: Publish observations with explicit gaps
         run: |
           git config user.name 'github-actions[bot]'
@@ -31,6 +35,10 @@ jobs:
           git add data/cross_market_snapshot.json
           if ! git diff --cached --quiet; then
             git commit -m 'Update completed-close cross-market observations'
-            git pull --rebase origin main
-            git push origin HEAD:main
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then break; fi
+              if [ "$attempt" = 3 ]; then exit 1; fi
+              sleep 2
+            done
           fi

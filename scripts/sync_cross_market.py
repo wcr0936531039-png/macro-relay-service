@@ -237,7 +237,7 @@ def flows(tw, previous):
         compact = day.replace("-", "")
         inst_url = f"https://www.twse.com.tw/exchangeReport/BFI82U?dayDate={compact}&type=day&response=json"
         day_url = f"https://www.twse.com.tw/exchangeReport/TWTB4U?date={compact}&selectType=All&response=json"
-        row = {"date": day, "available_at": point["available_at"], "totalValueTwd": point["totalValueTwd"], "status": "ok", "sources": [point["source"], inst_url, day_url], "scope": "TWSE_all_listed_securities"}
+        row = {"date": day, "fetched_at": NOW.isoformat(), "totalValueTwd": point["totalValueTwd"], "status": "ok", "sources": [point["source"], inst_url, day_url], "scope": "TWSE_all_listed_securities"}
         for fn, url in ((institution_flows, inst_url), (daytrade_value, day_url)):
             try:
                 row.update(fn(fetch_json(url), day))
@@ -278,7 +278,7 @@ def main():
     payload = build(previous)
     DEST.parent.mkdir(parents=True, exist_ok=True)
     DEST.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
-    print(json.dumps({"status": payload["status"], "histories": {k: len(v.get("history", [])) for k, v in payload["markets"].items()}, "flows": len(payload["flows"]["history"]), "errors": payload["errors"]}, ensure_ascii=False))
+    print(json.dumps({"status": payload["status"], "histories": {k: len(v.get("history", [])) for k, v in payload["markets"].items()}, "flows": len(payload["flows"]["history"]), "errors": payload["errors"], "flow_gaps": [{"date": r["date"], "errors": r.get("errors", [])} for r in payload["flows"]["history"] if r["status"] != "ok"]}, ensure_ascii=False))
     return 0  # Provider gaps are data states, not a failure of independent jobs.
 
 
