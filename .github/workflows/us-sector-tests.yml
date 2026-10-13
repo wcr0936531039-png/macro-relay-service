@@ -1,6 +1,16 @@
 name: US Sector Module Tests
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'site-embed/us-sector-*.js'
+      - 'site-embed/us-sector-*.mjs'
+      - 'site-embed/package.json'
+      - 'scripts/us_sector_feed.py'
+      - 'scripts/check_us_sector_snapshot.py'
+      - 'scripts/test_us_sector*.py'
+      - '.github/workflows/us-sector-*.yml'
   pull_request:
     paths:
       - 'site-embed/us-sector-*.js'
