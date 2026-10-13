@@ -31,3 +31,21 @@
 - If the source is unavailable, the context has `status: UNKNOWN` and `errorCode: DATA_UNAVAILABLE`; scoring stays unchanged.
 - Unit test: `node --test site-embed/us-sector-context.test.mjs`.
 - This is integration-ready source code, **not proof that the separate original production site has been modified**.
+
+## Preferred direct integration for the existing managed Site (no Cloudflare Worker required)
+
+The validated GitHub JSON is public; **US sector context does not depend on deploying `api-worker/index.mjs` or Cloudflare KV**. If the original Site's server-side report code can import this module, integrate it at the report assembly boundary without changing routes, UI components, Macro Gate, 10D, VETO or scores:
+
+```js
+import {attachUSSectorContext} from './us-sector-context.js';
+
+// existingReport must already have been calculated by the Site's own model.
+const enrichedReport = await attachUSSectorContext(existingReport, fetch, new Date());
+// Return enrichedReport from the existing report route; DO NOT create a new page.
+```
+
+The adapter reads `https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/us_sector_history.json` with an 8-second abort signal, returns `UNKNOWN` if unavailable or stale, and never overrides existing decisions. This is a **server integration recipe**, not an assertion that the inaccessible managed Site has been edited. Confirm its backend can perform outbound `fetch` and supports ECMAScript module imports before use; if the platform cannot import files, adapt the same logic in its existing report handler rather than redirecting to a new website.
+
+**Evidence required for production sign-off:** identify the actual Site editor/source and publishing target, verify the original report request returns `usSectorContext` while original fields and UI remain intact, verify failure behavior, and record the deployed revision and a production response. Until then mark `SITE_NOT_CONNECTED` and `DEPLOYMENT_UNVERIFIED`, regardless of GitHub CI status.
+
+The separate Worker endpoint is optional for US sector context. `/api/market-snapshot` remains private and has distinct token/KV requirements; do not weaken those requirements or expose its bearer token.
