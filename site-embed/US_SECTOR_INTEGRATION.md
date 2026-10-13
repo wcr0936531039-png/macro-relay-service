@@ -23,3 +23,11 @@
 
 ## Separate Pages issue
 - The unrelated standalone quote-page workflow previously failed because GitHub Pages setup returned `Resource not accessible by integration`. Its automatic push trigger was removed (commit 86fee8fe); it remains manual-only, not an alternate replacement website.
+
+## Non-mutating report integration adapter
+- Import `attachUSSectorContext` from `site-embed/us-sector-context.js` in the existing report backend.
+- Usage: `const enrichedReport = await attachUSSectorContext(existingReport, fetch, new Date());`
+- The adapter returns a new report object with `usSectorContext`; it does not mutate the original report, score, Macro Gate, 10D or VETO.
+- If the source is unavailable, the context has `status: UNKNOWN` and `errorCode: DATA_UNAVAILABLE`; scoring stays unchanged.
+- Unit test: `node --test site-embed/us-sector-context.test.mjs`.
+- This is integration-ready source code, **not proof that the separate original production site has been modified**.
