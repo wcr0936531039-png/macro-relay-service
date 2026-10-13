@@ -30,3 +30,17 @@ assert.equal(sectorBody.errorCode,'DATA_UNAVAILABLE');
 assert.equal(reads,2);
 assert.equal((await handle(new Request('https://example.com/api/us-sector-report',{method:'POST'}),{},now)).status,405);
 console.log('US sector API isolated fallback passed');
+
+const tickers=['SPY','XLK','XLC','XLY','XLP','XLF','XLI','XLV','XLE','XLB','XLU','XLRE'];
+const rows=Array.from({length:21},(_,i)=>({date:new Date(Date.UTC(2026,8,23+i)).toISOString().slice(0,10),close:100+i}));
+const complete={schema_version:1,source:'fixture',generated_at:'2026-10-13T00:00:00Z',histories:Object.fromEntries(tickers.map(t=>[t,rows])),status:Object.fromEntries(tickers.map(t=>[t,{status:'ok',observed_at:'2026-10-13'}]))};
+const sectorOK=await (await handle(sectorRequest,{},Date.parse('2026-10-14T12:00:00Z'),async()=>({ok:true,json:async()=>complete}))).json();
+assert.equal(sectorOK.status,'OK');
+assert.equal(sectorOK.coverage.valid,11);
+assert.equal(sectorOK.scoreContribution,0);
+assert.equal(sectorOK.vetoOverride,null);
+const sectorStale=await (await handle(sectorRequest,{},Date.parse('2026-10-20T12:00:00Z'),async()=>({ok:true,json:async()=>complete}))).json();
+assert.equal(sectorStale.status,'UNKNOWN');
+assert.equal(sectorStale.errorCode,'STALE_DATA');
+assert.equal(sectorStale.scoreContribution,0);
+console.log('US sector API complete and stale contracts passed');
