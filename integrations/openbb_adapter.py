@@ -1,7 +1,7 @@
 """Optional OpenBB adapter. No changes to existing snapshot writer.
 
 Install OpenBB separately in the scheduled Python environment:
-    pip install openbb
+    pip install openbb-fred
 This adapter does not require OpenBB for imports or for existing ETL jobs.
 """
 from datetime import datetime, timezone
@@ -16,11 +16,11 @@ def fetch_fred_series(series_id: str, provider: str = "fred") -> dict[str, Any]:
     """
     try:
         from openbb import obb
-        response = obb.economy.fred_series(symbol=series_id, provider=provider)
-        records = response.to_df()
+        response = obb.fred.economy.fred_series(symbol=series_id, provider=provider)
+        records = response.to_dataframe()
         if records.empty:
             raise ValueError("empty_response")
-        column = next((c for c in records.columns if c.lower() == series_id.lower()), None)
+        column = next((c for c in records.columns if c.lower() in (series_id.lower(), "value")), None)
         if column is None:
             raise ValueError("series_column_missing")
         observations = records[[column]].dropna()
