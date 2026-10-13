@@ -10,9 +10,12 @@ concurrency:
   cancel-in-progress: false
 jobs:
   update:
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -20,14 +23,18 @@ jobs:
         run: python -m unittest discover -s scripts -p 'test_us_sector_feed.py'
       - name: Fetch market data
         run: python scripts/us_sector_feed.py
-      - name: Check coverage
+      - name: Check coverage and aligned dates
         run: |
           python - <<'PY'
           import json
           d=json.load(open('data/us_sector_history.json'))
-          count=sum(x['status']=='ok' for x in d['status'].values())
-          print(f'Valid symbols: {count}/12')
-          if count < 12: raise SystemExit('Incomplete coverage: do not publish partial snapshot')
+          if d.get('schema_version')!=1: raise SystemExit('Schema mismatch')
+          expected={'SPY','XLK','XLC','XLY','XLP','XLF','XLI','XLV','XLE','XLB','XLU','XLRE'}
+          if set(d['status'])!=expected: raise SystemExit('Ticker coverage mismatch')
+          if any(d['status'][t]['status']!='ok' for t in expected): raise SystemExit('Incomplete data: do not publish')
+          dates={d['status'][t]['observed_at'] for t in expected}
+          if len(dates)!=1: raise SystemExit('Misaligned dates: do not publish')
+          print('Validated 12/12 ETFs, observed date:',next(iter(dates)))
           PY
       - name: Commit snapshot
         run: |
