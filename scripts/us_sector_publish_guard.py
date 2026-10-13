@@ -11,7 +11,10 @@ import sys
 def observed_date(snapshot):
     if not isinstance(snapshot,dict):
         return None
-    entry=(snapshot.get('status') or {}).get('SPY')
+    status=snapshot.get('status')
+    if not isinstance(status,dict):
+        return None
+    entry=status.get('SPY')
     if not isinstance(entry,dict) or entry.get('status')!='ok':
         return None
     value=entry.get('observed_at')
