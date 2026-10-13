@@ -14,6 +14,8 @@ on:
       - 'tests/test_openbb_parity_validation.py'
       - 'integrations/openbb_preflight.py'
       - 'tests/test_openbb_preflight.py'
+      - 'integrations/openbb_batch_parity.py'
+      - 'tests/test_openbb_batch_parity.py'
       - '.github/workflows/openbb-validation.yml'
   workflow_dispatch:
     # GitHub only discovers manual dispatch workflows from the default branch.
@@ -46,6 +48,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_openbb_parity_validation.py' -v
           python -m unittest discover -s tests -p 'test_openbb_preflight.py' -v
           python -m integrations.openbb_preflight
+          python -m unittest discover -s tests -p 'test_openbb_batch_parity.py' -v
 
   live-smoke:
     if: github.event_name == 'workflow_dispatch' && inputs.live_smoke
