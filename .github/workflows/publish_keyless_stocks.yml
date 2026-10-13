@@ -1,5 +1,8 @@
 name: Keyless stock snapshot publisher
 on:
+  push:
+    branches: [main]
+    paths: ['scripts/publish_keyless_stocks.mjs', '.github/workflows/publish_keyless_stocks.yml']
   workflow_dispatch:
   schedule:
     - cron: '45 12 * * 1-5'
