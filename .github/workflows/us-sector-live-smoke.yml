@@ -21,6 +21,13 @@ jobs:
         run: python scripts/us_sector_feed.py
       - name: Validate all 12 symbols and freshness
         run: python scripts/check_us_sector_snapshot.py data/us_sector_history.json
+      - name: Upload validated snapshot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: us-sector-validated-snapshot
+          path: data/us_sector_history.json
+          if-no-files-found: error
+          retention-days: 7
       - name: Print coverage only
         if: always()
         run: |
