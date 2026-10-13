@@ -62,3 +62,11 @@ python -m py_compile scripts/sync_macro.py
 沿用 schema_version=1、既有大寫指標鍵及 ok/stale/missing，避免另創 live 與小寫鍵造成讀寫不相容。零售採 RSAFS（含餐飲），不改成 RSXFS（不含餐飲）。coverage.total=13 只代表此端點規劃項目數；不硬寫整站 52 或宣稱全覆蓋。
 
 驗證：`node tests/test_api_worker.mjs`。單元測試不等同 Cloudflare 線上驗收。
+
+## 美國 11 板塊唯讀分析 API（程式已接線，未證實部署）
+
+現有 `api-worker/index.mjs` 另提供 `GET /api/us-sector-report`，從 GitHub `data/us_sector_history.json` 讀取 SPY + 11 檔板塊 ETF，計算 5D/10D/20D 相對強弱。該端點只提供公開行情衍生的市場背景，不讀取 `MACRO_KV`，也不要求或洩露總經專用的 `SNAPSHOT_READ_TOKEN`。原 `/api/market-snapshot` 驗證方式保持不變。
+
+資料失敗時回傳 `UNKNOWN / DATA_UNAVAILABLE`，超過 5 個 UTC 日曆天回傳 `UNKNOWN / STALE_DATA`；報告的 `scoreContribution=0`、`macroGateOverride=null`、`vetoOverride=null`。請由原網站伺服器接入後作為 `usSectorContext`，不要用它取代原有 Macro Gate、10D 或 VETO。
+
+程式與 CI 通過不代表 Worker 已發布。部署前須確認原網站正式後台與其授權的 Worker 專案；此儲存庫的 `api-worker/wrangler.toml.example` 不是正式部署設定。驗證指令：`node tests/test_api_worker.mjs`，以及 GitHub Actions `API Worker Regression Tests`。
