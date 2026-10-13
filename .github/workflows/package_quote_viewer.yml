@@ -27,7 +27,7 @@ jobs:
           const html=readFileSync('site-embed/index.html','utf8');
           const js=readFileSync('site-embed/quotes.js','utf8');
           mkdirSync('dist',{recursive:true});
-          writeFileSync('dist/index.html',html.replace('<script type="module" src="./quotes.js"></script>', '<script type="application/json" id="embedded-quotes">'+safe+'</script><script type="module">'+js.replace("const data=await response.json();","const data=JSON.parse(document.getElementById('embedded-quotes').textContent);")+'</script>'));
+          writeFileSync('dist/index.html',html.replace('<script type="module" src="./quotes.js"></script>', '<script type="application/json" id="embedded-quotes">'+safe+'</script><script type="module">'+js.replace(/const controller=new AbortController\(\),timer=setTimeout\(\(\)=>controller.abort\(\),12000\);[\\s\\S]*?const data=await response.json\(\);/,"const data=JSON.parse(document.getElementById('embedded-quotes').textContent);")+'</script>'));
           writeFileSync('dist/stock_snapshots_v2.json',JSON.stringify(json,null,2));
           EOF
       - name: Upload downloadable browser page
