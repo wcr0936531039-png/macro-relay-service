@@ -29,6 +29,12 @@ class ArbitrationTests(unittest.TestCase):
             chosen, _ = choose_observation(None, candidate, allow_candidate=True)
             self.assertIsNone(chosen)
 
+    def test_future_dated_candidate_rejected(self):
+        candidate = dict(self.candidate, date="2999-01-01")
+        chosen, reason = choose_observation(None, candidate, allow_candidate=True)
+        self.assertIsNone(chosen)
+        self.assertEqual(reason, "unknown_no_valid_official")
+
     def test_inputs_are_not_mutated(self):
         chosen, _ = choose_observation(self.official, self.candidate)
         chosen["value"] = 99
