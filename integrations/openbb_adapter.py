@@ -15,6 +15,9 @@ def fetch_fred_series(series_id: str, provider: str = "fred") -> dict[str, Any]:
     FRED pipeline. Never infer a date or synthesize a value on failure.
     """
     try:
+        import re
+        if not re.fullmatch(r"[A-Za-z0-9_.-]{1,64}", series_id):
+            raise ValueError("invalid_series_id")
         from openbb import obb
         response = obb.fred.economy.fred_series(symbol=series_id, provider=provider)
         records = response.to_dataframe()
@@ -26,9 +29,11 @@ def fetch_fred_series(series_id: str, provider: str = "fred") -> dict[str, Any]:
         observations = records[[column]].dropna()
         if observations.empty:
             raise ValueError("no_valid_observations")
-        index, row = observations.sort_index().iloc[-1:].iterrows().__next__()
+        index, row = next(observations.sort_index().iloc[-1:].iterrows())
         observation_date = index.date().isoformat() if hasattr(index, "date") else str(index)[:10]
-        datetime.strptime(observation_date, "%Y-%m-%d")
+        parsed_date = datetime.strptime(observation_date, "%Y-%m-%d").date()
+        if parsed_date > datetime.now(timezone.utc).date():
+            raise ValueError("future_observation_date")
         value = float(row[column])
         import math
         if not math.isfinite(value):
