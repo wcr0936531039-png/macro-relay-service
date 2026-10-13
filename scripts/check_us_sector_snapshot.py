@@ -20,13 +20,21 @@ def validate(data, now=None):
         dates.add(item.get('observed_at'))
         if rows[-1].get('date')!=item.get('observed_at'):issues.append(ticker+':DATE_MISMATCH')
         if any(not isinstance(row.get('close'),(int,float)) or row['close']<=0 for row in rows):issues.append(ticker+':BAD_PRICE')
+        parsed=[]
+        for row in rows:
+            try:
+                day=dt.date.fromisoformat(row['date'])
+                if day.isoformat()!=row['date']:raise ValueError()
+                parsed.append(day)
+            except (KeyError,TypeError,ValueError):issues.append(ticker+':INVALID_ROW_DATE');break
+        if parsed and (parsed!=sorted(set(parsed))):issues.append(ticker+':NON_MONOTONIC_DATES')
     if len(dates)!=1:issues.append('DATES_NOT_ALIGNED')
     observed=next(iter(dates)) if len(dates)==1 else None
     if observed:
         try:
             age=(now.date()-dt.date.fromisoformat(observed)).days
             if age<0 or age>5:issues.append('STALE_OR_FUTURE_DATA')
-        except ValueError:issues.append('INVALID_DATE')
+        except (TypeError,ValueError):issues.append('INVALID_DATE')
     return {'status':'OK' if not issues else 'UNKNOWN','coverage':sum((status.get(t) or {}).get('status')=='ok' for t in TICKERS),'observed_at':observed,'issues':issues}
 if __name__=='__main__':
     payload=json.loads(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'))
