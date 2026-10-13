@@ -235,14 +235,23 @@ def flows(tw, previous):
         if day in saved and saved[day].get("totalValueTwd") == point["totalValueTwd"]:
             rows.append(saved[day]); continue
         compact = day.replace("-", "")
-        inst_url = f"https://www.twse.com.tw/exchangeReport/BFI82U?dayDate={compact}&type=day&response=json"
+        inst_url = f"https://www.twse.com.tw/fund/BFI82U?dayDate={compact}&type=day&response=json"
         day_url = f"https://www.twse.com.tw/exchangeReport/TWTB4U?date={compact}&selectType=All&response=json"
         row = {"date": day, "fetched_at": NOW.isoformat(), "totalValueTwd": point["totalValueTwd"], "status": "ok", "sources": [point["source"], inst_url, day_url], "scope": "TWSE_all_listed_securities"}
         for fn, url in ((institution_flows, inst_url), (daytrade_value, day_url)):
             try:
-                row.update(fn(fetch_json(url), day))
+                if fn is institution_flows:
+                    try:
+                        values = fn(fetch_json(url), day)
+                    except Exception:
+                        url = f"https://www.twse.com.tw/rwd/zh/fund/BFI82U?dayDate={compact}&type=day&response=json"
+                        values = fn(fetch_json(url), day)
+                    row["sources"][1] = url
+                else:
+                    values = fn(fetch_json(url), day)
+                row.update(values)
             except Exception as error:
-                row["status"] = "partial"; row.setdefault("errors", []).append(str(error))
+                row["status"] = "partial"; row.setdefault("errors", []).append(f"{url}: {error}")
         if number(row.get("dayTradeValueTwd")) is not None:
             non = row["totalValueTwd"] - row["dayTradeValueTwd"]
             row["nonDayTradeValueTwd"] = non if non >= 0 else None
