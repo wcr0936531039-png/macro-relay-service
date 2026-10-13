@@ -16,3 +16,17 @@ const partial=evaluateSectorSnapshot({histories,status});
 assert.equal(partial.status,'UNKNOWN');
 assert.equal(partial.sectors.XLK.status,'UNKNOWN');
 console.log('sector snapshot tests passed');
+
+const metaHistories={SPY:rows},metaStatus={SPY:{status:'ok',observed_at:'2026-09-22'}};
+for(const s of SECTORS){metaHistories[s]=rows;metaStatus[s]={status:'ok',observed_at:'2026-09-21'};}
+const badMetadata=evaluateSectorSnapshot({histories:metaHistories,status:metaStatus});
+assert.equal(badMetadata.status,'UNKNOWN');
+assert.equal(badMetadata.coverage,0);
+metaStatus.SPY.observed_at='2026-09-21';
+const goodMetadata=evaluateSectorSnapshot({histories:metaHistories,status:metaStatus});
+assert.equal(goodMetadata.status,'OK');
+metaStatus.XLK.observed_at='2026-09-20';
+const partialMetadata=evaluateSectorSnapshot({histories:metaHistories,status:metaStatus});
+assert.equal(partialMetadata.status,'UNKNOWN');
+assert.equal(partialMetadata.sectors.XLK.status,'UNKNOWN');
+console.log('sector metadata alignment tests passed');
