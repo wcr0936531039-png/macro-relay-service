@@ -1,5 +1,6 @@
 import datetime as dt
 import unittest
+import math
 from check_us_sector_snapshot import validate,TICKERS
 class SnapshotTests(unittest.TestCase):
     def make_data(self, end=dt.date(2026,10,13)):
@@ -15,6 +16,13 @@ class SnapshotTests(unittest.TestCase):
     def test_stale(self):
         result=validate(self.make_data(dt.date(2026,9,20)),dt.datetime(2026,10,14,tzinfo=dt.timezone.utc))
         self.assertIn('STALE_OR_FUTURE_DATA',result['issues'])
+    def test_non_finite_prices(self):
+        for price in (float('nan'),float('inf'),float('-inf'),True):
+            with self.subTest(price=repr(price)):
+                data=self.make_data()
+                data['histories']['SPY'][0]['close']=price
+                result=validate(data,dt.datetime(2026,10,14,tzinfo=dt.timezone.utc))
+                self.assertIn('SPY:BAD_PRICE',result['issues'])
     def test_invalid_row_date(self):
         data=self.make_data()
         data['histories']['SPY'][0]['date']='2026-09-31'
