@@ -27,7 +27,15 @@ jobs:
           const html=readFileSync('site-embed/index.html','utf8');
           const js=readFileSync('site-embed/quotes.js','utf8');
           mkdirSync('dist',{recursive:true});
-          writeFileSync('dist/index.html',html.replace('<script type="module" src="./quotes.js"></script>', '<script type="application/json" id="embedded-quotes">'+safe+'</script><script type="module">'+js.replace(/const controller=new AbortController\(\),timer=setTimeout\(\(\)=>controller.abort\(\),12000\);[\\s\\S]*?const data=await response.json\(\);/,"const data=JSON.parse(document.getElementById('embedded-quotes').textContent);")+'</script>'));
+          const start=js.indexOf('  const controller=new AbortController()');
+          const end=js.indexOf('const data=await response.json();',start);
+          if(start<0||end<0)throw Error('Quote loader structure changed');
+          const offlineJs=js.slice(0,start)+'  const data=JSON.parse(document.getElementById("embedded-quotes").textContent);'+js.slice(end+'const data=await response.json();'.length);
+          const marker='<script type="module" src="./quotes.js"></script>';
+          if(!html.includes(marker))throw Error('Missing script marker');
+          const bundled=html.replace(marker,'<script type="application/json" id="embedded-quotes">'+safe+'</script><script type="module">'+offlineJs+'</script>');
+          if(bundled.includes('fetch(FEED')||bundled.includes('src="./quotes.js"'))throw Error('Not standalone');
+          writeFileSync('dist/index.html',bundled);
           writeFileSync('dist/stock_snapshots_v2.json',JSON.stringify(json,null,2));
           EOF
       - name: Upload downloadable browser page
