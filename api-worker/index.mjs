@@ -1,3 +1,4 @@
+import { handleStockReport } from './stock-report.mjs';
 import { adaptSnapshotRows, validateSnapshot } from '../worker/read_macro_snapshot.js';
 
 // Private server-to-server endpoint. Never embed SNAPSHOT_READ_TOKEN in browser code.
@@ -9,6 +10,7 @@ const json = (body, status=200) => new Response(JSON.stringify(body), {
 });
 
 export async function handle(request, env, now=Date.now()) {
+  if (new URL(request.url).pathname === '/api/stock-report') return handleStockReport(request, env, now);
   if (new URL(request.url).pathname !== '/api/market-snapshot') return json({error:'NOT_FOUND'},404);
   if (request.method !== 'GET') return new Response(null,{status:405,headers:{Allow:'GET'}});
   if (!env?.SNAPSHOT_READ_TOKEN || !env?.MACRO_KV?.get) return json({error:'NOT_CONFIGURED'},503);

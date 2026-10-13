@@ -1,0 +1,34 @@
+name: TWSE live connectivity probe
+on:
+  pull_request:
+    paths:
+      - 'scripts/sync_stocks.mjs'
+      - 'site-contract/twse-stock-day.mjs'
+      - '.github/workflows/stock_live_probe.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Probe TWSE public API (no credentials, no writes)
+        id: probe
+        env:
+          DRY_RUN: 'true'
+          ENABLE_FINMIND_FALLBACK: 'true'
+          FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
+          STOCK_TICKERS: '8299,5289,2404,5009'
+        run: node scripts/sync_stocks.mjs
+      - name: Record result
+        if: always()
+        env:
+          RESULT: ${{ steps.probe.outcome }}
+        run: |
+          echo "TWSE probe outcome: $RESULT" >> "$GITHUB_STEP_SUMMARY"
+          echo "This workflow fails when any requested ticker is unavailable; inspect per-ticker JSON for details."

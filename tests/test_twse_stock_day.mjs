@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {parseTwseStockDay,fetchTwseStockDay} from '../site-contract/twse-stock-day.mjs';
+const payload={stat:'OK',fields:['日期','成交股數','成交金額','開盤價','最高價','最低價','收盤價'],data:[['115/10/12','1,000','2,000','1','3','1','2.50']]};
+const rows=parseTwseStockDay(payload,'8299');
+assert.equal(rows.length,3);
+assert.equal(rows[0].observed_at,'2026-10-12');
+assert.equal(rows.find(x=>x.metric==='close').value,2.5);
+assert.equal(rows.find(x=>x.metric==='volume_shares').value,1000);
+const mocked=async url=>{assert.match(url,/stockNo=8299/);return {ok:true,json:async()=>payload}};
+assert.equal((await fetchTwseStockDay({ticker:'8299',month:'2026-10',fetchImpl:mocked})).length,3);
+assert.throws(()=>parseTwseStockDay({stat:'FAILED'},'8299'),/TWSE_UNAVAILABLE/);
+assert.throws(()=>parseTwseStockDay({...payload,fields:['日期'],data:[]},'8299'),/TWSE_SCHEMA_CHANGED/);
+await assert.rejects(()=>fetchTwseStockDay({ticker:'8299',month:'2026-13',fetchImpl:mocked}),/INVALID_MONTH/);
+console.log('twse-stock-day tests passed');

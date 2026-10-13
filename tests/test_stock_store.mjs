@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {saveStockSnapshot,loadStockSnapshot,refreshStockSnapshot,snapshotKey} from '../site-contract/stock-store.mjs';
+const map=new Map();
+const kv={get:async k=>map.get(k)??null,put:async(k,v)=>map.set(k,v)};
+const observation={ticker:'8299',metric:'close',value:200,observed_at:'2026-10-12',source:'TWSE',status:'ok'};
+assert.equal(snapshotKey('8299'),'stock_snapshot_v2:8299');
+assert.equal((await saveStockSnapshot(kv,{ticker:'8299',observations:[observation]})).written,true);
+assert.equal((await loadStockSnapshot(kv,'8299')).observations[0].value,200);
+assert.equal((await saveStockSnapshot(kv,{ticker:'8299',observations:[]})).written,false);
+const stale=await refreshStockSnapshot({kv,ticker:'8299',provider:async()=>{throw new Error('HTTP_503')}});
+assert.equal(stale.status,'stale');
+assert.equal(stale.snapshot.observations[0].value,200);
+const unavailable=await refreshStockSnapshot({kv,ticker:'5289',provider:async()=>{throw new Error('HTTP_503')}});
+assert.equal(unavailable.status,'unavailable');
+assert.equal((await loadStockSnapshot(kv,'8299')).observations.length,1);
+assert.equal((await loadStockSnapshot(kv,'5289')),null);
+console.log('stock-store tests passed');

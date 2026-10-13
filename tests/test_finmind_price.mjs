@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {parseFinMindPrice,fetchFinMindPrice} from '../site-contract/finmind-price.mjs';
+const payload={status:200,data:[{date:'2026-10-12',stock_id:'5289',close:1500,Trading_Volume:12345,Trading_money:18517500}]};
+const rows=parseFinMindPrice(payload,'5289');
+assert.equal(rows.length,3);
+assert.equal(rows[0].value,1500);
+assert.equal(rows[1].value,12345);
+assert.equal(rows[0].source.includes('FinMind'),true);
+assert.equal((await fetchFinMindPrice({ticker:'5289',fetchImpl:async()=>({ok:true,json:async()=>payload})})).length,3);
+assert.throws(()=>parseFinMindPrice(payload,'5009'),/FINMIND_NO_DATA/);
+console.log('FinMind secondary adapter tests passed');
