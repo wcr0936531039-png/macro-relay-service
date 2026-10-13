@@ -1,0 +1,37 @@
+name: US Sector History
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 23 * * 1-5'
+permissions:
+  contents: write
+concurrency:
+  group: us-sector-history
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests
+        run: python -m unittest discover -s scripts -p 'test_us_sector_feed.py'
+      - name: Fetch market data
+        run: python scripts/us_sector_feed.py
+      - name: Check coverage
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('data/us_sector_history.json'))
+          count=sum(x['status']=='ok' for x in d['status'].values())
+          print(f'Valid symbols: {count}/12')
+          if count < 12: raise SystemExit('Incomplete coverage: do not publish partial snapshot')
+          PY
+      - name: Commit snapshot
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/us_sector_history.json
+          git diff --cached --quiet || (git commit -m 'data: update US sector history' && git push)
