@@ -41,7 +41,7 @@ jobs:
             for(const name of ['群聯','宜鼎','漢唐','榮鋼','收盤價','成交股數','成交金額'])if(!body.includes(name))throw Error('Missing '+name);
             console.log('PASS: four stock cards rendered with validated snapshot');
             await page.route('https://raw.githubusercontent.com/**',r=>r.fulfill({status:503,body:'unavailable',headers:{'access-control-allow-origin':'*'}}));
-            await page.reload();
+            await page.setContent(pageHtml,{waitUntil:'load'});
             await page.waitForFunction(()=>document.querySelector('#master-model-quotes')?.textContent?.includes('行情暫時無法讀取'),{timeout:15000});
             console.log('PASS: fetch failure displays explicit fallback');
           }finally{await browser.close();}
