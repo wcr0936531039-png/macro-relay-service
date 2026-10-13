@@ -13,6 +13,8 @@ class PublishGuardTests(unittest.TestCase):
         self.assertFalse(should_publish(snapshot('2026-10-12'),snapshot('2026-10-13')))
     def test_empty_remote(self):
         self.assertTrue(should_publish(snapshot('2026-10-13'),{}))
+    def test_malformed_remote_status_falls_back_safely(self):
+        self.assertTrue(should_publish(snapshot('2026-10-13'),{'status':[]}))
     def test_invalid_candidate_rejected(self):
         with self.assertRaisesRegex(ValueError,'INVALID_CANDIDATE_DATE'):
             should_publish({'status':{}},snapshot('2026-10-13'))
