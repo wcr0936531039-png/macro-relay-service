@@ -23,14 +23,30 @@ def fetch_fred_series(series_id: str, provider: str = "fred") -> dict[str, Any]:
         records = response.to_dataframe()
         if records.empty:
             raise ValueError("empty_response")
-        column = next((c for c in records.columns if c.lower() in (series_id.lower(), "value")), None)
+        # OpenBB providers may expose date/value columns or a dated index.
+        column = next((c for c in records.columns if str(c).lower() in (series_id.lower(), "value")), None)
         if column is None:
             raise ValueError("series_column_missing")
-        observations = records[[column]].dropna()
-        if observations.empty:
+        if "date" in records.columns:
+            candidates = [(str(row["date"])[:10], row[column])
+                          for _, row in records.iterrows()]
+        else:
+            candidates = [(idx.date().isoformat() if hasattr(idx, "date") else str(idx)[:10], row[column])
+                          for idx, row in records.iterrows()]
+        import math
+        valid = []
+        for date_text, raw_value in candidates:
+            try:
+                parsed = datetime.strptime(date_text, "%Y-%m-%d").date()
+                number = float(raw_value)
+                if math.isfinite(number) and parsed <= datetime.now(timezone.utc).date():
+                    valid.append((parsed, number))
+            except (TypeError, ValueError, OverflowError):
+                continue
+        if not valid:
             raise ValueError("no_valid_observations")
-        index, row = next(observations.sort_index().iloc[-1:].iterrows())
-        observation_date = index.date().isoformat() if hasattr(index, "date") else str(index)[:10]
+        parsed_date, value = max(valid, key=lambda x: x[0])
+        observation_date = parsed_date.isoformat()
         parsed_date = datetime.strptime(observation_date, "%Y-%m-%d").date()
         if parsed_date > datetime.now(timezone.utc).date():
             raise ValueError("future_observation_date")
