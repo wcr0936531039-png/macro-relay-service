@@ -11,21 +11,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify configuration
         env:
-          ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCOUNT: ${{ secrets.CF_ACCOUNT_ID }}
+          TOKEN: ${{ secrets.CF_API_TOKEN }}
           KV_ID: ${{ secrets.CF_KV_NAMESPACE_ID }}
           READ_TOKEN: ${{ secrets.SNAPSHOT_READ_TOKEN }}
         run: |
-          test -n "$ACCOUNT" || { echo "Missing CLOUDFLARE_ACCOUNT_ID"; exit 1; }
-          test -n "$TOKEN" || { echo "Missing CLOUDFLARE_API_TOKEN"; exit 1; }
+          test -n "$ACCOUNT" || { echo "Missing CF_ACCOUNT_ID"; exit 1; }
+          test -n "$TOKEN" || { echo "Missing CF_API_TOKEN"; exit 1; }
           test -n "$KV_ID" || { echo "Missing CF_KV_NAMESPACE_ID"; exit 1; }
           test -n "$READ_TOKEN" || { echo "Missing SNAPSHOT_READ_TOKEN"; exit 1; }
           sed -i "s/REPLACE_WITH_STAGING_KV_NAMESPACE_ID/$KV_ID/" wrangler.staging.toml
       - name: Deploy staging Worker
         uses: cloudflare/wrangler-action@v4
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
           command: deploy --config wrangler.staging.toml
           secrets: |
             SNAPSHOT_READ_TOKEN
