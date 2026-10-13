@@ -9,8 +9,8 @@ def validate(data, now=None):
     issues=[]
     if not isinstance(data,dict):return {'status':'UNKNOWN','coverage':0,'observed_at':None,'issues':['INVALID_ROOT']}
     if data.get('schema_version')!=1:issues.append('SCHEMA_MISMATCH')
-    status=data.get('status') or {}
-    histories=data.get('histories') or {}
+    status=data.get('status',{})
+    histories=data.get('histories',{})
     if not isinstance(status,dict) or not isinstance(histories,dict):return {'status':'UNKNOWN','coverage':0,'observed_at':None,'issues':['INVALID_CONTAINERS']}
     if set(status)!=TICKERS or set(histories)!=TICKERS:issues.append('SYMBOL_COVERAGE')
     dates=set()
