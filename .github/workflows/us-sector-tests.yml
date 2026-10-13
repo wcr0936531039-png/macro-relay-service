@@ -7,6 +7,9 @@ on:
       - 'site-embed/us-sector-*.js'
       - 'site-embed/us-sector-*.mjs'
       - 'site-embed/package.json'
+      - 'tests/test_us_sector_published_pipeline.mjs'
+      - 'data/us_sector_history.json'
+      - 'api-worker/index.mjs'
       - 'scripts/us_sector_feed.py'
       - 'scripts/check_us_sector_snapshot.py'
       - 'scripts/us_sector_publish_guard.py'
@@ -36,4 +39,5 @@ jobs:
         with:
           python-version: '3.12'
       - run: node --test site-embed/us-sector-rotation.test.mjs site-embed/us-sector-history.test.mjs site-embed/us-sector-snapshot.test.mjs site-embed/us-sector-report.test.mjs site-embed/us-sector-loader.test.mjs site-embed/us-sector-context.test.mjs
+      - run: node tests/test_us_sector_published_pipeline.mjs
       - run: python -m unittest discover -s scripts -p 'test_us_sector*.py'
