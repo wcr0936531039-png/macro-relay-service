@@ -47,6 +47,17 @@ class OpenBBAdapterTests(unittest.TestCase):
         self.assertEqual(row["date"], "2026-10-10")
         self.assertEqual(row["value"], 4.1)
 
+    def test_live_parity_disables_provider_cache(self):
+        received = []
+        def fake_fetch(**kwargs):
+            received.append(kwargs)
+            return types.SimpleNamespace(to_dataframe=lambda: FakeFrame([("2026-10-10", {"DGS10": 4.1})]))
+        obb = types.SimpleNamespace(fred=types.SimpleNamespace(economy=types.SimpleNamespace(fred_series=fake_fetch)))
+        with patch.dict(sys.modules, {"openbb": types.SimpleNamespace(obb=obb)}):
+            row = fetch_fred_series("DGS10")
+        self.assertEqual(row["status"], "ok")
+        self.assertIs(received[0]["use_cache"], False)
+
     def test_invalid_series_id_never_calls_provider(self):
         row = fetch_fred_series("DGS10?inject")
         self.assertEqual(row["status"], "missing")
