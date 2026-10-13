@@ -34,4 +34,3 @@ jobs:
         run: |
           echo '### Stock snapshot pipeline' >> "$GITHUB_STEP_SUMMARY"
           echo 'The JSON is committed to main; this does not deploy or update the ChatGPT Site.' >> "$GITHUB_STEP_SUMMARY"
-          fi
