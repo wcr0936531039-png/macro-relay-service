@@ -44,3 +44,9 @@ assert.equal(sectorStale.status,'UNKNOWN');
 assert.equal(sectorStale.errorCode,'STALE_DATA');
 assert.equal(sectorStale.scoreContribution,0);
 console.log('US sector API complete and stale contracts passed');
+
+const sectorUnexpected=await (await handle(sectorRequest,{},Date.parse('2026-10-14T12:00:00Z'),async()=>({ok:true,json:async()=>({schema_version:1,histories:{SPY:42},status:{SPY:{status:'ok'}}})}))).json();
+assert.equal(sectorUnexpected.status,'UNKNOWN');
+assert.equal(sectorUnexpected.scoreContribution,0);
+assert.equal(sectorUnexpected.vetoOverride,null);
+console.log('Unexpected sector schema exception contained');
