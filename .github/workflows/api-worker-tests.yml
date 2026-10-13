@@ -27,4 +27,4 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/test_api_worker.mjs
-      - run: node --test site-embed/us-sector-rotation.test.mjs site-embed/us-sector-history.test.mjs site-embed/us-sector-snapshot.test.mjs site-embed/us-sector-report.test.mjs site-embed/us-sector-loader.test.mjs
+      - run: node --test site-embed/us-sector-rotation.test.mjs site-embed/us-sector-history.test.mjs site-embed/us-sector-snapshot.test.mjs site-embed/us-sector-report.test.mjs site-embed/us-sector-loader.test.mjs site-embed/us-sector-context.test.mjs
