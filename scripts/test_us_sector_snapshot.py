@@ -28,6 +28,16 @@ class SnapshotTests(unittest.TestCase):
         data['histories']['SPY'][0]['date']='2026-09-31'
         result=validate(data,dt.datetime(2026,10,14,tzinfo=dt.timezone.utc))
         self.assertIn('SPY:INVALID_ROW_DATE',result['issues'])
+    def test_session_mismatch_same_latest_date(self):
+        data=self.make_data()
+        rows=data['histories']['XLK']
+        prior=(dt.date.fromisoformat(rows[0]['date'])-dt.timedelta(days=1)).isoformat()
+        data['histories']['XLK']=[{'date':prior,'close':99}]+rows[:8]+rows[9:]
+        now=dt.datetime(2026,10,14,tzinfo=dt.timezone.utc)
+        result=validate(data,now)
+        self.assertEqual(result['status'],'UNKNOWN')
+        self.assertIn('XLK:TRADING_SESSIONS_MISMATCH',result['issues'])
+        self.assertNotIn('XLK:DATE_MISMATCH',result['issues'])
     def test_malformed_input_fails_closed(self):
         now=dt.datetime(2026,10,14,tzinfo=dt.timezone.utc)
         self.assertEqual(validate([],now)['status'],'UNKNOWN')
