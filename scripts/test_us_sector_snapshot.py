@@ -28,4 +28,23 @@ class SnapshotTests(unittest.TestCase):
         data['histories']['SPY'][0]['date']='2026-09-31'
         result=validate(data,dt.datetime(2026,10,14,tzinfo=dt.timezone.utc))
         self.assertIn('SPY:INVALID_ROW_DATE',result['issues'])
+    def test_malformed_input_fails_closed(self):
+        now=dt.datetime(2026,10,14,tzinfo=dt.timezone.utc)
+        self.assertEqual(validate([],now)['status'],'UNKNOWN')
+        self.assertIn('INVALID_ROOT',validate(None,now)['issues'])
+        for bad in ([], 'bad', 7):
+            data=self.make_data()
+            data['histories']=bad
+            self.assertIn('INVALID_CONTAINERS',validate(data,now)['issues'])
+        data=self.make_data()
+        data['histories']['SPY'][-1]=None
+        result=validate(data,now)
+        self.assertEqual(result['status'],'UNKNOWN')
+        self.assertIn('SPY:BAD_PRICE',result['issues'])
+        data=self.make_data()
+        data['status']['SPY']='corrupt'
+        self.assertIn('SPY:MISSING_HISTORY',validate(data,now)['issues'])
+        data=self.make_data()
+        data['histories']['SPY']='corrupt'
+        self.assertIn('SPY:MISSING_HISTORY',validate(data,now)['issues'])
 if __name__=='__main__':unittest.main()
