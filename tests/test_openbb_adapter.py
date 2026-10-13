@@ -45,6 +45,12 @@ class OpenBBAdapterTests(unittest.TestCase):
         self.assertEqual(row["date"], "2026-10-10")
         self.assertEqual(row["value"], 4.1)
 
+    def test_invalid_series_id_never_calls_provider(self):
+        row = fetch_fred_series("DGS10?inject")
+        self.assertEqual(row["status"], "missing")
+        self.assertIsNone(row["value"])
+        self.assertIn("invalid_series_id", row["error"])
+
     def test_provider_failure_never_invents_data(self):
         obb = types.SimpleNamespace(fred=types.SimpleNamespace(economy=types.SimpleNamespace(
             fred_series=lambda **kwargs: (_ for _ in ()).throw(RuntimeError("offline")))))
