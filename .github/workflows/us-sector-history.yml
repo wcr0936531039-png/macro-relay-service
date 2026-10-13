@@ -30,12 +30,22 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           cp data/us_sector_history.json /tmp/us-sector-history-validated.json
-          git fetch origin main
-          git reset --hard origin/main
-          cp /tmp/us-sector-history-validated.json data/us_sector_history.json
-          python scripts/check_us_sector_snapshot.py data/us_sector_history.json
-          git add -- data/us_sector_history.json
-          if ! git diff --cached --quiet; then
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/us-sector-history-validated.json data/us_sector_history.json
+            python scripts/check_us_sector_snapshot.py data/us_sector_history.json
+            git add -- data/us_sector_history.json
+            if git diff --cached --quiet; then
+              echo "Sector history unchanged; no publication required"
+              exit 0
+            fi
             git commit -m 'data: update US sector history'
-            git push origin HEAD:main
-          fi
+            if git push origin HEAD:main; then
+              echo "Validated sector history published"
+              exit 0
+            fi
+            echo "Concurrent main update: retrying only the validated sector snapshot ($attempt/3)"
+          done
+          echo "Publication failed after three retries; prior remote snapshot retained" >&2
+          exit 1
