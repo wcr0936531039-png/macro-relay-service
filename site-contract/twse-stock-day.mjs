@@ -31,7 +31,7 @@ export function parseTwseStockDay(payload,ticker) {
 }
 export async function fetchTwseStockDay({ticker,month,fetchImpl=fetch,timeoutMs=TIMEOUT_MS}) {
   ticker=normalizeTicker(ticker);
-  if(!/^\\d{4}-\\d{2}$/.test(month)) throw new Error('INVALID_MONTH');
+  if(!/^\d{4}-\d{2}$/.test(month)) throw new Error('INVALID_MONTH');
   const [y,m]=month.split('-').map(Number);
   if(m<1||m>12) throw new Error('INVALID_MONTH');
   const url=new URL('https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY');
