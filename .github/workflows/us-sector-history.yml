@@ -20,22 +20,11 @@ jobs:
         with:
           python-version: '3.12'
       - name: Unit tests
-        run: python -m unittest discover -s scripts -p 'test_us_sector_feed.py'
+        run: python -m unittest discover -s scripts -p 'test_us_sector*.py'
       - name: Fetch market data
         run: python scripts/us_sector_feed.py
-      - name: Check coverage and aligned dates
-        run: |
-          python - <<'PY'
-          import json
-          d=json.load(open('data/us_sector_history.json'))
-          if d.get('schema_version')!=1: raise SystemExit('Schema mismatch')
-          expected={'SPY','XLK','XLC','XLY','XLP','XLF','XLI','XLV','XLE','XLB','XLU','XLRE'}
-          if set(d['status'])!=expected: raise SystemExit('Ticker coverage mismatch')
-          if any(d['status'][t]['status']!='ok' for t in expected): raise SystemExit('Incomplete data: do not publish')
-          dates={d['status'][t]['observed_at'] for t in expected}
-          if len(dates)!=1: raise SystemExit('Misaligned dates: do not publish')
-          print('Validated 12/12 ETFs, observed date:',next(iter(dates)))
-          PY
+      - name: Validate coverage and freshness
+        run: python scripts/check_us_sector_snapshot.py data/us_sector_history.json
       - name: Commit snapshot
         run: |
           git config user.name github-actions[bot]
