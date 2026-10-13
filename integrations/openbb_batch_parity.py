@@ -13,6 +13,10 @@ DEFAULT_SERIES = ("DGS10", "DFII10", "T10YIE")
 
 
 def check_batch(series_ids, official_fetch, candidate_fetch=fetch_fred_series):
+    series_ids = list(series_ids)
+    if not series_ids or len(set(series_ids)) != len(series_ids):
+        return {"status": "not_verified", "reason": "empty_or_duplicate_series",
+                "series_count": len(series_ids), "matched": 0, "results": {}, "published": False}
     results = {}
     for series_id in series_ids:
         try:
