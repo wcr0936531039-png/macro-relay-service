@@ -5,6 +5,8 @@ on:
     paths:
       - 'integrations/openbb_adapter.py'
       - 'tests/test_openbb_adapter.py'
+      - 'integrations/openbb_arbitration.py'
+      - 'tests/test_openbb_arbitration.py'
       - '.github/workflows/openbb-validation.yml'
   workflow_dispatch:
     # GitHub only discovers manual dispatch workflows from the default branch.
@@ -28,7 +30,9 @@ jobs:
         with:
           python-version: '3.11'
       - name: Offline adapter contract tests
-        run: python -m unittest discover -s tests -p 'test_openbb_adapter.py' -v
+        run: |
+          python -m unittest discover -s tests -p 'test_openbb_adapter.py' -v
+          python -m unittest discover -s tests -p 'test_openbb_arbitration.py' -v
 
   live-smoke:
     if: github.event_name == 'workflow_dispatch' && inputs.live_smoke
