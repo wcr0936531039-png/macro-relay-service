@@ -19,3 +19,14 @@ assert.equal(body.rows.find(x=>x.id==='RRPONTSYD').status,'stale');
 assert.equal((await handle(request(),{...env,MACRO_KV:{get:async()=>null}},now)).status,503);
 assert.equal((await handle(request(),{...env,MACRO_KV:{get:async()=>{throw Error('private');}}},now)).status,503);
 console.log('API Worker auth, zero, missing, stale, and no-upstream checks passed');
+
+const sectorRequest=new Request('https://example.com/api/us-sector-report');
+const sectorFallback=await handle(sectorRequest,{},Date.parse('2026-10-14T12:00:00Z'),async()=>({ok:false,status:503}));
+const sectorBody=await sectorFallback.json();
+assert.equal(sectorFallback.status,200);
+assert.equal(sectorBody.status,'UNKNOWN');
+assert.equal(sectorBody.scoreContribution,0);
+assert.equal(sectorBody.errorCode,'DATA_UNAVAILABLE');
+assert.equal(reads,2);
+assert.equal((await handle(new Request('https://example.com/api/us-sector-report',{method:'POST'}),{},now)).status,405);
+console.log('US sector API isolated fallback passed');
