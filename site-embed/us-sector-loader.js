@@ -14,6 +14,7 @@ export async function loadUSSectorReport(fetchImpl = fetch, url = 'https://raw.g
     if (!Number.isFinite(date.getTime()) || !Number.isFinite(current.getTime()) || date.toISOString().slice(0,10)!==observed) throw new Error('INVALID_OBSERVED_DATE');
     const ageDays=(Date.UTC(current.getUTCFullYear(),current.getUTCMonth(),current.getUTCDate())-date.getTime())/86400000;
     if (ageDays<0 || ageDays>5) return {...buildSectorReport(),status:'UNKNOWN',errorCode:'STALE_DATA',warnings:['STALE_DATA','NO_TRADING_DECISION'],observedAt:observed};
+    if (report.status!=='OK') return {...report,errorCode:'DATA_INCOMPLETE'};
     return report;
   } catch (error) {
     return {...buildSectorReport(),errorCode:'DATA_UNAVAILABLE'};
