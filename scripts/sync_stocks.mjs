@@ -1,5 +1,5 @@
 import {fetchTwseStockDay} from '../site-contract/twse-stock-day.mjs';
-import {fetchTpexQuotes} from '../site-contract/tpex-quotes.mjs';
+import {parseTpexQuotes} from '../site-contract/tpex-quotes.mjs';
 const OTC=new Set(['8299','5289','5009']);
 import {normalizeTicker} from '../site-contract/stock-source.mjs';
 const tickers=(process.env.STOCK_TICKERS||'8299,5289,2404,5009').split(',').map(normalizeTicker);
@@ -7,9 +7,21 @@ const month=new Date().toISOString().slice(0,7);
 const account=process.env.CF_ACCOUNT_ID,namespace=process.env.CF_KV_NAMESPACE_ID,token=process.env.CF_API_TOKEN;
 const dryRun=process.env.DRY_RUN!=='false';
 const summary=[];
+let tpexPayload=null,tpexError=null;
+try {
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),20000);
+  try {
+    const response=await fetch('https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes',{headers:{Accept:'application/json'},signal:controller.signal});
+    if(!response.ok)throw new Error('TPEX_HTTP_'+response.status);
+    tpexPayload=await response.json();
+    if(!Array.isArray(tpexPayload))throw new Error('TPEX_SCHEMA_CHANGED');
+  } finally {clearTimeout(timer);}
+} catch(error){tpexError=String(error?.message||error);}
+
 for(const ticker of tickers){
   try{
-    const rows=OTC.has(ticker)?await fetchTpexQuotes({ticker}):await fetchTwseStockDay({ticker,month});
+    const rows=OTC.has(ticker)?(tpexPayload?parseTpexQuotes(tpexPayload,ticker):(()=>{throw new Error(tpexError||'TPEX_UNAVAILABLE');})()):await fetchTwseStockDay({ticker,month});
     const valid=rows.filter(x=>x.status==='ok');
     if(!valid.length){summary.push({ticker,status:'missing',reason:'NO_VALID_ROWS'});continue;}
     const key='stock_snapshot_v2:'+ticker;
