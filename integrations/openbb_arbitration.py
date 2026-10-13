@@ -36,3 +36,7 @@ def choose_observation(official, candidate, *, allow_candidate=False):
     if allow_candidate and _valid(candidate):
         return candidate.copy(), "candidate_fallback"
     return None, "unknown_no_valid_official"
+
+
+# Public read-only validation predicate shared with parity checks.
+valid_observation = _valid
