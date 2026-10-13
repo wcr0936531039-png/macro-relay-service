@@ -46,7 +46,7 @@ class OpenBBAdapterTests(unittest.TestCase):
         self.assertEqual(row["value"], 4.1)
 
     def test_provider_failure_never_invents_data(self):
-        obb = types.SimpleNamespace(economy=types.SimpleNamespace(
+        obb = types.SimpleNamespace(fred=types.SimpleNamespace(economy=types.SimpleNamespace(
             fred_series=lambda **kwargs: (_ for _ in ()).throw(RuntimeError("offline")))))
         with patch.dict(sys.modules, {"openbb": types.SimpleNamespace(obb=obb)}):
             row = fetch_fred_series("DGS10")
