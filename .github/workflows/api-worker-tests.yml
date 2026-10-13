@@ -1,0 +1,30 @@
+name: API Worker Regression Tests
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'api-worker/**'
+      - 'worker/**'
+      - 'tests/test_api_worker.mjs'
+      - 'site-embed/us-sector-*.js'
+      - '.github/workflows/api-worker-tests.yml'
+  pull_request:
+    paths:
+      - 'api-worker/**'
+      - 'worker/**'
+      - 'tests/test_api_worker.mjs'
+      - 'site-embed/us-sector-*.js'
+      - '.github/workflows/api-worker-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/test_api_worker.mjs
+      - run: node --test site-embed/us-sector-rotation.test.mjs site-embed/us-sector-history.test.mjs site-embed/us-sector-snapshot.test.mjs site-embed/us-sector-report.test.mjs site-embed/us-sector-loader.test.mjs
