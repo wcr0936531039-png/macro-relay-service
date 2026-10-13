@@ -4,13 +4,13 @@ This branch introduces an **isolated candidate-source adapter** in `integrations
 
 ## Deployment contract
 
-- Install `openbb` only in an isolated scheduled Python runner; do not attempt to import it in Cloudflare Workers.
-- Validate installed OpenBB version and the `obb.economy.fred_series` API before enabling. Provider availability may change.
+- Install `openbb-fred` and run `openbb-build` only in an isolated scheduled Python runner; do not attempt to import it in Cloudflare Workers.
+- Validate installed OpenBB version and the `obb.fred.economy.fred_series` API before enabling. Provider availability may change.
 - Test with a real FRED series (e.g. DGS10), compare value and observation date against the existing official FRED pipeline, and check access/limits.
 - Keep the existing official FRED source as primary. Only promote OpenBB when verified; never replace a newer official observation with an older one.
 - Do not publish `missing` as a numeric observation. Preserve prior dated observations with the existing stale handling.
 - Do not infer support for Taiwan filings, ROIC, 2027 EPS or institutional flows from this adapter.
-- The adapter is **not wired into the scheduled workflow** until real integration tests and a review pass.
+- The adapter is **not wired into the scheduled workflow** until real integration tests and a review pass. The PR-only CI checks offline behavior; the live-smoke job is deliberately skipped on pull requests. GitHub workflow_dispatch requires the workflow file on the default branch. Do not merge the entire experimental PR merely to enable manual dispatch. Run the isolated smoke script in an authorized test runner, or land a separate workflow-only PR after review.\n\nThe live smoke requires a valid `FRED_API_KEY` secret. No key is embedded in code. Do not interpret successful offline CI as a live FRED connection.
 
 ## Acceptance checklist
 
