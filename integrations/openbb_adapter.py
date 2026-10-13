@@ -4,7 +4,7 @@ Install OpenBB separately in the scheduled Python environment:
     pip install openbb
 This adapter does not require OpenBB for imports or for existing ETL jobs.
 """
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from typing import Any
 
 
@@ -26,8 +26,9 @@ def fetch_fred_series(series_id: str, provider: str = "fred") -> dict[str, Any]:
         observations = records[[column]].dropna()
         if observations.empty:
             raise ValueError("no_valid_observations")
-        index, row = next(reversed(list(observations.iterrows())))
+        index, row = observations.sort_index().iloc[-1:].iterrows().__next__()
         observation_date = index.date().isoformat() if hasattr(index, "date") else str(index)[:10]
+        datetime.strptime(observation_date, "%Y-%m-%d")
         value = float(row[column])
         import math
         if not math.isfinite(value):
