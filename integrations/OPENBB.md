@@ -19,3 +19,9 @@ This branch introduces an **isolated candidate-source adapter** in `integrations
 3. Missing/invalid/timeout results do not block existing ETL.
 4. Official source remains first priority, no duplicate scoring.
 5. Production site unchanged until review and separate deployment approval.
+
+## Upstream dependency and failure-domain warning
+
+OpenBB FRED and the official FRED API access the **same underlying FRED data provider**. They are not independent data sources. Passing parity verifies the alternate client integration, **not** upstream outage redundancy. A FRED outage, revoked key, quota/rate limit or provider-side error may affect both paths. Do not mark `independent_source_verified` or increase the macro confidence score because two FRED clients agree. For true source diversity, add and validate a separately operated upstream with compatible definitions, frequency, release lag, revisions and units.
+
+OpenBB V5 standalone namespace is `obb.fred.economy.fred_series`, and the documented environment credential is `FRED_API_KEY`. Keep `openbb-fred` installed without legacy shared routers in the isolated runner. Source: https://docs.openbb.co/odp/python/quickstart/user and https://docs.openbb.co/odp/python/extensions/providers
