@@ -1,0 +1,35 @@
+name: Validate browser quote viewer
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-embed/**'
+      - '.github/workflows/validate_quote_viewer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate JS syntax
+        run: node --check site-embed/quotes.js
+      - name: Verify published JSON contract
+        run: |
+          node --input-type=module <<'EOF'
+          import {readFileSync} from 'node:fs';
+          const data=JSON.parse(readFileSync('data/stock_snapshots_v2.json','utf8'));
+          if(data.schema_version!==2)throw Error('Invalid schema');
+          for(const ticker of ['2404','5009','5289','8299']){
+            const rows=data.stocks?.[ticker]?.observations;
+            if(!Array.isArray(rows))throw Error('Missing '+ticker);
+            for(const metric of ['close','volume_shares','turnover_twd']){
+              if(!rows.some(r=>r.ticker===ticker&&r.metric===metric&&r.status==='ok'&&Number.isFinite(r.value)))throw Error('Missing '+ticker+'/'+metric);
+            }
+          }
+          console.log('Verified 4 tickers and 3 metrics each');
+          EOF
