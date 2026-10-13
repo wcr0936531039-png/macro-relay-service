@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {createReport,updateModule,evaluateReport,MODULES} from '../site-contract/report-state.mjs';
+const report=createReport('8299');
+assert.equal(report.modules.veto.status,'unknown');
+assert.equal(report.final_rating,null);
+assert.throws(()=>createReport('8299;DROP'),/INVALID_TICKER/);
+let partial=updateModule(report,'fundamentals',{status:'complete',evidence:[{source:'MOPS',observed_at:'2026-09-30'}]});
+assert.equal(partial.status,'partial');
+assert.equal(partial.modules.macro.status,'pending');
+assert.equal(evaluateReport(partial,{rating:'A'}).final_rating,null);
+let full=report;
+for (const key of MODULES) full=updateModule(full,key,{status:'complete',evidence:key==='veto'?[{decision:'PASS',verified:true}]:[{source:'test',verified:true}]});
+assert.equal(evaluateReport(full,{rating:'A'}).final_rating,'A');
+const stale=updateModule(full,'macro',{status:'unavailable',evidence:[]});
+assert.equal(evaluateReport(stale,{rating:'A'}).final_rating,null);
+const unknown=updateModule(full,'veto',{status:'unknown',evidence:[]});
+assert.equal(evaluateReport(unknown,{rating:'A'}).final_rating,null);
+const blocked=updateModule(full,'veto',{status:'complete',evidence:[{decision:'VETO',verified:true}]});
+assert.equal(evaluateReport(blocked,{rating:'A'}).final_rating,null);
+assert.equal(full.modules.macro.status,'complete'); // no mutation
+console.log('report-state tests passed');
