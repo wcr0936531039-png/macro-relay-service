@@ -29,5 +29,13 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add data/us_sector_history.json
-          git diff --cached --quiet || (git commit -m 'data: update US sector history' && git push)
+          cp data/us_sector_history.json /tmp/us-sector-history-validated.json
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/us-sector-history-validated.json data/us_sector_history.json
+          python scripts/check_us_sector_snapshot.py data/us_sector_history.json
+          git add -- data/us_sector_history.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: update US sector history'
+            git push origin HEAD:main
+          fi
