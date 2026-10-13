@@ -33,7 +33,18 @@ jobs:
           for attempt in 1 2 3; do
             git fetch origin main
             git reset --hard origin/main
-            cp /tmp/us-sector-history-validated.json data/us_sector_history.json
+            cp /tmp/us-sector-history-validated.json /tmp/us-sector-publish-candidate.json
+            guard_status=0
+            python scripts/us_sector_publish_guard.py /tmp/us-sector-publish-candidate.json data/us_sector_history.json || guard_status=$?
+            if [ "$guard_status" -eq 2 ]; then
+              echo "Remote sector snapshot is newer; retaining it"
+              exit 0
+            fi
+            if [ "$guard_status" -ne 0 ]; then
+              echo "Sector snapshot guard failed" >&2
+              exit "$guard_status"
+            fi
+            cp /tmp/us-sector-publish-candidate.json data/us_sector_history.json
             python scripts/check_us_sector_snapshot.py data/us_sector_history.json
             git add -- data/us_sector_history.json
             if git diff --cached --quiet; then
