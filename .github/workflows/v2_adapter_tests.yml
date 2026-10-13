@@ -26,3 +26,4 @@ jobs:
       - run: node tests/test_stock_store.mjs
       - run: node tests/test_stock_report_endpoint.mjs
       - run: node tests/test_api_worker.mjs
+      - run: node tests/test_worker_integration.mjs
