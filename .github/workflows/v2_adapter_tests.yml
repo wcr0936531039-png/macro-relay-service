@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'site-contract/**'
+      - 'api-worker/**'
+      - 'tests/test_*.mjs'
       - 'tests/test_report_state.mjs'
       - 'tests/test_stock_source.mjs'
       - '.github/workflows/v2_adapter_tests.yml'
