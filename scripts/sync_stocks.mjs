@@ -15,7 +15,13 @@ for(const ticker of tickers){
     if(!dryRun){
       if(!account||!namespace||!token)throw new Error('CLOUDFLARE_NOT_CONFIGURED');
       const endpoint='https://api.cloudflare.com/client/v4/accounts/'+encodeURIComponent(account)+'/storage/kv/namespaces/'+encodeURIComponent(namespace)+'/values/'+encodeURIComponent(key);
-      const snapshot={schema_version:2,ticker,updated_at:new Date().toISOString(),observations:valid};
+      const previousResponse=await fetch(endpoint,{headers:{Authorization:'Bearer '+token}});
+      if(!previousResponse.ok && previousResponse.status!==404)throw new Error('KV_READ_HTTP_'+previousResponse.status);
+      const previous=previousResponse.ok?await previousResponse.json():null;
+      if(previous && (previous.schema_version!==2||previous.ticker!==ticker||!Array.isArray(previous.observations)))throw new Error('KV_EXISTING_SCHEMA_MISMATCH');
+      const combined=new Map();
+      for(const item of [...(previous?.observations||[]),...valid])combined.set(item.metric+'|'+item.observed_at,item);
+      const snapshot={schema_version:2,ticker,updated_at:new Date().toISOString(),observations:[...combined.values()]};
       const response=await fetch(endpoint,{method:'PUT',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(snapshot)});
       if(!response.ok)throw new Error('KV_HTTP_'+response.status);
     }
