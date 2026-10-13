@@ -1,5 +1,6 @@
 import datetime as dt
 import json
+import math
 import pathlib
 import sys
 TICKERS={'SPY','XLK','XLC','XLY','XLP','XLF','XLI','XLV','XLE','XLB','XLU','XLRE'}
@@ -19,7 +20,7 @@ def validate(data, now=None):
             continue
         dates.add(item.get('observed_at'))
         if rows[-1].get('date')!=item.get('observed_at'):issues.append(ticker+':DATE_MISMATCH')
-        if any(not isinstance(row.get('close'),(int,float)) or row['close']<=0 for row in rows):issues.append(ticker+':BAD_PRICE')
+        if any(not isinstance(row,dict) or isinstance(row.get('close'),bool) or not isinstance(row.get('close'),(int,float)) or not math.isfinite(row['close']) or row['close']<=0 for row in rows):issues.append(ticker+':BAD_PRICE')
         parsed=[]
         for row in rows:
             try:
