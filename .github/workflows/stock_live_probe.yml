@@ -21,6 +21,8 @@ jobs:
         id: probe
         env:
           DRY_RUN: 'true'
+          ENABLE_FINMIND_FALLBACK: 'true'
+          FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
           STOCK_TICKERS: '8299,5289,2404,5009'
         run: node scripts/sync_stocks.mjs
       - name: Record result
