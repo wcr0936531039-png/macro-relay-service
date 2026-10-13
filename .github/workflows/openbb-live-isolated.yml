@@ -1,0 +1,51 @@
+name: OpenBB Isolated Live Parity
+
+on:
+  workflow_dispatch:
+    inputs:
+      series:
+        description: 'FRED series (comma-separated, allowlisted)'
+        required: false
+        default: 'DGS10,DFII10,T10YIE'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out pinned experimental code (never default production)
+        uses: actions/checkout@v4
+        with:
+          ref: b6f95905a6fd4c88a7c92eaf26015f4ee955c3ca
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install isolated provider
+        run: |
+          python -m pip install openbb-fred
+          openbb-build
+      - name: Confirm pinned candidate code and preflight
+        run: |
+          python -m integrations.openbb_preflight
+          python -m unittest discover -s tests -p 'test_openbb_batch_parity.py' -v
+      - name: Run read-only parity check
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          SERIES_INPUT: ${{ inputs.series }}
+        run: |
+          python - <<'PY'
+          import os, re, subprocess, sys
+          key = os.getenv("FRED_API_KEY", "")
+          if not key:
+              raise SystemExit("FRED_API_KEY missing; no live validation performed")
+          series = [s.strip() for s in os.getenv("SERIES_INPUT", "").split(",")]
+          allowed = {"DGS10", "DFII10", "T10YIE"}
+          if not series or len(series) != len(set(series)) or any(s not in allowed for s in series):
+              raise SystemExit("Invalid series selection")
+          subprocess.run([sys.executable, "-m", "integrations.openbb_batch_parity", *series], check=True)
+          PY
