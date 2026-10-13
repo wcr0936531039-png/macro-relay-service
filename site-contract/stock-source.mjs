@@ -9,7 +9,7 @@ export function normalizeObservation({ticker,metric,value,observed_at,source,sou
   ticker=normalizeTicker(ticker);
   if(typeof metric!=='string'||!metric.trim()) throw new Error('INVALID_METRIC');
   if(typeof source!=='string'||!source.trim()) throw new Error('MISSING_SOURCE');
-  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(observed_at)||Number.isNaN(Date.parse(observed_at+'T00:00:00Z'))) throw new Error('INVALID_DATE');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(observed_at)||Number.isNaN(Date.parse(observed_at+'T00:00:00Z'))) throw new Error('INVALID_DATE');
   if(value===null||value===undefined||value===''||value==='.') return {ticker,metric,value:null,observed_at,period,source,source_url,status:'missing'};
   const num=typeof value==='number'?value:typeof value==='string'&&value.trim()?Number(value):NaN;
   if(!Number.isFinite(num)) throw new Error('INVALID_VALUE');
