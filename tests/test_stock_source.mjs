@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {normalizeObservation,selectLatest,sourceCoverage} from '../site-contract/stock-source.mjs';
+const row=normalizeObservation({ticker:'8299',metric:'revenue',value:'0',observed_at:'2026-09-30',source:'MOPS'});
+assert.equal(row.value,0); assert.equal(row.status,'ok');
+const missing=normalizeObservation({ticker:'8299',metric:'eps',value:'.',observed_at:'2026-09-30',source:'MOPS'});
+assert.equal(missing.status,'missing'); assert.equal(missing.value,null);
+assert.throws(()=>normalizeObservation({ticker:'8299',metric:'eps',value:1,observed_at:'2026-09-30',source:''}),/MISSING_SOURCE/);
+assert.throws(()=>normalizeObservation({ticker:'8299',metric:'eps',value:'not-a-number',observed_at:'2026-09-30',source:'MOPS'}),/INVALID_VALUE/);
+const old=normalizeObservation({ticker:'8299',metric:'revenue',value:5,observed_at:'2026-08-31',source:'MOPS'});
+const other=normalizeObservation({ticker:'5289',metric:'revenue',value:99,observed_at:'2026-10-01',source:'MOPS'});
+assert.equal(selectLatest([old,row,other],'8299','revenue').value,0);
+assert.equal(sourceCoverage([row,missing],'8299',['revenue','eps']).status,'partial');
+assert.equal(sourceCoverage([row],'5289',['revenue']).metrics[0].status,'missing');
+console.log('stock-source tests passed');
