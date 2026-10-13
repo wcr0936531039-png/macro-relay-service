@@ -29,3 +29,9 @@ jobs:
             git pull --rebase origin main
             git push origin HEAD:main
           fi
+      - name: Explain publication status
+        if: always()
+        run: |
+          echo '### Stock snapshot pipeline' >> "$GITHUB_STEP_SUMMARY"
+          echo 'The JSON is committed to main; this does not deploy or update the ChatGPT Site.' >> "$GITHUB_STEP_SUMMARY"
+          fi
