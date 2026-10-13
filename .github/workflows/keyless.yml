@@ -28,12 +28,12 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp data/keyless_snapshot.json "$RUNNER_TEMP/keyless_snapshot.json"
+          git fetch origin main
+          git reset --hard origin/main
+          cp "$RUNNER_TEMP/keyless_snapshot.json" data/keyless_snapshot.json
           git add data/keyless_snapshot.json
           if ! git diff --cached --quiet; then
             git commit -m 'Update verified official no-key observations'
-            git fetch origin main
-            git reset --soft origin/main
-            git add data/keyless_snapshot.json
-            git commit -m 'Update verified official no-key observations' || true
             git push origin HEAD:main
           fi
