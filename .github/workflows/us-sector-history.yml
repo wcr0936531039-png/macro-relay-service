@@ -1,5 +1,11 @@
 name: US Sector History
 on:
+  # Changes to this workflow run one live, validated publication smoke.
+  # Data-only commits do not retrigger it.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-sector-history.yml'
   workflow_dispatch:
   schedule:
     - cron: '35 23 * * 1-5'
