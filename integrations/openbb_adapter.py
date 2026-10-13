@@ -47,13 +47,7 @@ def fetch_fred_series(series_id: str, provider: str = "fred") -> dict[str, Any]:
             raise ValueError("no_valid_observations")
         parsed_date, value = max(valid, key=lambda x: x[0])
         observation_date = parsed_date.isoformat()
-        parsed_date = datetime.strptime(observation_date, "%Y-%m-%d").date()
-        if parsed_date > datetime.now(timezone.utc).date():
-            raise ValueError("future_observation_date")
-        value = float(row[column])
         import math
-        if not math.isfinite(value):
-            raise ValueError("non_finite_value")
         return {
             "symbol": series_id,
             "value": value,
