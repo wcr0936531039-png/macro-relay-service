@@ -7,6 +7,7 @@ on:
       - 'tests/test_openbb_adapter.py'
       - 'integrations/openbb_arbitration.py'
       - 'tests/test_openbb_arbitration.py'
+      - 'integrations/openbb_parity.py'
       - '.github/workflows/openbb-validation.yml'
   workflow_dispatch:
     # GitHub only discovers manual dispatch workflows from the default branch.
@@ -56,14 +57,7 @@ jobs:
         run: |
           python -m pip install 'openbb-fred'
           openbb-build
-      - name: Verify OpenBB API and FRED observation
+      - name: Compare OpenBB with official FRED (read-only)
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: |
-          python - <<'PY'
-          from integrations.openbb_adapter import fetch_fred_series
-          result = fetch_fred_series("DGS10")
-          print({k: v for k, v in result.items() if k != "error"})
-          if result["status"] != "ok":
-              raise SystemExit("OpenBB live smoke failed: " + result.get("error", "unknown"))
-          PY
+        run: python -m integrations.openbb_parity DGS10
