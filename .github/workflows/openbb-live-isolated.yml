@@ -1,6 +1,9 @@
 name: OpenBB Isolated Live Parity
 
 on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/openbb-live-isolated.yml']
   workflow_dispatch:
     inputs:
       series:
@@ -25,27 +28,49 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Prepare isolated diagnostics
+        run: |
+          mkdir -p "$RUNNER_TEMP/openbb-isolated"
+          git rev-parse HEAD | tee "$RUNNER_TEMP/openbb-isolated/candidate-commit.txt"
+          python --version | tee "$RUNNER_TEMP/openbb-isolated/python-version.txt"
       - name: Install isolated provider
         run: |
-          python -m pip install openbb-fred
-          openbb-build
+          set -o pipefail
+          python -m pip install openbb-fred 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/install.log"
+          openbb-build 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/build.log"
+          python -m pip freeze > "$RUNNER_TEMP/openbb-isolated/packages.txt"
       - name: Confirm pinned candidate code and preflight
         run: |
-          python -m integrations.openbb_preflight
-          python -m unittest discover -s tests -p 'test_openbb_batch_parity.py' -v
+          set -o pipefail
+          python -m integrations.openbb_preflight 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/preflight.log"
+          python -m unittest discover -s tests -p 'test_openbb_batch_parity.py' -v 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/tests.log"
       - name: Run read-only parity check
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          SERIES_INPUT: ${{ inputs.series }}
+          SERIES_INPUT: ${{ inputs.series || 'DGS10,DFII10,T10YIE' }}
         run: |
-          python - <<'PY'
-          import os, re, subprocess, sys
+          set -o pipefail
+          python - <<'PY' 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/parity.log"
+          import json, os, subprocess, sys
           key = os.getenv("FRED_API_KEY", "")
           if not key:
-              raise SystemExit("FRED_API_KEY missing; no live validation performed")
+              print(json.dumps({"status": "blocked", "reason": "FRED_API_KEY missing; no live validation performed", "published": False, "fallback_enabled": False}))
+              raise SystemExit(2)
           series = [s.strip() for s in os.getenv("SERIES_INPUT", "").split(",")]
           allowed = {"DGS10", "DFII10", "T10YIE"}
           if not series or len(series) != len(set(series)) or any(s not in allowed for s in series):
               raise SystemExit("Invalid series selection")
           subprocess.run([sys.executable, "-m", "integrations.openbb_batch_parity", *series], check=True)
           PY
+      - name: Preserve complete isolated diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openbb-isolated-live-parity-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/openbb-isolated/
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Record isolation boundary
+        if: always()
+        run: |
+          printf '%s\n' '## OpenBB isolated live parity' 'Series: DGS10, DFII10, T10YIE (default)' 'Official FRED remains authoritative. No production snapshot writes. OpenBB fallback remains disabled.' 'Full installation, preflight, test and live-comparison logs are preserved in the run artifact.' >> "$GITHUB_STEP_SUMMARY"
