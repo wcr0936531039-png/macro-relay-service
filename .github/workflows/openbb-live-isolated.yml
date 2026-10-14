@@ -23,7 +23,7 @@ jobs:
       - name: Check out pinned experimental code (never default production)
         uses: actions/checkout@v4
         with:
-          ref: 2ec513dd28f3e7058e52f424dbe90e81ce2f2ba3
+          ref: 74628c323b4a03545e781057bb2a60fdbe0136ee
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -98,6 +98,7 @@ jobs:
           root = Path(os.environ['RUNNER_TEMP']) / 'openbb-isolated'
           path = root / 'official-public-fred.json'
           public = json.loads(path.read_text()) if path.exists() else {'status': 'unknown', 'results': {}}
+          common = public.get('common_date_check', {'status': 'unknown'})
           parity = {'status': 'unknown', 'reason': 'no_completed_api_report'}
           log = root / 'parity.log'
           if log.exists():
@@ -109,6 +110,9 @@ jobs:
                   except ValueError:
                       pass
           lines = ['## OpenBB isolated live parity', '', f"Official public CSV: {public['status']}",
+                   f"Same-day definition consistency: {common['status']}",
+                   f"Common observation date: {common.get('as_of', 'UNKNOWN')}",
+                   f"Matched historical dates: {common.get('matched_dates', 0)}/{common.get('checked_dates', 0)}",
                    f"OpenBB authenticated API: {parity['status']}",
                    f"API reason: {parity.get('reason', 'see per-series report')}", '',
                    '| Series | CSV status | Latest observation |', '| --- | --- | --- |']
