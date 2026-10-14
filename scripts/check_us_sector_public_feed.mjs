@@ -5,7 +5,7 @@ import {loadUSSectorReport} from '../site-embed/us-sector-loader.js';
 const source='https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/us_sector_history.json';
 const candidate=JSON.parse(readFileSync(new URL('../data/us_sector_history.json',import.meta.url),'utf8'));
 const candidateDate=candidate.status?.SPY?.observed_at;
-assert.match(candidateDate,/^\\d{4}-\\d{2}-\\d{2}$/);
+assert.match(candidateDate,/^\d{4}-\d{2}-\d{2}$/);
 const maxAttempts=4;
 let report;
 for(let attempt=1;attempt<=maxAttempts;attempt++){
