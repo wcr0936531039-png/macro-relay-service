@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/us-sector-history.yml'
+      - 'scripts/check_us_sector_public_feed.mjs'
   workflow_dispatch:
   schedule:
     - cron: '35 23 * * 1-5'
