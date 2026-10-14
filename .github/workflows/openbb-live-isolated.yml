@@ -23,7 +23,7 @@ jobs:
       - name: Check out pinned experimental code (never default production)
         uses: actions/checkout@v4
         with:
-          ref: 0ec2d4dc08c72986ee3b892edff2307b3e0f5018
+          ref: 2ec513dd28f3e7058e52f424dbe90e81ce2f2ba3
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -33,17 +33,33 @@ jobs:
           mkdir -p "$RUNNER_TEMP/openbb-isolated"
           git rev-parse HEAD | tee "$RUNNER_TEMP/openbb-isolated/candidate-commit.txt"
           python --version | tee "$RUNNER_TEMP/openbb-isolated/python-version.txt"
+      - name: Validate public CSV parser
+        run: |
+          set -o pipefail
+          python -m unittest discover -s tests -p 'test_openbb_public_probe.py' -v 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/public-parser-tests.log"
+      - name: Probe official public CSV independently
+        id: public_csv
+        continue-on-error: true
+        env:
+          SERIES_INPUT: ${{ inputs.series || 'DGS10,DFII10,T10YIE' }}
+        run: |
+          set -o pipefail
+          python - <<'PY' 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/public-csv.log"
+          import os, subprocess, sys
+          series = [s.strip() for s in os.environ['SERIES_INPUT'].split(',')]
+          subprocess.run([sys.executable, '-m', 'integrations.fred_public_probe', *series], check=True)
+          PY
       - name: Install isolated provider
         run: |
           set -o pipefail
-          python -m pip install openbb-fred 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/install.log"
+          python -m pip install "openbb-fred==2.0.0" "openbb-core[pandas]==2.0.1" 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/install.log"
           openbb-build 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/build.log"
           python -m pip freeze > "$RUNNER_TEMP/openbb-isolated/packages.txt"
       - name: Confirm pinned candidate code and preflight
         run: |
           set -o pipefail
           python -m integrations.openbb_preflight 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/preflight.log"
-          python -m unittest discover -s tests -p 'test_openbb_batch_parity.py' -v 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/tests.log"
+          python -m unittest discover -s tests -p 'test_openbb*.py' -v 2>&1 | tee "$RUNNER_TEMP/openbb-isolated/tests.log"
       - name: Run read-only parity check
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
@@ -60,7 +76,10 @@ jobs:
           allowed = {"DGS10", "DFII10", "T10YIE"}
           if not series or len(series) != len(set(series)) or any(s not in allowed for s in series):
               raise SystemExit("Invalid series selection")
-          subprocess.run([sys.executable, "-m", "integrations.openbb_batch_parity", *series], check=True)
+          result = subprocess.run([sys.executable, "-m", "integrations.openbb_batch_parity", *series], capture_output=True, text=True)
+          for output in (result.stdout, result.stderr):
+              print(output.replace(key, "[REDACTED]"), end="")
+          raise SystemExit(result.returncode)
           PY
       - name: Preserve complete isolated diagnostics
         if: always()
@@ -73,4 +92,30 @@ jobs:
       - name: Record isolation boundary
         if: always()
         run: |
-          printf '%s\n' '## OpenBB isolated live parity' 'Series: DGS10, DFII10, T10YIE (default)' 'Official FRED remains authoritative. No production snapshot writes. OpenBB fallback remains disabled.' 'Full installation, preflight, test and live-comparison logs are preserved in the run artifact.' >> "$GITHUB_STEP_SUMMARY"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP']) / 'openbb-isolated'
+          path = root / 'official-public-fred.json'
+          public = json.loads(path.read_text()) if path.exists() else {'status': 'unknown', 'results': {}}
+          parity = {'status': 'unknown', 'reason': 'no_completed_api_report'}
+          log = root / 'parity.log'
+          if log.exists():
+              for line in log.read_text().splitlines():
+                  try:
+                      parsed = json.loads(line)
+                      if isinstance(parsed, dict) and 'status' in parsed:
+                          parity = parsed
+                  except ValueError:
+                      pass
+          lines = ['## OpenBB isolated live parity', '', f"Official public CSV: {public['status']}",
+                   f"OpenBB authenticated API: {parity['status']}",
+                   f"API reason: {parity.get('reason', 'see per-series report')}", '',
+                   '| Series | CSV status | Latest observation |', '| --- | --- | --- |']
+          for symbol, row in public.get('results', {}).items():
+              lines.append(f"| {symbol} | {row.get('status', 'unknown')} | {row.get('latest', {}).get('date', 'UNKNOWN')} |")
+          lines += ['', 'CSV success does not validate OpenBB parity. No production snapshot writes. OpenBB fallback remains disabled.',
+                    'Complete stage logs and the public-source JSON are retained in the run artifact.']
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as target:
+              target.write('\n'.join(lines) + '\n')
+          PY
