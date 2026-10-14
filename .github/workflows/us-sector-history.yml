@@ -71,3 +71,5 @@ jobs:
           done
           echo "Publication failed after three retries; prior remote snapshot retained" >&2
           exit 1
+      - name: Verify public Raw URL works for the existing site reader
+        run: node scripts/check_us_sector_public_feed.mjs
