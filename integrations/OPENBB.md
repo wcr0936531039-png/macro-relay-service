@@ -44,3 +44,11 @@ The isolated runner pins `openbb-fred==2.0.0` and `openbb-core[pandas]==2.0.1`,
 the versions that installed and built successfully in the initial diagnostic.
 This version observation is not a claim of live data parity.
 
+The public-source diagnostic also computes a same-day definition cross-check
+for `DGS10 - DFII10` versus `T10YIE`, using only the intersection of dated
+observations. The latest rows are never combined across dates. The explicitly
+reported 0.02 percentage-point tolerance is a diagnostic rounding allowance,
+not a trading Gate. Mismatches are retained as WATCH, without changing values.
+This is a same-provider consistency check, not independent source verification,
+and it contributes zero model points. Definition: https://fred.stlouisfed.org/series/T10YIE
+
