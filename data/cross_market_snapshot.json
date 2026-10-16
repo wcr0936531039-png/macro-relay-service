@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-15T12:06:07.794610+00:00",
+  "generated_at": "2026-10-16T00:44:15.848833+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -374,15 +374,10 @@
       "unit": "index_points",
       "warnings": [],
       "status": "ok",
-      "fetched_at": "2026-10-15T12:06:07.794610+00:00"
+      "fetched_at": "2026-10-16T00:44:15.848833+00:00"
     },
     "SP500": {
       "history": [
-        {
-          "date": "2026-05-22",
-          "value": 7473.47,
-          "available_at": "2026-05-22T20:15:00+00:00"
-        },
         {
           "date": "2026-05-26",
           "value": 7519.12,
@@ -877,14 +872,19 @@
           "date": "2026-10-14",
           "value": 7718.94,
           "available_at": "2026-10-14T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-15",
+          "value": 7744.06,
+          "available_at": "2026-10-15T20:15:00+00:00"
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-04-08",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-04-09",
       "provider": "FRED official published price-index history | SP500",
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-10-15T12:06:07.794610+00:00"
+      "fetched_at": "2026-10-16T00:44:15.848833+00:00"
     },
     "NASDAQCOM": {
       "history": [
@@ -1389,20 +1389,15 @@
           "available_at": "2026-10-14T20:15:00+00:00"
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-08",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-09",
       "provider": "FRED official published price-index history | NASDAQCOM",
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-10-15T12:06:07.794610+00:00"
+      "fetched_at": "2026-10-16T00:44:15.848833+00:00"
     },
     "SOX": {
       "history": [
-        {
-          "date": "2026-05-22",
-          "value": 12202.5400390625,
-          "available_at": "2026-05-22T20:15:00+00:00"
-        },
         {
           "date": "2026-05-26",
           "value": 12876.91015625,
@@ -1897,6 +1892,11 @@
           "date": "2026-10-14",
           "value": 11684.3798828125,
           "available_at": "2026-10-14T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-15",
+          "value": 11581.21484375,
+          "available_at": "2026-10-15T20:15:00+00:00"
         }
       ],
       "source": "https://query1.finance.yahoo.com/v8/finance/chart/%5ESOX?range=6mo&interval=1d",
@@ -1907,7 +1907,7 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-10-15T12:06:07.794610+00:00"
+      "fetched_at": "2026-10-16T00:44:15.848833+00:00"
     }
   },
   "errors": [],
