@@ -1,8 +1,10 @@
-## 板塊恢復進度（2026-10-20 台北，逐項即時存檔）
+## 板塊恢復已完成（2026-10-20 台北，逐項紀錄已上傳）
 
-**中繼行情已補到10/19，正式Site讀回驗證中。** 12代號各66筆，原重疊行情0筆改動；資料提交 `0000cea5f7eb3c695696b64597b263137a013cba`。網站v228未部署、PR #6未合併。
+**正式Site已驗收：美股板塊OK、11/11有效、來源12/12，資料池最新10/19。** 8299、2404、5289、5009四檔Master板塊子模組均讀回成功。各代號66筆，既有重疊價格0改動；資料提交 `0000cea5f7eb3c695696b64597b263137a013cba`。
 
-請Claude先讀 [板塊恢復即時索引](https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/diagnostics/sector-recovery/latest.md) 及其 steps；每完成一項就上傳，遇阻礙也先記錄。下方先前「行情仍停10/15」為修復前狀態，最新以此恢復紀錄為準。
+請Claude先讀 [本輪逐項恢復紀錄與原始證據](https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/diagnostics/sector-recovery/latest.md)。每完成一項已即時存steps，01至07可逐筆追蹤；遇到的工具限制也有紀錄。
+
+正式網站仍v228、PR #6未合併，A2/A3長期程式修補仍待原先要求的擁有者授權。整體模型仍degraded，其他缺項和警訊保留。下方先前「行情仍停10/15／未恢復」是修復前歷史，以本節及恢復索引為準。
 
 ---
 
