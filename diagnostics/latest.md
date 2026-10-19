@@ -1,304 +1,128 @@
-## 最新授權結果（2026-10-20台北，正式讀回中）
+# GPT → Claude：兩項授權已完成，正式v229驗收（2026-10-20台北）
 
-PR #6已合併（835168c）；合併後實際發布與模組CI通過。A1指定一行及測試已補，完整npm test exit0。**原網站已成功部署v229（v228修補版）**，來源commit543793fa6be1a9d4dfde79d0be4313eeb436f8e8，部署ID appgdep_6ad68d37e31c8191b1f2435d34c8c780；正讀回正式日圓、板塊與群聯面板。
+本檔取代先前「尚未合併／尚未部署」的目前狀態。依擁有者本對話及你固定交接「最新05:32」授權，僅完成兩件事：合併PR #6；補指定A1一行與測試後，部署A1＋A2＋已審閱群聯面板。其他項目未擴充。
 
-[逐項授權紀錄](https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/diagnostics/authorized-v228/latest.md)。其他項目未擴充，下方未部署／未合併為歷史狀態。
+## 已完成結果
 
----
+| 項目 | 可核對結果 |
+|---|---|
+| PR #6 | 指定head `2c098f9263eb4838487c212e123f6dda9256c5a1` 沒變，以expected_head_sha鎖定合併 |
+| Merge commit | `835168c34472333f54eb59956ac0576c067cab54` |
+| 合併後真實發布 | [US Sector History run39328238333](https://github.com/wcr0936531039-png/macro-relay-service/actions/runs/39328238333) success，Fetch／Validate coverage and freshness／pipeline／Commit／Raw驗證全部success |
+| 合併後Module CI | [run39328238044](https://github.com/wcr0936531039-png/macro-relay-service/actions/runs/39328238044) success |
+| A1補件 | obsoleteObservationReason精確加入「官方觀測或最近來源核對已過有效期；等待更新。」；新增stale＋有效releaseVerification＋該reason→ok/is_stale:false/reason:null案例 |
+| 目標回歸 | 修補前實跑失敗（reason仍過期），修補後成功；不是只補一個永遠通過的案例 |
+| 完整檢查 | npm run build成功；完整npm test exit0；git diff --check通過；完整36列同資料重播通過 |
+| 網站source commit | `543793fa6be1a9d4dfde79d0be4313eeb436f8e8` |
+| 原網站正式版本 | **v229（v228修補版）**；平台新存檔依序遞增，不覆寫v228 |
+| version_id | `appgprj_6ab2cc2055ac8191a2244d934f7384ee~appgver_f8cc8799fc688191b5953b51abf844be` |
+| deployment_id | `appgdep_6ad68d37e31c8191b1f2435d34c8c780` |
+| 原網站URL | https://taiwan-stock-master.fwf6fgj5p6.chatgpt.site |
+| 正式部署 | status:succeeded，2026-10-19T21:36:06.957980+00:00（台北05:36） |
+| 存取 | owner-private；allowed_users僅owner，外部訪客0，群組0；沒有改存取或環境變數 |
+| archive SHA-256 | `6240a296e03522ae02017b479e702916eefdb5b133aea9bca4f3e827c44a76bc` |
 
-## 板塊恢復已完成（2026-10-20 台北，逐項紀錄已上傳）
+每項完成後都已即時上傳，不是最後一次才寫：[授權逐項紀錄](https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/diagnostics/authorized-v228/latest.md)，包含01範圍、02合併、03回歸、04真實發布、05全套測試、06來源封裝、07部署、08正式驗收。前次行情恢復的01–07紀錄仍在 [sector-recovery/latest.md](https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/diagnostics/sector-recovery/latest.md)。
 
-**正式Site已驗收：美股板塊OK、11/11有效、來源12/12，資料池最新10/19。** 8299、2404、5289、5009四檔Master板塊子模組均讀回成功。各代號66筆，既有重疊價格0改動；資料提交 `0000cea5f7eb3c695696b64597b263137a013cba`。
+## 正式API驗收
 
-請Claude先讀 [本輪逐項恢復紀錄與原始證據](https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/diagnostics/sector-recovery/latest.md)。每完成一項已即時存steps，01至07可逐筆追蹤；遇到的工具限制也有紀錄。
+- `/api/macro-market`：HTTP200、完整36列。JPY_HV20與JPY_HV60 **stale→ok、is_stale:false、reason:null**，derivedFrom=DEXJPUS；值5.804832905239327／9.756886685658461與觀測日10/9不變。DEXJPUS仍ok，精確過期reason也清為null。沒有把舊觀測日改成今日。
+- `/api/us-sector-report?refresh=1`：HTTP200、OK，SPY＋11板塊共12代號可用，板塊11/11，資料池最新10/19。這裡12/12是代號覆蓋，不是12家獨立資料商；原始來源為Yahoo非官方聚合行情。
+- 8299、2404、5289、5009四檔Master均HTTP200，`report.usSectorContext.status=OK`、11/11；台股價格日10/19的報告仍使用美股10/16，避免偷看台股收盤後的10/19美股收盤。資料池有10/19供10/20參考。
+- 四檔Master整體仍degraded，其他缺口／風險沒有因板塊資料修好而當作解除。
+- 群聯Gate2=evaluated，共同最新交易日邏輯接通；只保留真實觀測，不用前值造同日。
+- 群聯Gate4已顯示年報事實與來源，仍warning；未製造護城河評分、產地曝險或清除訴訟。
+- 群聯Gate5的5A季度數字財測為`not_applicable / structural_unavailable`，顯示「公司不提供季度財測（結構性）」，明寫已核對範圍截至10/19。新量化指引仍須重新核對；年度指引不能拆季。Gate5仍partial、EPS surprise仍0/8。
+- 群聯Gate8獨立列Yahoo2026=10位、2027=12位，`productionEligible:false`，不借給FactSet；Gate8仍partial、直接同業仍未補滿，不自動通過。
+- 群聯Gate6仍warning：CFO／淨利−0.17倍、FCF−141.57億元，治理／訴訟及未知Veto保留。
 
-正式網站仍v228、PR #6未合併，A2/A3長期程式修補仍待原先要求的擁有者授權。整體模型仍degraded，其他缺項和警訊保留。下方先前「行情仍停10/15／未恢復」是修復前歷史，以本節及恢復索引為準。
+**JPY兩列恢復有效後會進入既有模型，擁有者已明確知悉。** 未改權重、總分公式、風險預算設定或Gate通過條件；輸入有效性改變不等於保證既有模型總分不變。板塊仍scoreContribution=0、macroGateOverride=null、vetoOverride=null。
 
----
+## 正式讀回的36列前後比較
 
-# GPT → Claude：v228 完整續作交接（2026-10-20 台北）
+部署前擷取完成：`2026-10-19T21:34:50.650655+00:00`；部署後：`2026-10-19T21:36:52.993929+00:00`。這是兩次實際讀回，不將之冒充同一固定時鐘資料；完整值、日期、HTTP與回應hash均在下方artifacts。status改變只有兩列JPY；其值與觀測日不變。其他行情在兩次擷取間可自然更新，完整原始值留存。
 
-先讀本節，再看完整 diff。已讀你的固定檔最新 03:50 一節及其中 04:59 檢查紀錄，blob `83b338bb23b6a94a5265ee19bbc7c522f1966eae`。接受新的處理順序：P1 缺資料 → P2 四層真實資料稽核 → P3 固定規則的綜合判斷；Gate 5B 維持現狀、不擴充，R2～R5、B1～B8 延後。本檔保存先前已做的本機工作與剩餘問題，沒有因此部署或合併。
+| 指標 | 觀測日前→後 | status前 | status後 | is_stale前 | is_stale後 | reason前 | reason後 |
+|---|---|---|---|---|---|---|---|
+| XAU | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| XAG | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| XAU_XAG | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | 金價與銀價即時比值有效；日歷史樣本 13/21，收集至少 21 個日觀測且資料缺口不超過 5 日後才判讀 20 日趨勢。 | 金價與銀價即時比值有效；日歷史樣本 13/21，收集至少 21 個日觀測且資料缺口不超過 5 日後才判讀 20 日趨勢。 |
+| NYFED_REPO | 2026-10-19 → 2026-10-19 | ok | ok | false | false | null | null |
+| TWSE_TAIEX | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_ELECTRONIC | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_SEMICONDUCTOR | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_FINANCIAL | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_SHIPPING | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_STEEL | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_TOTAL_TRADE_VALUE | 2026-10-19 → 2026-10-19 | ok | ok | false | false | null | null |
+| TWSE_MARGIN_BALANCE_NTD | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_MARGIN_CHANGE_NTD | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_MARGIN_BALANCE_UNITS | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_SHORT_BALANCE | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_SHORT_CHANGE | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_MARGIN_MARKET_CAP_RATIO | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_CREDIT_TRADE_VALUE | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| TWSE_BREADTH | 2026-10-19 → 2026-10-19 | ok | ok | false | false | null | null |
+| TPEX_BREADTH | 2026-10-19 → 2026-10-19 | ok | ok | false | false | null | null |
+| TWSE_DAYTRADE | 2026-10-19 → 2026-10-19 | ok | ok | false | false | null | null |
+| NYFED_SRP | 2026-10-19 → 2026-10-19 | ok | ok | false | false | null | null |
+| ICE_DXY | 2026-10-19 → 2026-10-19 | ok | ok | false | false | null | null |
+| DTWEXBGS | 2026-10-16 → 2026-10-16 | ok | ok | false | false | null | null |
+| DCOILWTICO | 2026-10-14 → 2026-10-14 | ok | ok | false | false | 資料較舊，暫不納入判讀 | null |
+| DCOILBRENTEU | 2026-10-14 → 2026-10-14 | ok | ok | false | false | 資料較舊，暫不納入判讀 | null |
+| DHHNGSP | 2026-10-14 → 2026-10-14 | ok | ok | false | false | 資料較舊，暫不納入判讀 | null |
+| DEXJPUS | 2026-10-09 → 2026-10-09 | ok | ok | false | false | 資料較舊，暫不納入判讀 | null |
+| US3M | 2026-10-15 → 2026-10-15 | ok | ok | false | false | 資料較舊，暫不納入判讀 | null |
+| US10Y | 2026-10-15 → 2026-10-15 | ok | ok | false | false | 資料較舊，暫不納入判讀 | null |
+| US30Y | 2026-10-15 → 2026-10-15 | ok | ok | false | false | 資料較舊，暫不納入判讀 | null |
+| VIXCLS | 2026-10-16 → 2026-10-16 | ok | ok | false | false | null | null |
+| WCESTUS1 | 2026-10-09 → 2026-10-09 | snapshot | snapshot | false | false | EIA／FRED 即時來源暫不可用；使用已標明日期的 EIA 官方週資料快照。 | EIA／FRED 即時來源暫不可用；使用已標明日期的 EIA 官方週資料快照。 |
+| US10Y3M | 2026-10-19 → 2026-10-19 | ok | ok | <absent> | false | null | null |
+| JPY_HV20 | 2026-10-09 → 2026-10-09 | stale | ok | true | false | 官方觀測或最近來源核對已過有效期；等待更新。 | null |
+| JPY_HV60 | 2026-10-09 → 2026-10-09 | stale | ok | true | false | 官方觀測或最近來源核對已過有效期；等待更新。 | null |
 
-## 先更正交接落差
+另重新跑了之前的**同一份36列／同一時鐘**控制比較：原JSON SHA-256 `3905328861fb4b648d0b0c8dd4bb930b8a1bb1198e4e51a30c39c2bda1e65a96`，時鐘2026-10-19T15:51:49.247Z；全部值、觀測日、順序不變，只有JPY兩列status改變。補的精確reason案例不在該原輸入，已由新增回歸單獨驗證。
 
-- GPT 已經找到可讀的 v228 本機原始碼，也已取得完整 `/api/macro-market` 36 列，無需再請擁有者轉存。原始碼基準 commit `0dd0df41a3aed304a8b11bf7658c855b978ea337`。此 GitHub repo 仍只是交接與中繼，不是正式網站原始碼倉庫；完整網站變更在本檔 diff，可供你審查。
-- A1 已補完全部列比較；A2 八項測試由 GPT 自己執行，並已套進本機 Site；A3 已核對 MANIFEST、開分支與 PR。
-- **PR #6 的中繼本身 CI 現已通過**，不是沿用 Claude 的測試。`US Sector Module Tests` 與 `US Sector Live Smoke` 都是 success，且核對 head `2c098f9263eb4838487c212e123f6dda9256c5a1`。PR 仍 open、`merged:false`；沒有合併。
-- 正式網站沒有在這輪部署。**本機通過不代表美股板塊已恢復**：本次直接重讀中繼 main，SPY 與 11 板塊仍全部停在 2026-10-15，`generated_at=2026-10-17T01:28:36.371009+00:00`，資料 blob `f12ca5bdaeab02e9bbcb2c50052ad4116d16902e`。必須拿到真實缺日行情；禁止改 generated_at、複製前一日收盤來製造恢復。
+## 合併後資料發布核對
 
-## 請 Claude 接續的問題，按新優先序
+合併後US Sector History push run使用的新檢查實際回傳 `{"status":"OK","coverage":12,"observed_at":"2026-10-19","issues":[]}`，發布防倒退PUBLICATION_DATE_GATE_OK，結果PUBLISHED（資料提交短碼a16d39a）；Public Raw回11/11、10/19、scoreContribution0。
 
-| 優先 | 問題／剩餘工作 | 已有結果 | 下一步及限制 |
-|---|---|---|---|
-| P1 | 美股板塊真實行情缺日 | A2 本機與 A3 PR 驗收完成；main 仍全是 10/15 | 追查下一輪 Yahoo 原始回應、刪除未收盤 bar 是否誤刪與發布流程；真正補到 10/16、10/19 才重新評估。PR 合併和 Site 部署都等擁有者授權 |
-| P1 | 日圓時效／舊 reason | A1 全 36 列重播完成，只有 HV20/60 status 改變 | 請審閱 below diff 與全列比較；正式站未部署，不宣稱已修復 |
-| P1 | ECB 匯率借用 DEXJPUS 代號 | 中繼 DEXJPUS provider 實為 ECB 交叉換算；A1 只處理時效，不修來源口徑 | 後續以獨立 ECB 代號與衍生 lineage 修正，不將其假稱 FRED H.10；這輪未混入 A1 |
-| P1 | Gate 4 各缺項 | 已讀實際 8299 checks，見下表；年報只加獨立證據 | PSR 五年／大戶歷史／CB 現行條款分開接；原始規則缺失不能自行發明分級；CFO、訴訟警訊保留 |
-| P1 | Gate 5、8 缺樣本 | 5A/5B 仍 0/8；直接同業 0/3 | 群聯季度數字指引標結構性；共識取樣與口徑保持嚴格，這輪不擴 Gate 5B。Yahoo 人數不能借給 FactSet |
-| P1 | EIA、官方公告與其他採集失敗 | 既有歷史報告不是本次新採集結果 | 依原始回應／日期／發布日核對，無法取得就保留缺項，不能用 passed 旗標代替原文 |
-| P2 | 任何股票都能用的官方估值主幹 | 8299 實際 Gate 8 已有自身歷史 P/E fallback，1216 筆；不能據此聲稱所有代號都已驗收 | 稽核所有代號 PE/PB/殖利率歷史、月營收、財報、線型與大盤；確認缺值、負 EPS、新上市與循環股分支，不用預設價格或共識 |
-| P3 | 最上層綜合判斷 | 目前 API 有 report/headline、qualifiedOutput、adaptiveRating，不代表你新規格已完成 | 對照固定規則，設計一句結論＋信心＋理由＋改變條件＋缺資料；原始資料可展開，美股板塊只作背景，AI 不決定結論 |
+最新中繼資料blob `da6890f5131d890477bea5d5658e1eff4463a9c3`，generated_at2026-10-19T21:32:12.176559Z。既有採集器range=3mo使目前快照7/20起各65筆；前次一次性恢復保留7/17時為66筆，原始資料與66筆版本仍存git及恢復artifacts。沒有將現在65筆說成66筆。
 
-請勿將網站尚未部署的修補描述為 production 修復。若要繼續研究原始來源，可直接讀本檔與 artifacts；不用擁有者反覆轉貼。本輪未建立新的排程。
+## 證據檔案
 
-## 交接通道與檔案
+- [授權前macro-market完整讀回](authorized-v228/artifacts/before-macro-market.json)
+- [部署後正式API完整必要讀回](authorized-v228/artifacts/after-production-readback.json)
+- [機器驗收摘要與36列比較](authorized-v228/artifacts/acceptance-summary.json)
+- [最終完整網站diff](artifacts/v228-20261020-authorized-site.diff)
+- [最終完整npm test日誌](artifacts/v228-20261020-authorized-site-test.log)
+- [原36列同資料控制比較](artifacts/v228-20261019-row-comparison.json)
+- [前次行情原始回應及SHA-256](sector-recovery/artifacts/20261020-source-archive.json)
 
-- 固定讀取：[diagnostics/latest.md](https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/diagnostics/latest.md)。Claude 回覆仍寫 gate-probe 的 `handoff/CLAUDE_TO_GPT_LATEST.md`。
-- [PR #6](https://github.com/wcr0936531039-png/macro-relay-service/pull/6)。[中繼 Module CI](https://github.com/wcr0936531039-png/macro-relay-service/actions/runs/39281730728)。[Live Smoke CI](https://github.com/wcr0936531039-png/macro-relay-service/actions/runs/39281730598)。
-- `diagnostics/artifacts/v228-20261019-macro-market.json`：完整 36 列的唯讀快照，不是現在即時值。
-- `diagnostics/artifacts/v228-20261019-row-comparison.json`：同一份資料、同一時鐘、全部列前後比較。
-- `diagnostics/artifacts/v228-20261019-site.diff`：網站完整本機 diff，含新增檔案和 build 產物，可重建審閱。
-- `diagnostics/artifacts/v228-20261019-site-test.log`：完整 Site npm test 輸出；其中 403/503 為既有故障注入測試，不代表本次正式站採集失敗。
-- 本檔及 artifacts 已做 token 模式檢查，不含服務憑證、Cookie 或授權標頭；不公開完整個股使用者研究回應，只列必要公開市場結果與程式。
+所有憑證只留記憶體並透過隱藏stdin使用，不存檔、未輸出；交接只包含必要程式、公用觀測及部署metadata。
 
-## A1：同一份完整 36 列修補前後比較
+## 授權邊界與保留問題
 
-原始讀回擷取完成 `2026-10-19T15:51:49.247923+00:00`；payload checkedAt `2026-10-19T15:49:08.620Z`。固定評估時間 `2026-10-19T15:51:49.247Z`；基準 HEAD bundle 與修補後 bundle 各執行 `refreshingMacroSnapshot(structuredClone(payload),false)`，沒有附加或補造來源驗證 metadata，沒有在比較中連網更新。
+A4–A6、B1–B8、R2–R5、P2/P3沒有新增或延伸。既有已審閱群聯面板中的Yahoo人數及年報證據屬本次明確授權的面板標示，不等於新增通用R3/R4匯入器或可計分共識。Gate5B不擴充；PSR五年、大戶、CB現行條款、同業共識、EPS口徑等原缺項保留。
 
-原始 JSON SHA-256：`3905328861fb4b648d0b0c8dd4bb930b8a1bb1198e4e51a30c39c2bda1e65a96`。36/36 值與觀測日不變，順序不變。`<absent>` 與 null 分開表示；多列只是明確補出 `is_stale:false`，不是新資料。
+剩餘已知限制只記錄、不擅自修：A5代理匯率的獨立代號／lineage未改；日曆僅涵蓋2026–2027；中間缺日的候選覆寫檢查、跨完整歷史保留未另增邏輯。當來源不符時維持UNKNOWN／缺項，不將缺樣本寫成0驚喜。不宣稱整站所有Gate完成。
 
-只有 JPY_HV20、JPY_HV60 的 status 是 `stale → ok`；沿用各自 5.804832905239327、9.756886685658461，觀測日仍 10/9。這兩列重新進入有效輸入集合，是需要審閱的行為改變。另七列 DCOILWTICO、DCOILBRENTEU、DHHNGSP、DEXJPUS、US3M、US10Y、US30Y 保持原 status，只清除精確的矛盾舊 reason；其他來源警告不清除。母序列失效、缺母列或日期不同時，衍生值仍 null/missing，不放行。
+## 最終全套測試尾段
 
-| # | 指標／觀測日 | before status | after status | before is_stale | after is_stale | before reason | after reason |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | XAU / 2026-10-19 | "ok" | "ok" | "<absent>" | false | null | null |
-| 2 | XAG / 2026-10-19 | "ok" | "ok" | "<absent>" | false | null | null |
-| 3 | XAU_XAG / 2026-10-19 | "ok" | "ok" | "<absent>" | false | "金價與銀價即時比值有效；日歷史樣本 13/21，收集至少 21 個日觀測且資料缺口不超過 5 日後才判讀 20 日趨勢。" | "金價與銀價即時比值有效；日歷史樣本 13/21，收集至少 21 個日觀測且資料缺口不超過 5 日後才判讀 20 日趨勢。" |
-| 4 | NYFED_REPO / 2026-10-15 | "ok" | "ok" | false | false | null | null |
-| 5 | TWSE_TAIEX / 2026-10-19 | "ok" | "ok" | "<absent>" | false | "<absent>" | "<absent>" |
-| 6 | TWSE_ELECTRONIC / 2026-10-19 | "ok" | "ok" | "<absent>" | false | "<absent>" | "<absent>" |
-| 7 | TWSE_SEMICONDUCTOR / 2026-10-19 | "ok" | "ok" | "<absent>" | false | "<absent>" | "<absent>" |
-| 8 | TWSE_FINANCIAL / 2026-10-19 | "ok" | "ok" | "<absent>" | false | "<absent>" | "<absent>" |
-| 9 | TWSE_SHIPPING / 2026-10-19 | "ok" | "ok" | "<absent>" | false | "<absent>" | "<absent>" |
-| 10 | TWSE_STEEL / 2026-10-19 | "ok" | "ok" | "<absent>" | false | "<absent>" | "<absent>" |
-| 11 | TWSE_TOTAL_TRADE_VALUE / 2026-10-19 | "ok" | "ok" | false | false | null | null |
-| 12 | TWSE_MARGIN_BALANCE_NTD / 2026-10-19 | "ok" | "ok" | "<absent>" | false | null | null |
-| 13 | TWSE_MARGIN_CHANGE_NTD / 2026-10-19 | "ok" | "ok" | "<absent>" | false | null | null |
-| 14 | TWSE_MARGIN_BALANCE_UNITS / 2026-10-19 | "ok" | "ok" | "<absent>" | false | null | null |
-| 15 | TWSE_SHORT_BALANCE / 2026-10-19 | "ok" | "ok" | "<absent>" | false | null | null |
-| 16 | TWSE_SHORT_CHANGE / 2026-10-19 | "ok" | "ok" | "<absent>" | false | null | null |
-| 17 | TWSE_MARGIN_MARKET_CAP_RATIO / 2026-10-19 | "ok" | "ok" | "<absent>" | false | null | null |
-| 18 | TWSE_CREDIT_TRADE_VALUE / 2026-10-19 | "ok" | "ok" | "<absent>" | false | null | null |
-| 19 | TWSE_BREADTH / 2026-10-19 | "ok" | "ok" | false | false | null | null |
-| 20 | TPEX_BREADTH / 2026-10-19 | "ok" | "ok" | false | false | null | null |
-| 21 | TWSE_DAYTRADE / 2026-10-19 | "ok" | "ok" | false | false | null | null |
-| 22 | NYFED_SRP / 2026-10-19 | "ok" | "ok" | false | false | null | null |
-| 23 | ICE_DXY / 2026-10-19 | "ok" | "ok" | false | false | null | null |
-| 24 | DTWEXBGS / 2026-10-09 | "ok" | "ok" | false | false | null | null |
-| 25 | DCOILWTICO / 2026-10-14 | "ok" | "ok" | false | false | "資料較舊，暫不納入判讀" | null |
-| 26 | DCOILBRENTEU / 2026-10-14 | "ok" | "ok" | false | false | "資料較舊，暫不納入判讀" | null |
-| 27 | DHHNGSP / 2026-10-14 | "ok" | "ok" | false | false | "資料較舊，暫不納入判讀" | null |
-| 28 | DEXJPUS / 2026-10-09 | "ok" | "ok" | false | false | "資料較舊，暫不納入判讀" | null |
-| 29 | US3M / 2026-10-15 | "ok" | "ok" | false | false | "資料較舊，暫不納入判讀" | null |
-| 30 | US10Y / 2026-10-15 | "ok" | "ok" | false | false | "資料較舊，暫不納入判讀" | null |
-| 31 | US30Y / 2026-10-15 | "ok" | "ok" | false | false | "資料較舊，暫不納入判讀" | null |
-| 32 | VIXCLS / 2026-10-15 | "ok" | "ok" | false | false | null | null |
-| 33 | WCESTUS1 / 2026-10-09 | "snapshot" | "snapshot" | false | false | "EIA／FRED 即時來源暫不可用；使用已標明日期的 EIA 官方週資料快照。" | "EIA／FRED 即時來源暫不可用；使用已標明日期的 EIA 官方週資料快照。" |
-| 34 | US10Y3M / 2026-10-16 | "ok" | "ok" | "<absent>" | false | null | null |
-| 35 | JPY_HV20 / 2026-10-09 | "stale" | "ok" | true | false | "官方觀測或最近來源核對已過有效期；等待更新。" | null |
-| 36 | JPY_HV60 / 2026-10-09 | "stale" | "ok" | true | false | "官方觀測或最近來源核對已過有效期；等待更新。" | null |
-
-A1 補件另含：衍生列按原 map 順序回填、找不到母列明標 `source_missing`；`importedOfficialSeries()` 合併時明確 `reason:null`。只刪精確 age-only 舊文案，不清其他失敗。
-
-### 搜尋兩段指定文字後定位的合併函式（修補後原文）
-
-`worker/data-import.js#importedOfficialSeries()` 寫入「經外部抓取並保存」「官方頁面同值核對」。它先 summarize 再 spread row，原本覆寫 ok 卻保留 stale reason；下方包含這次 reason:null 修正。這段既有驗證文案不能單獨充當原始來源口徑證據，ECB lineage 仍列待處理。
-
-```js
-async function importedOfficialSeries(id, env) {
-  if (!OFFICIAL_IMPORT_SERIES.has(id)) return null;
-  const saved = await readRuntimeCache(env, `official-series:v1:${id}`), input = saved?.payload;
-  if (!input || !saved.fresh || Date.now()-Date.parse(input.fetchedAt)>36*3600000) return null;
-  const history=cleanHistory(input.history || []);
-  if (history.length < (id==='DEXJPUS'?65:3)) return null;
-  const row=summarize(id,history);
-  if(['US3M','US10Y','US30Y'].includes(id))row.name={US3M:'13 週期美國國庫券折現殖利率（DTB3）',US10Y:'10 年期美債官方殖利率（DGS10）',US30Y:'30 年期美債官方殖利率（DGS30）'}[id];
-  const releaseVerification=input.releaseVerification;
-  if (row.status!=='ok'&&!releaseObservationCurrent(id,{...row,releaseVerification})) return null;
-  return {...row,status:'ok',reason:null,provider:'FRED／原始官方提供者｜經外部抓取並保存',source:input.source,fetchedAt:input.fetchedAt,releaseVerification,snapshot:true,is_stale:false,historyObservations:history.length,historyFetchState:'fetched',sourceValidation:{state:'passed',method:'官方 CSV 原始觀測；日期、正值、排序及筆數已校驗'},detail:`官方來源觀測 ${row.date}；擷取 ${input.fetchedAt}。${releaseVerification?`官方頁面同值核對；下一次發布 ${releaseVerification.nextReleaseDate}。`:''}${id==='DEXJPUS'?'FRED H.10 日參考匯率，非盤中價格；保留完整歷史供 20／60 日波動率。':id==='IORB'?'聯準會準備金餘額利率；保留同日配對所需歷史。':['US3M','US10Y','US30Y'].includes(id)?'官方利率序列；DTB3 為折現殖利率，DGS10／DGS30 為固定到期投資收益率。':'官方現貨系列，與近月期貨分開。'}`};
-}
-```
-
-## A2：站內美股板塊模組
-
-- 已用連接器取得三個原始檔，GPT 自己執行 `node --test us_sector_session.test.mjs`，8/8 通過。Fixture 未改值；原始 fixture、Site fixture、中繼真實資料 SHA-256 均為 `f830f59fb059ed4b3479d8f2bc79344558336dccfdae1a0b05c6f6b66a2c1071`。
-- 已以 `US_SECTOR_SESSION` 閉包嵌入 build，`normalizeUSSectorSnapshot` 取代 36 小時年齡規則；支援 NYSE 2026–2027 休市、提前收盤、15 分結算、8 小時上游發布容忍。超出日曆範圍失敗，不當作交易日。
-- 不改原本資料筆數、gaps、來源與 11 板塊評分；新錯誤區分格式、來源、擷取時間、未完成交易日等。較舊而缺最新 session 的回應不覆蓋已保存的新快照，並保留 fetchError。
-- 真實資料重播仍 UNKNOWN，見下面。附測試中「複製 close 補一日」只用於測試控制變因，從未寫回正式行情或聲稱取得真價格。
-
-```json
-{
-  "evaluationAt": "2026-10-19T15:51:49.247Z",
-  "input": "unmodified relay main 46b58640c7b3f839c0c4d55e77ddddacfaacbb64 data/us_sector_history.json",
-  "before": {
-    "status": "UNKNOWN",
-    "errorCode": "SCHEMA_SOURCE_OR_CAPTURE",
-    "coverage": {
-      "valid": 0,
-      "total": 11
-    }
-  },
-  "after": {
-    "status": "UNKNOWN",
-    "errorCode": "LATEST_SESSION_MISSING",
-    "coverage": {
-      "valid": 0,
-      "total": 11
-    },
-    "sessionFreshness": {
-      "ok": false,
-      "code": "LATEST_SESSION_MISSING",
-      "observed": "2026-10-15",
-      "expected": "2026-10-16",
-      "captured_at": "2026-10-17T01:28:36.371009+00:00"
-    }
-  },
-  "productionDeployed": false
-}
-```
-
-## A3：原檔雜湊、PR 與中繼 CI
-
-使用 `handoff/relay_patches/files/` 完整檔案，不使用舊基準 patch。基準 `46b58640c7b3f839c0c4d55e77ddddacfaacbb64` 五個既有檔 SHA-256 全 MATCH，六個套用後檔也全 MATCH；`.github/workflows` 寫入成功，未略過補抓排程。分支 `fix/us-sector-expected-session-20261019`，PR #6，head `2c098f9263eb4838487c212e123f6dda9256c5a1`。
-
-| 中繼路徑 | 基準 SHA-256 | 修補 SHA-256 |
-| --- | --- | --- |
-| .github/workflows/us-sector-history.yml | 17503bff051302237b5cb87237fe2ee5de5aa5b9923cbc054bc4f387f672e576 | 407fffa93ae833499ed79d9d23c0ea52af0bfd3ded15d594e35e4e7950b63d35 |
-| scripts/check_us_sector_snapshot.py | d5ef8face544b74488c9dfba0efd69e5412840b1163ae510571fa062aed2cf19 | 780bd0b9c83c26a023b81d8445fd5eb0d3f5a4a5c26609f87b6190f051ec495c |
-| scripts/test_us_sector_feed.py | dc2f97b5c0b72afa717d7f0fd91d6c2d3e2c9a9ee65c52df8c4affe42471f7ee | 23416bf2e59e7fbb067c0747ed444a8565f2c76c1fa38c399ddae175c7bd3ac2 |
-| scripts/test_us_sector_snapshot.py | 315dc85e56600317e1f086280d0bc35762de28fdffe054d9249d85470c5a77d1 | ca735f7bc149f8d779ea4c727d70c47270eb5212dbe42276574c118dbd173a82 |
-| scripts/us_sector_feed.py | 2edc54c159bdf9b51fc9045b82d8178b6bacc1511125d288bc0f8a5880ef6aa0 | f7e4ea5af565d81697286f6f978b5fe890837de4b8912adf488ee148dc01e307 |
-| scripts/us_market_calendar.py | (new file) | 12913d6a4ed390cdafc6c79b0dcd4ff37f5330ef7e6af7728ed812b9f0fa000a |
-
-| 執行者／環境 | 驗收內容 | 結果 |
-| --- | --- | --- |
-| GPT 本機 | 6 個 Node 模組檔＋published pipeline＋Python 20 項 | 全通過，完整輸出下方 |
-| GitHub 中繼 PR #6 | US Sector Module Tests / run 39281730728 | completed / success；核對三個正式 run 步驟均 success |
-| GitHub 中繼 PR #6 | US Sector Live Smoke / run 39281730598 | completed / success |
-| 正式發布 | PR merge / Site deploy | 未執行，等待擁有者授權 |
-
-PR 修補會擋「缺預期 session 卻標 ok」，保存 dropped bar 日期、加補抓排程、避免只有 generated_at 改變就提交。**尚未完成**每次 Yahoo 原始 HTTP 回應 SHA-256 與 dropped reason 的更完整審計；本輪不把這些列成已做。程式擋住壞資料不等於上游已補到新行情。
-
-## 群聯面板：已做的本機修正、未解除的風險
-
-- Gate 2 以各欄位真正共同的最新交易日比較，保留 latestAvailable 與逐筆來源。只保留最多100筆真正觀測；衝突值剔除、缺歷史留缺、未來值不收，不用帶值回填。本次實際擷取9欄已全為10/19且 Gate2 evaluated，這是來源後續更新，不能歸功於尚未部署的程式。
-- Gate 5 的季度數字指引無有效樣本時，按本次已審閱官方範圍標「公司不提供季度財測（結構性）」；保留原始年度指引、候選池筆數、5A/5B=0/8、ready=false 和既有權重／上限。新合法數字指引仍可覆蓋此描述，不宣稱公司永遠不提供。
-- Gate 4 加年報原文事實與頁碼、查核來源，不製造護城河分數或產能利用率。2024/25無單一客戶≥10%；台灣鎧俠28.33%是**進貨**集中，不是銷貨集中；全部委外不等於低地緣風險，產地、替代產能仍未知。公司個體年報表不直接解釋近12季合併現金流。
-- Gate 8 Yahoo FY2027 12 位與平均EPS281.54、FY2026 10位與平均412.34 独立記為來源證據，`productionEligible:false`、口徑未註明。不將 Yahoo 人數借給 FactSet 2027中位362.55；故有效共識仍未補滿，直接同業仍0/3，沒有自動通過 Gate8。
-- Gate 6 已核驗的真實警訊保留：CFO／淨利−0.17倍、FCF−141.57億元；三筆治理／訴訟風險、四條未知 Veto、原分數與風險限制不解除。
-
-### 讀回的 Gate 4／5／8 非完成檢查（原資料，非修補後假裝補齊）
-
-| Gate | 項目 | 狀態 | 資料數 | 缺口／原因 |
-| --- | --- | --- | --- | --- |
-| 4 | 10D 已接入必要資料 | missing | 3/10 | 逐項資料覆蓋；資料齊備不等於評分或 Veto 通過 |
-| 4 | S3 同業護城河 | missing | 1/2 | 已核驗直接同業映射 1 檔；具原文來源的比較證據 0 筆。資料覆蓋不給護城河分數。 |
-| 4 | S4 PSR 估值合理性 | missing | 0/2 | 當期 PSR 缺值；同口徑五年歷史 0/5 年。年度快照不當作完整五年最高值，Veto 高點另核驗。 |
-| 4 | S5 PEG 動態估值 | missing | 1/2 | 本年共識 Forward P/E 4.42；次年共識 EPS 成長 待核。不外推3–5年 CAGR或設定分級。 |
-| 4 | S6 法說指引動能 | missing | 0/1 | 已核對同口徑指引回測 0/8 期；定性展望不補成數值財測 |
-| 4 | S7 產能與地緣風險 | missing | 0/3 | 產地／產能、替代方案與客戶曝險分別核對；客戶證據 0 筆。保留既有 >80% 複合否決，不新增利用率門檻。 |
-| 4 | S8 CB／股本稀釋壓力 | missing | 0/5 | 登錄餘額：待核；目前轉換價：待核；同日股本：待核；同日匯率：待核；存量與賣回／期後事件：待核。已保存 3/3 檔餘額、0/3 檔目前轉換價；缺項不當作無 CB。 |
-| 4 | S10 籌碼大戶防禦力 | missing | 1/2 | 已連結五日法人淨買賣；大戶持股分布與延續性仍待核 |
-| 4 | Veto｜PSR 超過五年高點 20% | missing | 0/1 | 同口徑當期 PSR > 五年高點 ×1.2；P/E 不代替 PSR。 |
-| 4 | Veto｜CB 三條件同時成立 | missing | 0/1 | CB／股本 >15%、價格低於轉換價至少20%、六個月內賣回，須三條件同時成立。 已接入 2026-10-15 TPEx 國內／海外登錄餘額 3/3 檔：群聯三 TWD 6,000,000,000（面額）；群聯 海外 A USD 400,000,000（面額）；群聯 海外 B USD 400,000,000（面額）。目前轉換價核對 0/3；登錄欄位是發行時價格，不代替調整後現價。期後調價、全體存量完整性及股本同日核對仍待完成；台幣與美元不直接相加。 賣回日待核｜XS3364929045：登錄 2029-05-28／契約 2029-05-28／半年報周年／record date 2029-05-26；不同文件的標示差異尚待釐清，賣回相關計算停用。各券調價歷程分開維護；UNKNOWN 不代表沒有調整。 |
-| 4 | Veto｜單一高風險地區產能 | missing | 0/1 | 高關稅／地緣單一地區产能 >80% 且無替代；缺資料不代表零曝險。 |
-| 4 | Veto｜董監質押超過50% | missing | 0/1 | 判定採同月份董監合計質押股數／同範圍持有股數；須核對名單、代表人去重與分母，個人質押率不代替合計。 已保存 2026-09 董監明細 12 筆（出表 2026-10-15）；舊合計表 2026-08-19 為 7.81%，不當作本月比率。個別比例與董監合計口徑分開，合計待核時仍為未知。 |
-| 4 | 10D 分級與組內權重原始規則 | missing | 0/1 | 引擎已實作；35／30／25／10 組權重已核對，分級尺度及組內權重須有原始規則來源 |
-| 4 | 10D 可追溯分級 | missing | 0/10 | 1–4 分級與各項來源、規則版本須一致 |
-| 4 | 三層漏斗評分 | missing | 0/3 | 公司40%、籌碼30%、進場／風控30%；不以 10D 平均替代 |
-| 5 | 5A 同指標指引回測 | missing | 0/8 | 原始指引與同口徑實績配對 |
-| 5 | 5B 財報前共識與實際 EPS | missing | 0/8 | 同股票、不同季度；共識日期早於財報公告 |
-| 8 | 2027E 共識 | missing | 0/1 | 已核對 EPS、日期與來源，仍缺該年度至少3位分析師或3家券商的證據 |
-| 8 | 直接同業共識與同日行情 | missing | 0/3 | 相同年度、TWD；相鄰產品與產業候選不湊數 |
-
-### 能否由官方免費來源補：逐項判斷
-
-| 缺口 | 官方免費可得程度 | 接線方式／限制 |
-|---|---|---|
-| PSR當期＋五年歷史 | 原始收盤、股數、月營收／財報可查；歷史完整性待逐日驗收 | 同日市值與一致收入期間重建，不用P/E替代PSR、不把年度點當完整五年最高 |
-| 大戶分布＋連續性 | TDCC集保分級持股原表可查，頻率為週 | 核對股數、比例與分級，歷史實際累積，不補造過去週數 |
-| 董監合計質押 | MOPS官方個別資料可查 | 同月同範圍分母、代表人去重與合計，不借舊月份或個人比例 |
-| CB存量／現價／股本／匯率 | TPEx、MOPS、海外發行官方公告部分可得 | 每券每幣別分開；舊登錄價不等於調整後價；完整受託契約與事件通知可能非公開，維持UNKNOWN |
-| 護城河／地緣產能／替代方案 | 年報、法說有部分原文 | 市占未明、委外不含實際產地；不能用資料數量代替質化比較或填0曝險 |
-| 原始分級尺度與組內權重 | 不是外部市場資料問題 | 需原模型規則與擁有者決策，不能網搜或自行改公式 |
-| 指引回測 | 僅公開數字財測公司有 | 群聯現核閱範圍屬結構性缺季度數字，年度不能拆季；其他公司匹配鍵、時間、頁碼需驗證 |
-| 財報前共識／surprise | 財報實績免費；歷史時點共識不保證免費或可回溯 | 現在擷取的數字不變成過去快照；缺樣本不寫0驚喜 |
-| 2027人數與直接同業兩年共識 | 供應商公開報導／存檔部分可得 | 不同供應商人數與EPS不混配；官方年報不提供分析師共識；同產業名單不等於直接可比 |
-
-### 已核對的原始年報與 Yahoo 存檔
-
-- 年報原文 `https://doc.twse.com.tw/pdf/2025_8299_20260527F04_20261019_214335.pdf`；持久保存 `https://raw.githubusercontent.com/479dvcs8zv-create/gate-probe/main/results/8299/annual_report/39262137932/files/57f8a21d0b03_2025_8299_20260527F04_20261019_214335.pdf`。
-- GPT 已下載重算年報 SHA-256 `57f8a21d0b031abc24023867573175e9ad898c56be6a27ab88e613f032430061`，核對印刷頁73/78/79/80（PDF81/86/87/88）；擷取記錄 `2026-10-19T13:47:28.338173+00:00`。原發布日未知，不從檔名推定發布時間。
-- Yahoo原頁 `https://finance.yahoo.com/quote/8299.TWO/analysis/`；Wayback `https://web.archive.org/web/20261019092747/https://finance.yahoo.com/quote/8299.TWO/analysis/`；raw `https://raw.githubusercontent.com/479dvcs8zv-create/gate-probe/main/results/8299/archive/39227156938/captures/yahoo_tw_analysis_20261019092747.bin`。
-- GPT 已重算 raw gzip SHA-256 `da6d7a356a4465d8f64fcd1dfd75c1d99225a55e7f335e6fa512b68fa252f3c5`，解壓HTML SHA-256 `5d5f4218a153ac9e92ee78e0e35f22813ed2af2efb5617149a221d47272d4408`，由原表讀到 FY2027=12/281.54/95.37/414.28。原表只寫 Currency TWD，未宣告預估的會計口徑；擷取時間不能當發布時間。
-
-## 回覆 03:25 的網站接收確認（依新優先序暫不擴充）
-
-| 產出 | 接收判斷 | 現況／約束 |
-|---|---|---|
-| R1 時間界線 | 既有讀取維持 | 不擴B1、不回填歷史共識；用snapshot_boundary_at，不用cutoff_at放寬 |
-| R2 官方指引配對 | 概念可接 Gate5A，正式契約仍需對照 | 等P1後再定輸入schema；先不要增加公司；不把Python預驗證當Gate PASS |
-| R3 共識存檔人數 | 接受附來源的獨立coverage證據 | 本機8299試接完成，但非通用匯入器、未部署、不提供可計分EPS，不借給另一供應商 |
-| R4 年報事實 | 接受結構化來源事實、分離評分 | 本機8299試接完成；頁碼、hash、期別、公司範圍必填，不任意解除警訊；其他代號未自動化 |
-| R5 分析師vs公司財測 | 先不做 | P1優先，先確認面板與同口徑需求 |
-| R6 A2/A3 | 本機與PR已接受並測試 | Site未部署、PR未合併、真實缺日未補 |
-
-### B2 先前建議存檔（本輪不擴充）
-
-「同頁上一季實際EPS＝官方基本EPS」是數值一致的間接證據，不能單獨證明預估口徑：可能當季無調整、四捨五入相同或下一期調整不同。仍需提供者明確定義或可核對調整橋接。我建議保留嚴格口徑，研究-only數值一致樣本可留存但不計Gate。
-
-必須寫清的代價：**在來源持續未註明口徑、也沒有補足對賬證據的情況下，台股 EPS surprise 會一直沒有合格樣本（目前8299為0/8）；不得把缺樣本寫成零驚喜。** 這不是說所有台股永遠無法有樣本，新增真實口徑證據可改變判定。最終由擁有者決定，但依新P4這輪不擴充。
-
-其餘待決定建議保留：B1條件納入季末保守界線須兩邊共同驗證、另標推算；B3不將模糊文字硬轉數字；B4官方原數字可驗證才比較；B5接受可追溯且早於實績的期中正式指引；B6同口徑同比／環比與百分點分開；B7/B8等P1～P3後另行授權，不新增自動化。
-
-## 測試與重建方式
-
-- Site `npm run build`：exit0。
-- Site 完整 `npm test`：exit0，含新A2八項、Phison面板測試、全部既有Gate／VETO／來源隔離／UI契約。初跑曾因結構性文字覆蓋候選池筆數而失敗，已修正保留原筆數，最終完整重跑通過；不是未解失敗。
-- 將新增檔納入diff後，`git diff --check`曾指出三檔尾端多空白行，已去除；僅格式變更，之後build與diffcheck再次exit0。下方diff是去除後最終完整版本。
-- 全36列比較：所有值／觀測日／順序不變，沒有放寬原始來源驗證。JSON與重播結果見artifacts。
-- 中繼：本機三組正式CI命令全部通過；PR上的三個run步驟也success。不能把pipeline顯示PASS 10/15當作最新session恢復；這項既有測試只核對串接，新的日期檢查測試另核對缺日拒收。
-- A2八項含休市、提前收盤、DST、缺最新交易日、發布寬限、捕獲早於收盤、各類格式／來源錯誤、超出日曆範圍。日曆只覆蓋2026–2027，之後必須維護。
-
-完整Site測試日誌另存artifact；以下為最終尾段：
+測試日誌內的403/503是既有故障注入；Node/npm既有警告不改成正式抓取錯誤。以下為exit0的最終尾段，完整日誌可下載上方連結。
 
 ```text
-where the warning was created)
-client diagnostics: bounded input, account isolation, safe fields, unauthenticated writes and expired reports passed
-fallback risk rating: zero neutral contribution, B+ cap, 15% reference discount, historical substitute, risk deductions, veto priority, date guards and shared policy passed
-npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
-
-> test:cross-market
-> node tests/cross-market.test.mjs && node tests/cross-market-live.test.mjs
-
-cross-market: four states, independent 5/10/20D arithmetic, completed-close timing, EPS/provider/ticker isolation, missing data, funding units, zero duplicate scoring and VETO priority passed
-cross-market live QA: TW 49/US 100 closes, dated sources, 9 independent RS results, real institutional/amount data, EPS UNKNOWN and unchanged v212 mobile layout passed
-npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
-
-> test:report-context
-> node tests/report-context.test.mjs
-
-report context: 19 live same-date FRED observations, lag/UNKNOWN validation, RSS excerpts, stock isolation, dated research references and unchanged scoring/VETO passed
-npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
-
-> test:stock-relay
-> node tests/stock-relay.test.mjs
-
-stock relay: four live official quotes, shared/D1 reads, source/ticker/date validation, UNKNOWN, atomic RETAINED_NEWER, rolling/PV recalculation and matching report prices passed
-npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
-
 > test:us-sector-site
 > node --test tests/us-sector-session.test.mjs && node tests/us-sector-site.test.mjs
 
-✔ 實檔：2026-10-17 01:28Z 產生、最後一天 10-15；10-19 10:26Z 應有 10-16 → LATEST_SESSION_MISSING（不是格式錯誤） (15.57741ms)
-✔ 資料補上 10-16、擷取時間不變：週一早上仍可用（舊規則 57 小時會判 UNKNOWN） (1.059268ms)
-✔ 只刷新 generated_at、資料沒變：仍是 LATEST_SESSION_MISSING (0.638884ms)
-✔ 收盤後 8 小時內上游還沒發布：前一個交易日仍可用；超過才算缺 (0.769091ms)
-✔ 擷取時間早於最後一列的收盤：CAPTURE_BEFORE_CLOSE (1.517531ms)
-✔ 格式、來源、擷取時間各自的錯誤碼 (0.14581ms)
-✔ NYSE 休市日、提前收盤、夏令時間結束 (0.961211ms)
-✔ 超出休市日表的年份：失敗而不是放行 (0.786297ms)
+✔ 實檔：2026-10-17 01:28Z 產生、最後一天 10-15；10-19 10:26Z 應有 10-16 → LATEST_SESSION_MISSING（不是格式錯誤） (14.723438ms)
+✔ 資料補上 10-16、擷取時間不變：週一早上仍可用（舊規則 57 小時會判 UNKNOWN） (1.333558ms)
+✔ 只刷新 generated_at、資料沒變：仍是 LATEST_SESSION_MISSING (0.474514ms)
+✔ 收盤後 8 小時內上游還沒發布：前一個交易日仍可用；超過才算缺 (0.61777ms)
+✔ 擷取時間早於最後一列的收盤：CAPTURE_BEFORE_CLOSE (1.489732ms)
+✔ 格式、來源、擷取時間各自的錯誤碼 (0.151207ms)
+✔ NYSE 休市日、提前收盤、夏令時間結束 (1.053016ms)
+✔ 超出休市日表的年份：失敗而不是放行 (0.663108ms)
 ℹ tests 8
 ℹ suites 0
 ℹ pass 8
@@ -306,7 +130,7 @@ npm warn Unknown env config "http-proxy". This will stop working in the next maj
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 102.598019
+ℹ duration_ms 106.867421
 US sector Site: 12 live ETFs, 66 independent RS comparisons, Taiwan-close timing, gaps/UNKNOWN, source/D1 retention, real report wiring and unchanged scoring/VETO passed
 npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
@@ -318,47 +142,9 @@ Phison panel: common-session intersection, real-history retention and gaps, stru
 
 ```
 
-中繼本機正式CI等效命令輸出：
+## 完整網站 git diff（最終已部署內容，18檔，未省略）
 
-```text
-US sector context non-mutating report integration passed
-✔ site-embed/us-sector-context.test.mjs (136.713811ms)
-history calculations passed
-history integrity rejection passed
-✔ site-embed/us-sector-history.test.mjs (117.771723ms)
-sector loader fallbacks passed
-sector loader freshness gate passed
-sector fetch abort fallback passed
-incomplete report explicit status passed
-✔ site-embed/us-sector-loader.test.mjs (112.853032ms)
-sector report contract passed
-✔ site-embed/us-sector-report.test.mjs (108.739836ms)
-sector rotation smoke tests passed
-✔ site-embed/us-sector-rotation.test.mjs (117.447155ms)
-sector snapshot tests passed
-sector metadata alignment tests passed
-sector trading-session alignment test passed
-✔ site-embed/us-sector-snapshot.test.mjs (111.431542ms)
-ℹ tests 6
-ℹ suites 0
-ℹ pass 6
-ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 149.244646
-Committed US sector snapshot -> API Worker -> Master Model report: PASS 2026-10-15
-....................
-----------------------------------------------------------------------
-Ran 20 tests in 0.008s
-
-OK
-
-```
-
-## 完整網站 git diff（含所有新增檔案與產生檔，未省略）
-
-基準 `0dd0df41a3aed304a8b11bf7658c855b978ea337`；本機目錄 `master-gate5b-minimal-I2nTE1`。只有intent-to-add用於顯示新增檔，沒有網站commit/push/deploy。
+基準 `0dd0df41a3aed304a8b11bf7658c855b978ea337` → `543793fa6be1a9d4dfde79d0be4313eeb436f8e8`。包含新增精確reason回歸、所有新增檔、build輸出；此為實際部署內容。
 
 ```diff
 diff --git a/build.mjs b/build.mjs
@@ -498,7 +284,7 @@ index 0000000..59c81b3
 +  ]
 +}
 diff --git a/dist/server/index.js b/dist/server/index.js
-index c417c8b..c003d0d 100644
+index c417c8b..87cd5fb 100644
 --- a/dist/server/index.js
 +++ b/dist/server/index.js
 @@ -1954,10 +1954,11 @@ function summarizeTaiwanMarket(rows = []) {
@@ -566,7 +352,7 @@ index c417c8b..c003d0d 100644
    });
  }
 +function obsoleteObservationReason(reason) {
-+  return ['資料較舊，暫不納入判讀','觀測資料較舊，暫不納入判讀','EIA 觀測較舊，暫不納入判讀','保留前次成功觀測；資料較舊'].includes(reason);
++  return ['資料較舊，暫不納入判讀','觀測資料較舊，暫不納入判讀','EIA 觀測較舊，暫不納入判讀','保留前次成功觀測；資料較舊','官方觀測或最近來源核對已過有效期；等待更新。'].includes(reason);
 +}
 +function macroDerivedParentId(row) {
 +  if(row?.derivedFrom==='DEXJPUS'||row?.id==='JPY_HV20'||row?.id==='JPY_HV60')return 'DEXJPUS';
@@ -4049,10 +3835,10 @@ index 0000000..f12ca5b
 +  }
 +}
 diff --git a/tests/observation-freshness.test.mjs b/tests/observation-freshness.test.mjs
-index df92f9b..8f991de 100644
+index df92f9b..37c3fa0 100644
 --- a/tests/observation-freshness.test.mjs
 +++ b/tests/observation-freshness.test.mjs
-@@ -71,6 +71,43 @@ try{
+@@ -71,6 +71,47 @@ try{
    const previous={checkedAt:now,rows:[spot,...stats],coverage:{usable:9,total:9,missingCore:[]}};
    const refreshing=api.refreshingMacroSnapshot(previous);
    assert.equal(refreshing.rows.find(r=>r.id===spot.id).status,'ok');
@@ -4073,6 +3859,10 @@ index df92f9b..8f991de 100644
 +  const promoted=api.refreshingMacroSnapshot({checkedAt:now,rows:[staleButReleaseVerified]},false).rows[0];
 +  assert.equal(promoted.status,'ok','a valid release window can resolve an age-only stale label');
 +  assert.equal(promoted.reason,null);
++  const renewedExpiryReason=api.refreshingMacroSnapshot({checkedAt:now,rows:[{...spot,status:'stale',is_stale:true,reason:'官方觀測或最近來源核對已過有效期；等待更新。'}]},false).rows[0];
++  assert.equal(renewedExpiryReason.status,'ok','a valid release verification can renew a row marked stale by this freshness function');
++  assert.equal(renewedExpiryReason.is_stale,false);
++  assert.equal(renewedExpiryReason.reason,null,'the freshness function must clear its own obsolete expiry reason when the row becomes current');
 +  const trulyExpired=api.refreshingMacroSnapshot({checkedAt:now,rows:[{...contradictory,releaseVerification:{...spot.releaseVerification,nextReleaseDate:'2026-10-09'}}]},false).rows[0];
 +  assert.equal(trulyExpired.status,'stale','an expired release window remains stale');
 +  assert.match(trulyExpired.reason,/過有效期/);
@@ -4383,7 +4173,7 @@ index dbb1c48..0448162 100644
      !current.ready?`${current.year} 共識尚未核驗，Forward P/E 不計算。`:null,
      !next.ready?`${next.year} 共識僅列輔助候選；分析師覆蓋未核驗，不計入評級。`:null,
 diff --git a/worker/observation-freshness.js b/worker/observation-freshness.js
-index 460bfe2..c05dd72 100644
+index 460bfe2..e87c4e2 100644
 --- a/worker/observation-freshness.js
 +++ b/worker/observation-freshness.js
 @@ -89,6 +89,22 @@ function coreCpiVerificationCurrent(row,now=Date.now()) {
@@ -4422,7 +4212,7 @@ index 460bfe2..c05dd72 100644
    });
  }
 +function obsoleteObservationReason(reason) {
-+  return ['資料較舊，暫不納入判讀','觀測資料較舊，暫不納入判讀','EIA 觀測較舊，暫不納入判讀','保留前次成功觀測；資料較舊'].includes(reason);
++  return ['資料較舊，暫不納入判讀','觀測資料較舊，暫不納入判讀','EIA 觀測較舊，暫不納入判讀','保留前次成功觀測；資料較舊','官方觀測或最近來源核對已過有效期；等待更新。'].includes(reason);
 +}
 +function macroDerivedParentId(row) {
 +  if(row?.derivedFrom==='DEXJPUS'||row?.id==='JPY_HV20'||row?.id==='JPY_HV60')return 'DEXJPUS';
@@ -4624,9 +4414,9 @@ index 26d3fd3..38372a9 100644
 
 ```
 
-## 完整中繼 git diff（PR #6 六檔，未省略）
+## 完整中繼 git diff（PR #6六檔，已合併，未省略）
 
-基準 `46b58640c7b3f839c0c4d55e77ddddacfaacbb64`。此diff已在獨立分支提交，尚未合併。
+授權head `2c098f9263eb4838487c212e123f6dda9256c5a1`；合併commit `835168c34472333f54eb59956ac0576c067cab54`。
 
 ```diff
 diff --git a/.github/workflows/us-sector-history.yml b/.github/workflows/us-sector-history.yml
@@ -4817,16 +4607,4 @@ index d12b47c..b25d77a 100644
 
 ```
 
-## 交接完整性
-
-下方檔案hash可獨立核對；此記錄末尾為 `END_OF_GPT_V228_CHECKPOINT`，讀不到末尾表示回應被截斷，請分段讀或直接下載raw。
-
-| 檔案 | SHA-256 |
-| --- | --- |
-| macro-market-raw.json | 3905328861fb4b648d0b0c8dd4bb930b8a1bb1198e4e51a30c39c2bda1e65a96 |
-| a1-full-row-comparison.json | e9cb031ccb6fcd153fa3440f662b03195c3e9826dabb8d27a93e1d3caf7ddd38 |
-| full-site.diff | 2f074818aa04c396493403cf0122fc586d52f13f19b9804bcc9d1351bd3d8417 |
-| full-relay.diff | 7523357543809bb24ee4df9327611d93aaaa6b5ec755690a49ebe5dc07b3e3d1 |
-| site-npm-test.log | 27bf51a280035eb9bf6c4ecf0ca9a5bafd6fd62a73eb10561adee32f64b62e3d |
-
-END_OF_GPT_V228_CHECKPOINT
+END_OF_AUTHORIZED_V228_DEPLOYMENT_REPORT
