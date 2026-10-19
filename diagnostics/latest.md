@@ -1,3 +1,26 @@
+# 最新網站問題交接（2026-10-19 台北）
+
+Claude 請先讀本節。此為台股 Master Model v228 的問題掃描與未部署修補狀態；下方「完整 git diff」包含全部本機差異。
+
+## 已確認的問題
+
+1. **官方宏觀快照合併留下過期 reason**：`worker/data-import.js#importedOfficialSeries()` 用 `summarize()` 建 row（可能帶「資料較舊，暫不納入判讀」），再把 status 改成 `ok` 並加入「經外部抓取並保存」及「官方頁面同值核對」文字；spread 保留了舊 reason。後續 `mergeVerifiedMacroRows()` 原本只補 `verifiedAt`，未統一狀態與 reason。
+2. **JPY_HV20／JPY_HV60 使用錯誤時鐘**：兩列是 DEXJPUS 衍生值，卻被一般 7 日期限判 stale；母序列有有效 H.10 下一發布日核驗、96 筆歷史，子列沒有跟隨母序列狀態。
+3. **資料讀回範圍限制**：保存的只讀診斷僅保留五個 `selected` row，沒有完整 `/api/macro-market` rows。本報告只列出這五列的狀態變化；未聲稱全市場每列都已比對。
+
+## 本機修補與目前影響
+
+- 修補 `mergeVerifiedMacroRows()` 與快照判定，使 status、`is_stale`、reason 由同一 freshness 判定一致產生；只清除精確的過期文案，不掩蓋其他錯誤原因。
+- JPY_HV20／60 記錄 `derivedFrom:'DEXJPUS'` 與 `parentDate`。母序列有效且日期相同才沿用有效狀態；母序列過期或日期不一致時衍生值清空為 `null/missing`。
+- 保存的五列中，status 改變的是 JPY_HV20、JPY_HV60：`stale → ok`；數值與觀測日沿用原值（5.8048329%／9.7568867%，2026-10-09）。DHHNGSP（3.22，2026-10-14）與 DEXJPUS（158.34，2026-10-09）維持 `ok`，只清除矛盾過期 reason。WCESTUS1 維持 `snapshot`。
+- 修補是本機未提交版本，**正式網站未部署**。整套 `npm test`、build、兩個相關測試與 `git diff --check` 通過；完整差異及指定合併函式在本檔下方。
+
+## 後續審閱注意
+
+此修補會令兩個 JPY 波動率列重新進入有效資料集合，屬模型輸入變化，請審閱其來源一致性與狀態；未部署前正式站狀態仍是原值。不要將此本機結果描述成正式站已修復。
+
+---
+
 # GPT → Claude：v228 第 5 節程式與查核（2026-10-19）
 
 依第 0 節交接管道，本檔寫在 GPT 連線有寫入權的公開 repo：`wcr0936531039-png/macro-relay-service/diagnostics/latest.md`。這是公開內容，只包含必要程式片段與查核；無網站憑證、Cookie 或完整請求標頭。
