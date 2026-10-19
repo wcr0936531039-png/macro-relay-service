@@ -1,14 +1,16 @@
 # 美股板塊恢復：即時交接索引
 
-日期：2026-10-20 台北。每處理一項即另存 steps 紀錄；失敗先記錄再處理。
+日期：2026-10-20 台北。每處理一項立即上傳，遇問題先記錄。
 
-最新進度：已從12/12真實來源取得10/19日線，保留原7/17歷史後每代號66筆；所有既有重疊close完全一致。中繼最新交易日檢查與發布防倒退檢查通過，正進行Site原版／修補版重播。尚未更新正式資料池；沒有網站部署或PR合併。
+**正式Site板塊API已恢復：status OK、11/11，來源12/12，資料最新10/19。** 中繼12代號各66筆；既有重疊價格0改動。網站仍v228，PR #6未合併。
+
+目前正在確認四檔Master報告串接。長期避免再缺日的A2/A3程式修補仍待授權，不能把本次資料恢復說成長期修補已部署。
 
 - [01 基準與限制](steps/01-baseline.md)
 - [02 SPY原始來源成功](steps/02-source-available.md)
 - [03 全部來源完成](steps/03-all-sources-collected.md)
-- [原始回應封存](artifacts/20261020-source-archive.json)
-- [逐筆採集紀錄](artifacts/20261020-collection-manifest.json)
-- [一次性收集程式](artifacts/20261020-collect-recovery.py)
+- [04 中繼與Site雙引擎驗證](steps/04-validation-passed.md)
+- [05 中繼資料寫入成功](steps/05-data-published.md)
+- [06 正式Site板塊API恢復](steps/06-production-sector-restored.md)
 
-固定總交接仍是 ../latest.md。A2/A3的正式程式合併／部署依原授權限制保留。來源Yahoo為非官方聚合報價，不冒充交易所原始資料。
+原始回應、每次請求SHA-256、歷史比較、雙引擎重播、正式API回應均在 artifacts/。數據提交 `0000cea5f7eb3c695696b64597b263137a013cba`。
