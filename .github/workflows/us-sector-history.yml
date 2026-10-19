@@ -10,6 +10,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '35 23 * * 1-5'
+    # Retry after a late-finalized Yahoo bar; publishes only when rows actually change.
+    - cron: '45 3 * * 2-6'
 permissions:
   contents: write
 concurrency:
@@ -58,6 +60,11 @@ jobs:
             if [ "$guard_status" -ne 0 ]; then
               echo "Sector snapshot guard failed" >&2
               exit "$guard_status"
+            fi
+            if [ -f data/us_sector_history.json ] && python3 -c 'import json,sys; k=lambda p:{x:json.load(open(p)).get(x) for x in ("histories","status")}; sys.exit(0 if k(sys.argv[1])==k(sys.argv[2]) else 1)' /tmp/us-sector-publish-candidate.json data/us_sector_history.json; then
+              echo "Sector rows unchanged (generated_at ignored); no publication required"
+              echo "publication_outcome=UNCHANGED" >> "$GITHUB_OUTPUT"
+              exit 0
             fi
             cp /tmp/us-sector-publish-candidate.json data/us_sector_history.json
             python scripts/check_us_sector_snapshot.py data/us_sector_history.json
