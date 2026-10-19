@@ -1,0 +1,128 @@
+{
+  "evaluationAt": "2026-10-19T21:13:30.798Z",
+  "input": "saved original Yahoo responses; old history retained without overlap changes",
+  "cases": [
+    {
+      "engine": "v228_baseline",
+      "referenceDate": null,
+      "status": "OK",
+      "errorCode": null,
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      },
+      "sourceCoverage": {
+        "valid": 12,
+        "total": 12
+      },
+      "observedAt": "2026-10-19",
+      "latestSourceObservedAt": "2026-10-19",
+      "scoreContribution": 0,
+      "macroGateOverride": null,
+      "vetoOverride": null,
+      "summary": "美股板塊 OK／板塊強弱分化：2026-10-19（資料池最新 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.49%／-1.08%／-0.91%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+    },
+    {
+      "engine": "v228_baseline",
+      "referenceDate": "2026-10-19",
+      "status": "OK",
+      "errorCode": null,
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      },
+      "sourceCoverage": {
+        "valid": 12,
+        "total": 12
+      },
+      "observedAt": "2026-10-16",
+      "latestSourceObservedAt": "2026-10-19",
+      "scoreContribution": 0,
+      "macroGateOverride": null,
+      "vetoOverride": null,
+      "summary": "美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+    },
+    {
+      "engine": "v228_baseline",
+      "referenceDate": "2026-10-20",
+      "status": "OK",
+      "errorCode": null,
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      },
+      "sourceCoverage": {
+        "valid": 12,
+        "total": 12
+      },
+      "observedAt": "2026-10-19",
+      "latestSourceObservedAt": "2026-10-19",
+      "scoreContribution": 0,
+      "macroGateOverride": null,
+      "vetoOverride": null,
+      "summary": "美股板塊 OK／板塊強弱分化：2026-10-19（資料池最新 2026-10-19，台股基準 2026-10-20）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.49%／-1.08%／-0.91%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+    },
+    {
+      "engine": "local_A2_patch",
+      "referenceDate": null,
+      "status": "OK",
+      "errorCode": null,
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      },
+      "sourceCoverage": {
+        "valid": 12,
+        "total": 12
+      },
+      "observedAt": "2026-10-19",
+      "latestSourceObservedAt": "2026-10-19",
+      "scoreContribution": 0,
+      "macroGateOverride": null,
+      "vetoOverride": null,
+      "summary": "美股板塊 OK／板塊強弱分化：2026-10-19（資料池最新 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.49%／-1.08%／-0.91%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+    },
+    {
+      "engine": "local_A2_patch",
+      "referenceDate": "2026-10-19",
+      "status": "OK",
+      "errorCode": null,
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      },
+      "sourceCoverage": {
+        "valid": 12,
+        "total": 12
+      },
+      "observedAt": "2026-10-16",
+      "latestSourceObservedAt": "2026-10-19",
+      "scoreContribution": 0,
+      "macroGateOverride": null,
+      "vetoOverride": null,
+      "summary": "美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+    },
+    {
+      "engine": "local_A2_patch",
+      "referenceDate": "2026-10-20",
+      "status": "OK",
+      "errorCode": null,
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      },
+      "sourceCoverage": {
+        "valid": 12,
+        "total": 12
+      },
+      "observedAt": "2026-10-19",
+      "latestSourceObservedAt": "2026-10-19",
+      "scoreContribution": 0,
+      "macroGateOverride": null,
+      "vetoOverride": null,
+      "summary": "美股板塊 OK／板塊強弱分化：2026-10-19（資料池最新 2026-10-19，台股基準 2026-10-20）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.49%／-1.08%／-0.91%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+    }
+  ],
+  "passed": true,
+  "productionDeployed": false
+}
