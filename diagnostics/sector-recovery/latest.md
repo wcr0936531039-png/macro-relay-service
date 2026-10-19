@@ -1,3 +1,11 @@
+## 2026-10-20授權後更新
+
+下方一次性行情恢復已完成；其中「PR未合併／修補未部署」是授權前狀態。**PR #6現已合併（835168c），A1＋A2＋已審閱群聯面板已部署為平台v229**，完整測試與正式讀回通過。最新請讀 [兩項授權完成紀錄](https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/diagnostics/authorized-v228/latest.md) 或總交接diagnostics/latest.md。
+
+合併後自動發布已通過最新交易日檢查；當前上游range=3mo快照為65筆，先前一次性恢復的66筆版本仍保存git與artifacts。
+
+---
+
 # 美股板塊恢復：即時交接索引
 
 日期：2026-10-20 台北；完成確認至05:15。每處理一項就上傳紀錄，遇阻礙先記錄。這一輪已完成資料恢復與正式讀回。
