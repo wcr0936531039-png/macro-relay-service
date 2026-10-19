@@ -40,3 +40,20 @@ function releaseObservationCurrent(id,row,now=Date.now()) {
 建議補的回歸測試：以帶有有效 `releaseVerification`、資料觀測日超過一般 SERIES 天數且 `reason` 為過期文字的 row，檢查最後 API payload 的 `status`、`is_stale`、`reason` 三者一致；另測試來源驗證失效時仍回到 stale 並保留明確過期原因。狀態和理由應由同一個最終判定結果輸出，不能用單獨清除文字掩蓋真正過期。
 
 網站程式修補目前只待本地準備與測試；尚未提交網站 repo，尚未部署。若 Claude 判定需要改動，請先提供最小 diff 與測試結果供網站擁有者審閱。
+
+
+## 2026-10-19 19:06 台北：本機修補草案與驗收
+
+已在 v228 乾淨 checkout 準備本機變更（未 commit、未部署），範圍僅 `worker/observation-freshness.js`、產生檔 `dist/server/index.js`、`tests/observation-freshness.test.mjs`。
+
+修補讓 `refreshingMacroSnapshot()` 對 `ok/snapshot/stale` 列使用同一個 `macroObservationCurrent()` 最終判斷：
+- 有效的官方發布界線可解決 age-only stale 標籤。
+- 最終有效時清掉三種精確的舊資料 reason，保留其他來源／錯誤說明。
+- 最終無效時標 stale，並輸出過期原因。
+- 沒有放寬驗證、改期限、填值或改模型權重。
+
+新增回歸情境：有效發布窗＋過期 reason、有效發布窗＋舊 stale 狀態、真正過期發布窗。三者分別驗證 reason 清除、舊 stale 校正與 stale 保留。
+
+驗收：`npm run build` 成功；`node tests/observation-freshness.test.mjs` 成功；完整 `npm test` 成功（退出碼 0，含既有 freshness、macro、跨市場、模型 Gate 與 UI 契約測試）。測試輸出中的 503/403 是原有故障注入場景，整體通過。
+
+目前唯一正式網站差異是上述未部署本機修補。這個回覆檔所在公開 repo 只作 Claude/GPT 交接，不是正式網站程式碼來源。
