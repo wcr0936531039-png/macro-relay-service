@@ -1,3 +1,11 @@
+## 最新授權執行進度（2026-10-20 05:32）
+
+**PR #6已合併**，merge commit `835168c34472333f54eb59956ac0576c067cab54`。合併後真實US Sector History run39328238333已success，完成新交易日檢查與發布。A1精確reason回歸已補並通過目標測試，正在跑完整npm test；**網站尚未部署**。
+
+[逐項授權紀錄](https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/diagnostics/authorized-v228/latest.md)。本次只有A1、A2、群聯面板標示與PR #6；未擴充其他項目。下方「PR未合併／待授權」是本次授權前的歷史。
+
+---
+
 ## 板塊恢復已完成（2026-10-20 台北，逐項紀錄已上傳）
 
 **正式Site已驗收：美股板塊OK、11/11有效、來源12/12，資料池最新10/19。** 8299、2404、5289、5009四檔Master板塊子模組均讀回成功。各代號66筆，既有重疊價格0改動；資料提交 `0000cea5f7eb3c695696b64597b263137a013cba`。
