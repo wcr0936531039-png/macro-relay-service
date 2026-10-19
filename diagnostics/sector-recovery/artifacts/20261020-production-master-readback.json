@@ -1,0 +1,2330 @@
+Warning: truncated output (original token count: 27048)
+Total output lines: 2846
+
+[
+  {
+    "path": "/api/master-model?id=8299",
+    "requestedAt": "2026-10-19T21:15:16.749635+00:00",
+    "httpStatus": 200,
+    "sha256": "ac5c485e63fb7fe73df1ba34faaff7860c29e61974620e3b0dfa09f17767d4c5",
+    "response": {
+      "symbol": "8299",
+      "generatedAt": "2026-10-19T21:15:27.107Z",
+      "status": "degraded",
+      "usSectorContext": {
+        "module": "US_SECTOR_ROTATION_V1",
+        "status": "OK",
+        "classification": "MIXED_ROTATION",
+        "coverage": {
+          "valid": 11,
+          "total": 11
+        },
+        "benchmark": "SPY",
+        "observedAt": "2026-10-16",
+        "generatedAt": "2026-10-19T21:12:14.926743+00:00",
+        "source": "Yahoo Finance chart API (unofficial)",
+        "sectors": {
+          "XLK": {
+            "status": "OK",
+            "classification": "LAGGING",
+            "relative": {
+              "return5d": -5.734270209474102,
+              "return10d": -7.347507225500804,
+              "return20d": -3.4379323647530713
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "資訊科技",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -7.7019811233624225,
+              "return10d": -8.177767460865503,
+              "return20d": -3.233124897685924
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLK/"
+          },
+          "XLC": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.9133559568031089,
+              "return10d": 0.8302602353646993,
+              "return20d": -0.6470040277060218
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "通訊服務",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.054354957085211986,
+              "return10d": 0,
+              "return20d": -0.44219656063887447
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLC/"
+          },
+          "XLY": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 1.6221203007630969,
+              "return10d": 3.0294586886616903,
+              "return20d": 1.0831327408761027
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "非必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.345590613125224,
+              "return10d": 2.199198453296991,
+              "return20d": 1.28794020794325
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLY/"
+          },
+          "XLP": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.989888787554865,
+              "return10d": 9.634437669913032,
+              "return20d": 5.616448360665127
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 5.022177873666545,
+              "return10d": 8.804177434548333,
+              "return20d": 5.821255827732275
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLP/"
+          },
+          "XLF": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.411160575865302,
+              "return10d": 4.625358242652133,
+              "return20d": -0.813473764799566
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "金融",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.443449661976981,
+              "return10d": 3.795098007287434,
+              "return20d": -0.6086662977324186
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLF/"
+          },
+          "XLI": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.0873534545087105,
+              "return10d": -0.4583552625220033,
+              "return20d": -1.3771226364338585
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "工業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.8803574593796104,
+              "return10d": -1.2886154978867026,
+              "return20d": -1.172315169366711
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLI/"
+          },
+          "XLV": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 5.421846543583708,
+              "return10d": 7.166771514433057,
+              "return20d": 4.736108293612906
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "醫療保健",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.4541356296953873,
+              "return10d": 6.3365112790683575,
+              "return20d": 4.940915760680054
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLV/"
+          },
+          "XLE": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.823267003145972,
+              "return10d": 9.458082584934902,
+              "return20d": 5.906217446974993
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "能源",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 4.855556089257651,
+              "return10d": 8.627822349570202,
+              "return20d": 6.11102491404214
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLE/"
+          },
+          "XLB": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 4.982070614474998,
+              "return10d": 5.046381720912763,
+              "return20d": 1.6555565313179699
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "原物料",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.0143597005866773,
+              "return10d": 4.216121485548063,
+              "return20d": 1.8603639983851172
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLB/"
+          },
+          "XLU": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 3.899609006136595,
+              "return10d": 6.805647833889061,
+              "return20d": 2.495925024452683
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "公用事業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.9318980922482742,
+              "return10d": 5.975387598524362,
+              "return20d": 2.7007324915198305
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLU/"
+          },
+          "XLRE": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.2895061236505097,
+              "return10d": 4.138270445901071,
+              "return20d": -1.0747792721452543
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "房地產",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.3217952097621888,
+              "return10d": 3.308010210536372,
+              "return20d": -0.8699718050781069
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLRE/"
+          }
+        },
+        "macroGateOverride": null,
+        "vetoOverride": null,
+        "scoreContribution": 0,
+        "warnings": [],
+        "benchmarkReturns": {
+          "status": "OK",
+          "observedAt": "2026-10-16",
+          "return5d": -1.9677109138883209,
+          "return10d": -0.8302602353646993,
+          "return20d": 0.20480746706714736
+        },
+        "sourceCoverage": {
+          "valid": 12,
+          "total": 12
+        },
+        "latestSourceObservedAt": "2026-10-19",
+        "referenceDate": "2026-10-19",
+        "sourceUrl": "https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/us_sector_history.json",
+        "errorCode": null,
+        "pending": false,
+        "refreshing": false,
+        "fetchError": null,
+        "summary": "美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+      },
+      "crossMarket": {
+        "module": "US_SECTOR_ROTATION_V1",
+        "status": "OK",
+        "classification": "MIXED_ROTATION",
+        "coverage": {
+          "valid": 11,
+          "total": 11
+        },
+        "benchmark": "SPY",
+        "observedAt": "2026-10-16",
+        "generatedAt": "2026-10-19T21:12:14.926743+00:00",
+        "source": "Yahoo Finance chart API (unofficial)",
+        "sectors": {
+          "XLK": {
+            "status": "OK",
+            "classification": "LAGGING",
+            "relative": {
+              "return5d": -5.734270209474102,
+              "return10d": -7.347507225500804,
+              "return20d": -3.4379323647530713
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "資訊科技",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -7.7019811233624225,
+              "return10d": -8.177767460865503,
+              "return20d": -3.233124897685924
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLK/"
+          },
+          "XLC": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.9133559568031089,
+              "return10d": 0.8302602353646993,
+              "return20d": -0.6470040277060218
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "通訊服務",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.054354957085211986,
+              "return10d": 0,
+              "return20d": -0.44219656063887447
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLC/"
+          },
+          "XLY": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 1.6221203007630969,
+              "return10d": 3.0294586886616903,
+              "return20d": 1.0831327408761027
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "非必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.345590613125224,
+              "return10d": 2.199198453296991,
+              "return20d": 1.28794020794325
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLY/"
+          },
+          "XLP": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.989888787554865,
+              "return10d": 9.634437669913032,
+              "return20d": 5.616448360665127
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 5.022177873666545,
+              "return10d": 8.804177434548333,
+              "return20d": 5.821255827732275
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLP/"
+          },
+          "XLF": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.411160575865302,
+              "return10d": 4.625358242652133,
+              "return20d": -0.813473764799566
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "金融",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.443449661976981,
+              "return10d": 3.795098007287434,
+              "return20d": -0.6086662977324186
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLF/"
+          },
+          "XLI": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.0873534545087105,
+              "return10d": -0.4583552625220033,
+              "return20d": -1.3771226364338585
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "工業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.8803574593796104,
+              "return10d": -1.2886154978867026,
+              "return20d": -1.172315169366711
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLI/"
+          },
+          "XLV": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 5.421846543583708,
+              "return10d": 7.166771514433057,
+              "return20d": 4.736108293612906
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "醫療保健",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.4541356296953873,
+              "return10d": 6.3365112790683575,
+              "return20d": 4.940915760680054
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLV/"
+          },
+          "XLE": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.823267003145972,
+              "return10d": 9.458082584934902,
+              "return20d": 5.906217446974993
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "能源",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 4.855556089257651,
+              "return10d": 8.627822349570202,
+              "return20d": 6.11102491404214
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLE/"
+          },
+          "XLB": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 4.982070614474998,
+              "return10d": 5.046381720912763,
+              "return20d": 1.6555565313179699
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "原物料",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.0143597005866773,
+              "return10d": 4.216121485548063,
+              "return20d": 1.8603639983851172
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLB/"
+          },
+          "XLU": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 3.899609006136595,
+              "return10d": 6.805647833889061,
+              "return20d": 2.495925024452683
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "公用事業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.9318980922482742,
+              "return10d": 5.975387598524362,
+              "return20d": 2.7007324915198305
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLU/"
+          },
+          "XLRE": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.2895061236505097,
+              "return10d": 4.138270445901071,
+              "return20d": -1.0747792721452543
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "房地產",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.3217952097621888,
+              "return10d": 3.308010210536372,
+              "return20d": -0.8699718050781069
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLRE/"
+          }
+        },
+        "macroGateOverride": null,
+        "vetoOverride": null,
+        "scoreContribution": 0,
+        "warnings": [],
+        "benchmarkReturns": {
+          "status": "OK",
+          "observedAt": "2026-10-16",
+          "return5d": -1.9677109138883209,
+          "return10d": -0.8302602353646993,
+          "return20d": 0.20480746706714736
+        },
+        "sourceCoverage": {
+          "valid": 12,
+          "total": 12
+        },
+        "latestSourceObservedAt": "2026-10-19",
+        "referenceDate": "2026-10-19",
+        "sourceUrl": "https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/us_sector_history.json",
+        "errorCode": null,
+        "pending": false,
+        "refreshing": false,
+        "fetchError": null,
+        "summary": "美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+      },
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "detail": "黃燈｜中性偏支持｜既有網站模型 58/100，評分指標覆蓋 100%；65/65 項總經資料可用，快照 2026-10-19T21:08:17.651Z。 跨市場背離｜UNKNOWN 資料不足。台股2026-10-19／美股2026-10-16；相對報酬差（百分點）：S&P 500 5D -3.08／10D -2.59／20D +2.01；NASDAQ 5D -3.26／10D -2.82／20D +1.01；費半 5D +6.38／10D +11.81／20D +8.70。缺項：三個美股基準的最新完成收盤日期不一致；5D美股基準起始日不一致；歷史缺日待核；10D美股基準起始日不一致；歷史缺日待核；20D美股基準起始日不一致；歷史缺日待核；2027 Forward EPS修正：缺同公司、同年度、同提供者、至少3位分析師且可追溯的前後共識；內部 EPS 推估不替代修正率；HY利差；IG利差；SOFR與IORB同日觀測。共用風控證據，不新增10D分數或自動VETO。 利率同日核對 VERIFIED（2026-10-15）：名目 10Y 5.10% − 實質 10Y 2.78% ≈ BEI 2.32%；19 個共同觀測日，最大差 0.0000 個百分點（容許 0.02）。BEI 含風險溢酬，三者同源；只作診斷，新增評分0，未啟用 OpenBB 備援。 美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。 XLK 資訊科技：-5.73／-7.35／-3.44 個百分點（5D／10D／20D）；XLC 通訊服務：1.91／0.83／-0.65 個百分點（5D／10D／20D）；XLY 非必需消費：1.62／3.03／1.08 個百分點（5D／10D／20D）；XLP 必需消費：6.99／9.63／5.62 個百分點（5D／10D／20D）；XLF 金融：3.41／4.63／-0.81 個百分點（5D／10D／20D）；XLI 工業：1.09／-0.46／-1.38 個百分點（5D／10D／20D）；XLV 醫療保健：5.42／7.17／4.74 個百分點（5D／10D／20D）；XLE 能源：6.82／9.46／5.91 個百分點（5D／10D／20D）；XLB 原物料：4.98／5.05／1.66 個百分點（5D／10D／20D）；XLU 公用事業：3.90／6.81／2.50 個百分點（5D／10D／20D）；XLRE 房地產：3.29／4.14／-1.07 個百分點（5D／10D／20D）"
+        }
+      ]
+    },
+    "completedAt": "2026-10-19T21:15:27.243276+00:00"
+  },
+  {
+    "path": "/api/master-model?id=2404",
+    "requestedAt": "2026-10-19T21:15:27.244592+00:00",
+    "httpStatus": 200,
+    "sha256": "63852ce42843b6f56f8ecb42629e92acad0403c7544f22d34689fe327992e772",
+    "response": {
+      "symbol": "2404",
+      "generatedAt": "2026-10-19T21:15:37.483Z",
+      "status": "degraded",
+      "usSectorContext": {
+        "module": "US_SECTOR_ROTATION_V1",
+        "status": "OK",
+        "classification": "MIXED_ROTATION",
+        "coverage": {
+          "valid": 11,
+          "total": 11
+        },
+        "benchmark": "SPY",
+        "observedAt": "2026-10-16",
+        "generatedAt": "2026-10-19T21:12:14.926743+00:00",
+        "source": "Yahoo Finance chart API (unofficial)",
+        "sectors": {
+          "XLK": {
+            "status": "OK",
+            "classification": "LAGGING",
+            "relative": {
+              "return5d": -5.734270209474102,
+              "return10d": -7.347507225500804,
+              "return20d": -3.4379323647530713
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "資訊科技",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -7.7019811233624225,
+              "return10d": -8.177767460865503,
+              "return20d": -3.233124897685924
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLK/"
+          },
+          "XLC": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.9133559568031089,
+              "return10d": 0.8302602353646993,
+              "return20d": -0.6470040277060218
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "通訊服務",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.054354957085211986,
+              "return10d": 0,
+              "return20d": -0.44219656063887447
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLC/"
+          },
+          "XLY": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 1.6221203007630969,
+              "return10d": 3.0294586886616903,
+              "return20d": 1.0831327408761027
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "非必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.345590613125224,
+              "return10d": 2.199198453296991,
+              "return20d": 1.28794020794325
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLY/"
+          },
+          "XLP": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.989888787554865,
+              "return10d": 9.634437669913032,
+              "return20d": 5.616448360665127
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 5.022177873666545,
+              "return10d": 8.804177434548333,
+              "return20d": 5.821255827732275
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLP/"
+          },
+          "XLF": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.411160575865302,
+              "return10d": 4.625358242652133,
+              "return20d": -0.813473764799566
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "金融",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.443449661976981,
+              "return10d": 3.795098007287434,
+              "return20d": -0.6086662977324186
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLF/"
+          },
+          "XLI": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.0873534545087105,
+              "return10d": -0.4583552625220033,
+              "return20d": -1.3771226364338585
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "工業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.8803574593796104,
+              "return10d": -1.2886154978867026,
+              "return20d": -1.172315169366711
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLI/"
+          },
+          "XLV": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 5.421846543583708,
+              "return10d": 7.166771514433057,
+              "return20d": 4.736108293612906
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "醫療保健",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.4541356296953873,
+              "return10d": 6.3365112790683575,
+              "return20d": 4.940915760680054
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLV/"
+          },
+          "XLE": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.823267003145972,
+              "return10d": 9.458082584934902,
+              "return20d": 5.906217446974993
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "能源",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 4.855556089257651,
+              "return10d": 8.627822349570202,
+              "return20d": 6.11102491404214
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLE/"
+          },
+          "XLB": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 4.982070614474998,
+              "return10d": 5.046381720912763,
+              "return20d": 1.6555565313179699
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "原物料",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.0143597005866773,
+              "return10d": 4.216121485548063,
+              "return20d": 1.8603639983851172
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLB/"
+          },
+          "XLU": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 3.899609006136595,
+              "return10d": 6.805647833889061,
+              "return20d": 2.495925024452683
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "公用事業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.9318980922482742,
+              "return10d": 5.975387598524362,
+              "return20d": 2.7007324915198305
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLU/"
+          },
+          "XLRE": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.2895061236505097,
+              "return10d": 4.138270445901071,
+              "return20d": -1.0747792721452543
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "房地產",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.3217952097621888,
+              "return10d": 3.308010210536372,
+              "return20d": -0.8699718050781069
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLRE/"
+          }
+        },
+        "macroGateOverride": null,
+        "vetoOverride": null,
+        "scoreContribution": 0,
+        "warnings": [],
+        "benchmarkReturns": {
+          "status": "OK",
+          "observedAt": "2026-10-16",
+          "return5d": -1.9677109138883209,
+          "return10d": -0.8302602353646993,
+          "return20d": 0.20480746706714736
+        },
+        "sourceCoverage": {
+          "valid": 12,
+          "total": 12
+        },
+        "latestSourceObservedAt": "2026-10-19",
+        "referenceDate": "2026-10-19",
+        "sourceUrl": "https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/us_sector_history.json",
+        "errorCode": null,
+        "pending": false,
+        "refreshing": false,
+        "fetchError": null,
+        "summary": "美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+      },
+      "crossMarket": {
+        "module": "US_SECTOR_ROTATION_V1",
+        "status": "OK",
+        "classification": "MIXED_ROTATION",
+        "coverage": {
+          "valid": 11,
+          "total": 11
+        },
+        "benchmark": "SPY",
+        "observedAt": "2026-10-16",
+        "generatedAt": "2026-10-19T21:12:14.926743+00:00",
+        "source": "Yahoo Finance chart API (unofficial)",
+        "sectors": {
+          "XLK": {
+            "status": "OK",
+            "classification": "LAGGING",
+            "relative": {
+              "return5d": -5.734270209474102,
+              "return10d": -7.347507225500804,
+              "return20d": -3.4379323647530713
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "資訊科技",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -7.7019811233624225,
+              "return10d": -8.177767460865503,
+              "return20d": -3.233124897685924
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLK/"
+          },
+          "XLC": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.9133559568031089,
+              "return10d": 0.8302602353646993,
+              "return20d": -0.6470040277060218
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "通訊服務",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.054354957085211986,
+              "return10d": 0,
+              "return20d": -0.44219656063887447
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLC/"
+          },
+          "XLY": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 1.6221203007630969,
+              "return10d": 3.0294586886616903,
+              "return20d": 1.0831327408761027
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "非必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.345590613125224,
+              "return10d": 2.199198453296991,
+              "return20d": 1.28794020794325
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLY/"
+          },
+          "XLP": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.989888787554865,
+              "return10d": 9.634437669913032,
+              "return20d": 5.616448360665127
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 5.022177873666545,
+              "return10d": 8.804177434548333,
+              "return20d": 5.821255827732275
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLP/"
+          },
+          "XLF": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.411160575865302,
+              "return10d": 4.625358242652133,
+              "return20d": -0.813473764799566
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": nul…5048 tokens truncated…98305
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLU/"
+          },
+          "XLRE": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.2895061236505097,
+              "return10d": 4.138270445901071,
+              "return20d": -1.0747792721452543
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "房地產",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.3217952097621888,
+              "return10d": 3.308010210536372,
+              "return20d": -0.8699718050781069
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLRE/"
+          }
+        },
+        "macroGateOverride": null,
+        "vetoOverride": null,
+        "scoreContribution": 0,
+        "warnings": [],
+        "benchmarkReturns": {
+          "status": "OK",
+          "observedAt": "2026-10-16",
+          "return5d": -1.9677109138883209,
+          "return10d": -0.8302602353646993,
+          "return20d": 0.20480746706714736
+        },
+        "sourceCoverage": {
+          "valid": 12,
+          "total": 12
+        },
+        "latestSourceObservedAt": "2026-10-19",
+        "referenceDate": "2026-10-19",
+        "sourceUrl": "https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/us_sector_history.json",
+        "errorCode": null,
+        "pending": false,
+        "refreshing": false,
+        "fetchError": null,
+        "summary": "美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+      },
+      "crossMarket": {
+        "module": "US_SECTOR_ROTATION_V1",
+        "status": "OK",
+        "classification": "MIXED_ROTATION",
+        "coverage": {
+          "valid": 11,
+          "total": 11
+        },
+        "benchmark": "SPY",
+        "observedAt": "2026-10-16",
+        "generatedAt": "2026-10-19T21:12:14.926743+00:00",
+        "source": "Yahoo Finance chart API (unofficial)",
+        "sectors": {
+          "XLK": {
+            "status": "OK",
+            "classification": "LAGGING",
+            "relative": {
+              "return5d": -5.734270209474102,
+              "return10d": -7.347507225500804,
+              "return20d": -3.4379323647530713
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "資訊科技",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -7.7019811233624225,
+              "return10d": -8.177767460865503,
+              "return20d": -3.233124897685924
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLK/"
+          },
+          "XLC": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.9133559568031089,
+              "return10d": 0.8302602353646993,
+              "return20d": -0.6470040277060218
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "通訊服務",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.054354957085211986,
+              "return10d": 0,
+              "return20d": -0.44219656063887447
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLC/"
+          },
+          "XLY": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 1.6221203007630969,
+              "return10d": 3.0294586886616903,
+              "return20d": 1.0831327408761027
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "非必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.345590613125224,
+              "return10d": 2.199198453296991,
+              "return20d": 1.28794020794325
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLY/"
+          },
+          "XLP": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.989888787554865,
+              "return10d": 9.634437669913032,
+              "return20d": 5.616448360665127
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 5.022177873666545,
+              "return10d": 8.804177434548333,
+              "return20d": 5.821255827732275
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLP/"
+          },
+          "XLF": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.411160575865302,
+              "return10d": 4.625358242652133,
+              "return20d": -0.813473764799566
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "金融",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.443449661976981,
+              "return10d": 3.795098007287434,
+              "return20d": -0.6086662977324186
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLF/"
+          },
+          "XLI": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.0873534545087105,
+              "return10d": -0.4583552625220033,
+              "return20d": -1.3771226364338585
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "工業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.8803574593796104,
+              "return10d": -1.2886154978867026,
+              "return20d": -1.172315169366711
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLI/"
+          },
+          "XLV": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 5.421846543583708,
+              "return10d": 7.166771514433057,
+              "return20d": 4.736108293612906
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "醫療保健",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.4541356296953873,
+              "return10d": 6.3365112790683575,
+              "return20d": 4.940915760680054
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLV/"
+          },
+          "XLE": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.823267003145972,
+              "return10d": 9.458082584934902,
+              "return20d": 5.906217446974993
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "能源",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 4.855556089257651,
+              "return10d": 8.627822349570202,
+              "return20d": 6.11102491404214
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLE/"
+          },
+          "XLB": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 4.982070614474998,
+              "return10d": 5.046381720912763,
+              "return20d": 1.6555565313179699
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "原物料",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.0143597005866773,
+              "return10d": 4.216121485548063,
+              "return20d": 1.8603639983851172
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLB/"
+          },
+          "XLU": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 3.899609006136595,
+              "return10d": 6.805647833889061,
+              "return20d": 2.495925024452683
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "公用事業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.9318980922482742,
+              "return10d": 5.975387598524362,
+              "return20d": 2.7007324915198305
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLU/"
+          },
+          "XLRE": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.2895061236505097,
+              "return10d": 4.138270445901071,
+              "return20d": -1.0747792721452543
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "房地產",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.3217952097621888,
+              "return10d": 3.308010210536372,
+              "return20d": -0.8699718050781069
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLRE/"
+          }
+        },
+        "macroGateOverride": null,
+        "vetoOverride": null,
+        "scoreContribution": 0,
+        "warnings": [],
+        "benchmarkReturns": {
+          "status": "OK",
+          "observedAt": "2026-10-16",
+          "return5d": -1.9677109138883209,
+          "return10d": -0.8302602353646993,
+          "return20d": 0.20480746706714736
+        },
+        "sourceCoverage": {
+          "valid": 12,
+          "total": 12
+        },
+        "latestSourceObservedAt": "2026-10-19",
+        "referenceDate": "2026-10-19",
+        "sourceUrl": "https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/us_sector_history.json",
+        "errorCode": null,
+        "pending": false,
+        "refreshing": false,
+        "fetchError": null,
+        "summary": "美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+      },
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "detail": "黃燈｜中性偏支持｜既有網站模型 58/100，評分指標覆蓋 100%；65/65 項總經資料可用，快照 2026-10-19T21:08:17.651Z。 跨市場背離｜UNKNOWN 資料不足。台股2026-10-19／美股2026-10-16；相對報酬差（百分點）：S&P 500 5D -3.08／10D -2.59／20D +2.01；NASDAQ 5D -3.26／10D -2.82／20D +1.01；費半 5D +6.38／10D +11.81／20D +8.70。缺項：三個美股基準的最新完成收盤日期不一致；5D美股基準起始日不一致；歷史缺日待核；10D美股基準起始日不一致；歷史缺日待核；20D美股基準起始日不一致；歷史缺日待核；2027 Forward EPS修正：缺同公司、同年度、同提供者、至少3位分析師且可追溯的前後共識；內部 EPS 推估不替代修正率；HY利差；IG利差；SOFR與IORB同日觀測。共用風控證據，不新增10D分數或自動VETO。 利率同日核對 VERIFIED（2026-10-15）：名目 10Y 5.10% − 實質 10Y 2.78% ≈ BEI 2.32%；19 個共同觀測日，最大差 0.0000 個百分點（容許 0.02）。BEI 含風險溢酬，三者同源；只作診斷，新增評分0，未啟用 OpenBB 備援。 美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。 XLK 資訊科技：-5.73／-7.35／-3.44 個百分點（5D／10D／20D）；XLC 通訊服務：1.91／0.83／-0.65 個百分點（5D／10D／20D）；XLY 非必需消費：1.62／3.03／1.08 個百分點（5D／10D／20D）；XLP 必需消費：6.99／9.63／5.62 個百分點（5D／10D／20D）；XLF 金融：3.41／4.63／-0.81 個百分點（5D／10D／20D）；XLI 工業：1.09／-0.46／-1.38 個百分點（5D／10D／20D）；XLV 醫療保健：5.42／7.17／4.74 個百分點（5D／10D／20D）；XLE 能源：6.82／9.46／5.91 個百分點（5D／10D／20D）；XLB 原物料：4.98／5.05／1.66 個百分點（5D／10D／20D）；XLU 公用事業：3.90／6.81／2.50 個百分點（5D／10D／20D）；XLRE 房地產：3.29／4.14／-1.07 個百分點（5D／10D／20D）"
+        }
+      ]
+    },
+    "completedAt": "2026-10-19T21:15:45.786303+00:00"
+  },
+  {
+    "path": "/api/master-model?id=5009",
+    "requestedAt": "2026-10-19T21:15:45.790029+00:00",
+    "httpStatus": 200,
+    "sha256": "bcd14d5bb95811a495791dcc6856986639f76e031d1068104c0e923477256d60",
+    "response": {
+      "symbol": "5009",
+      "generatedAt": "2026-10-19T21:15:53.924Z",
+      "status": "degraded",
+      "usSectorContext": {
+        "module": "US_SECTOR_ROTATION_V1",
+        "status": "OK",
+        "classification": "MIXED_ROTATION",
+        "coverage": {
+          "valid": 11,
+          "total": 11
+        },
+        "benchmark": "SPY",
+        "observedAt": "2026-10-16",
+        "generatedAt": "2026-10-19T21:12:14.926743+00:00",
+        "source": "Yahoo Finance chart API (unofficial)",
+        "sectors": {
+          "XLK": {
+            "status": "OK",
+            "classification": "LAGGING",
+            "relative": {
+              "return5d": -5.734270209474102,
+              "return10d": -7.347507225500804,
+              "return20d": -3.4379323647530713
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "資訊科技",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -7.7019811233624225,
+              "return10d": -8.177767460865503,
+              "return20d": -3.233124897685924
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLK/"
+          },
+          "XLC": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.9133559568031089,
+              "return10d": 0.8302602353646993,
+              "return20d": -0.6470040277060218
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "通訊服務",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.054354957085211986,
+              "return10d": 0,
+              "return20d": -0.44219656063887447
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLC/"
+          },
+          "XLY": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 1.6221203007630969,
+              "return10d": 3.0294586886616903,
+              "return20d": 1.0831327408761027
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "非必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.345590613125224,
+              "return10d": 2.199198453296991,
+              "return20d": 1.28794020794325
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLY/"
+          },
+          "XLP": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.989888787554865,
+              "return10d": 9.634437669913032,
+              "return20d": 5.616448360665127
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 5.022177873666545,
+              "return10d": 8.804177434548333,
+              "return20d": 5.821255827732275
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLP/"
+          },
+          "XLF": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.411160575865302,
+              "return10d": 4.625358242652133,
+              "return20d": -0.813473764799566
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "金融",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.443449661976981,
+              "return10d": 3.795098007287434,
+              "return20d": -0.6086662977324186
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLF/"
+          },
+          "XLI": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.0873534545087105,
+              "return10d": -0.4583552625220033,
+              "return20d": -1.3771226364338585
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "工業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.8803574593796104,
+              "return10d": -1.2886154978867026,
+              "return20d": -1.172315169366711
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLI/"
+          },
+          "XLV": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 5.421846543583708,
+              "return10d": 7.166771514433057,
+              "return20d": 4.736108293612906
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "醫療保健",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.4541356296953873,
+              "return10d": 6.3365112790683575,
+              "return20d": 4.940915760680054
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLV/"
+          },
+          "XLE": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.823267003145972,
+              "return10d": 9.458082584934902,
+              "return20d": 5.906217446974993
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "能源",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 4.855556089257651,
+              "return10d": 8.627822349570202,
+              "return20d": 6.11102491404214
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLE/"
+          },
+          "XLB": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 4.982070614474998,
+              "return10d": 5.046381720912763,
+              "return20d": 1.6555565313179699
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "原物料",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.0143597005866773,
+              "return10d": 4.216121485548063,
+              "return20d": 1.8603639983851172
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLB/"
+          },
+          "XLU": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 3.899609006136595,
+              "return10d": 6.805647833889061,
+              "return20d": 2.495925024452683
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "公用事業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.9318980922482742,
+              "return10d": 5.975387598524362,
+              "return20d": 2.7007324915198305
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLU/"
+          },
+          "XLRE": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.2895061236505097,
+              "return10d": 4.138270445901071,
+              "return20d": -1.0747792721452543
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "房地產",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.3217952097621888,
+              "return10d": 3.308010210536372,
+              "return20d": -0.8699718050781069
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLRE/"
+          }
+        },
+        "macroGateOverride": null,
+        "vetoOverride": null,
+        "scoreContribution": 0,
+        "warnings": [],
+        "benchmarkReturns": {
+          "status": "OK",
+          "observedAt": "2026-10-16",
+          "return5d": -1.9677109138883209,
+          "return10d": -0.8302602353646993,
+          "return20d": 0.20480746706714736
+        },
+        "sourceCoverage": {
+          "valid": 12,
+          "total": 12
+        },
+        "latestSourceObservedAt": "2026-10-19",
+        "referenceDate": "2026-10-19",
+        "sourceUrl": "https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/us_sector_history.json",
+        "errorCode": null,
+        "pending": false,
+        "refreshing": false,
+        "fetchError": null,
+        "summary": "美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+      },
+      "crossMarket": {
+        "module": "US_SECTOR_ROTATION_V1",
+        "status": "OK",
+        "classification": "MIXED_ROTATION",
+        "coverage": {
+          "valid": 11,
+          "total": 11
+        },
+        "benchmark": "SPY",
+        "observedAt": "2026-10-16",
+        "generatedAt": "2026-10-19T21:12:14.926743+00:00",
+        "source": "Yahoo Finance chart API (unofficial)",
+        "sectors": {
+          "XLK": {
+            "status": "OK",
+            "classification": "LAGGING",
+            "relative": {
+              "return5d": -5.734270209474102,
+              "return10d": -7.347507225500804,
+              "return20d": -3.4379323647530713
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "資訊科技",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -7.7019811233624225,
+              "return10d": -8.177767460865503,
+              "return20d": -3.233124897685924
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLK/"
+          },
+          "XLC": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.9133559568031089,
+              "return10d": 0.8302602353646993,
+              "return20d": -0.6470040277060218
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "通訊服務",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.054354957085211986,
+              "return10d": 0,
+              "return20d": -0.44219656063887447
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLC/"
+          },
+          "XLY": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 1.6221203007630969,
+              "return10d": 3.0294586886616903,
+              "return20d": 1.0831327408761027
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "非必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.345590613125224,
+              "return10d": 2.199198453296991,
+              "return20d": 1.28794020794325
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLY/"
+          },
+          "XLP": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.989888787554865,
+              "return10d": 9.634437669913032,
+              "return20d": 5.616448360665127
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "必需消費",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 5.022177873666545,
+              "return10d": 8.804177434548333,
+              "return20d": 5.821255827732275
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLP/"
+          },
+          "XLF": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.411160575865302,
+              "return10d": 4.625358242652133,
+              "return20d": -0.813473764799566
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "金融",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.443449661976981,
+              "return10d": 3.795098007287434,
+              "return20d": -0.6086662977324186
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLF/"
+          },
+          "XLI": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 1.0873534545087105,
+              "return10d": -0.4583552625220033,
+              "return20d": -1.3771226364338585
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "工業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": -0.8803574593796104,
+              "return10d": -1.2886154978867026,
+              "return20d": -1.172315169366711
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLI/"
+          },
+          "XLV": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 5.421846543583708,
+              "return10d": 7.166771514433057,
+              "return20d": 4.736108293612906
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "醫療保健",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.4541356296953873,
+              "return10d": 6.3365112790683575,
+              "return20d": 4.940915760680054
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLV/"
+          },
+          "XLE": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 6.823267003145972,
+              "return10d": 9.458082584934902,
+              "return20d": 5.906217446974993
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "能源",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 4.855556089257651,
+              "return10d": 8.627822349570202,
+              "return20d": 6.11102491404214
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLE/"
+          },
+          "XLB": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 4.982070614474998,
+              "return10d": 5.046381720912763,
+              "return20d": 1.6555565313179699
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "原物料",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 3.0143597005866773,
+              "return10d": 4.216121485548063,
+              "return20d": 1.8603639983851172
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLB/"
+          },
+          "XLU": {
+            "status": "OK",
+            "classification": "LEADING",
+            "relative": {
+              "return5d": 3.899609006136595,
+              "return10d": 6.805647833889061,
+              "return20d": 2.495925024452683
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "公用事業",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.9318980922482742,
+              "return10d": 5.975387598524362,
+              "return20d": 2.7007324915198305
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLU/"
+          },
+          "XLRE": {
+            "status": "OK",
+            "classification": "MIXED",
+            "relative": {
+              "return5d": 3.2895061236505097,
+              "return10d": 4.138270445901071,
+              "return20d": -1.0747792721452543
+            },
+            "missing": [],
+            "fundamentals": {
+              "fundFlow": null,
+              "breadthAboveMA20": null,
+              "breadthAboveMA60": null,
+              "epsRevision": null,
+              "forwardPE": null,
+              "roic": null
+            },
+            "observedAt": "2026-10-16",
+            "name": "房地產",
+            "returns": {
+              "status": "OK",
+              "observedAt": "2026-10-16",
+              "return5d": 1.3217952097621888,
+              "return10d": 3.308010210536372,
+              "return20d": -0.8699718050781069
+            },
+            "sourceUrl": "https://finance.yahoo.com/quote/XLRE/"
+          }
+        },
+        "macroGateOverride": null,
+        "vetoOverride": null,
+        "scoreContribution": 0,
+        "warnings": [],
+        "benchmarkReturns": {
+          "status": "OK",
+          "observedAt": "2026-10-16",
+          "return5d": -1.9677109138883209,
+          "return10d": -0.8302602353646993,
+          "return20d": 0.20480746706714736
+        },
+        "sourceCoverage": {
+          "valid": 12,
+          "total": 12
+        },
+        "latestSourceObservedAt": "2026-10-19",
+        "referenceDate": "2026-10-19",
+        "sourceUrl": "https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/us_sector_history.json",
+        "errorCode": null,
+        "pending": false,
+        "refreshing": false,
+        "fetchError": null,
+        "summary": "美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。"
+      },
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "detail": "黃燈｜中性偏支持｜既有網站模型 58/100，評分指標覆蓋 100%；65/65 項總經資料可用，快照 2026-10-19T21:08:17.651Z。 跨市場背離｜UNKNOWN 資料不足。台股2026-10-19／美股2026-10-16；相對報酬差（百分點）：S&P 500 5D -3.08／10D -2.59／20D +2.01；NASDAQ 5D -3.26／10D -2.82／20D +1.01；費半 5D +6.38／10D +11.81／20D +8.70。缺項：三個美股基準的最新完成收盤日期不一致；5D美股基準起始日不一致；歷史缺日待核；10D美股基準起始日不一致；歷史缺日待核；20D美股基準起始日不一致；歷史缺日待核；2027 Forward EPS修正：缺同公司、同年度、同提供者、至少3位分析師且可追溯的前後共識；內部 EPS 推估不替代修正率；HY利差；IG利差；SOFR與IORB同日觀測。共用風控證據，不新增10D分數或自動VETO。 利率同日核對 VERIFIED（2026-10-15）：名目 10Y 5.10% − 實質 10Y 2.78% ≈ BEI 2.32%；19 個共同觀測日，最大差 0.0000 個百分點（容許 0.02）。BEI 含風險溢酬，三者同源；只作診斷，新增評分0，未啟用 OpenBB 備援。 美股板塊 OK／板塊強弱分化：2026-10-16（資料池最新 2026-10-19，台股基準 2026-10-19）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -1.97%／-0.83%／0.20%。相對 SPY 三個期間皆領先：XLY、XLP、XLV、XLE、XLB、XLU；皆落後：XLK。ETF 價格輪動參考，採 USD 收盤價格報酬，含 Yahoo 非官方來源與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。 XLK 資訊科技：-5.73／-7.35／-3.44 個百分點（5D／10D／20D）；XLC 通訊服務：1.91／0.83／-0.65 個百分點（5D／10D／20D）；XLY 非必需消費：1.62／3.03／1.08 個百分點（5D／10D／20D）；XLP 必需消費：6.99／9.63／5.62 個百分點（5D／10D／20D）；XLF 金融：3.41／4.63／-0.81 個百分點（5D／10D／20D）；XLI 工業：1.09／-0.46／-1.38 個百分點（5D／10D／20D）；XLV 醫療保健：5.42／7.17／4.74 個百分點（5D／10D／20D）；XLE 能源：6.82／9.46／5.91 個百分點（5D／10D／20D）；XLB 原物料：4.98／5.05／1.66 個百分點（5D／10D／20D）；XLU 公用事業：3.90／6.81／2.50 個百分點（5D／10D／20D）；XLRE 房地產：3.29／4.14／-1.07 個百分點（5D／10D／20D）"
+        }
+      ]
+    },
+    "completedAt": "2026-10-19T21:15:54.034130+00:00"
+  }
+]
