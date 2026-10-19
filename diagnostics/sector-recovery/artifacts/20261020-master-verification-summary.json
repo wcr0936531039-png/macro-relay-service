@@ -1,0 +1,74 @@
+[
+  {
+    "symbol": "8299",
+    "httpStatus": 200,
+    "overallStatus": "degraded",
+    "sectorStatus": "OK",
+    "coverage": {
+      "valid": 11,
+      "total": 11
+    },
+    "sourceCoverage": {
+      "valid": 12,
+      "total": 12
+    },
+    "observedAt": "2026-10-16",
+    "latestSourceObservedAt": "2026-10-19",
+    "scoreContribution": 0,
+    "completedAt": "2026-10-19T21:15:27.243276+00:00"
+  },
+  {
+    "symbol": "2404",
+    "httpStatus": 200,
+    "overallStatus": "degraded",
+    "sectorStatus": "OK",
+    "coverage": {
+      "valid": 11,
+      "total": 11
+    },
+    "sourceCoverage": {
+      "valid": 12,
+      "total": 12
+    },
+    "observedAt": "2026-10-16",
+    "latestSourceObservedAt": "2026-10-19",
+    "scoreContribution": 0,
+    "completedAt": "2026-10-19T21:15:37.598630+00:00"
+  },
+  {
+    "symbol": "5289",
+    "httpStatus": 200,
+    "overallStatus": "degraded",
+    "sectorStatus": "OK",
+    "coverage": {
+      "valid": 11,
+      "total": 11
+    },
+    "sourceCoverage": {
+      "valid": 12,
+      "total": 12
+    },
+    "observedAt": "2026-10-16",
+    "latestSourceObservedAt": "2026-10-19",
+    "scoreContribution": 0,
+    "completedAt": "2026-10-19T21:15:45.786303+00:00"
+  },
+  {
+    "symbol": "5009",
+    "httpStatus": 200,
+    "overallStatus": "degraded",
+    "sectorStatus": "OK",
+    "coverage": {
+      "valid": 11,
+      "total": 11
+    },
+    "sourceCoverage": {
+      "valid": 12,
+      "total": 12
+    },
+    "observedAt": "2026-10-16",
+    "latestSourceObservedAt": "2026-10-19",
+    "scoreContribution": 0,
+    "completedAt": "2026-10-19T21:15:54.034130+00:00"
+  }
+]
