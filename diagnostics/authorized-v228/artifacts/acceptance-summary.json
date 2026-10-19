@@ -1,0 +1,738 @@
+{
+  "siteVersion": 229,
+  "sourceCommit": "543793fa6be1a9d4dfde79d0be4313eeb436f8e8",
+  "deployment": {
+    "id": "appgdep_6ad68d37e31c8191b1f2435d34c8c780",
+    "project_id": "appgprj_6ab2cc2055ac8191a2244d934f7384ee",
+    "title": "台股 Master Model",
+    "version_id": "appgprj_6ab2cc2055ac8191a2244d934f7384ee~appgver_f8cc8799fc688191b5953b51abf844be",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://taiwan-stock-master.fwf6fgj5p6.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6ab2cc2055ac8191a2244d934f7384ee",
+    "failure_message": null,
+    "env_set_revision": 4,
+    "updated_at": "2026-10-19T21:36:06.957980+00:00"
+  },
+  "relayMerge": {
+    "sha": "835168c34472333f54eb59956ac0576c067cab54",
+    "merged": true,
+    "message": "Pull Request successfully merged"
+  },
+  "relayHistoryRun": 39328238333,
+  "relayHistoryConclusion": "success",
+  "beforeCapturedAt": "2026-10-19T21:34:50.650655+00:00",
+  "afterCapturedAt": "2026-10-19T21:36:52.993929+00:00",
+  "rows": [
+    {
+      "index": 0,
+      "id": "XAU",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 4140.255
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 4140.255
+      }
+    },
+    {
+      "index": 1,
+      "id": "XAG",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 57.0505
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 57.0505
+      }
+    },
+    {
+      "index": 2,
+      "id": "XAU_XAG",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": "金價與銀價即時比值有效；日歷史樣本 13/21，收集至少 21 個日觀測且資料缺口不超過 5 日後才判讀 20 日趨勢。",
+        "date": "2026-10-19",
+        "value": 72.57175660160735
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": "金價與銀價即時比值有效；日歷史樣本 13/21，收集至少 21 個日觀測且資料缺口不超過 5 日後才判讀 20 日趨勢。",
+        "date": "2026-10-19",
+        "value": 72.57175660160735
+      }
+    },
+    {
+      "index": 3,
+      "id": "NYFED_REPO",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 0.011
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 0.011
+      }
+    },
+    {
+      "index": 4,
+      "id": "TWSE_TAIEX",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 46822.08
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 46822.08
+      }
+    },
+    {
+      "index": 5,
+      "id": "TWSE_ELECTRONIC",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 2923.78
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 2923.78
+      }
+    },
+    {
+      "index": 6,
+      "id": "TWSE_SEMICONDUCTOR",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 1552.16
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 1552.16
+      }
+    },
+    {
+      "index": 7,
+      "id": "TWSE_FINANCIAL",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 3715.11
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 3715.11
+      }
+    },
+    {
+      "index": 8,
+      "id": "TWSE_SHIPPING",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 218.54
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 218.54
+      }
+    },
+    {
+      "index": 9,
+      "id": "TWSE_STEEL",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 125.53
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 125.53
+      }
+    },
+    {
+      "index": 10,
+      "id": "TWSE_TOTAL_TRADE_VALUE",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 8667.11859964
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 8667.11859964
+      }
+    },
+    {
+      "index": 11,
+      "id": "TWSE_MARGIN_BALANCE_NTD",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 6406.18432
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 6406.18432
+      }
+    },
+    {
+      "index": 12,
+      "id": "TWSE_MARGIN_CHANGE_NTD",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": -49.75616
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": -49.75616
+      }
+    },
+    {
+      "index": 13,
+      "id": "TWSE_MARGIN_BALANCE_UNITS",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 9592714
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 9592714
+      }
+    },
+    {
+      "index": 14,
+      "id": "TWSE_SHORT_BALANCE",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 201916
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 201916
+      }
+    },
+    {
+      "index": 15,
+      "id": "TWSE_SHORT_CHANGE",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": -31686
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": -31686
+      }
+    },
+    {
+      "index": 16,
+      "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 0.4180527253209176
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 0.4180527253209176
+      }
+    },
+    {
+      "index": 17,
+      "id": "TWSE_CREDIT_TRADE_VALUE",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 981.4327557
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 981.4327557
+      }
+    },
+    {
+      "index": 18,
+      "id": "TWSE_BREADTH",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 16.839584996009577
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 16.839584996009577
+      }
+    },
+    {
+      "index": 19,
+      "id": "TPEX_BREADTH",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 19.925742574257427
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 19.925742574257427
+      }
+    },
+    {
+      "index": 20,
+      "id": "TWSE_DAYTRADE",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 20.97
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 20.97
+      }
+    },
+    {
+      "index": 21,
+      "id": "NYFED_SRP",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 0.011
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 0.011
+      }
+    },
+    {
+      "index": 22,
+      "id": "ICE_DXY",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 101.99
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 101.99
+      }
+    },
+    {
+      "index": 23,
+      "id": "DTWEXBGS",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-16",
+        "value": 121.4048
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-16",
+        "value": 121.4048
+      }
+    },
+    {
+      "index": 24,
+      "id": "DCOILWTICO",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": "資料較舊，暫不納入判讀",
+        "date": "2026-10-14",
+        "value": 101.91
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-14",
+        "value": 101.91
+      }
+    },
+    {
+      "index": 25,
+      "id": "DCOILBRENTEU",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": "資料較舊，暫不納入判讀",
+        "date": "2026-10-14",
+        "value": 126.55
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-14",
+        "value": 126.55
+      }
+    },
+    {
+      "index": 26,
+      "id": "DHHNGSP",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": "資料較舊，暫不納入判讀",
+        "date": "2026-10-14",
+        "value": 3.22
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-14",
+        "value": 3.22
+      }
+    },
+    {
+      "index": 27,
+      "id": "DEXJPUS",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": "資料較舊，暫不納入判讀",
+        "date": "2026-10-09",
+        "value": 158.34
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-09",
+        "value": 158.34
+      }
+    },
+    {
+      "index": 28,
+      "id": "US3M",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": "資料較舊，暫不納入判讀",
+        "date": "2026-10-15",
+        "value": 4.1
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-15",
+        "value": 4.1
+      }
+    },
+    {
+      "index": 29,
+      "id": "US10Y",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": "資料較舊，暫不納入判讀",
+        "date": "2026-10-15",
+        "value": 5.1
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-15",
+        "value": 5.1
+      }
+    },
+    {
+      "index": 30,
+      "id": "US30Y",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": "資料較舊，暫不納入判讀",
+        "date": "2026-10-15",
+        "value": 5.43
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-15",
+        "value": 5.43
+      }
+    },
+    {
+      "index": 31,
+      "id": "VIXCLS",
+      "before": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-16",
+        "value": 19.99
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-16",
+        "value": 19.99
+      }
+    },
+    {
+      "index": 32,
+      "id": "WCESTUS1",
+      "before": {
+        "status": "snapshot",
+        "is_stale": false,
+        "reason": "EIA／FRED 即時來源暫不可用；使用已標明日期的 EIA 官方週資料快照。",
+        "date": "2026-10-09",
+        "value": 415.577
+      },
+      "after": {
+        "status": "snapshot",
+        "is_stale": false,
+        "reason": "EIA／FRED 即時來源暫不可用；使用已標明日期的 EIA 官方週資料快照。",
+        "date": "2026-10-09",
+        "value": 415.577
+      }
+    },
+    {
+      "index": 33,
+      "id": "US10Y3M",
+      "before": {
+        "status": "ok",
+        "is_stale": "<absent>",
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 88
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-19",
+        "value": 88
+      }
+    },
+    {
+      "index": 34,
+      "id": "JPY_HV20",
+      "before": {
+        "status": "stale",
+        "is_stale": true,
+        "reason": "官方觀測或最近來源核對已過有效期；等待更新。",
+        "date": "2026-10-09",
+        "value": 5.804832905239327
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-09",
+        "value": 5.804832905239327
+      }
+    },
+    {
+      "index": 35,
+      "id": "JPY_HV60",
+      "before": {
+        "status": "stale",
+        "is_stale": true,
+        "reason": "官方觀測或最近來源核對已過有效期；等待更新。",
+        "date": "2026-10-09",
+        "value": 9.756886685658461
+      },
+      "after": {
+        "status": "ok",
+        "is_stale": false,
+        "reason": null,
+        "date": "2026-10-09",
+        "value": 9.756886685658461
+      }
+    }
+  ],
+  "masterReports": [
+    {
+      "symbol": "8299",
+      "status": "degraded",
+      "sectorStatus": "OK",
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      }
+    },
+    {
+      "symbol": "2404",
+      "status": "degraded",
+      "sectorStatus": "OK",
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      }
+    },
+    {
+      "symbol": "5289",
+      "status": "degraded",
+      "sectorStatus": "OK",
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      }
+    },
+    {
+      "symbol": "5009",
+      "status": "degraded",
+      "sectorStatus": "OK",
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      }
+    }
+  ],
+  "guidance": {
+    "label": "5A 季度數字財測",
+    "available": 0,
+    "required": 8,
+    "state": "not_applicable",
+    "detail": "公司不提供季度財測（結構性）；本次已核對的重大訊息與法說範圍；有新季度量化財測時須重新核對",
+    "applicability": "structural_unavailable"
+  },
+  "coverageObservations": [
+    {
+      "year": 2026,
+      "analysts": 10,
+      "productionEligible": false
+    },
+    {
+      "year": 2027,
+      "analysts": 12,
+      "productionEligible": false
+    }
+  ],
+  "financialWarning": "ROIC 54.74%（2026-06-30）；CFO／淨利 -0.17x；FCF -141.57 億元；財報期間：2023-09-30 至 2026-06-30；官方交叉核對：逐份官方財報核對近12季CFO為-103.95539億元，合併淨利610.30859億元，現金轉換率約-0.17033倍；目前畫面-0.17倍的負值方向與口徑可核實，不能因資料補齊而解除警訊。。負現金流或營運資金異常是資料顯示的警訊，補齊資料不會自動解除。DSO／DIO 已計算，需按產業與期別解讀。",
+  "allPassed": true
+}
