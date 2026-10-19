@@ -1,0 +1,271 @@
+{
+  "started_at": "2026-10-19T21:11:51.678306+00:00",
+  "completed_tickers": 12,
+  "success_tickers": 12,
+  "requests": {
+    "XLY": [
+      {
+        "ticker": "XLY",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLY?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:11:51.682523+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLY?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:11:57 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "3"
+        },
+        "sha256": "87a27e10badcd9b14faf8cdb96e19d74e9dca9402f0acb271461ad0102ab9532",
+        "bytes": 8452,
+        "raw_file": "XLY-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:11:59.669744+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "XLK": [
+      {
+        "ticker": "XLK",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLK?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:11:51.681505+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLK?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:11:59 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "0e076b27ab9763bdf27908aba36ba7075250be9a0ee9977df51a4bd2409afb64",
+        "bytes": 8372,
+        "raw_file": "XLK-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:11:59.717597+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "XLC": [
+      {
+        "ticker": "XLC",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLC?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:11:51.682089+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLC?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:11:59 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "40e09f7aa91f239ea82cb83cb9474cc90d7b34604e2a996ddd92c2af4fc83e72",
+        "bytes": 8445,
+        "raw_file": "XLC-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:11:59.725373+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "SPY": [
+      {
+        "ticker": "SPY",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:11:51.680930+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:11:59 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "cafe42b61b564531ee5948d412614d62210c54f759731bf3c11ef67bc869f2a7",
+        "bytes": 8068,
+        "raw_file": "SPY-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:11:59.737652+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "XLP": [
+      {
+        "ticker": "XLP",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLP?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:11:59.669846+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLP?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:12:07 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "ffcf7ad3cb791d44bdc4d64d3656a32b742b5820a1977be0fa2cc3c807dfa8e1",
+        "bytes": 8130,
+        "raw_file": "XLP-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:12:07.577510+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "XLI": [
+      {
+        "ticker": "XLI",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLI?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:11:59.725418+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLI?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:12:07 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "beaeb0c9e518a0c7a2d0c5eb6148a31c2c1ba073ad95afe616eeb6acf7492c61",
+        "bytes": 8364,
+        "raw_file": "XLI-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:12:07.597409+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "XLV": [
+      {
+        "ticker": "XLV",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLV?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:11:59.737698+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLV?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:12:07 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "35b3409444bccf035d3cccc323500dfdd2c64c1be9289b00f27c052e86e900a3",
+        "bytes": 8367,
+        "raw_file": "XLV-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:12:07.605253+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "XLF": [
+      {
+        "ticker": "XLF",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLF?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:11:59.717655+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLF?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:12:07 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "77615dd9aaab0eae902b82b55bade6a2a5bbc2cb5df754d750042ee34b6fec3f",
+        "bytes": 8267,
+        "raw_file": "XLF-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:12:07.625531+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "XLU": [
+      {
+        "ticker": "XLU",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLU?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:12:07.605293+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLU?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:12:14 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "b0d87a4ceba4a1df7d83aea7fbf4ac1dae244b6f7793d5ca980a27ad724845b9",
+        "bytes": 8301,
+        "raw_file": "XLU-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:12:14.711014+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "XLB": [
+      {
+        "ticker": "XLB",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLB?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:12:07.597460+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLB?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:12:14 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "a6f2e261792a49bbfb0b7703e2ccec6f297eb11cb69cf3bf4db3dc11c64b2b91",
+        "bytes": 8344,
+        "raw_file": "XLB-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:12:14.721185+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "XLRE": [
+      {
+        "ticker": "XLRE",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLRE?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:12:07.625579+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLRE?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:12:14 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "4f0ca743fa5433a44537af395f5e38ddbd8df9d2353f8c88cc3100254d1051cb",
+        "bytes": 8290,
+        "raw_file": "XLRE-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:12:14.857437+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ],
+    "XLE": [
+      {
+        "ticker": "XLE",
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/XLE?range=3mo&interval=1d",
+        "started_at": "2026-10-19T21:12:07.577563+00:00",
+        "http_status": 200,
+        "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/XLE?range=3mo&interval=1d",
+        "headers": {
+          "Date": "Mon, 19 Oct 2026 21:12:14 GMT",
+          "Content-Type": "application/json;charset=utf-8",
+          "Age": "0"
+        },
+        "sha256": "fcdd24035db0ccee0f12708cf3714fccb8b1d86a99d83c4cfbae1a74ec4a9f83",
+        "bytes": 8210,
+        "raw_file": "XLE-query1.finance.yahoo.com.json",
+        "completed_at": "2026-10-19T21:12:14.925368+00:00",
+        "observed_at": "2026-10-19",
+        "count": 65,
+        "required_session": "2026-10-19",
+        "dropped_bars": []
+      }
+    ]
+  }
+}
