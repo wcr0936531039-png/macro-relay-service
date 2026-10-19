@@ -3,6 +3,7 @@ import json
 import math
 import pathlib
 import sys
+from us_market_calendar import expected_latest_session
 TICKERS={'SPY','XLK','XLC','XLY','XLP','XLF','XLI','XLV','XLE','XLB','XLU','XLRE'}
 def validate(data, now=None):
     now=now or dt.datetime.now(dt.timezone.utc)
@@ -44,6 +45,12 @@ def validate(data, now=None):
             age=(now.date()-dt.date.fromisoformat(observed)).days
             if age<0 or age>5:issues.append('STALE_OR_FUTURE_DATA')
         except (TypeError,ValueError):issues.append('INVALID_DATE')
+        try:
+            # A five-day window cannot see one missing session (2026-10-16 was absent from the 10-16 21:28 ET run).
+            # The site reader allows PUBLISH_GRACE_HOURS; the publisher itself does not.
+            expected=expected_latest_session(now,grace_hours=0)   # the publisher runs after the close: no grace
+            if dt.date.fromisoformat(observed)<expected:issues.append('LATEST_SESSION_MISSING:expected '+expected.isoformat())
+        except ValueError as exc:issues.append(str(exc) if str(exc) in ('CALENDAR_NOT_COVERED','NO_SESSION_FOUND') else 'INVALID_DATE')
     return {'status':'OK' if not issues else 'UNKNOWN','coverage':sum(isinstance(status.get(t),dict) and status[t].get('status')=='ok' for t in TICKERS),'observed_at':observed,'issues':issues}
 if __name__=='__main__':
     payload=json.loads(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'))

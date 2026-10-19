@@ -27,4 +27,13 @@ class FeedTests(unittest.TestCase):
         data=build(failing)
         self.assertTrue(all(x['status']=='UNKNOWN' for x in data['status'].values()))
         self.assertTrue(all(x==[] for x in data['histories'].values()))
+    def test_dropped_bars_are_recorded(self):
+        body={'chart':{'result':[{'meta':{'gmtoffset':0},'indicators':{'quote':[{'close':[100.0,None]}]},'timestamp':[1790000000,1790086400]}]}}
+        with patch('us_sector_feed.urllib.request.urlopen',return_value=io.BytesIO(json.dumps(body).encode())):
+            got=fetch('SPY',detail=True)
+        self.assertEqual(len(got['rows']),1)
+        self.assertEqual(len(got['dropped']),1)
+        rows=[{'date':'2026-09-'+str(i).zfill(2),'close':100+i} for i in range(1,22)]
+        data=build(lambda _:{'rows':rows,'dropped':['2026-09-22']})
+        self.assertEqual(data['status']['SPY']['dropped_bars'],['2026-09-22'])
 if __name__=='__main__':unittest.main()

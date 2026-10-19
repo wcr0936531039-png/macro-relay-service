@@ -57,4 +57,20 @@ class SnapshotTests(unittest.TestCase):
         data=self.make_data()
         data['histories']['SPY']='corrupt'
         self.assertIn('SPY:MISSING_HISTORY',validate(data,now)['issues'])
+    def test_latest_session_missing_real_case(self):
+        # Published 2026-10-17 01:28Z (Fri 21:28 ET, after the close) with the last row 10-15: one session missing.
+        data=self.make_data(dt.date(2026,10,15))
+        result=validate(data,dt.datetime(2026,10,17,1,28,36,tzinfo=dt.timezone.utc))
+        self.assertIn('LATEST_SESSION_MISSING:expected 2026-10-16',result['issues'])
+        self.assertEqual(result['status'],'UNKNOWN')
+        # Before the 10-16 close the 10-15 session is the latest one that must be present.
+        self.assertEqual(validate(data,dt.datetime(2026,10,16,19,0,tzinfo=dt.timezone.utc))['status'],'OK')
+    def test_weekend_and_holiday(self):
+        data=self.make_data(dt.date(2026,10,16))
+        self.assertEqual(validate(data,dt.datetime(2026,10,19,10,26,tzinfo=dt.timezone.utc))['status'],'OK')
+        data=self.make_data(dt.date(2026,11,25))   # Thanksgiving 11-26 closed
+        self.assertEqual(validate(data,dt.datetime(2026,11,27,15,0,tzinfo=dt.timezone.utc))['status'],'OK')
+    def test_calendar_not_covered_fails_closed(self):
+        data=self.make_data(dt.date(2028,1,4))
+        self.assertIn('CALENDAR_NOT_COVERED',validate(data,dt.datetime(2028,1,5,12,0,tzinfo=dt.timezone.utc))['issues'])
 if __name__=='__main__':unittest.main()
