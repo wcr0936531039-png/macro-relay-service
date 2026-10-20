@@ -1,0 +1,3 @@
+d69ac5bb2538c9b3115306eb8c490077797b284a69e9c07151dbcf560bae6d0c  fixpack.patch
+
+Base f9c5f15b371de58d0a06ef5251ce5c8a895f217e. Source-only; run node build.mjs after apply. Full npm test is running; final report must confirm exit status. No C2 and no deployment.
