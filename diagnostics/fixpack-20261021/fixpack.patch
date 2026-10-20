@@ -1,0 +1,449 @@
+diff --git a/build.mjs b/build.mjs
+index 4980492..f18190b 100644
+--- a/build.mjs
++++ b/build.mjs
+@@ -3,6 +3,10 @@ const fallbackRating = readFileSync(new URL('./worker/fallback-rating.js', impor
+ let html = readFileSync(new URL('./dist/index.html', import.meta.url), 'utf8').replace(/\/\* FALLBACK_ENGINE_START \*\/[\s\S]*?\/\* FALLBACK_ENGINE_END \*\//,`/* FALLBACK_ENGINE_START */\n${fallbackRating}\n/* FALLBACK_ENGINE_END */`);
+ html=html.replace(/\/\* ADVISORY_PANEL_DISPLAY_START \*\/[\s\S]*?\/\* ADVISORY_PANEL_DISPLAY_END \*\/\n*/,()=>readFileSync(new URL('./worker/panel-display.js',import.meta.url),'utf8'));
+ writeFileSync(new URL('./dist/index.html', import.meta.url),html);
++const fixpack=readFileSync(new URL('./worker/fixpack.js',import.meta.url),'utf8');
++const metals=fixpack.match(/\/\* COHERENT_METALS_START \*\/[\s\S]*?\/\* COHERENT_METALS_END \*\//)[0];
++if(html.includes('/* COHERENT_METALS_START */'))html=html.replace(/\/\* COHERENT_METALS_START \*\/[\s\S]*?\/\* COHERENT_METALS_END \*\//,()=>metals);else html=html.replace('function mergeMarketRows(',metals+'\nfunction mergeMarketRows(');
++writeFileSync(new URL('./dist/index.html',import.meta.url),html);
+ const observations = readFileSync(new URL('./worker/observations.js', import.meta.url), 'utf8');
+ const cpiSeed = JSON.parse(readFileSync(new URL('./worker/core-cpi-snapshot.json', import.meta.url), 'utf8'));
+ const relay = readFileSync(new URL('./worker/relay.js', import.meta.url), 'utf8');
+@@ -42,4 +46,4 @@ const officialNewsModule=readFileSync(new URL('./worker/official-news.js',import
+ updateTools.sourceCollectorNode=updateTools.sourceCollectorNode.replace("let newsModule = '__OFFICIAL_NEWS_MODULE__';",`let newsModule = ${JSON.stringify(officialNewsModule)};`);
+ const macro = `${panelCalculations}\n${panelSources}\n${advisoryDecision}\n${readFileSync(new URL('./worker/macro.js', import.meta.url), 'utf8')}`;
+ mkdirSync(new URL('./dist/server/', import.meta.url), { recursive: true });
+-writeFileSync(new URL('./dist/server/index.js', import.meta.url), `const HTML = ${JSON.stringify(html)};\nconst CPI_SEED = ${JSON.stringify(cpiSeed)};\nconst OFFICIAL_UPDATE_TOOLS = ${JSON.stringify(updateTools)};\n${observations}\n${observationFreshness}\nconst RELAY_SEED = ${JSON.stringify(relaySeed)};\n${relay}\n${research}\n${macroScoring}\n${dataImport}\n${sourceResearch}\n${reportContext}\n${stockRelay}\n${fallbackRating}\n${gate5bBoundaries}\n${masterEvidence}\n${masterInputs}\n${issuerContext}\n${crossMarketCore}\n${crossMarket}\n${usSectorCore}\n${usSectorSession}\n${tiingoMarket}\n${tiingoStore}\n${usSectors}\n${tiingoSite}\n${marketTimeline}\n${officialNewsModule}\n${macro}`);
++writeFileSync(new URL('./dist/server/index.js', import.meta.url), `const HTML = ${JSON.stringify(html)};\nconst CPI_SEED = ${JSON.stringify(cpiSeed)};\nconst OFFICIAL_UPDATE_TOOLS = ${JSON.stringify(updateTools)};\n${observations}\n${fixpack}\n${observationFreshness}\nconst RELAY_SEED = ${JSON.stringify(relaySeed)};\n${relay}\n${research}\n${macroScoring}\n${dataImport}\n${sourceResearch}\n${reportContext}\n${stockRelay}\n${fallbackRating}\n${gate5bBoundaries}\n${masterEvidence}\n${masterInputs}\n${issuerContext}\n${crossMarketCore}\n${crossMarket}\n${usSectorCore}\n${usSectorSession}\n${tiingoMarket}\n${tiingoStore}\n${usSectors}\n${tiingoSite}\n${marketTimeline}\n${officialNewsModule}\n${macro}`);
+diff --git a/dist/index.html b/dist/index.html
+index a5456c7..ea742de 100644
+--- a/dist/index.html
++++ b/dist/index.html
+@@ -82,7 +82,7 @@
+         <tr><th scope="row">公用事業<small>XLU</small></th><td class="sector-unknown">UNKNOWN</td><td class="sector-unknown">UNKNOWN</td><td class="sector-unknown">UNKNOWN</td></tr>
+         <tr><th scope="row">房地產<small>XLRE</small></th><td class="sector-unknown">UNKNOWN</td><td class="sector-unknown">UNKNOWN</td><td class="sector-unknown">UNKNOWN</td></tr>
+       </tbody></table>
+-      <p class="macro-meta us-sector-note" id="usSectorMethod">正值＝領先 SPY，負值＝落後 SPY。本表採美股最新已完成收盤；個股報告另與台股基準日對齊。ETF 價格輪動不等同成分股廣度或資金流；不增加評分或解除 VETO。來源：<a href="https://raw.githubusercontent.com/wcr0936531039-png/macro-relay-service/main/data/us_sector_history.json" target="_blank" rel="noopener noreferrer">GitHub 歷史資料池</a>（Yahoo Finance 非官方資料）。</p>
++      <p class="macro-meta us-sector-note" id="usSectorMethod">正值＝領先 SPY，負值＝落後 SPY。本表採美股最新已完成收盤；個股報告另與台股基準日對齊。ETF 價格輪動不等同成分股廣度或資金流；不增加評分或解除 VETO。來源依本次後台 Tiingo／Yahoo 備援結果顯示。</p>
+     </section>
+     <!-- US_SECTOR_DISPLAY_END -->
+     <h4 class="macro-label">其他市場與風險指標</h4>
+@@ -253,7 +253,7 @@ function computeFallbackRating(input) {
+   if(input.qualityWarning){const before=grade;grade=order[Math.max(0,order.indexOf(grade)-1)];reasons.push(`現金流／財報品質警訊使風險評級下調一級：${before} → ${grade}；CFO 與 FCF 同源警訊不重複扣減。`);adjustments.push({gate:6,rule:'one_grade_risk_deduction',grades:-1,detail:'實質風險列入評級與警告，持續產出；不解除原始否決。'});}
+   if(input.vetoStatus!=='clear'){grade=cap(grade,'B');reasons.push('部分否決條件尚未排除：保留風險限制，退避評級最高B。');}
+   if(!input.coreReady||!input.qualityReady){grade=cap(grade,'C');reasons.push('總經／市場或必要財報欄位尚未齊：仍輸出已有資料的風險觀察，評級最高C。');}
+-  if(input.timingWeak){const before=grade;grade=order[Math.max(0,order.indexOf(grade)-1)];reasons.push(`價格低於 MA20 與 MA60，時機風險下調一級：${before} → ${grade}。`);}
++  if(input.timingWeak){const before=grade;grade=order[Math.max(0,order.indexOf(grade)-1)];reasons.push(before===grade?'價格低於 MA20 與 MA60；已是最低級，保留時機風險警訊。':`價格低於 MA20 與 MA60，時機風險下調一級：${before} → ${grade}。`);}
+   return {available:true,status:'degraded',grade,label:grade==='D'?'風險偏高':grade==='C'?'保守觀察':grade==='B'?'附限制觀察':grade==='B+'?'估值具條件吸引力':'條件較有利',score:null,
+     policyVersion:'user-fallback-210',policyLabel:'自訂退避風險評級',isOriginalMasterScore:false,valuationGrade,forecastFactor,forecastReferenceWeight:input.currentConsensusReady?forecastFactor:0,consensusUsage:'reference_only',forecastCoefficientApplied:false,
+     reasons,adjustments,riskPermission:input.vetoStatus==='clear'&&input.coreReady&&input.qualityReady&&!input.qualityWarning?'subject_to_macro_budget':'not_cleared',
+@@ -354,10 +354,10 @@ async function updateSiteAutomationStatus(){
+   const response=await siteFetch('/api/automation/status',{cache:'no-store',timeoutMs:12000});if(!response.ok)throw Error(`HTTP ${response.status}`);
+   const data=await response.json(),historyResponse=await siteFetch('/api/automation/history',{cache:'no-store',timeoutMs:12000}),history=historyResponse.ok?await historyResponse.json():{runs:[]};
+   lastAutomationStatusAt=Date.now();
+-  if(data.status==='waiting'){target.textContent='整站更新：後台每日 06:30、20:30（台灣）巡檢並留存快照；開啟網站時市場資料每 5／15 分鐘依來源更新。';report.textContent='首次排程尚未完成。資料源無新觀測、失敗或過期時會保留缺值／舊資料狀態。';return}
++  if(data.status==='waiting'){target.textContent='整站更新：後台每日 06:30、22:30（台灣）巡檢並留存快照；開啟網站時市場資料每 5／15 分鐘依來源更新。';report.textContent='首次排程尚未完成。資料源無新觀測、失敗或過期時會保留缺值／舊資料狀態。';return}
+   const modules=Object.entries(data.modules||{}),counts=modules.reduce((a,[,x])=>{a.ok+=x.status==='ok'?1:0;a.partial+=['partial','pending','error','missing'].includes(x.status)?1:0;return a},{ok:0,partial:0});
+   const stamp=data.completedAt||data.startedAt;
+-  target.textContent=`整站早晚巡檢｜06:30／20:30（台灣）｜${data.status==='complete'?'完成':data.status==='partial'?'部分完成':data.status}｜市場資料模組 ${counts.ok}/${modules.length} 全數有效${counts.partial?`；${counts.partial} 組缺值／待查`:''}｜本次更新 ${data.stocks?.length||0} 檔追蹤股${data.deferredStockCount?`（${data.deferredStockCount} 檔輪替中）`:''}｜${stamp?new Date(stamp).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}):'執行中'}`;
++  target.textContent=`整站早晚巡檢｜06:30／22:30（台灣）｜${data.status==='complete'?'完成':data.status==='partial'?'部分完成':data.status}｜市場資料模組 ${counts.ok}/${modules.length} 全數有效${counts.partial?`；${counts.partial} 組缺值／待查`:''}｜本次更新 ${data.stocks?.length||0} 檔後台巡檢股；此瀏覽器追蹤 ${stocks.length} 檔，未涵蓋：${stocks.filter(s=>!(data.stocks||[]).some(x=>(x.id||x.symbol)===s.id)).map(s=>s.id).join('、')||'無'}（私人清單與後台巡檢清單分開，不宣稱全數更新）${data.deferredStockCount?`（${data.deferredStockCount} 檔輪替中）`:''}｜${stamp?new Date(stamp).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}):'執行中'}`;
+   report.replaceChildren();
+   const addGroup=(title,lines)=>{if(!lines.length)return;const heading=document.createElement('strong');heading.textContent=title;const list=document.createElement('ul');for(const line of lines){const item=document.createElement('li');item.textContent=line;list.append(item)}report.append(heading,list)};
+   const statusText=x=>({ok:'有效',partial:'部分有效',pending:'更新中',missing:'缺值',error:'錯誤',fresh:'快取有效',saved:'已保存',needs_refresh:'待搜尋',daily_limit:'達每日上限',auth_required:'排程未取得登入身分',deferred:'排入後續輪替',collecting_history:'已啟動快照累積',history_ready:'歷史樣本已成熟',source_error:'來源／日期／儲存錯誤'}[x]||x||'未知');
+@@ -384,7 +384,7 @@ const fmt=(n,d=1)=>n==null?'MISSING':Number(n).toLocaleString('zh-TW',{minimumFr
+ const signed=(n,s='')=>n==null?'MISSING':`${n>0?'+':''}${fmt(n,1)}${s}`;
+ function macroTierText(x){if(x?.value==null||!Number.isFinite(Number(x.value)))return '';const v=Number(x.value),id=x.id,name=x.name||'';if(id==='CNN_FEAR_GREED'){const rating=String(x.rating||'').toLowerCase();return `情緒：${rating.includes('extreme fear')?'極度恐懼':rating==='fear'?'恐懼':rating==='neutral'?'中性':rating.includes('extreme greed')?'極度貪婪':rating==='greed'?'貪婪':'待分類'}（只作觀察，不計入總分）`;}if(id==='XAU')return '與 10Y TIPS 實質利率、DXY 同看；金價單獨不代表風險厭惡';if(id==='XAG')return '白銀分母報價；單獨不作避險訊號';if(id==='XAU_XAG'){if(x.trendValidationState!=='validated'||!Number.isFinite(Number(x.change20d)))return `日歷史樣本 ${Number(x.historyObservations)||0}/21；方向待確認，不計分`;const direction=Number(x.change20d)>0?'黃金相對白銀走強':Number(x.change20d)<0?'白銀相對黃金走強':'近 20 個日觀測大致持平';return `${direction}（${Number(x.change20d)>0?'+':''}${fmt(x.change20d,2)}%）；連續 3 個日間隔${x.trend3d==='rising'?'上升':x.trend3d==='falling'?'下降':x.trend3d==='mixed'?'方向混合':'待確認'}；只作交叉確認，不計入總分`;}if(id==='DFII10')return v>=2?'位階：偏高（實質利率壓估值）':v>=1?'位階：中性偏高':v>0?'位階：偏低至中性':'位階：負值（金融條件較寬）';if(id==='T10YIE')return v<2?'位階：低於 2% 長期目標參考':v<=2.5?'位階：通膨預期錨定區':v<3?'位階：通膨預期偏高':'位階：通膨預期高位';if(id==='IC4WSA'||name.includes('初領失業金 4 週平均'))return v<230000?'位階：低於 23 萬（勞動需求穩健）':v<=260000?'位階：23–26 萬（留意降溫）':'位階：高於 26 萬（裁員警戒）';if(id==='ICE_DXY')return v<100?'位階：美元偏弱':v<=105?'位階：中性區間': '位階：美元偏強';if(id==='T10Y2Y')return v<0?'位階：殖利率倒掛':v<0.5?'位階：轉正但偏平': '位階：正斜率較陡（需辨成因）';if(id==='BAMLH0A0HYM2')return v<3?'位階：利差偏窄':v<5?'位階：一般區間':v<8?'位階：信用警戒': '位階：信用壓力偏高';if(id==='VIXCLS')return v<15?'位階：低波動':v<20?'位階：常態波動':v<30?'位階：波動升高':'位階：高波動';if(name.includes('SOFR−IORB'))return v<=0?'位階：正常（未見利差壓力）':v<=5?'位階：留意':v<=10?'位階：偏緊':'位階：資金壓力升高';return '';}
+ function macroPipelineState(x){if(x.validationState==='source_stale'||x.status==='stale'||x.is_stale===true)return ['阻擋｜來源觀測過期','state-blocked'];if(x.validationState==='sample_insufficient')return ['已取回｜樣本不足','state-blocked'];if(x.validationState==='fetch_failed'||x.status==='missing'&&x.value==null)return ['阻擋｜取數失敗','state-blocked'];if(x.status==='pending')return ['已連結｜取數中','state-linked'];if(x.status==='ok'||x.status==='snapshot'&&x.sourceValidation?.state==='passed')return ['單項驗證通過','state-validated'];if(x.value!=null)return ['已取回｜尚未驗證','state-fetched'];return ['已連結｜尚未取回','state-linked']}
+-function macroIndicatorCard(x){const box=document.createElement('div');box.className='macro-item';const name=document.createElement('span');name.textContent=x.name;const digits=x.valueDecimals??2,value=document.createElement('b'),display=x.id==='US10Y3M'&&x.value>0?`+${fmt(x.value,digits)}`:fmt(x.value,digits),statusPrefix=x.status==='snapshot'?'官方快照｜':x.status==='stale'&&x.snapshot?'舊資料｜官方快照｜':'';value.textContent=x.status==='pending'?'載入中…':x.value==null?'資料缺失':`${statusPrefix}${x.status==='stale'&&!x.snapshot?'舊資料｜':''}${display}${x.unit?' '+x.unit:''}${macroTierText(x)?`｜${macroTierText(x)}`:''}`;if(x.status==='pending')value.className='macro-pending';else if(x.status!=='ok')value.className='macro-missing';const date=document.createElement('small');date.textContent=x.date?`觀測 ${x.date}${x.observedAt?'｜報價 '+new Date(x.observedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}):''}`:x.status==='pending'?'正在查詢官方操作結果':'尚無有效觀測日';const phase=document.createElement('small'),[phaseText,phaseClass]=macroPipelineState(x);phase.textContent=`狀態：${phaseText}`;phase.className=phaseClass;const change=document.createElement('small');change.textContent=x.detail||(x.delta==null?(x.reason||'無足夠歷史變化資料'):`${x.changeLabel||'較前次觀測'} ${signed(x.delta)} ${x.unit}${x.percent!=null?'／'+signed(x.percent,'%'):''}${x.previousDate?'；比較起日 '+x.previousDate:''}${x.status==='stale'?'｜過期，不納入判讀':''}`);const source=document.createElement('a');source.href=x.source||'#';source.target='_blank';source.rel='noopener noreferrer';source.textContent=x.provider||'資料來源';box.append(name,value,date,phase,change,source);if(x.timeline){const t=x.timeline,stamp=document.createElement('small');stamp.textContent=`資料所屬期 ${t.dataPeriod||'UNKNOWN'}｜發布 ${t.publishedAt?new Date(t.publishedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}):'來源未提供'}｜擷取 ${t.fetchedAt?new Date(t.fetchedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}):'UNKNOWN'}（台灣）；${t.reason}`;box.append(stamp)}return box}
++function macroIndicatorCard(x){if(['XAU','XAG'].includes(x.id)&&liveMarketRows.some(r=>r.id==='XAU_XAG'))x=coherentMetalRows(liveMarketRows).find(r=>r.id===x.id)||x;const box=document.createElement('div');box.className='macro-item';const name=document.createElement('span');name.textContent=x.name;const digits=x.valueDecimals??2,value=document.createElement('b'),display=x.id==='US10Y3M'&&x.value>0?`+${fmt(x.value,digits)}`:fmt(x.value,digits),statusPrefix=x.status==='snapshot'?'官方快照｜':x.status==='stale'&&x.snapshot?'舊資料｜官方快照｜':'';value.textContent=x.status==='pending'?'載入中…':x.value==null?'資料缺失':`${statusPrefix}${x.status==='stale'&&!x.snapshot?'舊資料｜':''}${display}${x.unit?' '+x.unit:''}${macroTierText(x)?`｜${macroTierText(x)}`:''}`;if(x.status==='pending')value.className='macro-pending';else if(x.status!=='ok')value.className='macro-missing';const date=document.createElement('small');date.textContent=x.date?`觀測 ${x.date}${x.observedAt?'｜報價 '+new Date(x.observedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}):''}`:x.status==='pending'?'正在查詢官方操作結果':'尚無有效觀測日';const phase=document.createElement('small'),[phaseText,phaseClass]=macroPipelineState(x);phase.textContent=`狀態：${phaseText}${x.finality==='final'?'｜官方隔日最終值':x.finality==='provisional'?'｜當日暫定值':''}`;phase.className=phaseClass;const change=document.createElement('small');change.textContent=x.detail||(x.delta==null?(x.reason||'無足夠歷史變化資料'):`${x.changeLabel||'較前次觀測'} ${signed(x.delta)} ${x.unit}${x.percent!=null?'／'+signed(x.percent,'%'):''}${x.previousDate?'；比較起日 '+x.previousDate:''}${x.status==='stale'?'｜過期，不納入判讀':''}`);const source=document.createElement('a');source.href=x.source||'#';source.target='_blank';source.rel='noopener noreferrer';source.textContent=x.provider||'資料來源';box.append(name,value,date,phase,change,source);if(x.timeline){const t=x.timeline,stamp=document.createElement('small');stamp.textContent=`資料所屬期 ${t.dataPeriod||'UNKNOWN'}｜發布 ${t.publishedAt?new Date(t.publishedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}):'來源未提供'}｜擷取 ${t.fetchedAt?new Date(t.fetchedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}):'UNKNOWN'}（台灣）；${t.reason}`;box.append(stamp)}return box}
+ function macroPlaceholder(id){const waitForMarket=['NYFED_SRP','WCESTUS1','JPY_HV20','JPY_HV60','XAU','XAG','XAU_XAG'].includes(id)&&marketDataState==='loading',twse=id.startsWith('TWSE_'),ticker={ICE_DXY:'DX-Y.NYB',DCOILWTICO:'CL=F',DCOILBRENTEU:'BZ=F',DHHNGSP:'NG=F',US3M:'^IRX',US10Y:'^TNX',US30Y:'^TYX',US10Y3M:'^IRX'}[id],source=twse?'https://openapi.twse.com.tw/':['XAU','XAG','XAU_XAG'].includes(id)?'https://gold-api.com/assets/':id==='NYFED_REPO'||id==='NYFED_SRP'?'https://www.newyorkfed.org/markets/desk-operations/repo':id.startsWith('JPY_HV')?'https://fred.stlouisfed.org/series/DEXJPUS':ticker?`https://finance.yahoo.com/quote/${encodeURIComponent(ticker)}/`:`https://fred.stlouisfed.org/series/${id}`,pendingReason=id==='NYFED_SRP'?'等待紐約聯儲官方操作結果':['XAU','XAG','XAU_XAG'].includes(id)?'金價與銀價查詢中；完成前保留載入狀態':'官方來源查詢中；完成前保留載入狀態',failedReason=id==='WCESTUS1'||id.startsWith('JPY_HV')?`市場資料請求失敗（${marketFetchError||'尚無有效回應'}）；將自動重試`:id==='NYFED_SRP'&&marketFetchError?`紐約聯儲資料組失敗（${marketFetchError}）`:'本次更新尚未取得資料；缺值不代表安全';return {id,name:MARKET_INDEX_NAMES[id]||id,unit:'',value:null,date:null,status:waitForMarket?'pending':'missing',reason:waitForMarket?pendingReason:failedReason,source,provider:twse?'臺灣證券交易所 OpenAPI':['XAU','XAG','XAU_XAG'].includes(id)?'Gold API｜第三方現貨參考價':id==='NYFED_REPO'||id==='NYFED_SRP'?'紐約聯儲 Markets Data API':ticker?`Yahoo Finance｜${ticker} 市場報價`:'FRED／原始提供者'}}
+ function renderUSIndices(rows){const byId=Object.fromEntries(rows.map(x=>[x.id,x]));const us=document.getElementById('usIndices');us.replaceChildren();for(const id of US_INDEX_IDS)us.append(macroIndicatorCard(byId[id]||macroPlaceholder(id)))}
+ function renderOtherMarketRows(rows){const byId=Object.fromEntries(rows.map(x=>[x.id,x]));const market=document.getElementById('marketIndicators');market.replaceChildren();for(const id of MARKET_INDEX_IDS)market.append(macroIndicatorCard(byId[id]||macroPlaceholder(id)))}
+@@ -1020,6 +1020,7 @@ const US_SECTOR_DISPLAY=Object.freeze([['XLK','資訊科技'],['XLC','通訊服
+ let usSectorReportState=null,usSectorFetchPending=false,usSectorRetryTimer=null,usSectorRetryAttempts=0,lastUSSectorCheckAt=0;
+ function renderUSSectorReport(context={}){
+  const host=document.getElementById('usSectorRows'),meta=document.getElementById('usSectorMeta'),benchmark=document.getElementById('usSectorBenchmark');if(!host||!meta)return;
++ const method=document.getElementById('usSectorMethod');if(method)method.textContent=`正值＝領先SPY，負值＝落後SPY。來源：${context.sourceRole||'來源待核'}｜${context.priceField==='adjClose'?'Tiingo adjClose 完整歷史':'Yahoo 獨立歷史（備援來源）'}。本表採最新完成收盤；個股另依台股基準日對齊。新增評分0，不解除VETO。`;
+  host.replaceChildren();let available=0;
+  for(const [symbol,name] of US_SECTOR_DISPLAY){
+   const data=context.sectors?.[symbol],valid=data?.status==='OK'&&!!context.observedAt&&data.observedAt===context.observedAt&&[5,10,20].every(n=>typeof data.relative?.['return'+n+'d']==='number'&&Number.isFinite(data.relative['return'+n+'d']));
+@@ -1063,12 +1064,26 @@ function scheduleMarketRetry(){
+  if(marketRetryAttempts>=MAX_AUTO_RETRIES){lastMarketCheckAt=Date.now();document.getElementById('marketMeta').textContent+='｜已達三次自動重試上限；保留已載入資料，按更新可重試。';return}
+  marketRetryAttempts++;marketRetryTimer=setTimeout(()=>{marketRetryTimer=null;if(document.visibilityState==='visible')void updateMacroMarket()},15000);
+ }
+-function mergeMarketRows(incoming){const rows=new Map(liveMarketRows.map(x=>[x.id,x]));for(const row of incoming||[]){if(!row?.id)continue;const old=rows.get(row.id);if(!old){rows.set(row.id,row);continue}const oldDate=old.date||'',newDate=row.date||'';if(old.status==='proxy'&&['ok','snapshot'].includes(row.status)&&row.is_stale!==true&&row.value!=null){rows.set(row.id,row);continue}if(newDate>oldDate||newDate===oldDate&&row.value!=null){rows.set(row.id,row);continue}if(row.value==null&&old.value!=null){rows.set(row.id,{...old,status:'stale',is_stale:true,reason:`最新取數未回傳有效值；保留 ${old.date||'無日期'} 的上一筆資料，不納入即時判讀`});}}liveMarketRows=[...rows.values()];return liveMarketRows}
++/* COHERENT_METALS_START */
++function coherentMetalRows(input){
++ const rows=(input||[]).map(r=>({...r})),ratio=[...rows].reverse().find(r=>r.id==='XAU_XAG');
++ if(!ratio||!Number.isFinite(ratio.goldPrice)||!Number.isFinite(ratio.silverPrice))return rows;
++ for(const [id,value,at,verification] of [['XAU',ratio.goldPrice,ratio.goldObservedAt,ratio.goldVerification],['XAG',ratio.silverPrice,ratio.silverObservedAt,ratio.silverVerification]]){
++  const prior=[...rows].reverse().find(r=>r.id===id)||{id};
++  const replacement={...prior,value,observedAt:at,date:at?.slice(0,10)||ratio.date,status:ratio.status==='ok'?'ok':'unverified',is_stale:ratio.is_stale===true,sourceVerification:verification,detail:'與此畫面金銀比採同一筆核對快照',metalBundleAt:ratio.observedAt};
++  for(let i=rows.length-1;i>=0;i--)if(rows[i].id===id)rows.splice(i,1);
++  rows.push(replacement);
++ }
++ return rows;
++}
++/* COHERENT_METALS_END */
++function mergeMarketRows(incoming){incoming=coherentMetalRows(incoming);const rows=new Map(liveMarketRows.map(x=>[x.id,x]));for(const row of incoming||[]){if(!row?.id)continue;const old=rows.get(row.id);if(!old){rows.set(row.id,row);continue}const oldDate=old.date||'',newDate=row.date||'';if(old.status==='proxy'&&['ok','snapshot'].includes(row.status)&&row.is_stale!==true&&row.value!=null){rows.set(row.id,row);continue}if(newDate>oldDate||newDate===oldDate&&row.value!=null){rows.set(row.id,row);continue}if(row.value==null&&old.value!=null){rows.set(row.id,{...old,status:'stale',is_stale:true,reason:`最新取數未回傳有效值；保留 ${old.date||'無日期'} 的上一筆資料，不納入即時判讀`});}}liveMarketRows=[...rows.values()];return liveMarketRows}
+ function mergeExpandedIntoBase(){
+  if(!macroState||!expandedMacroData)return;
+  const rows=new Map((macroState.rows||[]).map(x=>[x.id,x]));for(const row of expandedMacroData.rows||[])rows.set(row.id,row);macroState.rows=[...rows.values()];
+  const derived=new Map((macroState.derived||[]).map(x=>[x.name,x]));for(const item of expandedMacroData.derived||[])derived.set(item.name,item);macroState.derived=[...derived.values()];
+- macroState.coverage={...macroState.coverage,total:macroState.rows.length,usable:macroState.rows.filter(x=>x.status==='ok').length};
++ const catalogIds=new Set(macroState.catalogIds||[]); // Expanded rows stay visible; core coverage uses only the core catalog.
++ macroState.coverage={...macroState.coverage,total:catalogIds.size||macroState.coverage.total,usable:macroState.rows.filter(x=>(!catalogIds.size||catalogIds.has(x.id))&&['ok','snapshot'].includes(x.status)&&!x.is_stale&&Number.isFinite(x.value)).length};
+ }
+ function scoreMetric(item){
+  if(!item||!(item.status==='ok'||item.status==='snapshot'||(item.status===undefined&&item.audit?.verified===true))||item.is_stale===true||item.value===null||item.value===undefined)return null;
+@@ -1161,7 +1176,7 @@ function marketScoreModels(){
+  return [us,tw];
+ }
+ function preciousMetalsDecision(){
+- const rows=[...(macroState?.rows||[]),...liveMarketRows],byId=Object.fromEntries(rows.map(x=>[x.id,x])),gold=byId.XAU,silver=byId.XAG,ratio=byId.XAU_XAG,vix=byId.VIXCLS,hy=byId.BAMLH0A0HYM2,real=byId.DFII10,dxy=byId.ICE_DXY;
++ const rows=coherentMetalRows([...(macroState?.rows||[]),...liveMarketRows]),byId=Object.fromEntries(rows.map(x=>[x.id,x])),gold=byId.XAU,silver=byId.XAG,ratio=byId.XAU_XAG,vix=byId.VIXCLS,hy=byId.BAMLH0A0HYM2,real=byId.DFII10,dxy=byId.ICE_DXY;
+  const ready=gold?.status==='ok'&&silver?.status==='ok'&&ratio?.status==='ok'&&!gold.is_stale&&!silver.is_stale&&!ratio.is_stale;
+  const cross=[];if(vix?.status==='ok')cross.push(`VIX ${fmt(vix.value,2)}`);if(hy?.status==='ok')cross.push(`HY ${fmt(hy.value,2)}%`);if(real?.status==='ok')cross.push(`10Y 實質殖利率 ${fmt(real.value,2)}%`);if(dxy?.status==='ok')cross.push(`DXY ${fmt(dxy.value,2)}`);
+  let interpretation=ratio?.value!=null&&ratio.status!=='ok'?`XAU/XAG 原始比值 ${fmt(ratio.value,2)} 已計算，但三來源核對未通過；僅供對照，不納入總經判讀或趨勢累積。${gold?.reason||silver?.reason||''}`:'金價、銀價或同時點比值未齊；缺值不作中性判斷。';
+@@ -1341,7 +1356,7 @@ async function updateMacro(force=false){
+  try{
+   const data=await fetchJsonTimeout(force?'/api/macro?refresh=1':'/api/macro',12000);
+   if(data.pending){document.getElementById('macroMeta').textContent='主要總經來源正在背景更新；未完成資料不納入判讀，5 秒後自動重試。';const list=document.getElementById('macroFive');list.replaceChildren();const line=document.createElement('li');line.textContent='必要總經來源仍在查詢；風險預算維持原狀。';list.append(line);scheduleMacroRetry();return}
+-  macroState=data;mergeExpandedIntoBase();lastMacroCheckAt=Date.now();lastMarketCheckAt=Date.now();renderMacroDimensions(macroState);renderMacroAudit(macroState);renderMacroScores();
++  macroState=data;macroState.rows=coherentMetalRows(macroState.rows);mergeExpandedIntoBase();lastMacroCheckAt=Date.now();lastMarketCheckAt=Date.now();renderMacroDimensions(macroState);renderMacroAudit(macroState);renderMacroScores();
+   if(data.refreshing)scheduleMacroRetry();else{macroRetryAttempts=0;if(macroRetryTimer){clearTimeout(macroRetryTimer);macroRetryTimer=null}}
+   document.getElementById('macroMeta').textContent=`已接入 ${data.coverage.usable}/${data.coverage.total} 項資料可用${data.refreshing?'｜背景核對中，仍有效的觀測保留原日期':''}｜${data.light}｜取數 ${new Date(data.checkedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})}（台灣）｜頁面開啟時每 15 分鐘自動查詢；背景分頁暫停`;
+   renderMacroFiveLines();
+@@ -1371,7 +1386,7 @@ async function updateMacroExpanded(){
+  finally{expandedMacroPending=false}
+ }
+ async function updateMacroMarket(){if(marketFetchPending||marketRetryAttempts>MAX_AUTO_RETRIES)return;marketFetchPending=true;marketDataState='loading';marketFetchError='';lastMarketCheckAt=Date.now();document.getElementById('marketMeta').textContent='其他市場與風險指標獨立載入中…';renderOtherMarketRows(liveMarketRows);try{const data=await fetchJsonTimeout('/api/macro-market',35000);if(marketRetryTimer){clearTimeout(marketRetryTimer);marketRetryTimer=null}if(data.pending||data.refreshing){marketDataState=data.refreshing?'loaded':'loading';marketFetchError='官方來源仍在背景查詢';lastMarketCheckAt=Date.now()-MARKET_REFRESH_MS+15000;if(data.refreshing){const previous=mergeMarketRows(data.rows||[]);renderOtherMarketRows(previous);renderMacroScores();if(macroState)renderMacroDimensions(macroState)}else renderOtherMarketRows(liveMarketRows);document.getElementById('marketMeta').textContent=data.refreshing?'顯示上次成功市場快照；官方來源正在背景更新，15 秒後重查。':'部分官方來源仍在背景查詢；資料尚未完成驗證，15 秒後自動重試。';scheduleMarketRetry();return}marketRetryAttempts=0;const merged=mergeMarketRows(data.rows||[]);marketDataState='loaded';renderOtherMarketRows(merged);renderMacroScores();if(macroState)renderMacroDimensions(macroState);lastMarketCheckAt=Date.now();document.getElementById('marketMeta').textContent=`已完成 ${merged.filter(x=>x.status==='ok').length} 項市場資料更新｜${new Date(data.checkedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})}（台灣）；其餘缺值保留灰色。`}catch(e){marketDataState='error';marketFetchError=e.message;lastMarketCheckAt=Date.now()-MARKET_REFRESH_MS+15000;renderOtherMarketRows(liveMarketRows);document.getElementById('marketMeta').textContent=`市場資料請求未完成（${e.message}）；保留已顯示的觀測日期，15 秒後自動重試。`;if(marketRetryTimer)clearTimeout(marketRetryTimer);scheduleMarketRetry()}finally{marketFetchPending=false}}
+-async function updateUSIndices(){if(usIndexFetchPending)return;usIndexFetchPending=true;document.getElementById('usIndexMeta').textContent='三大指數獨立取數中…';try{const data=await fetchJsonTimeout('/api/us-indices',12000);if(data.pending&&!liveUSIndexRows.length){document.getElementById('usIndexMeta').textContent='三大指數來源正在背景查詢；數值未完成時不納入判讀。';scheduleUSIndexRetry();return}liveUSIndexRows=data.rows||[];renderUSIndices(liveUSIndexRows);renderMacroScores();const dates=[...new Set(liveUSIndexRows.filter(x=>x.status==='ok').map(x=>x.date))];document.getElementById('usIndexMeta').textContent=`已取得 ${liveUSIndexRows.filter(x=>x.status==='ok').length}/3 項｜${dates.join('、')||'觀測日期缺失'}｜Yahoo Finance 延遲日資料${data.refreshing?'｜上次成功快照顯示中，背景更新中':''}`;if(data.pending||data.refreshing)scheduleUSIndexRetry();else{usIndexRetryAttempts=0;if(usIndexRetryTimer){clearTimeout(usIndexRetryTimer);usIndexRetryTimer=null}}}catch(e){if(!liveUSIndexRows.length)renderUSIndices([]);document.getElementById('usIndexMeta').textContent=`三大指數來源暫不可用（${e.message}）；保留灰色資料卡。`;scheduleUSIndexRetry()}finally{usIndexFetchPending=false}}
++async function updateUSIndices(){if(usIndexFetchPending)return;usIndexFetchPending=true;document.getElementById('usIndexMeta').textContent='三大指數獨立取數中…';try{const data=await fetchJsonTimeout('/api/us-indices',12000);if(data.pending&&!liveUSIndexRows.length){document.getElementById('usIndexMeta').textContent='三大指數來源正在背景查詢；數值未完成時不納入判讀。';scheduleUSIndexRetry();return}liveUSIndexRows=data.rows||[];renderUSIndices(liveUSIndexRows);renderMacroScores();const dates=[...new Set(liveUSIndexRows.filter(x=>x.status==='ok').map(x=>x.date))];document.getElementById('usIndexMeta').textContent=`已取得 ${liveUSIndexRows.filter(x=>x.status==='ok').length}/3 項｜${dates.join('、')||'觀測日期缺失'}｜來源：${[...new Set(liveUSIndexRows.map(x=>x.provider).filter(Boolean))].join("、")||"未取得"}${data.refreshing?'｜上次成功快照顯示中，背景更新中':''}`;if(data.pending||data.refreshing)scheduleUSIndexRetry();else{usIndexRetryAttempts=0;if(usIndexRetryTimer){clearTimeout(usIndexRetryTimer);usIndexRetryTimer=null}}}catch(e){if(!liveUSIndexRows.length)renderUSIndices([]);document.getElementById('usIndexMeta').textContent=`三大指數來源暫不可用（${e.message}）；保留灰色資料卡。`;scheduleUSIndexRetry()}finally{usIndexFetchPending=false}}
+ document.getElementById('macroRefresh').addEventListener('click',()=>{resetAutomaticRetries();updateMacro(true);updateUSIndices();void updateUSSectorReport(true);updateMacroMarket();updateNews()});
+ document.getElementById('siteRefreshAll').addEventListener('click',async()=>{const button=document.getElementById('siteRefreshAll'),target=document.getElementById('siteAutomationMeta');button.disabled=true;button.textContent='全站巡檢啟動中…';try{const response=await siteFetch('/api/automation/refresh-all',{method:'POST',headers:{Accept:'application/json'},cache:'no-store',timeoutMs:15000}),payload=await response.json();if(!response.ok)throw Error(payload.message||payload.error||`HTTP ${response.status}`);target.textContent=payload.alreadyRunning?'全站巡檢已在執行；等待當前結果。':'已啟動全站巡檢；上市櫃快照與其他模組將在後台更新並保存。';for(let i=0;i<24;i++){await new Promise(resolve=>setTimeout(resolve,1500));const statusResponse=await siteFetch('/api/automation/status',{cache:'no-store',timeoutMs:12000});if(!statusResponse.ok)break;const status=await statusResponse.json();if(!['running','updating_market_modules','updating_stocks','updating_research'].includes(status.status)){await updateSiteAutomationStatus();break}}}catch(error){target.textContent=`無法啟動整站巡檢（${error.message}）；排程會按每日時間再試。`}finally{button.disabled=false;button.textContent='立即巡檢全站'}});
+ document.getElementById('stockRefresh').addEventListener('click',()=>{resetAutomaticRetries();void updateStock(true)});
+diff --git a/package.json b/package.json
+index 6badd42..5bb6885 100644
+--- a/package.json
++++ b/package.json
+@@ -5,7 +5,7 @@
+     "build": "node build.mjs",
+     "test:master-validation": "node tests/master-model-validation.test.mjs",
+     "db:generate": "drizzle-kit generate",
+-    "test": "npm run test:legacy && npm run test:advisory-integration",
++    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack",
+     "test:remediation": "node tests/master-remediation.test.mjs",
+     "test:qualified-output": "node tests/qualified-output.test.mjs",
+     "test:client-diagnostics": "node tests/client-diagnostics.test.mjs",
+@@ -16,7 +16,8 @@
+     "test:us-sector-site": "node --test tests/us-sector-session.test.mjs && node tests/us-sector-site.test.mjs",
+     "test:market-timeline": "node tests/market-timeline.test.mjs",
+     "test:legacy": "node tests/runtime-cache.test.mjs && node tests/master-gate-evidence.test.mjs && node tests/master-gate-pipeline.test.mjs && node tests/research-package-cloud.test.mjs && node tests/data-package.test.mjs && node tests/guidance-report.test.mjs && node tests/automatic-research.test.mjs && node tests/site-automation.test.mjs && node tests/site-module-contract.test.mjs && node tests/valuation-render.test.mjs && node tests/macro-market-state.test.mjs && node tests/core-cpi-ingestion.test.mjs && node tests/core-cpi-collector.test.mjs && node tests/cnn-fear-greed.test.mjs && node tests/financial-quality.test.mjs && node tests/relay-freshness.test.mjs && node tests/observation-freshness.test.mjs && node tests/monthly-release-news.test.mjs && node tests/macro-source-isolation.test.mjs && node tests/financial-analysis.test.mjs && node tests/official-collector.test.mjs && node tests/official-data-import.test.mjs && node tests/source-research.test.mjs && node tests/dashboard-interactions.test.mjs && node tests/master-model-validation.test.mjs && node tests/master-remediation.test.mjs && node tests/master-input-wiring.test.mjs && node tests/qualified-output.test.mjs && node tests/client-diagnostics.test.mjs && node tests/fallback-rating.test.mjs && npm run test:cross-market && npm run test:report-context && npm run test:stock-relay && npm run test:us-sector-site && npm run test:market-timeline && node tests/phison-panel.test.mjs",
+-    "test:advisory-integration": "node --test tests/tiingo-market.test.mjs tests/tiingo-site.test.mjs tests/panel-calculations.test.mjs tests/panel-sources.test.mjs tests/panel-display.test.mjs tests/advisory-decision.test.mjs && node tests/build-reproducibility.test.mjs"
++    "test:advisory-integration": "node --test tests/tiingo-market.test.mjs tests/tiingo-site.test.mjs tests/panel-calculations.test.mjs tests/panel-sources.test.mjs tests/panel-display.test.mjs tests/advisory-decision.test.mjs && node tests/build-reproducibility.test.mjs",
++    "test:fixpack": "node --test tests/fixpack.test.mjs"
+   },
+   "devDependencies": {
+     "drizzle-kit": "0.31.10",
+diff --git a/tests/core-cpi-ingestion.test.mjs b/tests/core-cpi-ingestion.test.mjs
+index 787fac0..419db09 100644
+--- a/tests/core-cpi-ingestion.test.mjs
++++ b/tests/core-cpi-ingestion.test.mjs
+@@ -101,8 +101,8 @@ try{
+   shared.rows.set('macro:v1',{payload:JSON.stringify(oldMacro),updated_at:new Date().toISOString(),expires_at:new Date(Date.now()+900000).toISOString()});
+   const readerA=await importWorker('macro isolate A'),readerB=await importWorker('macro isolate B');
+   const readMacro=(reader,ctx={})=>reader.default.fetch(new Request('https://site.test/api/macro'),sharedEnv,ctx).then(response=>response.json());
+-  assert.equal((await readMacro(readerA)).rows[0].status,'unverified');
+-  assert.equal((await readMacro(readerB)).rows[0].status,'unverified');
++  assert.equal((await readMacro(readerA)).rows.find(row=>row.id==='CPILFESL').status,'unverified');
++  assert.equal((await readMacro(readerB)).rows.find(row=>row.id==='CPILFESL').status,'unverified');
+   const importedResponse=await api.default.fetch(new Request('https://site.test/api/official-data-import',{method:'POST',body:JSON.stringify({schema_version:1,coreCpiSources:sources(history)})}),sharedEnv);
+   const imported=await importedResponse.json();assert.equal(importedResponse.status,200);assert.ok(imported.coreCpi.revision);
+   let requests=0;globalThis.fetch=async()=>{requests++;return new Response('test-only unavailable provider',{status:503});};
+diff --git a/tests/fixpack.test.mjs b/tests/fixpack.test.mjs
+new file mode 100644
+index 0000000..0dda661
+--- /dev/null
++++ b/tests/fixpack.test.mjs
+@@ -0,0 +1,8 @@
++import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
++const src=fs.readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');
++const api=await import('data:text/javascript;base64,'+Buffer.from(src+'\nexport {summarize,completeIndicatorCatalog,catalogPayload,reconcileCreditHistory,coherentMetalRows,computeFallbackRating};').toString('base64'));
++test('fixed catalogs deduplicate legacy 65 rows into 55 indicators; market always 36 and missing stays missing',()=>{for(const [scope,n] of [['macro',55],['market',36]]){const rows=api.completeIndicatorCatalog([],scope);assert.equal(rows.length,n);assert.equal(new Set(rows.map(r=>r.id)).size,n);assert.ok(rows.every(r=>r.status==='missing'&&r.value===null));const p=api.catalogPayload({rows:[{id:'TWSE_TAIEX',value:100,date:'2026-10-20',status:'ok'},{id:'TWSE_TAIEX',value:100,date:'2026-10-20',status:'ok'}]},scope);assert.equal(p.coverage.total,n);assert.equal(p.coverage.usable,1);}});
++test('daily SP500/WTI/HH source comparisons use adjacent observations not five bars',()=>{for(const [id,values,expected] of [['SP500',[7807.24,7800,7790,7770,7659.44,7690.73],.4085],['DCOILWTICO',[95.02,96,97,98,100.86,101.91],1.04105],['DHHNGSP',[3.16,3.1,3.1,3.1,3.14,3.22],2.54777]]){const h=values.map((value,i)=>({date:`2026-10-${String(7+i).padStart(2,'0')}`,value})),r=api.summarize(id,h);assert.ok(Math.abs(r.percent-expected)<.001);assert.equal(r.previousDate,h.at(-2).date);}});
++const item=(date,previous,current)=>({date,capturedAt:date+'T15:00:00Z',sourceUrls:{margin:'https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?date='+date.replaceAll('-','')},tradingDates:[{Date:'1151016'},{Date:'1151019'},{Date:'1151020'}],margin:{tables:[{fields:['今日餘額'],data:[['融資金額(仟元)',0,0,0,previous,current],['融資(交易單位)',0,0,0,previous,current],['融券(交易單位)',0,0,0,previous,current]]}]},marginTrend:{data:[{date:date.replaceAll('-',''),marketValue:50000}]}});
++test('next report previous balance revises original session, preserves original provisional audit, no invented day or overwrite by old import',()=>{let a=api.reconcileCreditHistory(null,item('2026-10-19',600000000,640618432),[]);let b=api.reconcileCreditHistory(a.history,item('2026-10-20',640617928,638100111),[]);assert.equal(b.history.points.TWSE_MARGIN_BALANCE_NTD['2026-10-19'].value,6406.17928);assert.equal(b.history.points.TWSE_MARGIN_BALANCE_NTD['2026-10-19'].finality,'final');assert.equal(b.history.points.TWSE_MARGIN_BALANCE_NTD['2026-10-20'].finality,'provisional');assert.equal(b.history.points.TWSE_MARGIN_BALANCE_NTD['2026-10-19'].reportedDate,'2026-10-20');assert.ok(b.history.revisions.some(r=>r.before?.value===6406.18432&&r.after.value===6406.17928));const c=api.reconcileCreditHistory(b.history,item('2026-10-19',600000000,640618432),[]);assert.equal(c.history.points.TWSE_MARGIN_BALANCE_NTD['2026-10-19'].value,6406.17928);assert.equal(Object.keys(c.history.points.TWSE_MARGIN_BALANCE_NTD).includes('2026-10-18'),false);});
++test('quote cards use exactly ratio operands and timestamps',()=>{const rows=api.coherentMetalRows([{id:'XAU',value:4124.6},{id:'XAU_XAG',value:70,goldPrice:4127.4,silverPrice:58.96285714285714,status:'ok',goldObservedAt:'2026-10-20T15:00:00Z',silverObservedAt:'2026-10-20T15:00:00Z'}]);assert.equal(rows.find(r=>r.id==='XAU').value,4127.4);assert.equal(rows.find(r=>r.id==='XAG').value,58.96285714285714);assert.equal(rows.find(r=>r.id==='XAU').observedAt,'2026-10-20T15:00:00Z');});
+diff --git a/tests/market-timeline.test.mjs b/tests/market-timeline.test.mjs
+index 2730c9a..a8a8049 100644
+--- a/tests/market-timeline.test.mjs
++++ b/tests/market-timeline.test.mjs
+@@ -17,7 +17,7 @@ audit=api.buildMarketDateAudit(rows.map(r=>({...r,publishedAt:'2026-10-14'})),{e
+ audit=api.buildMarketDateAudit(rows.map((r,i)=>({...r,date:i?'2026-10-14':'2026-10-13',history:[{date:'2026-10-13',value:123}]})),{evaluationAt:now});assert.equal(audit.commonTradeDate,'2026-10-13');assert.equal(audit.comparisonRows[1].value,123);assert.equal(audit.comparisonRows[1].delta,undefined,'a historical common-date comparison cannot borrow today\'s change');
+ assert.equal(api.buildMarketDateAudit(rows.slice(0,8),{evaluationAt:now}).commonTradeDate,null);
+ const entries=new Map([['macro-market:v7',{payload:JSON.stringify({checkedAt:new Date().toISOString(),rows}),updated_at:new Date().toISOString(),expires_at:new Date(Date.now()+3600000).toISOString()}]]),db={prepare(){return{bind(key){return{all:async()=>({results:entries.has(key)?[entries.get(key)]:[]})}},run:async()=>({})}}};
+-const response=await api.default.fetch(new Request('https://site.test/api/macro-market'),{DB:db}),live=await response.json();assert.equal(response.status,200);assert.equal(live.dateAudit.fields.length,9);assert.equal(live.rows[0].timeline.publishedAt,null);
++const response=await api.default.fetch(new Request('https://site.test/api/macro-market'),{DB:db}),live=await response.json();assert.equal(response.status,200);assert.equal(live.dateAudit.fields.length,9);assert.equal(live.rows.find(row=>row.id==='TWSE_TAIEX').timeline.publishedAt,null);
+ const terms=JSON.parse(readFileSync(new URL('../data/official/veto-8299-cb-20261015.json',import.meta.url),'utf8')).companies[0].records;
+ const veto=api.evaluateMasterVeto({id:'8299',price:{value:1965},financialQuality:{}},terms,'2026-10-15'),cb=veto.rules.find(r=>r.id==='cb');assert.equal(cb.state,'pending');assert.equal(cb.contracts.length,4);assert.equal(cb.evidenceStatus,'terms_recorded_inventory_pending');assert.equal(cb.evidence.dataPeriod,'2026-06-30');assert.match(cb.detail,/初始發行額/);
+ const stock=JSON.parse(readFileSync(new URL('./fixtures/master-remediation.json',import.meta.url),'utf8')).stock;
+diff --git a/tests/site-automation.test.mjs b/tests/site-automation.test.mjs
+index ba93447..e43b440 100644
+--- a/tests/site-automation.test.mjs
++++ b/tests/site-automation.test.mjs
+@@ -98,7 +98,8 @@ response = await worker.fetch(new Request('https://site.test/api/automation/hist
+ const history = await response.json();
+ assert.equal(history.runs.length, 1);
+ assert.equal(history.runs[0].status, 'partial');
+-assert.equal(history.runs[0].moduleCounts.marketAndPreciousMetals, 'ok');
++assert.equal(history.runs[0].moduleCounts.marketAndPreciousMetals, 'partial', 'small seeded fixture must not masquerade as all 36 catalog indicators');
++assert.equal(result.modules.marketAndPreciousMetals.total,36);
+ assert.equal(history.runs[0].gateAuditCount,4);
+ 
+ response = await worker.fetch(new Request('https://site.test/api/automation/refresh-all'), env);
+diff --git a/worker/advisory-decision.mjs b/worker/advisory-decision.mjs
+index a7a34a4..5319a80 100644
+--- a/worker/advisory-decision.mjs
++++ b/worker/advisory-decision.mjs
+@@ -58,7 +58,7 @@ export function buildAdvisoryDecision({stock,panels,sectorContext,macroRows=[],m
+  const reasons=[];
+  if(cashRisk)reasons.push(`CFO／淨利 ${finite(fq.cfoToNetIncome?.value)?fq.cfoToNetIncome.value.toFixed(2):'缺值'}倍；FCF ${finite(fq.freeCashFlow?.value)?(fq.freeCashFlow.value/1e8).toFixed(2):'缺值'}億元；此為已核算警訊。`);
+  if(existingRating?.available)reasons.push(`既有自訂退避評級 ${existingRating.grade}；原始Gate限制與未知否決條件仍保留。`);
+- reasons.push(t.status==='ok'?`四條均線觀測強弱 ${t.score>=0?'+':''}${t.score}/4，屬草案參考。`:`均線完整性不足：${t.reason||'待補'}。`);
++ reasons.push(t.status==='ok'?`四條均線觀測強弱 ${t.score>=0?'+':''}${t.score}（範圍 −4～+4），屬草案參考。`:`均線完整性不足：${t.reason||'待補'}。`);
+  const gaps=[...globalFactors,...stockFactors].filter(f=>f.draftPoints===null).map(f=>({id:f.id,label:f.label,reason:f.reason||'DATA_OR_POLICY_PENDING'}));
+  const dataChecks=[t.status==='ok',r.status==='ok',e.status==='ok',l.status==='ok',pb.status==='ok',panels.industryMapping.status==='ok',axis.status==='ok',sectorContext?.status==='OK',freshness.stockFresh===true];
+  return {version:'advisory-decision-draft-v1',approved:false,activeScoreContribution:0,asOf,conclusion,confidence:{label:dataChecks.every(Boolean)?'所列觀測已齊，策略未校準':'受資料缺口限制',coverage:dataChecks.filter(Boolean).length,total:dataChecks.length,isReturnProbability:false},reasons:reasons.slice(0,3),changeConditions:['最新季度現金流與財報警訊依實際財報重新核算。','補齊原Gate可追溯來源；草案門檻完成回測及擁有者核准後另行整合。','行情、官方產業分類與來源時效更新後重新計算，未知不視為安全。'],discipline:'均線變化已列強弱；分批比例由投資人自行決定，未新增停損規則。',globalFactors,stockFactors,globalSummary,stockSummary,holding:previewHoldingRange({score:globalSummary.total}),gold:{informationalOnly:true,activeContribution:0,zeroAxis:panels.goldZeroAxis},sentiment:{status:'partial',vix:validRow(get('VIXCLS'),asOf)?get('VIXCLS').value:null,gaps:['VIX極高門檻待回測','VIX3M、NAAIM、Cboe股票Put/Call未有已核對輸入','FINRA月度融資轉折、全市場60日線比例、估計融資維持率須獨立來源與門檻']},gaps,originalGateWarnings:gates.filter(g=>['warning','partial','blocked','needs_user_records'].includes(g.status)).map(g=>({id:g.id,status:g.status})),appliedToRating:false,appliedToRiskBudget:false};
+diff --git a/worker/data-import.js b/worker/data-import.js
+index d11a33f..982b9e2 100644
+--- a/worker/data-import.js
++++ b/worker/data-import.js
+@@ -137,7 +137,7 @@ async function officialDataImport(request, env) {
+       cpiSnapshot=null;cpiRetryAfter=0;
+       try{await globalThis.caches?.default?.delete(new Request('https://cache.taiwan-stock-master.invalid/core-cpi/v5/fred-json/last-success'));}catch{}
+     }
+-    if(marketStatistics){if(!await writeRuntimeCache(env,TWSE_STATISTICS_KEY,marketStatistics,36*3600000))throw Error('statistics_write_failed');results.marketStatistics={date:marketStatistics.date,rows:validateTaiwanStatistics(marketStatistics).length,capturedAt:marketStatistics.capturedAt};}
++    if(marketStatistics){const revisions=await persistCreditRevisions(env,marketStatistics,validateTaiwanStatistics(marketStatistics));if(!await writeRuntimeCache(env,TWSE_STATISTICS_KEY,marketStatistics,36*3600000))throw Error('statistics_write_failed');results.marketStatistics={date:marketStatistics.date,rows:validateTaiwanStatistics(marketStatistics).length,capturedAt:marketStatistics.capturedAt,previousFinalDate:revisions.previousDate,revisionCount:revisions.history.revisions.length};}
+     if(issuerUniverse) {if(!await writeRuntimeCache(env,'market-official-universe:v1',issuerUniverse,7*86400000))throw Error('universe_write_failed');results.issuerUniverse={asOf:issuerUniverse.asOf,count:issuerUniverse.rows.length};}
+     for(const item of series) {
+       if(!await writeRuntimeCache(env,`official-series:v1:${item.id}`,item,36*3600000))throw Error('series_write_failed');
+diff --git a/worker/fallback-rating.js b/worker/fallback-rating.js
+index b6c64fd..7ba29fd 100644
+--- a/worker/fallback-rating.js
++++ b/worker/fallback-rating.js
+@@ -21,7 +21,7 @@ function computeFallbackRating(input) {
+   if(input.qualityWarning){const before=grade;grade=order[Math.max(0,order.indexOf(grade)-1)];reasons.push(`現金流／財報品質警訊使風險評級下調一級：${before} → ${grade}；CFO 與 FCF 同源警訊不重複扣減。`);adjustments.push({gate:6,rule:'one_grade_risk_deduction',grades:-1,detail:'實質風險列入評級與警告，持續產出；不解除原始否決。'});}
+   if(input.vetoStatus!=='clear'){grade=cap(grade,'B');reasons.push('部分否決條件尚未排除：保留風險限制，退避評級最高B。');}
+   if(!input.coreReady||!input.qualityReady){grade=cap(grade,'C');reasons.push('總經／市場或必要財報欄位尚未齊：仍輸出已有資料的風險觀察，評級最高C。');}
+-  if(input.timingWeak){const before=grade;grade=order[Math.max(0,order.indexOf(grade)-1)];reasons.push(`價格低於 MA20 與 MA60，時機風險下調一級：${before} → ${grade}。`);}
++  if(input.timingWeak){const before=grade;grade=order[Math.max(0,order.indexOf(grade)-1)];reasons.push(before===grade?'價格低於 MA20 與 MA60；已是最低級，保留時機風險警訊。':`價格低於 MA20 與 MA60，時機風險下調一級：${before} → ${grade}。`);}
+   return {available:true,status:'degraded',grade,label:grade==='D'?'風險偏高':grade==='C'?'保守觀察':grade==='B'?'附限制觀察':grade==='B+'?'估值具條件吸引力':'條件較有利',score:null,
+     policyVersion:'user-fallback-210',policyLabel:'自訂退避風險評級',isOriginalMasterScore:false,valuationGrade,forecastFactor,forecastReferenceWeight:input.currentConsensusReady?forecastFactor:0,consensusUsage:'reference_only',forecastCoefficientApplied:false,
+     reasons,adjustments,riskPermission:input.vetoStatus==='clear'&&input.coreReady&&input.qualityReady&&!input.qualityWarning?'subject_to_macro_budget':'not_cleared',
+diff --git a/worker/fixpack.js b/worker/fixpack.js
+new file mode 100644
+index 0000000..5ea1973
+--- /dev/null
++++ b/worker/fixpack.js
+@@ -0,0 +1,63 @@
++// Authorized data/label corrections; no new weights or investment thresholds.
++const FIXPACK_MARKET_IDS=['XAU','XAG','XAU_XAG','NYFED_REPO','TWSE_TAIEX','TWSE_ELECTRONIC','TWSE_SEMICONDUCTOR','TWSE_FINANCIAL','TWSE_SHIPPING','TWSE_STEEL','TWSE_TOTAL_TRADE_VALUE','TWSE_MARGIN_BALANCE_NTD','TWSE_MARGIN_CHANGE_NTD','TWSE_MARGIN_BALANCE_UNITS','TWSE_SHORT_BALANCE','TWSE_SHORT_CHANGE','TWSE_MARGIN_MARKET_CAP_RATIO','TWSE_CREDIT_TRADE_VALUE','TWSE_BREADTH','TPEX_BREADTH','TWSE_DAYTRADE','NYFED_SRP','ICE_DXY','DTWEXBGS','DCOILWTICO','DCOILBRENTEU','DHHNGSP','DEXJPUS','US3M','US10Y','US30Y','VIXCLS','WCESTUS1','US10Y3M','JPY_HV20','JPY_HV60'];
++function indicatorCatalog(scope){
++ if(scope==='market')return FIXPACK_MARKET_IDS;
++ return [...Object.keys(SERIES).filter(id=>!INTERNAL_SERIES_IDS.has(id)&&!EXPANDED_SERIES_IDS.has(id)),...['TWSE_ELECTRONIC','TWSE_SEMICONDUCTOR','TWSE_FINANCIAL','TWSE_SHIPPING','TWSE_STEEL','TPEX_BREADTH','TWSE_MARGIN_MARKET_CAP_RATIO','TWSE_CREDIT_TRADE_VALUE','XAU']].filter((id,i,a)=>!INTERNAL_SERIES_IDS.has(id)&&a.indexOf(id)===i);
++}
++function repairDailyObservation(row){
++ if(!row||!['SP500','DJIA','NASDAQCOM','DCOILWTICO','DCOILBRENTEU','DHHNGSP',...FIXPACK_MARKET_IDS.filter(id=>/^TWSE_(TAIEX|ELECTRONIC|SEMICONDUCTOR|FINANCIAL|SHIPPING|STEEL)$/.test(id))].includes(row.id))return row;
++ const history=cleanHistory(row.history||[]).filter(p=>p.date<=row.date),last=history.at(-1),prev=history.at(-2);
++ if(last?.date===row.date&&last.value===row.value&&prev)return {...row,delta:last.value-prev.value,percent:prev.value?(last.value/prev.value-1)*100:null,previousDate:prev.date,comparisonStart:prev.date,comparisonEnd:last.date,comparisonObservations:1,changeLabel:'較前一來源交易日'};
++ if(/5 筆前|5筆前/.test(row.changeLabel||''))return {...row,periodChange:{percent:row.percent,delta:row.delta,from:row.previousDate,to:row.date},percent:null,delta:null,changeLabel:'單日比較未取得',reason:row.reason||'舊快照只有多日變動；等待相鄰來源歷史重算'};
++ return row;
++}
++function completeIndicatorCatalog(rows,scope){
++ const by=new Map((rows||[]).map(row=>[row.id,row]));
++ return indicatorCatalog(scope).map(id=>by.has(id)?repairDailyObservation(by.get(id)):{...missing(id,'本輪未取得此指標；保留固定目錄缺項，不以舊值補新值'),catalogMissing:true});
++}
++function catalogPayload(payload,scope){
++ if(!payload)return payload;
++ const rows=completeIndicatorCatalog(payload.rows||[],scope),usable=rows.filter(r=>['ok','snapshot'].includes(r.status)&&!r.is_stale&&Number.isFinite(r.value)).length;
++ return {...payload,rows,catalogIds:indicatorCatalog(scope),coverage:{...payload.coverage,usable,total:rows.length}};
++}
++// Shared browser helper: ratio operands and quote cards always use one captured bundle.
++/* COHERENT_METALS_START */
++function coherentMetalRows(input){
++ const rows=(input||[]).map(r=>({...r})),ratio=[...rows].reverse().find(r=>r.id==='XAU_XAG');
++ if(!ratio||!Number.isFinite(ratio.goldPrice)||!Number.isFinite(ratio.silverPrice))return rows;
++ for(const [id,value,at,verification] of [['XAU',ratio.goldPrice,ratio.goldObservedAt,ratio.goldVerification],['XAG',ratio.silverPrice,ratio.silverObservedAt,ratio.silverVerification]]){
++  const prior=[...rows].reverse().find(r=>r.id===id)||{id};
++  const replacement={...prior,value,observedAt:at,date:at?.slice(0,10)||ratio.date,status:ratio.status==='ok'?'ok':'unverified',is_stale:ratio.is_stale===true,sourceVerification:verification,detail:'與此畫面金銀比採同一筆核對快照',metalBundleAt:ratio.observedAt};
++  for(let i=rows.length-1;i>=0;i--)if(rows[i].id===id)rows.splice(i,1);
++  rows.push(replacement);
++ }
++ return rows;
++}
++/* COHERENT_METALS_END */
++const CREDIT_REVISION_KEY='official-credit-revisions:v1';
++function reconcileCreditHistory(previous,item,rows){
++ const saved=structuredClone(previous||{points:{},revisions:[]}),points=saved.points||{};saved.points=points;saved.revisions||=[];
++ const report=item.tradingDates,raw=Array.isArray(report)?report:report?.data?.map(r=>({Date:String(r[0]).replaceAll('/','')}))||[];
++ const sessions=[...new Set(raw.map(r=>twseDate(r.Date)).filter(d=>officialImportDate(d)&&d<=item.date))].sort(),previousDate=sessions.filter(d=>d<item.date).at(-1);
++ const table=item.margin?.tables?.find(t=>t.fields?.includes('今日餘額'));
++ const specs=[['TWSE_MARGIN_BALANCE_NTD','融資金額(仟元)',1e5],['TWSE_MARGIN_BALANCE_UNITS','融資(交易單位)',1],['TWSE_SHORT_BALANCE','融券(交易單位)',1]];
++ const put=(id,point)=>{const by=points[id]||(points[id]={}),old=by[point.date];if(old?.finality==='final'&&point.finality==='provisional')return;if(old&&Date.parse(old.fetchedAt)>Date.parse(point.fetchedAt))return;
++  if(!old||old.value!==point.value||old.finality!==point.finality){saved.revisions.push({id,date:point.date,before:old||null,after:point});by[point.date]=point;}
++ };
++ for(const [id,label,div] of specs){const rawRow=table?.data?.find(r=>r[0]===label);if(!rawRow)continue;const values=rawRow.slice(1).map(numeric);
++  if(previousDate&&Number.isFinite(values[3]))put(id,{date:previousDate,value:values[3]/div,finality:'final',reportedDate:item.date,fetchedAt:item.capturedAt,source:item.sourceUrls.margin});
++  if(Number.isFinite(values[4]))put(id,{date:item.date,value:values[4]/div,finality:'provisional',reportedDate:item.date,fetchedAt:item.capturedAt,source:item.sourceUrls.margin});
++ }
++ // Keep original market-cap denominator for each observed session; never borrow the next day's cap.
++ const marketCap=item.marginTrend?.data?.find(r=>r.date===item.date.replaceAll('-',''))?.marketValue;
++ saved.marketCaps||={};if(Number.isFinite(marketCap)&&marketCap>0)saved.marketCaps[item.date]=marketCap;
++ for(const [date,p] of Object.entries(points.TWSE_MARGIN_BALANCE_NTD||{})){const cap=saved.marketCaps[date];if(cap)put('TWSE_MARGIN_MARKET_CAP_RATIO',{...p,value:p.value/cap*100,denominatorDate:date});}
++ for(const [id,changeId] of [['TWSE_MARGIN_BALANCE_NTD','TWSE_MARGIN_CHANGE_NTD'],['TWSE_SHORT_BALANCE','TWSE_SHORT_CHANGE']]){const h=Object.values(points[id]||{}).sort((a,b)=>a.date.localeCompare(b.date));for(let i=1;i<h.length;i++){const p=h[i],prev=h[i-1];put(changeId,{...p,value:p.value-prev.value,comparisonStart:prev.date});}}
++ const revisedRows=rows.map(row=>{const series=points[row.id];if(!series)return {...row,...(/^TWSE_(MARGIN|SHORT)/.test(row.id)?{finality:'provisional'}:{})};const history=Object.values(series).sort((a,b)=>a.date.localeCompare(b.date)),point=series[row.date];return {...row,...(point?{value:point.value,finality:point.finality,reportedDate:point.reportedDate}:{}),history};});
++ return {history:saved,rows:revisedRows,previousDate};
++}
++async function persistCreditRevisions(env,item,rows){
++ const prior=(await readRuntimeCache(env,CREDIT_REVISION_KEY))?.payload,result=reconcileCreditHistory(prior,item,rows);
++ if(!await writeRuntimeCache(env,CREDIT_REVISION_KEY,result.history,370*86400000))throw Error('credit_revision_write_failed');
++ return result;
++}
+diff --git a/worker/macro.js b/worker/macro.js
+index f91bf76..b871ff2 100644
+--- a/worker/macro.js
++++ b/worker/macro.js
+@@ -850,8 +850,8 @@ async function masterModelResponse(request, env = {}, ctx = {}) {
+   const peerInputs=await readMasterPeerInputs(env,id,company?.payload?.records,userId,stock.price?.date);
+   const scannerAge = Date.now() - Date.parse(scanner?.payload?.checkedAt || '');
+   const macroRecent=macroSnapshotRecent(macro?.payload),marketRecent=macroSnapshotRecent(market?.payload);
+-  const marketState=market?.payload?refreshingMacroSnapshot(market.payload):null;
+-  const macroState=macro?.payload?refreshingMacroSnapshot(macro.payload):null;
++  const marketState=market?.payload?catalogPayload(refreshingMacroSnapshot(market.payload),'market'):null;
++  const macroState=macro?.payload?catalogPayload(refreshingMacroSnapshot(macro.payload),'macro'):null;
+   const marketPayload = { ...(marketState || {}), fullMarketScanner: scanner?.payload || null, scannerFailure: automation?.payload?.fullMarketScanner || null };
+   const models=macroState ? backendMarketScoreModels(macroState,expanded?.fresh?expanded.payload:null,marketRecent?marketState.rows||[]:[]) : [];
+   const riskModel=models.find(x=>x.market==='TW');
+diff --git a/worker/market-timeline.js b/worker/market-timeline.js
+index 80c8586..4535978 100644
+--- a/worker/market-timeline.js
++++ b/worker/market-timeline.js
+@@ -21,6 +21,8 @@ function retainTaiwanComparisonHistory(rows,previous=[],now=Date.now()){
+     if(!marketAuditDate(point.date)||point.date>today||!Number.isFinite(point.value))continue;
+     const source=point.source||saved.source,captured=marketAuditInstant(point.fetchedAt||saved.fetchedAt||saved.verifiedAt||payload.checkedAt);
+     try{if(new URL(source).protocol!=='https:'||!captured||Date.parse(captured)>now)continue;}catch{continue;}
++    if(point.finality==='final'&&source.includes('/MI_MARGN?')){points.set(point.date,point);conflicts.delete(point.date);continue;}
++    if(points.get(point.date)?.finality==='final')continue;
+     if(points.has(point.date)&&points.get(point.date).value!==point.value){points.delete(point.date);conflicts.add(point.date);continue;}
+     if(!conflicts.has(point.date))points.set(point.date,{date:point.date,value:point.value,source,fetchedAt:captured,publishedAt:point.publishedAt||null});
+    }
+diff --git a/worker/observation-freshness.js b/worker/observation-freshness.js
+index e87c4e2..d415fe4 100644
+--- a/worker/observation-freshness.js
++++ b/worker/observation-freshness.js
+@@ -71,7 +71,7 @@ function validateTaiwanStatistics(item,now=Date.now()) {
+ async function importedTaiwanStatistics(env) {
+   const saved=await readRuntimeCache(env,TWSE_STATISTICS_KEY);
+   if(!saved?.fresh)return null;
+-  try{return validateTaiwanStatistics(saved.payload);}catch{return null;}
++  try{const rows=validateTaiwanStatistics(saved.payload);const prior=(await readRuntimeCache(env,CREDIT_REVISION_KEY))?.payload;return reconcileCreditHistory(prior,saved.payload,rows).rows;}catch{return null;}
+ }
+ function coreCpiVerificationCurrent(row,now=Date.now()) {
+   const check=row?.sourceVerification,stamp=Date.parse(check?.checkedAt||'');
+diff --git a/worker/observations.js b/worker/observations.js
+index a0c91cb..e288c98 100644
+--- a/worker/observations.js
++++ b/worker/observations.js
+@@ -125,14 +125,14 @@ function parseFred(csv, id) {
+ function summarize(id, history) {
+   if (!history.length) return missing(id, '期間內沒有可用數值');
+   const newest = history.at(-1), monthly = id==='CPILFESL'||SERIES[id][3] >= 80, weekly = ['ICSA','CCSA','WALCL','WCESTUS1'].includes(id);
+-  const steps = monthly ? 1 : weekly ? 1 : 5;
++  const steps = 1;
+   const older = history.length > steps ? history.at(-steps-1) : null;
+   const stale = age(newest.date) > SERIES[id][3];
+   return { id, name: SERIES[id][0], group: SERIES[id][1], unit: SERIES[id][2], ...newest,
+     status: stale ? 'stale' : 'ok', reason: stale ? '資料較舊，暫不納入判讀' : null,
+-    delta: older ? newest.value - older.value : null, previousDate: older?.date ?? null,
++    delta: older ? newest.value - older.value : null, previousDate: older?.date ?? null, comparisonStart:older?.date??null,comparisonEnd:newest.date,comparisonObservations:older?1:0,
+     percent: older && older.value !== 0 ? (newest.value / older.value - 1) * 100 : null,
+-    changeLabel: monthly ? '較上期' : weekly ? '較前一週' : '較 5 筆前',
++    changeLabel: monthly ? '較上期' : weekly ? '較前一週' : '較前一來源交易日',
+     source: link(id), provider: 'FRED／原始提供者', history };
+ }
+ // These values were checked against the named government/FRED releases on
+@@ -2086,9 +2086,11 @@ async function buildMacroSnapshot(env={}) {
+     ];
+     const extraRows=resolveIndependentSources(settled[2],extraFallback);
+     const previous=await Promise.all(['macro:v1','macro-market:v7'].map(key=>readRuntimeCache(env,key)));
+-    const rows=mergeVerifiedMacroRows([...indexRows,...fredRows,extraRows[0],extraRows[1],...extraRows[2],extraRows[3]],previous.map(saved=>saved?.payload));
++    let rows=mergeVerifiedMacroRows([...indexRows,...fredRows,extraRows[0],extraRows[1],...extraRows[2],extraRows[3]],previous.map(saved=>saved?.payload));
+     rows.push(live10Y3MSpread(rows));
+-    const payload={checkedAt:new Date().toISOString(),coreCpiImportRevision,rows:rows.map(({history,...row})=>row),...evaluate(rows,internalRows)};
++    const expanded=await readRuntimeCache(env,'macro-expanded:v1');
++    rows=completeIndicatorCatalog([...rows,...(expanded?.fresh?expanded.payload.rows||[]:[])],'macro');
++    const payload={checkedAt:new Date().toISOString(),coreCpiImportRevision,catalogIds:indicatorCatalog('macro'),rows:rows.map(({history,...row})=>row),...evaluate(rows,internalRows)};
+     const derivedSourceRows=[...rows,...internalRows].filter(x=>['SOFR','IORB','CPILFESL','PCEPILFE','IC4WSA','CCSA','US10Y','DFII10','T10YIE'].includes(x.id));
+     payload.sourceHistories=Object.fromEntries(derivedSourceRows.filter(row=>Array.isArray(row.history)).map(row=>[row.id,row.history.slice(-100)]));
+     payload.rateContext=buildReportRateContext(payload);
+@@ -2122,7 +2124,7 @@ async function macroResponse(force=false, env={}, ctx={}) {
+       macroCache={at:Date.now(),ttl,payload:persisted.payload};cached={payload:persisted.payload,fresh:true};
+     }else force=true;
+   }
+-  if(cached?.fresh&&!force)return Response.json(refreshingMacroSnapshot(cached.payload,false),{headers:{'Cache-Control':'private, no-store'}});
++  if(cached?.fresh&&!force)return Response.json(catalogPayload(refreshingMacroSnapshot(cached.payload,false),'macro'),{headers:{'Cache-Control':'private, no-store'}});
+   if(!macroPending)macroPending=buildMacroSnapshot(env).then(async payload=>{
+     const ttl=payload.coverage.usable<3?60000:900000;
+     macroCache={at:Date.now(),ttl,payload};
+@@ -2130,7 +2132,7 @@ async function macroResponse(force=false, env={}, ctx={}) {
+     return payload;
+   }).finally(()=>{macroPending=null});
+   try{ctx.waitUntil?.(macroPending.catch(()=>{}))}catch{}
+-  if(cached?.payload)return Response.json(refreshingMacroSnapshot(cached.payload),{headers:{'Cache-Control':'private, no-store'}});
++  if(cached?.payload)return Response.json(catalogPayload(refreshingMacroSnapshot(cached.payload),'macro'),{headers:{'Cache-Control':'private, no-store'}});
+   return Response.json(pendingMacroPayload(),{headers:{'Cache-Control':'private, no-store'}});
+ }
+ function pendingMacroMarketPayload() {
+@@ -2140,14 +2142,14 @@ function pendingMacroMarketPayload() {
+ }
+ async function macroMarketResponse(env={},ctx={}) {
+   const ttl=5*60*1000;
+-  if(macroMarketCache&&Date.now()-macroMarketCache.at<ttl)return Response.json(refreshingMacroSnapshot(macroMarketCache.payload,false),{headers:{'Cache-Control':'private, no-store'}});
++  if(macroMarketCache&&Date.now()-macroMarketCache.at<ttl)return Response.json(catalogPayload(refreshingMacroSnapshot(macroMarketCache.payload,false),'market'),{headers:{'Cache-Control':'private, no-store'}});
+   let lastGood=macroMarketCache?.payload||null;
+   const persisted=await readRuntimeCache(env,'macro-market:v7');
+-  if(persisted?.payload){lastGood=persisted.payload;macroMarketCache={at:Date.parse(persisted.updatedAt||'')||Date.now(),payload:lastGood};if(persisted.fresh)return Response.json(refreshingMacroSnapshot(lastGood,false),{headers:{'Cache-Control':'private, no-store'}})}
++  if(persisted?.payload){lastGood=persisted.payload;macroMarketCache={at:Date.parse(persisted.updatedAt||'')||Date.now(),payload:lastGood};if(persisted.fresh)return Response.json(catalogPayload(refreshingMacroSnapshot(lastGood,false),'market'),{headers:{'Cache-Control':'private, no-store'}})}
+   const sharedCache=globalThis.caches?.default,sharedKey=new Request('https://macro-cache.invalid/macro-market/v7');
+   if(sharedCache)try{
+     const response=await sharedCache.match(sharedKey);
+-    if(response){const cached=await response.json(),ageMs=Date.now()-Date.parse(cached.checkedAt||'');if(Number.isFinite(ageMs)&&ageMs>=0&&ageMs<ttl&&Array.isArray(cached.rows)&&!cached.pending){macroMarketCache={at:Date.now(),payload:cached};return Response.json(refreshingMacroSnapshot(cached,false),{headers:{'Cache-Control':'private, no-store'}})}}
++    if(response){const cached=await response.json(),ageMs=Date.now()-Date.parse(cached.checkedAt||'');if(Number.isFinite(ageMs)&&ageMs>=0&&ageMs<ttl&&Array.isArray(cached.rows)&&!cached.pending){macroMarketCache={at:Date.now(),payload:cached};return Response.json(catalogPayload(refreshingMacroSnapshot(cached,false),'market'),{headers:{'Cache-Control':'private, no-store'}})}}
+   }catch{}
+   if(!macroMarketPending)macroMarketPending=(async()=>{
+     const extrasPending=Promise.allSettled([
+@@ -2174,8 +2176,8 @@ async function macroMarketResponse(env={},ctx={}) {
+     const rollingVol=(n)=>{const required=n+1,points=yenHistory.slice(-required);if(yen?.historyFetchState==='fetch_failed'||!yenHistory.length)return {value:null,state:'fetch_failed',reason:yen?.reason||'匯率歷史來源沒有回應'};if(yen?.historyFetchState==='source_stale'||yen?.status==='stale')return {value:null,state:'source_stale',reason:yen.reason||'匯率來源觀測已過期'};if(points.length<required)return {value:null,state:'sample_insufficient',reason:`已取回 ${yenHistory.length} 筆；${n} 日波動率需 ${required} 筆交易日資料`};const gap=points.slice(1).find((x,i)=>Date.parse(x.date)-Date.parse(points[i].date)>5*86400000);if(gap)return {value:null,state:'sample_insufficient',reason:`已取回 ${yenHistory.length} 筆，但計算窗口含超過 5 日的觀測缺口，無法視為連續交易日樣本`};const returns=points.slice(1).map((x,i)=>Math.log(x.value/points[i].value)).filter(Number.isFinite);if(returns.length!==n)return {value:null,state:'sample_insufficient',reason:`有效日報酬 ${returns.length}/${n}；樣本不足`};const mean=returns.reduce((a,b)=>a+b,0)/n,variance=returns.reduce((s,x)=>s+(x-mean)**2,0)/(n-1);return {value:Math.sqrt(variance*252)*100,state:'validated',reason:null};};
+     for(const n of [20,60]){const result=rollingVol(n);rows.push({id:`JPY_HV${n}`,name:`日圓匯率歷史波動率（${n} 日）`,group:'曲線／放大器',unit:'% 年化',value:result.value,date:yenHistory.at(-1)?.date||null,derivedFrom:'DEXJPUS',parentDate:yenHistory.at(-1)?.date||null,status:result.value==null?'missing':'ok',validationState:result.state,historyObservations:yenHistory.length,requiredObservations:n+1,reason:result.reason,provider:`${yen?.provider||'FRED／ECB 匯率來源'}；按日對數報酬年化標準差計算`,source:yen?.source||link('DEXJPUS')});}
+     const previous=await readRuntimeCache(env,'macro:v1');
+-    const verified=retainTaiwanComparisonHistory(mergeVerifiedMacroRows(rows,[lastGood,previous?.payload]),[lastGood,previous?.payload]);
+-    return {checkedAt:new Date().toISOString(),rows:verified.map(({history,...row})=>TAIWAN_MARKET_AUDIT_IDS.includes(row.id)?{...row,history}:row),taiwanMarket:summarizeTaiwanMarket(verified)};
++    const verified=completeIndicatorCatalog(retainTaiwanComparisonHistory(mergeVerifiedMacroRows(rows,[lastGood,previous?.payload]),[lastGood,previous?.payload]),'market');
++    return {checkedAt:new Date().toISOString(),catalogIds:indicatorCatalog('market'),rows:verified.map(({history,...row})=>TAIWAN_MARKET_AUDIT_IDS.includes(row.id)?{...row,history}:row),taiwanMarket:summarizeTaiwanMarket(verified)};
+   })().then(async payload=>{
+     macroMarketCache={at:Date.now(),payload};
+     await writeRuntimeCache(env,'macro-market:v7',payload,ttl);
+@@ -2186,7 +2188,7 @@ async function macroMarketResponse(env={},ctx={}) {
+   // hosting edge cancels it. Return the last snapshot or an explicit pending
+   // state while the refresh continues in the background.
+   try{ctx.waitUntil?.(macroMarketPending.catch(()=>{}))}catch{}
+-  return Response.json(lastGood?refreshingMacroSnapshot(lastGood):pendingMacroMarketPayload(),{headers:{'Cache-Control':'private, no-store'}});
++  return Response.json(lastGood?catalogPayload(refreshingMacroSnapshot(lastGood),'market'):catalogPayload(pendingMacroMarketPayload(),'market'),{headers:{'Cache-Control':'private, no-store'}});
+ }
+ async function usIndicesResponse(env={},ctx={}) {
+   const key='us-indices:v1',ttl=15*60*1000;
