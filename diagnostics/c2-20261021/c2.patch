@@ -1,0 +1,290 @@
+diff --git a/build.mjs b/build.mjs
+index f18190b..ac82550 100644
+--- a/build.mjs
++++ b/build.mjs
+@@ -7,6 +7,10 @@ const fixpack=readFileSync(new URL('./worker/fixpack.js',import.meta.url),'utf8'
+ const metals=fixpack.match(/\/\* COHERENT_METALS_START \*\/[\s\S]*?\/\* COHERENT_METALS_END \*\//)[0];
+ if(html.includes('/* COHERENT_METALS_START */'))html=html.replace(/\/\* COHERENT_METALS_START \*\/[\s\S]*?\/\* COHERENT_METALS_END \*\//,()=>metals);else html=html.replace('function mergeMarketRows(',metals+'\nfunction mergeMarketRows(');
+ writeFileSync(new URL('./dist/index.html',import.meta.url),html);
++const valuationDivergence=readFileSync(new URL('./worker/valuation-divergence.js',import.meta.url),'utf8');
++const divergenceBlock='/* VALUATION_DIVERGENCE_START */\n'+valuationDivergence+'\n/* VALUATION_DIVERGENCE_END */';
++if(html.includes('/* VALUATION_DIVERGENCE_START */'))html=html.replace(/\/\* VALUATION_DIVERGENCE_START \*\/[\s\S]*?\/\* VALUATION_DIVERGENCE_END \*\//,()=>divergenceBlock);else html=html.replace('/* FALLBACK_ENGINE_START */',divergenceBlock+'\n/* FALLBACK_ENGINE_START */');
++writeFileSync(new URL('./dist/index.html',import.meta.url),html);
+ const observations = readFileSync(new URL('./worker/observations.js', import.meta.url), 'utf8');
+ const cpiSeed = JSON.parse(readFileSync(new URL('./worker/core-cpi-snapshot.json', import.meta.url), 'utf8'));
+ const relay = readFileSync(new URL('./worker/relay.js', import.meta.url), 'utf8');
+@@ -46,4 +50,4 @@ const officialNewsModule=readFileSync(new URL('./worker/official-news.js',import
+ updateTools.sourceCollectorNode=updateTools.sourceCollectorNode.replace("let newsModule = '__OFFICIAL_NEWS_MODULE__';",`let newsModule = ${JSON.stringify(officialNewsModule)};`);
+ const macro = `${panelCalculations}\n${panelSources}\n${advisoryDecision}\n${readFileSync(new URL('./worker/macro.js', import.meta.url), 'utf8')}`;
+ mkdirSync(new URL('./dist/server/', import.meta.url), { recursive: true });
+-writeFileSync(new URL('./dist/server/index.js', import.meta.url), `const HTML = ${JSON.stringify(html)};\nconst CPI_SEED = ${JSON.stringify(cpiSeed)};\nconst OFFICIAL_UPDATE_TOOLS = ${JSON.stringify(updateTools)};\n${observations}\n${fixpack}\n${observationFreshness}\nconst RELAY_SEED = ${JSON.stringify(relaySeed)};\n${relay}\n${research}\n${macroScoring}\n${dataImport}\n${sourceResearch}\n${reportContext}\n${stockRelay}\n${fallbackRating}\n${gate5bBoundaries}\n${masterEvidence}\n${masterInputs}\n${issuerContext}\n${crossMarketCore}\n${crossMarket}\n${usSectorCore}\n${usSectorSession}\n${tiingoMarket}\n${tiingoStore}\n${usSectors}\n${tiingoSite}\n${marketTimeline}\n${officialNewsModule}\n${macro}`);
++writeFileSync(new URL('./dist/server/index.js', import.meta.url), `const HTML = ${JSON.stringify(html)};\nconst CPI_SEED = ${JSON.stringify(cpiSeed)};\nconst OFFICIAL_UPDATE_TOOLS = ${JSON.stringify(updateTools)};\n${observations}\n${fixpack}\n${observationFreshness}\nconst RELAY_SEED = ${JSON.stringify(relaySeed)};\n${relay}\n${research}\n${macroScoring}\n${dataImport}\n${sourceResearch}\n${reportContext}\n${stockRelay}\n${valuationDivergence}\n${fallbackRating}\n${gate5bBoundaries}\n${masterEvidence}\n${masterInputs}\n${issuerContext}\n${crossMarketCore}\n${crossMarket}\n${usSectorCore}\n${usSectorSession}\n${tiingoMarket}\n${tiingoStore}\n${usSectors}\n${tiingoSite}\n${marketTimeline}\n${officialNewsModule}\n${macro}`);
+diff --git a/dist/index.html b/dist/index.html
+index ea742de..268074c 100644
+--- a/dist/index.html
++++ b/dist/index.html
+@@ -229,6 +229,28 @@
+   </details>
+ </main>
+ <script>
++/* VALUATION_DIVERGENCE_START */
++// C2: source-qualified EPS disagreement, independent of investment scoring.
++function nextFinancialDisclosure(stock,today,records=[]){
++ const y=Number(today.slice(0,4)),q=stock.epsHistory?.quarterly?.at(-1),lastYear=Number(q?.year),lastQuarter=Number(q?.quarter);
++ const deadlines=[{period:(y-1)+' FY',date:y+'-03-31',year:y-1,quarter:4},{period:y+' Q1',date:y+'-05-15',year:y,quarter:1},{period:y+' Q2',date:y+'-08-14',year:y,quarter:2},{period:y+' Q3',date:y+'-11-14',year:y,quarter:3},{period:y+' FY',date:(y+1)+'-03-31',year:y,quarter:4}];
++ const next=deadlines.find(d=>lastYear?d.year*4+d.quarter>lastYear*4+lastQuarter:d.date>=today)||deadlines.at(-1);
++ const announced=records.filter(r=>r.kind==='earnings_schedule'&&r.symbol===stock.id&&r.validation_status==='VERIFIED_SOURCE'&&masterEvidenceHttps(r.source_url)&&masterEvidenceDate(r.source_date)&&r.source_date<=today&&masterEvidencePeriod(r.period)===masterEvidencePeriod(next.period)&&masterEvidenceDate(r.earnings_date)&&r.earnings_date>=today).sort((a,b)=>b.source_date.localeCompare(a.source_date))[0];
++ return announced?{period:next.period,date:announced.earnings_date,basis:'公司已公告',source:announced.source_url,announcedAt:announced.source_date}:{period:next.period,date:next.date,basis:'法定期限',source:'https://mops.twse.com.tw/',overdue:next.date<today,note:'非公司公告日期；採曆年制Q1 5/15、Q2 8/14、Q3 11/14、年報3/31'};
++}
++function evaluateValuationDivergence(stock,consensus,today,records=[]){
++ const year=Number(today.slice(0,4)),cycle=stock.financialQuality?.cycleValuation?.eps,forecast=stock.forecastEps||stock.valuation?.forecastEps,ttm=stock.epsHistory?.ttm??stock.valuation?.ttmEPS,last=stock.epsHistory?.quarterly?.at(-1),c=consensus?.find(r=>r.year===year),source=stock.documentation?.finmind||'https://finmind.github.io/tutor/TaiwanMarket/Fundamental/';
++ const rows=[
++ {id:'historical',label:'歷史常態EPS（跨週期中位數）',value:cycle?.median,source:cycle?.source||stock.epsHistory?.source,sourceUrl:source,period:cycle?cycle.from+'–'+cycle.through+'完整年度':null,date:cycle?cycle.through+'-12-31':null,dateBasis:'資料所屬期末，非發布日',sampleYears:cycle?.observations,analysts:null},
++ {id:'model',label:'今年模型EPS',value:forecast?.year===year&&['estimate','actual'].includes(forecast?.status)?forecast.median:null,source:forecast?.source,sourceUrl:source,period:year+'E',date:stock.price?.date||null,dateBasis:'模型評估基準日',analysts:null,reason:forecast?.year!==year?'非本年度模型':forecast?.reason},
++ {id:'ttm',label:'近四季EPS',value:ttm,source:stock.epsHistory?.source||stock.valuation?.source,sourceUrl:source,period:'最近四季',date:last?.date||null,dateBasis:'財報所屬期末，非發布日',analysts:null},
++ {id:'consensus',label:'當年度有效分析師共識',value:c?.ready?c.eps:null,source:c?.ready?c.rows?.map(r=>r.source).join('、'):null,sourceUrl:c?.ready?c.rows?.map(r=>r.source_url).join('、'):null,period:year+'E',date:c?.asOf||null,dateBasis:'共識原更新日',analysts:c?.ready?c.analysts:null,reason:c?.ready?null:c?.missingReason||'Gate8未判定有效；不採候選值'}
++ ].map(r=>({...r,included:typeof r.value==='number'&&Number.isFinite(r.value)&&r.value>0,reason:typeof r.value==='number'&&Number.isFinite(r.value)&&r.value>0?null:r.reason||(typeof r.value==='number'&&Number.isFinite(r.value)&&r.value<=0?'EPS非正，不參與':'EPS缺值，不參與')}));
++ const usable=rows.filter(r=>r.included),ratio=usable.length>=2?Math.max(...usable.map(r=>r.value))/Math.min(...usable.map(r=>r.value)):null,divergent=ratio!==null&&ratio>2;
++ return {status:divergent?'divergent':usable.length<2?'insufficient':'within_range',divergent,ratio,threshold:2,rows,nextDisclosure:nextFinancialDisclosure(stock,today,records),reason:divergent?'估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 '+ratio.toFixed(2)+' 倍。':usable.length<2?'可用EPS少於2個；不解除風險限制':'可用EPS未超過2倍；沿用原估值核驗',riskBudgetRelaxed:false};
++}
++
++/* VALUATION_DIVERGENCE_END */
+ /* FALLBACK_ENGINE_START */
+ // User-directed fallback policy, separate from the unrecovered original 10D
+ // rubric. Grades are policy risk categories, not an audited 0–100 total.
+@@ -254,10 +276,12 @@ function computeFallbackRating(input) {
+   if(input.vetoStatus!=='clear'){grade=cap(grade,'B');reasons.push('部分否決條件尚未排除：保留風險限制，退避評級最高B。');}
+   if(!input.coreReady||!input.qualityReady){grade=cap(grade,'C');reasons.push('總經／市場或必要財報欄位尚未齊：仍輸出已有資料的風險觀察，評級最高C。');}
+   if(input.timingWeak){const before=grade;grade=order[Math.max(0,order.indexOf(grade)-1)];reasons.push(before===grade?'價格低於 MA20 與 MA60；已是最低級，保留時機風險警訊。':`價格低於 MA20 與 MA60，時機風險下調一級：${before} → ${grade}。`);}
+-  return {available:true,status:'degraded',grade,label:grade==='D'?'風險偏高':grade==='C'?'保守觀察':grade==='B'?'附限制觀察':grade==='B+'?'估值具條件吸引力':'條件較有利',score:null,
++  const result={available:true,status:'degraded',grade,label:grade==='D'?'風險偏高':grade==='C'?'保守觀察':grade==='B'?'附限制觀察':grade==='B+'?'估值具條件吸引力':'條件較有利',score:null,
+     policyVersion:'user-fallback-210',policyLabel:'自訂退避風險評級',isOriginalMasterScore:false,valuationGrade,forecastFactor,forecastReferenceWeight:input.currentConsensusReady?forecastFactor:0,consensusUsage:'reference_only',forecastCoefficientApplied:false,
+     reasons,adjustments,riskPermission:input.vetoStatus==='clear'&&input.coreReady&&input.qualityReady&&!input.qualityWarning?'subject_to_macro_budget':'not_cleared',
+     basis:'先按現價與自身三情境對照分級，再套用資料上限、品質與時機扣減；不是阮慕驊原始10D總分。'};
++  if(input.valuationDivergence?.divergent)return {...result,status:'valuation_divergence',grade:null,label:'未評（估值分歧）',valuationGrade:null,valuationDivergence:input.valuationDivergence,reasons:[input.valuationDivergence.reason,...(input.qualityWarning?['現金流／財報品質警訊保留，未因估值分歧解除。']:[]),...(input.timingWeak?['價格低於MA20與MA60，時機風險保留。']:[]),...(input.vetoStatus!=='clear'?['未知否決條件仍限制風險預算。']:[]),...(!input.coreReady||!input.qualityReady?['必要資料未齊的限制仍保留。']:[])],retainedRiskRestrictions:{riskPermission:result.riskPermission,qualityWarning:!!input.qualityWarning,timingWeak:!!input.timingWeak,vetoStatus:input.vetoStatus},basis:'估值分歧不產出貴或便宜等級；原風險限制與預算不放寬。'};
++  return result;
+ }
+ 
+ /* FALLBACK_ENGINE_END */
+@@ -927,6 +951,8 @@ function renderAdvisoryPanels(model){
+ }
+ function renderAdvisoryDecision(host,decision){
+  const box=document.createElement('section');box.className='advisory-decision';
++ const divergence=decision.valuationDivergence;
++ if(divergence?.divergent){const intro=document.createElement('p');intro.textContent=divergence.reason;box.append(intro);for(const r of divergence.rows){const row=document.createElement('p');row.textContent=r.label+'：'+(r.included?r.value.toFixed(2):'不參與（'+r.reason+'）')+'｜'+(r.date||'日期缺值')+'（'+r.dateBasis+'）｜人數：'+(r.analysts??'不適用')+'｜來源：'+(r.source||'缺值')+' '+(r.sourceUrl||'');box.append(row);}const next=document.createElement('p');next.textContent='下次財報 '+divergence.nextDisclosure.period+' '+divergence.nextDisclosure.date+'（'+divergence.nextDisclosure.basis+'）；風險限制維持。';box.append(next);}
+  const title=document.createElement('b');title.textContent='綜合觀察｜草案未啟用';const text=document.createElement('p');text.textContent=decision.conclusion;box.append(title,text);
+  const confidence=document.createElement('p');confidence.className='tiny';confidence.textContent=`核對信心：${decision.confidence.label}（所列觀測${decision.confidence.coverage}/${decision.confidence.total}，不是報酬勝率）。`;box.append(confidence);
+  const reasons=document.createElement('ul');for(const reason of decision.reasons||[]){const line=document.createElement('li');line.textContent=reason;reasons.append(line);}box.append(reasons);
+@@ -981,20 +1007,20 @@ function renderReportContext(model){
+ function renderAdaptiveRating(rating,model=null,stockData=null){
+  const report=document.getElementById('qualifiedReport');if(!report||!rating.available)return;report.hidden=false;
+   document.getElementById('qualifiedTitle').textContent=rating.status==='vetoed'?'否決結果':'退避版｜歷史估值與風險';
+- document.getElementById('qualifiedStatus').textContent=rating.status==='vetoed'?'否決優先／剔除':'評級已產出／採替代規則';
+- document.getElementById('qualifiedGrade').textContent=`${rating.grade}｜${rating.label}`;
++ document.getElementById('qualifiedStatus').textContent=rating.status==='valuation_divergence'?'未評（估值分歧）':rating.status==='vetoed'?'否決優先／剔除':'評級已產出／採替代規則';
++ document.getElementById('qualifiedGrade').textContent=`${rating.grade??'未評'}｜${rating.label}`;
+   document.getElementById('qualifiedPolicyNotice').textContent=rating.status==='vetoed'?'已核實否決優先，剔除；來源保留。':'此為自訂退避分級；阮慕驊原始10D／三層評分仍待核，尚未產出原始模型總分。';
+   const data=stockData||(model?.symbol?liveStockData[model.symbol]:null),primary=model?.primaryValuation||(data?activeStockValuation(data):null),base=primary?.scenarios?.find(row=>row.name==='Base')||primary?.scenarios?.[1],cycle=data?.financialQuality?.cycleValuation,epsBasis=primary?.epsBasis||cycle?.eps;
+   const historical=primary?.basisType==='cross_cycle'&&base?.eps>0&&base?.pe>0;
+-  document.getElementById('qualifiedBasis').textContent=historical?`本次分級主情境：${epsBasis?.from??'起年待核'}–${epsBasis?.through??'迄年待核'} 完整年度 EPS 中位數 ${fmt(base.eps,2)} 元 × 歷史 P/E 中位數 ${fmt(base.pe,2)}x = Base ${fmt(base.value,2)} 元。這是歷史自身參考；新獲利水準的持續性仍須核對。`:'本次分級使用已列示的個股估值情境；原始模型總分仍待核。';
++  document.getElementById('qualifiedBasis').textContent=rating.valuationDivergence?.divergent?rating.valuationDivergence.reason:historical?`本次分級主情境：${epsBasis?.from??'起年待核'}–${epsBasis?.through??'迄年待核'} 完整年度 EPS 中位數 ${fmt(base.eps,2)} 元 × 歷史 P/E 中位數 ${fmt(base.pe,2)}x = Base ${fmt(base.value,2)} 元。這是歷史自身參考；新獲利水準的持續性仍須核對。`:'本次分級使用已列示的個股估值情境；原始模型總分仍待核。';
+  document.getElementById('qualifiedConclusion').textContent=rating.reasons.join(' ');
+  const current=model?.qualifiedOutput?.research?.consensus?.primary;
+   document.getElementById('qualifiedConsensus').textContent=current?.status==='verified'?`${current.year}E 共識 EPS ${fmt(current.eps,2)} 元，${current.analysts} 位分析師，日期 ${current.asOf}；Forward P/E ${fmt(current.forwardPe,2)}x。${historical?`與主情境 EPS ${fmt(base.eps,2)} 元為不同口徑，相差 ${fmt(current.eps/base.eps,2)} 倍。`:''}共識只作旁列參考，未納入本次分級；${fmt(rating.forecastFactor,2)} 是保留的政策係數，尚未套用為加權分數。`:`採用已讀取的個股估值；未核驗共識不填數值。政策係數 ${fmt(rating.forecastFactor,2)} 不代表準確率或已完成加權評分。`;
+  const limits=document.getElementById('qualifiedLimits'),details=document.getElementById('qualifiedLimitDetails');limits.replaceChildren();if(details){details.dataset.loaded='';mountLazyDetails(details,()=>appendBoundedRows(limits,[rating.basis,...rating.adjustments.map(row=>`Gate ${row.gate}｜${row.detail}`),rating.riskPermission==='vetoed'?'已核實否決，剔除；其他条件不能覆蓋。':rating.riskPermission==='not_cleared'?'已核實警訊與未知否決條件仍限制風險預算；產出評級不代表所有風控已解除。':'依總經風險預算與部位規則使用。'],text=>{const row=document.createElement('p');row.textContent=text;return row}))}
+- const status=document.getElementById('overallReportStatus');if(status){status.textContent=`退避評級 ${rating.grade}｜${rating.label}`;status.className='badge watch'}
+- const overall=document.getElementById('overallGate');if(overall){overall.textContent=model?.adaptiveRating===rating?model.summary:`個股退避評級 ${rating.grade}｜${rating.label}；已採用現有資料，後台資料更新獨立進行。`;overall.dataset.outputStatus=rating.status==='vetoed'?'vetoed':'graded';}
++ const status=document.getElementById('overallReportStatus');if(status){status.textContent=`退避評級 ${rating.grade??'未評'}｜${rating.label}`;status.className='badge watch'}
++ const overall=document.getElementById('overallGate');if(overall){overall.textContent=model?.adaptiveRating===rating?model.summary:`個股退避評級 ${rating.grade??'未評'}｜${rating.label}；已採用現有資料，後台資料更新獨立進行。`;overall.dataset.outputStatus=rating.status==='vetoed'?'vetoed':rating.status==='valuation_divergence'?'not_rated':'graded';}
+  document.getElementById('overallReportSummary').textContent=rating.reasons.join(' ');
+- document.getElementById('overallReportNext').textContent=rating.status==='vetoed'?'已核實否決，剔除；補資料與替代估值不能覆蓋紅線。':`退避風險評級 ${rating.grade} 已產出；${rating.riskPermission==='not_cleared'?'已核實警訊與未知否決條件仍限制風險預算。':'依總經風險預算使用。'}來源更新後可重新核對，研究缺口不阻止本次輸出。`;
++ document.getElementById('overallReportNext').textContent=rating.status==='vetoed'?'已核實否決，剔除；補資料與替代估值不能覆蓋紅線。':`退避風險評級 ${rating.grade??'未評'} 已產出；${rating.riskPermission==='not_cleared'?'已核實警訊與未知否決條件仍限制風險預算。':'依總經風險預算使用。'}來源更新後可重新核對，研究缺口不阻止本次輸出。`;
+  renderReportContext(model);
+ }
+ function renderLocalFallback(symbol){
+@@ -1003,7 +1029,7 @@ function renderLocalFallback(symbol){
+  if(['evaluated','conditional'].includes(model?.status))return;
+  const fresh=!data.snapshotStale&&Number.isFinite(Date.parse(data.checkedAt))&&Date.now()-Date.parse(data.checkedAt)<=36*3600000&&Date.parse(data.checkedAt)<=Date.now()+60000;
+  const consensus=model?.evidenceSummary?.consensus||[],qualityReady=[fq.roic?.value,fq.cfoToNetIncome?.value,fq.freeCashFlow?.value,fq.workingCapitalQuality?.dsoDays,fq.workingCapitalQuality?.dioDays].every(Number.isFinite);
+- const rating=computeFallbackRating({stockFresh:fresh,price:data.price?.value,priceDate:data.price?.date,scenarios:primary?.scenarios,history:fq.cycleValuation?.pe||data.valuation?.peBand,
++ const rating=computeFallbackRating({valuationDivergence:evaluateValuationDivergence(data,consensus,taiwanToday()),stockFresh:fresh,price:data.price?.value,priceDate:data.price?.date,scenarios:primary?.scenarios,history:fq.cycleValuation?.pe||data.valuation?.peBand,
+    vetoStatus:model?.veto?.status==='triggered'?'triggered':'pending',scoringReady:model?.scoring?.ready===true,guidanceReady:model?.evidenceSummary?.guidance?.ready===true,surprisesReady:model?.evidenceSummary?.surprises?.ready===true,
+    peerReady:(model?.evidenceSummary?.peers?.length||0)>=3,currentConsensusReady:consensus[0]?.ready===true,nextConsensusReady:consensus[1]?.ready===true,
+    qualityWarning:fq.cfoToNetIncome?.value<0||fq.freeCashFlow?.value<0||Boolean(fq.workingCapitalWarnings?.length)||Boolean(model?.issues?.verifiedRisks?.includes(4)),qualityReady,
+diff --git a/package.json b/package.json
+index 5bb6885..139f5fa 100644
+--- a/package.json
++++ b/package.json
+@@ -5,7 +5,7 @@
+     "build": "node build.mjs",
+     "test:master-validation": "node tests/master-model-validation.test.mjs",
+     "db:generate": "drizzle-kit generate",
+-    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack",
++    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack && npm run test:c2",
+     "test:remediation": "node tests/master-remediation.test.mjs",
+     "test:qualified-output": "node tests/qualified-output.test.mjs",
+     "test:client-diagnostics": "node tests/client-diagnostics.test.mjs",
+@@ -17,7 +17,8 @@
+     "test:market-timeline": "node tests/market-timeline.test.mjs",
+     "test:legacy": "node tests/runtime-cache.test.mjs && node tests/master-gate-evidence.test.mjs && node tests/master-gate-pipeline.test.mjs && node tests/research-package-cloud.test.mjs && node tests/data-package.test.mjs && node tests/guidance-report.test.mjs && node tests/automatic-research.test.mjs && node tests/site-automation.test.mjs && node tests/site-module-contract.test.mjs && node tests/valuation-render.test.mjs && node tests/macro-market-state.test.mjs && node tests/core-cpi-ingestion.test.mjs && node tests/core-cpi-collector.test.mjs && node tests/cnn-fear-greed.test.mjs && node tests/financial-quality.test.mjs && node tests/relay-freshness.test.mjs && node tests/observation-freshness.test.mjs && node tests/monthly-release-news.test.mjs && node tests/macro-source-isolation.test.mjs && node tests/financial-analysis.test.mjs && node tests/official-collector.test.mjs && node tests/official-data-import.test.mjs && node tests/source-research.test.mjs && node tests/dashboard-interactions.test.mjs && node tests/master-model-validation.test.mjs && node tests/master-remediation.test.mjs && node tests/master-input-wiring.test.mjs && node tests/qualified-output.test.mjs && node tests/client-diagnostics.test.mjs && node tests/fallback-rating.test.mjs && npm run test:cross-market && npm run test:report-context && npm run test:stock-relay && npm run test:us-sector-site && npm run test:market-timeline && node tests/phison-panel.test.mjs",
+     "test:advisory-integration": "node --test tests/tiingo-market.test.mjs tests/tiingo-site.test.mjs tests/panel-calculations.test.mjs tests/panel-sources.test.mjs tests/panel-display.test.mjs tests/advisory-decision.test.mjs && node tests/build-reproducibility.test.mjs",
+-    "test:fixpack": "node --test tests/fixpack.test.mjs"
++    "test:fixpack": "node --test tests/fixpack.test.mjs",
++    "test:c2": "node --test tests/valuation-divergence.test.mjs"
+   },
+   "devDependencies": {
+     "drizzle-kit": "0.31.10",
+diff --git a/tests/valuation-divergence.test.mjs b/tests/valuation-divergence.test.mjs
+new file mode 100644
+index 0000000..b04049e
+--- /dev/null
++++ b/tests/valuation-divergence.test.mjs
+@@ -0,0 +1,10 @@
++import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
++const src=fs.readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');const api=await import('data:text/javascript;base64,'+Buffer.from(src+'\nexport {evaluateValuationDivergence,nextFinancialDisclosure,computeFallbackRating};').toString('base64'));
++const today='2026-10-21';
++const make=()=>({id:'8299',price:{value:1845,date:'2026-10-20'},financialQuality:{cycleValuation:{eps:{median:39,from:2019,through:2025,source:'official',observations:7}}},forecastEps:{year:2026,status:'estimate',median:206.883,source:'model'},epsHistory:{ttm:220.2,source:'financial statements',quarterly:[{date:'2026-06-30',year:2026,quarter:2}]} });
++const c=[{year:2026,ready:true,eps:416.97,analysts:11,asOf:'2026-10-13',rows:[{source:'FactSet',source_url:'https://gfemobile.cnyes.com/news/id/6629082'}]}];
++const ratingInput={stockFresh:true,price:1845,priceDate:'2026-10-20',scenarios:[{value:223},{value:594},{value:1575}],vetoStatus:'pending',scoringReady:false,guidanceReady:false,surprisesReady:false,peerReady:false,currentConsensusReady:true,nextConsensusReady:false,qualityWarning:true,qualityReady:true,coreReady:false,timingWeak:true};
++test('Phison four EPS bases yield 10.69x; next report Q3 statutory date, not fabricated announcement',()=>{const d=api.evaluateValuationDivergence(make(),c,today);assert.equal(d.divergent,true);assert.ok(Math.abs(d.ratio-416.97/39)<1e-10);assert.deepEqual(d.rows.map(r=>r.value),[39,206.883,220.2,416.97]);assert.equal(d.rows[3].analysts,11);assert.equal(d.nextDisclosure.period,'2026 Q3');assert.equal(d.nextDisclosure.date,'2026-11-14');assert.equal(d.nextDisclosure.basis,'法定期限');});
++test('unqualified consensus never participates; exactly 2x does not trigger; nonpositive and missing excluded',()=>{const s=make();s.financialQuality.cycleValuation.eps.median=100;s.forecastEps.median=200;s.epsHistory.ttm=-1;let d=api.evaluateValuationDivergence(s,[{...c[0],ready:false,eps:99999}],today);assert.equal(d.divergent,false);assert.equal(d.ratio,2);assert.equal(d.rows[3].included,false);assert.equal(d.rows[2].included,false);s.forecastEps.median=null;d=api.evaluateValuationDivergence(s,[],today);assert.equal(d.status,'insufficient');assert.equal(d.ratio,null);assert.match(d.rows[1].reason,/缺值/);});
++test('unrated divergence preserves risk restrictions; actual VETO remains superior',()=>{const d=api.evaluateValuationDivergence(make(),c,today),before=api.computeFallbackRating(ratingInput),a=api.computeFallbackRating({...ratingInput,valuationDivergence:d});assert.equal(a.grade,null);assert.equal(a.label,'未評（估值分歧）');assert.equal(a.valuationGrade,null);assert.equal(a.riskPermission,before.riskPermission);assert.ok(a.reasons.some(r=>r.includes('現金流')));assert.ok(a.reasons.some(r=>r.includes('MA20')));assert.ok(a.reasons.some(r=>r.includes('未知否決')));assert.equal(api.computeFallbackRating({...ratingInput,vetoStatus:'triggered',valuationDivergence:d}).grade,'VETO');});
++test('verified company schedule supersedes statutory fallback; new financial quarter automatically advances deadline and recalculates',()=>{const s=make(),record={kind:'earnings_schedule',symbol:'8299',validation_status:'VERIFIED_SOURCE',source_url:'https://www.phison.com/ir.pdf',source_date:'2026-10-20',period:'2026Q3',earnings_date:'2026-11-03'};assert.equal(api.evaluateValuationDivergence(s,c,today,[record]).nextDisclosure.date,'2026-11-03');record.validation_status='UNKNOWN';assert.equal(api.evaluateValuationDivergence(s,c,today,[record]).nextDisclosure.basis,'法定期限');s.epsHistory.quarterly.push({date:'2026-09-30',year:2026,quarter:3});s.epsHistory.ttm=40;s.forecastEps.median=40;s.financialQuality.cycleValuation.eps.median=40;const d=api.evaluateValuationDivergence(s,[],today);assert.equal(d.divergent,false);assert.equal(d.nextDisclosure.date,'2027-03-31');});
+diff --git a/worker/advisory-decision.mjs b/worker/advisory-decision.mjs
+index 5319a80..fa0ce57 100644
+--- a/worker/advisory-decision.mjs
++++ b/worker/advisory-decision.mjs
+@@ -54,12 +54,13 @@ export function buildAdvisoryDecision({stock,panels,sectorContext,macroRows=[],m
+  const summarize=factors=>{const known=factors.filter(r=>finite(r.draftPoints)),complete=known.length===factors.length;return {knownSubtotal:known.reduce((s,r)=>s+r.draftPoints,0),total:complete?known.reduce((s,r)=>s+r.draftPoints,0):null,known:known.length,required:factors.length,complete};};
+  const globalSummary=summarize(globalFactors),stockSummary=summarize(stockFactors),fq=stock.financialQuality||{},cashRisk=fq.cfoToNetIncome?.value<0||fq.freeCashFlow?.value<0;
+  const triggered=veto?.status==='triggered';
+- const conclusion=triggered?'既有否決已觸發，保留剔除結論。':cashRisk?'維持保守觀察，先追蹤獲利轉成現金的能力。':existingRating?.available?`沿用既有${existingRating.grade}級觀察，補充因子尚未改級。`:'資料尚未足夠，先保留觀察，暫不產出新增評級。';
++ const conclusion=triggered?'既有否決已觸發，保留剔除結論。':existingRating?.status==='valuation_divergence'?existingRating.valuationDivergence.reason:cashRisk?'維持保守觀察，先追蹤獲利轉成現金的能力。':existingRating?.available?`沿用既有${existingRating.grade}級觀察，補充因子尚未改級。`:'資料尚未足夠，先保留觀察，暫不產出新增評級。';
+  const reasons=[];
++ if(existingRating?.valuationDivergence?.divergent)reasons.push(existingRating.valuationDivergence.reason);
+  if(cashRisk)reasons.push(`CFO／淨利 ${finite(fq.cfoToNetIncome?.value)?fq.cfoToNetIncome.value.toFixed(2):'缺值'}倍；FCF ${finite(fq.freeCashFlow?.value)?(fq.freeCashFlow.value/1e8).toFixed(2):'缺值'}億元；此為已核算警訊。`);
+- if(existingRating?.available)reasons.push(`既有自訂退避評級 ${existingRating.grade}；原始Gate限制與未知否決條件仍保留。`);
++ if(existingRating?.available&&existingRating.status!=='valuation_divergence')reasons.push(`既有自訂退避評級 ${existingRating.grade}；原始Gate限制與未知否決條件仍保留。`);
+  reasons.push(t.status==='ok'?`四條均線觀測強弱 ${t.score>=0?'+':''}${t.score}（範圍 −4～+4），屬草案參考。`:`均線完整性不足：${t.reason||'待補'}。`);
+  const gaps=[...globalFactors,...stockFactors].filter(f=>f.draftPoints===null).map(f=>({id:f.id,label:f.label,reason:f.reason||'DATA_OR_POLICY_PENDING'}));
+  const dataChecks=[t.status==='ok',r.status==='ok',e.status==='ok',l.status==='ok',pb.status==='ok',panels.industryMapping.status==='ok',axis.status==='ok',sectorContext?.status==='OK',freshness.stockFresh===true];
+- return {version:'advisory-decision-draft-v1',approved:false,activeScoreContribution:0,asOf,conclusion,confidence:{label:dataChecks.every(Boolean)?'所列觀測已齊，策略未校準':'受資料缺口限制',coverage:dataChecks.filter(Boolean).length,total:dataChecks.length,isReturnProbability:false},reasons:reasons.slice(0,3),changeConditions:['最新季度現金流與財報警訊依實際財報重新核算。','補齊原Gate可追溯來源；草案門檻完成回測及擁有者核准後另行整合。','行情、官方產業分類與來源時效更新後重新計算，未知不視為安全。'],discipline:'均線變化已列強弱；分批比例由投資人自行決定，未新增停損規則。',globalFactors,stockFactors,globalSummary,stockSummary,holding:previewHoldingRange({score:globalSummary.total}),gold:{informationalOnly:true,activeContribution:0,zeroAxis:panels.goldZeroAxis},sentiment:{status:'partial',vix:validRow(get('VIXCLS'),asOf)?get('VIXCLS').value:null,gaps:['VIX極高門檻待回測','VIX3M、NAAIM、Cboe股票Put/Call未有已核對輸入','FINRA月度融資轉折、全市場60日線比例、估計融資維持率須獨立來源與門檻']},gaps,originalGateWarnings:gates.filter(g=>['warning','partial','blocked','needs_user_records'].includes(g.status)).map(g=>({id:g.id,status:g.status})),appliedToRating:false,appliedToRiskBudget:false};
++ return {version:'advisory-decision-draft-v1',approved:false,activeScoreContribution:0,asOf,conclusion,valuationDivergence:existingRating?.valuationDivergence||null,confidence:{label:dataChecks.every(Boolean)?'所列觀測已齊，策略未校準':'受資料缺口限制',coverage:dataChecks.filter(Boolean).length,total:dataChecks.length,isReturnProbability:false},reasons:reasons.slice(0,3),changeConditions:['最新季度現金流與財報警訊依實際財報重新核算。','補齊原Gate可追溯來源；草案門檻完成回測及擁有者核准後另行整合。','行情、官方產業分類與來源時效更新後重新計算，未知不視為安全。'],discipline:'均線變化已列強弱；分批比例由投資人自行決定，未新增停損規則。',globalFactors,stockFactors,globalSummary,stockSummary,holding:previewHoldingRange({score:globalSummary.total}),gold:{informationalOnly:true,activeContribution:0,zeroAxis:panels.goldZeroAxis},sentiment:{status:'partial',vix:validRow(get('VIXCLS'),asOf)?get('VIXCLS').value:null,gaps:['VIX極高門檻待回測','VIX3M、NAAIM、Cboe股票Put/Call未有已核對輸入','FINRA月度融資轉折、全市場60日線比例、估計融資維持率須獨立來源與門檻']},gaps,originalGateWarnings:gates.filter(g=>['warning','partial','blocked','needs_user_records'].includes(g.status)).map(g=>({id:g.id,status:g.status})),appliedToRating:false,appliedToRiskBudget:false};
+ }
+diff --git a/worker/data-import.js b/worker/data-import.js
+index 982b9e2..8ef337e 100644
+--- a/worker/data-import.js
++++ b/worker/data-import.js
+@@ -113,8 +113,9 @@ async function officialDataImport(request, env) {
+     for(const item of input.companies || []) {
+       if(!/^\d{4}$/.test(item.symbol)||!Array.isArray(item.records)||item.records.length>200)throw Error('invalid_company_records');
+       for(const row of item.records) {
+-        if(!row.id||!officialCompanyUrl(row.source_url,row.kind)||(row.source_date!==null&&!officialImportDate(row.source_date))||(row.source_date&&row.source_date>taiwanToday)||!['quarterly_result','annual_result','management_guidance','quarterly_consensus','qualitative_outlook','governance','financial_reconciliation','industry_report','peer_comparison','consensus_estimate','veto_inputs','master_score_rules','master_dimension_score','master_tier_score'].includes(row.kind))throw Error('invalid_company_evidence');
++        if(!row.id||!officialCompanyUrl(row.source_url,row.kind)||(row.source_date!==null&&!officialImportDate(row.source_date))||(row.source_date&&row.source_date>taiwanToday)||!['quarterly_result','annual_result','earnings_schedule','management_guidance','quarterly_consensus','qualitative_outlook','governance','financial_reconciliation','industry_report','peer_comparison','consensus_estimate','veto_inputs','master_score_rules','master_dimension_score','master_tier_score'].includes(row.kind))throw Error('invalid_company_evidence');
+         if(row.symbol&&row.symbol!==item.symbol)throw Error('company_symbol_mismatch');
++        if(row.kind==='earnings_schedule'&&(row.symbol!==item.symbol||row.validation_status!=='VERIFIED_SOURCE'||!masterEvidencePeriod(row.period)||!officialImportDate(row.earnings_date)||!officialImportDate(row.source_date)||row.earnings_date<row.source_date))throw Error('invalid_earnings_schedule');
+         if(row.kind==='quarterly_consensus'&&(row.symbol!==item.symbol||row.validation_status!=='VERIFIED_SOURCE'||!officialImportDate(row.source_date)||!/^\d{4}\s?Q[1-4]$/.test(row.period||'')||row.currency!=='TWD'||row.unit!=='TWD per share'||!String(row.accounting_basis||'').trim()||!Number.isFinite(row.consensus_eps)||row.consensus_eps<=0||!Number.isFinite(Date.parse(row.consensus_captured_at||''))))throw Error('invalid_quarterly_consensus');
+         if(row.kind==='peer_comparison'&&row.production_eligible===true&&(row.symbol!==item.symbol||row.validation_status!=='VERIFIED_SOURCE'||!officialImportDate(row.source_date)||row.direct_peer!==true||!/^\d{4}$/.test(row.peer_symbol||'')||row.peer_symbol===item.symbol||!String(row.relationship_basis||'').trim()))throw Error('invalid_direct_peer');
+         if(row.kind==='consensus_estimate'&&(row.symbol!==item.symbol||row.provider!=='FactSet'||row.currency!=='TWD'||row.validation_status!=='VERIFIED_SOURCE'||!officialImportDate(row.source_date)||!Number.isInteger(row.year)||row.year<Number(today.slice(0,4))||row.year>Number(today.slice(0,4))+2||![row.eps_low,row.eps_mid,row.eps_high].every(Number.isFinite)||row.eps_low<=0||row.eps_low>row.eps_mid||row.eps_mid>row.eps_high||(row.analysts_count!==null&&(!Number.isInteger(row.analysts_count)||row.analysts_count<1))))throw Error('invalid_consensus_evidence');
+diff --git a/worker/fallback-rating.js b/worker/fallback-rating.js
+index 7ba29fd..c4acc78 100644
+--- a/worker/fallback-rating.js
++++ b/worker/fallback-rating.js
+@@ -22,8 +22,10 @@ function computeFallbackRating(input) {
+   if(input.vetoStatus!=='clear'){grade=cap(grade,'B');reasons.push('部分否決條件尚未排除：保留風險限制，退避評級最高B。');}
+   if(!input.coreReady||!input.qualityReady){grade=cap(grade,'C');reasons.push('總經／市場或必要財報欄位尚未齊：仍輸出已有資料的風險觀察，評級最高C。');}
+   if(input.timingWeak){const before=grade;grade=order[Math.max(0,order.indexOf(grade)-1)];reasons.push(before===grade?'價格低於 MA20 與 MA60；已是最低級，保留時機風險警訊。':`價格低於 MA20 與 MA60，時機風險下調一級：${before} → ${grade}。`);}
+-  return {available:true,status:'degraded',grade,label:grade==='D'?'風險偏高':grade==='C'?'保守觀察':grade==='B'?'附限制觀察':grade==='B+'?'估值具條件吸引力':'條件較有利',score:null,
++  const result={available:true,status:'degraded',grade,label:grade==='D'?'風險偏高':grade==='C'?'保守觀察':grade==='B'?'附限制觀察':grade==='B+'?'估值具條件吸引力':'條件較有利',score:null,
+     policyVersion:'user-fallback-210',policyLabel:'自訂退避風險評級',isOriginalMasterScore:false,valuationGrade,forecastFactor,forecastReferenceWeight:input.currentConsensusReady?forecastFactor:0,consensusUsage:'reference_only',forecastCoefficientApplied:false,
+     reasons,adjustments,riskPermission:input.vetoStatus==='clear'&&input.coreReady&&input.qualityReady&&!input.qualityWarning?'subject_to_macro_budget':'not_cleared',
+     basis:'先按現價與自身三情境對照分級，再套用資料上限、品質與時機扣減；不是阮慕驊原始10D總分。'};
++  if(input.valuationDivergence?.divergent)return {...result,status:'valuation_divergence',grade:null,label:'未評（估值分歧）',valuationGrade:null,valuationDivergence:input.valuationDivergence,reasons:[input.valuationDivergence.reason,...(input.qualityWarning?['現金流／財報品質警訊保留，未因估值分歧解除。']:[]),...(input.timingWeak?['價格低於MA20與MA60，時機風險保留。']:[]),...(input.vetoStatus!=='clear'?['未知否決條件仍限制風險預算。']:[]),...(!input.coreReady||!input.qualityReady?['必要資料未齊的限制仍保留。']:[])],retainedRiskRestrictions:{riskPermission:result.riskPermission,qualityWarning:!!input.qualityWarning,timingWeak:!!input.timingWeak,vetoStatus:input.vetoStatus},basis:'估值分歧不產出貴或便宜等級；原風險限制與預算不放寬。'};
++  return result;
+ }
+diff --git a/worker/macro.js b/worker/macro.js
+index b871ff2..b2ad75e 100644
+--- a/worker/macro.js
++++ b/worker/macro.js
+@@ -792,7 +792,8 @@ function evaluateMasterModel(stock, macro, market, freshness = {}, gateEvidence
+   const missingGates=gates.filter(gate=>['partial','stale'].includes(gate.dataState)),riskGates=gates.filter(gate=>gate.status==='warning'),applicabilityGates=gates.filter(gate=>gate.dataState==='not_applicable');
+   const vetoGates=gates.filter(gate=>gate.status==='veto');
+   const qualifiedOutput=masterQualifiedOutput({gates,stock,primaryValuation,veto,scoring,guidance,surprises,consensus,peers,tenDimensionChecks});
+-  const adaptiveRating=computeFallbackRating({stockFresh:freshness.stockFresh,price:stock.price?.value,priceDate:stock.price?.date,scenarios:primaryValuation?.scenarios,
++  const valuationDivergence=evaluateValuationDivergence(stock,consensus,today,companyRecords);
++  const adaptiveRating=computeFallbackRating({valuationDivergence,stockFresh:freshness.stockFresh,price:stock.price?.value,priceDate:stock.price?.date,scenarios:primaryValuation?.scenarios,
+     history:fq.cycleValuation?.pe||stock.valuation?.peBand,vetoStatus:veto.status,scoringReady:scoring.ready,guidanceReady:guidance.ready,surprisesReady:surprises.ready,
+     peerReady:peers.length>=3,currentConsensusReady:consensus[0].ready,nextConsensusReady:consensus[1].ready,qualityWarning:qualityRisk||legalRisks.length>0,qualityReady,
+     coreReady:[1,2,3,7,9,10].every(id=>{const row=gates.find(x=>x.id===id);return row.status==='evaluated'||id===9&&row.status==='conditional'&&!row.blocksOverall}),
+@@ -801,7 +802,7 @@ function evaluateMasterModel(stock, macro, market, freshness = {}, gateEvidence
+   const auditStatus=vetoGates.length?'vetoed':blocked.length?'blocked':conditionalGates.length?'conditional':'evaluated';
+   gates.find(gate=>gate.id===5).sampleState=qualifiedOutput.research.guidance.status==='sufficient'&&qualifiedOutput.research.surprises.status==='sufficient'?'sufficient':'insufficient_sample';
+   const gateNames=list=>list.map(gate=>`Gate ${gate.id}`).join('、');
+-  const summary=(vetoGates.length?'已觸發否決，剔除／總分0。':blocked.length&&adaptiveRating.available?`退避風險評級 ${adaptiveRating.grade}｜${adaptiveRating.label}。${adaptiveRating.adjustments.length?`已採替代規則：${adaptiveRating.adjustments.map(x=>`Gate ${x.gate}`).join('、')}。`:''}`:blocked.length?'必要行情或估值仍缺值；已取得資料保留顯示。':'所有必要 Gate 均完成核驗。')+(riskGates.length?`已核實警訊：${gateNames(riskGates)}。`:'')+(veto.status==='pending'?'未知否決條件保留風險限制。':'')+(conditionalGates.length?'替代估值已接軌：'+gateNames(conditionalGates)+'。':'');
++  const summary=(vetoGates.length?'已觸發否決，剔除／總分0。':adaptiveRating.status==='valuation_divergence'?valuationDivergence.reason:blocked.length&&adaptiveRating.available?`退避風險評級 ${adaptiveRating.grade??'未評'}｜${adaptiveRating.label}。${adaptiveRating.adjustments.length?`已採替代規則：${adaptiveRating.adjustments.map(x=>`Gate ${x.gate}`).join('、')}。`:''}`:blocked.length?'必要行情或估值仍缺值；已取得資料保留顯示。':'所有必要 Gate 均完成核驗。')+(riskGates.length?`已核實警訊：${gateNames(riskGates)}。`:'')+(veto.status==='pending'?'未知否決條件保留風險限制。':'')+(conditionalGates.length?'替代估值已接軌：'+gateNames(conditionalGates)+'。':'');
+   const revenue = stock?.revenue, roic = fq.roic, normalizedRoic = fq.normalizedRoic, fcf = fq.freeCashFlow, wc = fq.workingCapitalQuality;
+   const scenarioValues = primaryValuation?.scenarios || [], baseScenario = scenarioValues.find(x => x.name === 'Base') || scenarioValues[1];
+   const upside = baseScenario && price?.value > 0 ? (baseScenario.value / price.value - 1) * 100 : null;
+@@ -811,7 +812,7 @@ function evaluateMasterModel(stock, macro, market, freshness = {}, gateEvidence
+   if (freshness.stockFresh && fcf?.value < 0) reportRisks.unshift(`自由現金流為負：${(fcf.value / 1e8).toFixed(2)} 億元，需查明營運資金與資本支出來源。`);
+   if (freshness.stockFresh && fq?.workingCapitalWarnings?.length) reportRisks.unshift(`營運資金警訊：${fq.workingCapitalWarnings.join('、')}。`);
+   const report = {
+-    headline: vetoGates.length?'否決紅線已觸發；保留事實與來源，剔除／總分0。':blocked.length&&adaptiveRating.available?`自訂退避風險評級 ${adaptiveRating.grade}｜${adaptiveRating.label}。${adaptiveRating.reasons.join(' ')}`:blocked.length?qualifiedOutput.conclusion:'全部 Gate 已核驗；仍須依模型風險預算管理部位。',
++    headline: vetoGates.length?'否決紅線已觸發；保留事實與來源，剔除／總分0。':adaptiveRating.status==='valuation_divergence'?valuationDivergence.reason:blocked.length&&adaptiveRating.available?`自訂退避風險評級 ${adaptiveRating.grade??'未評'}｜${adaptiveRating.label}。${adaptiveRating.reasons.join(' ')}`:blocked.length?qualifiedOutput.conclusion:'全部 Gate 已核驗；仍須依模型風險預算管理部位。',
+     financial: `${roic ? `近四季 ROIC ${Number(roic.value).toFixed(2)}%` : fq.roicApplicability?.status==='not_applicable'?'最新 ROIC 此投入資本口徑不適用':'近四季 ROIC 缺值'}；${normalizedRoic ? `五年常態 ROIC 中位數 ${Number(normalizedRoic.median).toFixed(2)}%（${normalizedRoic.observations}/20 季有效觀測）` : '五年常態 ROIC 樣本不足'}；${cfo ? `近三年 CFO／淨利 ${Number(cfo.value).toFixed(2)}x` : 'CFO／淨利缺值'}；${fcf ? `近三年 FCF ${(fcf.value / 1e8).toFixed(2)} 億元` : 'FCF 缺值'}；${wc ? `DSO ${finiteNumber(wc.dsoDays) ? Number(wc.dsoDays).toFixed(1) : '缺值'} 天、DIO ${finiteNumber(wc.dioDays) ? Number(wc.dioDays).toFixed(1) : '缺值'} 天` : 'DSO／DIO 樣本不足'}。財報期別：${fq.observedThrough || roic?.period || stock?.checkedAt || '日期缺值'}。`,
+     revenue: revenue ? `${revenue.month || '最近月份'}營收${revenue.yoy == null ? '' : `年增 ${Number(revenue.yoy).toFixed(2)}%`}${revenue.mom == null ? '' : `、月增 ${Number(revenue.mom).toFixed(2)}%`}；資料觀測日 ${revenue.observed || revenue.month || '日期缺值'}。` : '目前沒有可用的個股月營收快照。',
+     valuation: primaryValuation ? `主要估值：${primaryValuation.label}；Bear／Base／Bull 情境 ${scenarioValues.map(x => `${x.name} ${Number(x.value).toFixed(2)} 元`).join('、')}；現價 ${price?.value ?? '缺值'} 元${upside == null ? '' : `，Base 情境相對現價 ${upside >= 0 ? '+' : ''}${upside.toFixed(1)}%`}。這是模型情境值，不是保證目標價。` : stock?.errors?.valuation || 'EPS／歷史 P/E 估值資料不足，暫不輸出情境價。',
+@@ -827,12 +828,14 @@ function evaluateMasterModel(stock, macro, market, freshness = {}, gateEvidence
+   report.usSectorContext=usSectorContext;report.market+=` ${usSectorContext.summary}`;
+   if(typeof PANEL_CALCULATIONS!=='undefined')report.advisoryPanels=PANEL_CALCULATIONS.buildStockPanels(stock,freshness.marketFresh?market?.rows||[]:[],usSectorContext);
+   if(typeof ADVISORY_DECISION!=='undefined'&&report.advisoryPanels)report.advisoryDecision=ADVISORY_DECISION.buildAdvisoryDecision({stock,panels:report.advisoryPanels,sectorContext:usSectorContext,macroRows:freshness.macroFresh?rows:[],marketRows:freshness.marketFresh?market?.rows||[]:[],crossSnapshot:gateEvidence.crossMarketSnapshot,existingRating:adaptiveRating,veto,gates,freshness});
++  report.valuationDivergence=valuationDivergence;
++  if(valuationDivergence.divergent)report.valuation=valuationDivergence.reason+' 下次'+valuationDivergence.nextDisclosure.period+'：'+valuationDivergence.nextDisclosure.date+'（'+valuationDivergence.nextDisclosure.basis+'）。歷史情境僅作原始數據參考。';
+   report.quoteIntegration=stock.quoteIntegration||null;
+   if(stock.quoteIntegration)report.valuation+=` ${stock.quoteIntegration.summary}`;
+   if(stock.quoteIntegration?.status==='VERIFIED')gates.find(row=>row.id===10).sources.push({label:'GitHub 正式資料池｜官方收盤',url:stock.price.source_url,sourceDate:stock.price.date,detail:stock.quoteIntegration.summary,validationStatus:'VERIFIED_SOURCE'});
+   if(crossMarket.status==='RED'&&veto.status!=='triggered')report.action+=' 假性脫鉤風險列入總經預算限制：維持原預算，不僅因相對強弱提高部位；不另加10D扣分或自動否決。';
+   if(crossMarket.status==='GREEN')report.positives.push(crossMarket.summary);
+-  return { status:vetoGates.length?'vetoed':blocked.length&&adaptiveRating.available?'degraded':auditStatus,auditStatus,outputStatus:vetoGates.length?'vetoed':blocked.length&&adaptiveRating.available?'graded':blocked.length?'pending':'complete',adaptiveRating,qualifiedOutput,crossMarket, generatedAt: new Date().toISOString(), symbol: stock?.id, sourceResearch:collected||null, primaryValuation, veto, scoring, stockCheckedAt: stock?.checkedAt || null, macroCheckedAt: macro?.checkedAt || null, marketCheckedAt: market?.checkedAt || null, gates, report, evidenceSummary:{guidance, surprises,consensus,peers,company:{symbol:stock.id,results:officialResults,guidance:officialGuidance,outlooks:officialOutlooks}}, conditionalCount:conditionalGates.length, evaluatedCount: gates.filter(x => x.status === 'evaluated').length, blockedCount: blocked.length, summary,issues:{veto:vetoGates.map(gate=>gate.id),missingData:missingGates.map(gate=>gate.id),verifiedRisks:riskGates.map(gate=>gate.id),applicability:applicabilityGates.map(gate=>gate.id)} };
++  return { status:vetoGates.length?'vetoed':adaptiveRating.status==='valuation_divergence'?'valuation_divergence':blocked.length&&adaptiveRating.available?'degraded':auditStatus,auditStatus,outputStatus:vetoGates.length?'vetoed':adaptiveRating.status==='valuation_divergence'?'not_rated':blocked.length&&adaptiveRating.available?'graded':blocked.length?'pending':'complete',adaptiveRating,qualifiedOutput,crossMarket, generatedAt: new Date().toISOString(), symbol: stock?.id, sourceResearch:collected||null, primaryValuation, veto, scoring, stockCheckedAt: stock?.checkedAt || null, macroCheckedAt: macro?.checkedAt || null, marketCheckedAt: market?.checkedAt || null, gates, report, evidenceSummary:{guidance, surprises,consensus,peers,company:{symbol:stock.id,results:officialResults,guidance:officialGuidance,outlooks:officialOutlooks}}, conditionalCount:conditionalGates.length, evaluatedCount: gates.filter(x => x.status === 'evaluated').length, blockedCount: blocked.length, summary,issues:{veto:vetoGates.map(gate=>gate.id),missingData:missingGates.map(gate=>gate.id),verifiedRisks:riskGates.map(gate=>gate.id),applicability:applicabilityGates.map(gate=>gate.id)} };
+ }
+ 
+ async function masterModelResponse(request, env = {}, ctx = {}) {
+diff --git a/worker/panel-display.js b/worker/panel-display.js
+index 6ceb858..a381a04 100644
+--- a/worker/panel-display.js
++++ b/worker/panel-display.js
+@@ -35,6 +35,8 @@ function renderAdvisoryPanels(model){
+ }
+ function renderAdvisoryDecision(host,decision){
+  const box=document.createElement('section');box.className='advisory-decision';
++ const divergence=decision.valuationDivergence;
++ if(divergence?.divergent){const intro=document.createElement('p');intro.textContent=divergence.reason;box.append(intro);for(const r of divergence.rows){const row=document.createElement('p');row.textContent=r.label+'：'+(r.included?r.value.toFixed(2):'不參與（'+r.reason+'）')+'｜'+(r.date||'日期缺值')+'（'+r.dateBasis+'）｜人數：'+(r.analysts??'不適用')+'｜來源：'+(r.source||'缺值')+' '+(r.sourceUrl||'');box.append(row);}const next=document.createElement('p');next.textContent='下次財報 '+divergence.nextDisclosure.period+' '+divergence.nextDisclosure.date+'（'+divergence.nextDisclosure.basis+'）；風險限制維持。';box.append(next);}
+  const title=document.createElement('b');title.textContent='綜合觀察｜草案未啟用';const text=document.createElement('p');text.textContent=decision.conclusion;box.append(title,text);
+  const confidence=document.createElement('p');confidence.className='tiny';confidence.textContent=`核對信心：${decision.confidence.label}（所列觀測${decision.confidence.coverage}/${decision.confidence.total}，不是報酬勝率）。`;box.append(confidence);
+  const reasons=document.createElement('ul');for(const reason of decision.reasons||[]){const line=document.createElement('li');line.textContent=reason;reasons.append(line);}box.append(reasons);
+diff --git a/worker/valuation-divergence.js b/worker/valuation-divergence.js
+new file mode 100644
+index 0000000..1f6605d
+--- /dev/null
++++ b/worker/valuation-divergence.js
+@@ -0,0 +1,19 @@
++// C2: source-qualified EPS disagreement, independent of investment scoring.
++function nextFinancialDisclosure(stock,today,records=[]){
++ const y=Number(today.slice(0,4)),q=stock.epsHistory?.quarterly?.at(-1),lastYear=Number(q?.year),lastQuarter=Number(q?.quarter);
++ const deadlines=[{period:(y-1)+' FY',date:y+'-03-31',year:y-1,quarter:4},{period:y+' Q1',date:y+'-05-15',year:y,quarter:1},{period:y+' Q2',date:y+'-08-14',year:y,quarter:2},{period:y+' Q3',date:y+'-11-14',year:y,quarter:3},{period:y+' FY',date:(y+1)+'-03-31',year:y,quarter:4}];
++ const next=deadlines.find(d=>lastYear?d.year*4+d.quarter>lastYear*4+lastQuarter:d.date>=today)||deadlines.at(-1);
++ const announced=records.filter(r=>r.kind==='earnings_schedule'&&r.symbol===stock.id&&r.validation_status==='VERIFIED_SOURCE'&&masterEvidenceHttps(r.source_url)&&masterEvidenceDate(r.source_date)&&r.source_date<=today&&masterEvidencePeriod(r.period)===masterEvidencePeriod(next.period)&&masterEvidenceDate(r.earnings_date)&&r.earnings_date>=today).sort((a,b)=>b.source_date.localeCompare(a.source_date))[0];
++ return announced?{period:next.period,date:announced.earnings_date,basis:'公司已公告',source:announced.source_url,announcedAt:announced.source_date}:{period:next.period,date:next.date,basis:'法定期限',source:'https://mops.twse.com.tw/',overdue:next.date<today,note:'非公司公告日期；採曆年制Q1 5/15、Q2 8/14、Q3 11/14、年報3/31'};
++}
++function evaluateValuationDivergence(stock,consensus,today,records=[]){
++ const year=Number(today.slice(0,4)),cycle=stock.financialQuality?.cycleValuation?.eps,forecast=stock.forecastEps||stock.valuation?.forecastEps,ttm=stock.epsHistory?.ttm??stock.valuation?.ttmEPS,last=stock.epsHistory?.quarterly?.at(-1),c=consensus?.find(r=>r.year===year),source=stock.documentation?.finmind||'https://finmind.github.io/tutor/TaiwanMarket/Fundamental/';
++ const rows=[
++ {id:'historical',label:'歷史常態EPS（跨週期中位數）',value:cycle?.median,source:cycle?.source||stock.epsHistory?.source,sourceUrl:source,period:cycle?cycle.from+'–'+cycle.through+'完整年度':null,date:cycle?cycle.through+'-12-31':null,dateBasis:'資料所屬期末，非發布日',sampleYears:cycle?.observations,analysts:null},
++ {id:'model',label:'今年模型EPS',value:forecast?.year===year&&['estimate','actual'].includes(forecast?.status)?forecast.median:null,source:forecast?.source,sourceUrl:source,period:year+'E',date:stock.price?.date||null,dateBasis:'模型評估基準日',analysts:null,reason:forecast?.year!==year?'非本年度模型':forecast?.reason},
++ {id:'ttm',label:'近四季EPS',value:ttm,source:stock.epsHistory?.source||stock.valuation?.source,sourceUrl:source,period:'最近四季',date:last?.date||null,dateBasis:'財報所屬期末，非發布日',analysts:null},
++ {id:'consensus',label:'當年度有效分析師共識',value:c?.ready?c.eps:null,source:c?.ready?c.rows?.map(r=>r.source).join('、'):null,sourceUrl:c?.ready?c.rows?.map(r=>r.source_url).join('、'):null,period:year+'E',date:c?.asOf||null,dateBasis:'共識原更新日',analysts:c?.ready?c.analysts:null,reason:c?.ready?null:c?.missingReason||'Gate8未判定有效；不採候選值'}
++ ].map(r=>({...r,included:typeof r.value==='number'&&Number.isFinite(r.value)&&r.value>0,reason:typeof r.value==='number'&&Number.isFinite(r.value)&&r.value>0?null:r.reason||(typeof r.value==='number'&&Number.isFinite(r.value)&&r.value<=0?'EPS非正，不參與':'EPS缺值，不參與')}));
++ const usable=rows.filter(r=>r.included),ratio=usable.length>=2?Math.max(...usable.map(r=>r.value))/Math.min(...usable.map(r=>r.value)):null,divergent=ratio!==null&&ratio>2;
++ return {status:divergent?'divergent':usable.length<2?'insufficient':'within_range',divergent,ratio,threshold:2,rows,nextDisclosure:nextFinancialDisclosure(stock,today,records),reason:divergent?'估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 '+ratio.toFixed(2)+' 倍。':usable.length<2?'可用EPS少於2個；不解除風險限制':'可用EPS未超過2倍；沿用原估值核驗',riskBudgetRelaxed:false};
++}
