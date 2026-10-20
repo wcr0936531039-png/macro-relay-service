@@ -1,0 +1,4 @@
+efabb7006bddb3e327fcd027d3b4f72ce7e04c018df4656d5a7b7f2e2c77cf46  fixpack-checkpoint.patch
+
+Base: f9c5f15b371de58d0a06ef5251ce5c8a895f217e
+Checkpoint only; full npm test not yet confirmed. C2 not applied. Not deployed.
