@@ -1,0 +1,208 @@
+{
+  "scope": "fixpack only; frozen identical inputs, no production modification",
+  "beforeScores": [
+    {
+      "market": "US",
+      "score": 59,
+      "dimensions": [
+        {
+          "name": "物價與通膨",
+          "score": 65
+        },
+        {
+          "name": "成長與就業",
+          "score": 75
+        },
+        {
+          "name": "利率、信用與流動性",
+          "score": 56.25
+        },
+        {
+          "name": "美股波動與指數動能",
+          "score": 45
+        }
+      ]
+    },
+    {
+      "market": "TW",
+      "score": 58,
+      "dimensions": [
+        {
+          "name": "物價與通膨（美國）",
+          "score": 65
+        },
+        {
+          "name": "成長與就業（美國）",
+          "score": 75
+        },
+        {
+          "name": "利率、信用與流動性（美國）",
+          "score": 56.25
+        },
+        {
+          "name": "台股本土景氣／廣度／交易",
+          "score": 41
+        }
+      ]
+    }
+  ],
+  "afterScores": [
+    {
+      "market": "US",
+      "score": 65,
+      "dimensions": [
+        {
+          "name": "物價與通膨",
+          "score": 65
+        },
+        {
+          "name": "成長與就業",
+          "score": 75
+        },
+        {
+          "name": "利率、信用與流動性",
+          "score": 56.25
+        },
+        {
+          "name": "美股波動與指數動能",
+          "score": 62.5
+        }
+      ]
+    },
+    {
+      "market": "TW",
+      "score": 59,
+      "dimensions": [
+        {
+          "name": "物價與通膨（美國）",
+          "score": 65
+        },
+        {
+          "name": "成長與就業（美國）",
+          "score": 75
+        },
+        {
+          "name": "利率、信用與流動性（美國）",
+          "score": 56.25
+        },
+        {
+          "name": "台股本土景氣／廣度／交易",
+          "score": 45
+        }
+      ]
+    }
+  ],
+  "catalog": {
+    "beforeRaw": 65,
+    "beforeUnique": 55,
+    "after": 55,
+    "market": 36
+  },
+  "changes": [
+    {
+      "id": "SP500",
+      "date": "2026-10-19",
+      "before": -1.4923327577991752,
+      "after": 0.4085155050499667,
+      "previousDate": "2026-10-16"
+    },
+    {
+      "id": "DJIA",
+      "date": "2026-10-19",
+      "before": 0.22271702035947527,
+      "after": -0.06995829616358584,
+      "previousDate": "2026-10-16"
+    },
+    {
+      "id": "NASDAQCOM",
+      "date": "2026-10-19",
+      "before": -2.991312454350936,
+      "after": 1.112699564614128,
+      "previousDate": "2026-10-16"
+    },
+    {
+      "id": "SP500",
+      "date": "2026-10-19",
+      "before": -1.4923327577991752,
+      "after": 0.4085155050499667,
+      "previousDate": "2026-10-16"
+    },
+    {
+      "id": "DJIA",
+      "date": "2026-10-19",
+      "before": 0.22271702035947527,
+      "after": -0.06995829616358584,
+      "previousDate": "2026-10-16"
+    },
+    {
+      "id": "NASDAQCOM",
+      "date": "2026-10-19",
+      "before": -2.991312454350936,
+      "after": 1.112699564614128,
+      "previousDate": "2026-10-16"
+    },
+    {
+      "id": "DCOILWTICO",
+      "date": "2026-10-14",
+      "before": 7.251105030519889,
+      "after": 1.0410469958358037,
+      "previousDate": "2026-10-13"
+    },
+    {
+      "id": "DCOILBRENTEU",
+      "date": "2026-10-14",
+      "before": 0.43650793650793496,
+      "after": 0.6121799968198394,
+      "previousDate": "2026-10-13"
+    },
+    {
+      "id": "DHHNGSP",
+      "date": "2026-10-14",
+      "before": 1.8987341772152,
+      "after": 2.547770700636942,
+      "previousDate": "2026-10-13"
+    }
+  ],
+  "stocks": [
+    {
+      "symbol": "8299",
+      "gradeBefore": "D",
+      "gradeAfter": "D",
+      "scoreBefore": null,
+      "scoreAfter": null,
+      "gateChanges": [],
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared"
+    },
+    {
+      "symbol": "5289",
+      "gradeBefore": "D",
+      "gradeAfter": "D",
+      "scoreBefore": null,
+      "scoreAfter": null,
+      "gateChanges": [],
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared"
+    },
+    {
+      "symbol": "2404",
+      "gradeBefore": "D",
+      "gradeAfter": "D",
+      "scoreBefore": null,
+      "scoreAfter": null,
+      "gateChanges": [],
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared"
+    },
+    {
+      "symbol": "5009",
+      "gradeBefore": "C",
+      "gradeAfter": "C",
+      "scoreBefore": null,
+      "scoreAfter": null,
+      "gateChanges": [],
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared"
+    }
+  ]
+}
