@@ -20,7 +20,7 @@ index f18190b..ac82550 100644
 -writeFileSync(new URL('./dist/server/index.js', import.meta.url), `const HTML = ${JSON.stringify(html)};\nconst CPI_SEED = ${JSON.stringify(cpiSeed)};\nconst OFFICIAL_UPDATE_TOOLS = ${JSON.stringify(updateTools)};\n${observations}\n${fixpack}\n${observationFreshness}\nconst RELAY_SEED = ${JSON.stringify(relaySeed)};\n${relay}\n${research}\n${macroScoring}\n${dataImport}\n${sourceResearch}\n${reportContext}\n${stockRelay}\n${fallbackRating}\n${gate5bBoundaries}\n${masterEvidence}\n${masterInputs}\n${issuerContext}\n${crossMarketCore}\n${crossMarket}\n${usSectorCore}\n${usSectorSession}\n${tiingoMarket}\n${tiingoStore}\n${usSectors}\n${tiingoSite}\n${marketTimeline}\n${officialNewsModule}\n${macro}`);
 +writeFileSync(new URL('./dist/server/index.js', import.meta.url), `const HTML = ${JSON.stringify(html)};\nconst CPI_SEED = ${JSON.stringify(cpiSeed)};\nconst OFFICIAL_UPDATE_TOOLS = ${JSON.stringify(updateTools)};\n${observations}\n${fixpack}\n${observationFreshness}\nconst RELAY_SEED = ${JSON.stringify(relaySeed)};\n${relay}\n${research}\n${macroScoring}\n${dataImport}\n${sourceResearch}\n${reportContext}\n${stockRelay}\n${valuationDivergence}\n${fallbackRating}\n${gate5bBoundaries}\n${masterEvidence}\n${masterInputs}\n${issuerContext}\n${crossMarketCore}\n${crossMarket}\n${usSectorCore}\n${usSectorSession}\n${tiingoMarket}\n${tiingoStore}\n${usSectors}\n${tiingoSite}\n${marketTimeline}\n${officialNewsModule}\n${macro}`);
 diff --git a/dist/index.html b/dist/index.html
-index ea742de..268074c 100644
+index ea742de..333beca 100644
 --- a/dist/index.html
 +++ b/dist/index.html
 @@ -229,6 +229,28 @@
@@ -75,6 +75,22 @@ index ea742de..268074c 100644
   const title=document.createElement('b');title.textContent='綜合觀察｜草案未啟用';const text=document.createElement('p');text.textContent=decision.conclusion;box.append(title,text);
   const confidence=document.createElement('p');confidence.className='tiny';confidence.textContent=`核對信心：${decision.confidence.label}（所列觀測${decision.confidence.coverage}/${decision.confidence.total}，不是報酬勝率）。`;box.append(confidence);
   const reasons=document.createElement('ul');for(const reason of decision.reasons||[]){const line=document.createElement('li');line.textContent=reason;reasons.append(line);}box.append(reasons);
+@@ -965,13 +991,13 @@ function renderBackendMasterModel(model){
+   list.append(article)
+  }}
+  if(overall){overall.textContent=`後台 Master Model｜${model.summary}｜執行 ${new Date(model.generatedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})}（台灣）`;overall.dataset.readiness=model.status;overall.dataset.outputStatus=model.outputStatus||'pending'}
+- const reportStatus=document.getElementById('overallReportStatus');if(reportStatus){reportStatus.textContent=model.status==='evaluated'?'完整決策鏈已完成核驗':model.status==='conditional'?'必要核對完成｜替代估值條件式適用':model.outputStatus==='qualified'?'暫定觀察可用｜完整評級待核':model.status==='vetoed'?'否決已觸發｜剔除':'完整評級暫停｜資料與風險分列';reportStatus.className='badge '+(model.status==='evaluated'?'pass':'watch')}
++ const reportStatus=document.getElementById('overallReportStatus');if(reportStatus){reportStatus.textContent=model.status==='valuation_divergence'?'未評（估值分歧）':model.status==='evaluated'?'完整決策鏈已完成核驗':model.status==='conditional'?'必要核對完成｜替代估值條件式適用':model.outputStatus==='qualified'?'暫定觀察可用｜完整評級待核':model.status==='vetoed'?'否決已觸發｜剔除':'完整評級暫停｜資料與風險分列';reportStatus.className='badge '+(model.status==='evaluated'?'pass':'watch')}
+  const qualified=document.getElementById('qualifiedReport'),output=model.qualifiedOutput;if(qualified){qualified.hidden=model.outputStatus!=='qualified'||!output?.available;if(!qualified.hidden){document.getElementById('qualifiedConclusion').textContent=output.conclusion;const current=output.research.consensus.primary;document.getElementById('qualifiedConsensus').textContent=current.status==='verified'?`主要共識參考：${current.year}E EPS ${fmt(current.eps,2)} 元；${current.analysts} 位分析師，截至 ${current.asOf}。以 ${current.priceDate} 收盤計算 Forward P/E ${fmt(current.forwardPe,2)}x；此數字是共識比較，主要估值仍採已核驗的模型情境。`:`${current.year} 年市場共識待核；目前僅顯示已核驗的模型情境。`;const limits=document.getElementById('qualifiedLimits');limits.replaceChildren();for(const limit of output.limits){const row=document.createElement('p');row.textContent=limit;limits.append(row)}}}
+  const put=(id,value)=>{const node=document.getElementById(id);if(node)node.textContent=value};
+  put('overallReportSummary',model.summary);put('overallReportEvidence',model.gates.filter(x=>x.dataState==='verified'||x.status==='evaluated').map(x=>`Gate ${x.id} ${x.title}：${x.detail}`).join('　｜　')||'後台尚未取得完整核驗資料');
+  put('overallReportRisks',model.report?.risks?.join('　｜　')||model.gates.filter(x=>x.status!=='evaluated').map(x=>`Gate ${x.id} ${x.title}：${x.detail}`).join('　｜　')||'未發現未核實 Gate');
+  put('overallReportNext',model.report?.action||(model.status==='evaluated'?'所有必要 Gate 均完成核驗。':'依各 Gate 的逐項核對補齊資料，已核實警訊仍保留。'))
+- if(model.adaptiveRating?.available&&['degraded','vetoed'].includes(model.status))renderAdaptiveRating(model.adaptiveRating,model);
++ if(model.adaptiveRating?.available&&['degraded','vetoed','valuation_divergence'].includes(model.status))renderAdaptiveRating(model.adaptiveRating,model);
+  if(model.crossMarket){const cross=model.crossMarket,node=document.getElementById('overallReportSummary');if(node)node.textContent+=` 跨市場背離：${cross.status}／${cross.label}（台股${cross.asOf||'UNKNOWN'}、美股${cross.usAsOf||'UNKNOWN'}）；5D／10D／20D與缺項見Gate 1完整判讀，新增評分0。`;if(['evaluated','conditional'].includes(model.status)&&cross.status==='UNKNOWN'){const status=document.getElementById('overallReportStatus');if(status)status.textContent='既有核驗完成｜跨市場 UNKNOWN';}if(cross.status==='RED'&&model.status!=='vetoed'){const next=document.getElementById('overallReportNext');if(next)next.textContent+=' 假性脫鉤風險：維持原風險預算，不僅因相對強弱提高部位。';}}
+  renderReportContext(model);
+ }
 @@ -981,20 +1007,20 @@ function renderReportContext(model){
  function renderAdaptiveRating(rating,model=null,stockData=null){
   const report=document.getElementById('qualifiedReport');if(!report||!rating.available)return;report.hidden=false;
@@ -136,11 +152,11 @@ index 5bb6885..139f5fa 100644
      "drizzle-kit": "0.31.10",
 diff --git a/tests/valuation-divergence.test.mjs b/tests/valuation-divergence.test.mjs
 new file mode 100644
-index 0000000..b04049e
+index 0000000..5290342
 --- /dev/null
 +++ b/tests/valuation-divergence.test.mjs
-@@ -0,0 +1,10 @@
-+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
+@@ -0,0 +1,12 @@
++import vm from 'node:vm';import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
 +const src=fs.readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');const api=await import('data:text/javascript;base64,'+Buffer.from(src+'\nexport {evaluateValuationDivergence,nextFinancialDisclosure,computeFallbackRating};').toString('base64'));
 +const today='2026-10-21';
 +const make=()=>({id:'8299',price:{value:1845,date:'2026-10-20'},financialQuality:{cycleValuation:{eps:{median:39,from:2019,through:2025,source:'official',observations:7}}},forecastEps:{year:2026,status:'estimate',median:206.883,source:'model'},epsHistory:{ttm:220.2,source:'financial statements',quarterly:[{date:'2026-06-30',year:2026,quarter:2}]} });
@@ -150,6 +166,8 @@ index 0000000..b04049e
 +test('unqualified consensus never participates; exactly 2x does not trigger; nonpositive and missing excluded',()=>{const s=make();s.financialQuality.cycleValuation.eps.median=100;s.forecastEps.median=200;s.epsHistory.ttm=-1;let d=api.evaluateValuationDivergence(s,[{...c[0],ready:false,eps:99999}],today);assert.equal(d.divergent,false);assert.equal(d.ratio,2);assert.equal(d.rows[3].included,false);assert.equal(d.rows[2].included,false);s.forecastEps.median=null;d=api.evaluateValuationDivergence(s,[],today);assert.equal(d.status,'insufficient');assert.equal(d.ratio,null);assert.match(d.rows[1].reason,/缺值/);});
 +test('unrated divergence preserves risk restrictions; actual VETO remains superior',()=>{const d=api.evaluateValuationDivergence(make(),c,today),before=api.computeFallbackRating(ratingInput),a=api.computeFallbackRating({...ratingInput,valuationDivergence:d});assert.equal(a.grade,null);assert.equal(a.label,'未評（估值分歧）');assert.equal(a.valuationGrade,null);assert.equal(a.riskPermission,before.riskPermission);assert.ok(a.reasons.some(r=>r.includes('現金流')));assert.ok(a.reasons.some(r=>r.includes('MA20')));assert.ok(a.reasons.some(r=>r.includes('未知否決')));assert.equal(api.computeFallbackRating({...ratingInput,vetoStatus:'triggered',valuationDivergence:d}).grade,'VETO');});
 +test('verified company schedule supersedes statutory fallback; new financial quarter automatically advances deadline and recalculates',()=>{const s=make(),record={kind:'earnings_schedule',symbol:'8299',validation_status:'VERIFIED_SOURCE',source_url:'https://www.phison.com/ir.pdf',source_date:'2026-10-20',period:'2026Q3',earnings_date:'2026-11-03'};assert.equal(api.evaluateValuationDivergence(s,c,today,[record]).nextDisclosure.date,'2026-11-03');record.validation_status='UNKNOWN';assert.equal(api.evaluateValuationDivergence(s,c,today,[record]).nextDisclosure.basis,'法定期限');s.epsHistory.quarterly.push({date:'2026-09-30',year:2026,quarter:3});s.epsHistory.ttm=40;s.forecastEps.median=40;s.financialQuality.cycleValuation.eps.median=40;const d=api.evaluateValuationDivergence(s,[],today);assert.equal(d.divergent,false);assert.equal(d.nextDisclosure.date,'2027-03-31');});
++
++test('primary Master renderer routes valuation_divergence to the unrated panel instead of hiding it',()=>{const html=fs.readFileSync(new URL('../dist/index.html',import.meta.url),'utf8'),start=html.indexOf('function renderBackendMasterModel('),end=html.indexOf('\nfunction ',start+1);let calls=0;const model={status:'valuation_divergence',outputStatus:'not_rated',gates:[],adaptiveRating:{available:true,grade:null,label:'未評（估值分歧）'}};const ctx=vm.createContext({model,document:{getElementById:()=>null},renderAdvisoryPanels:()=>{},renderAdaptiveRating:r=>{assert.equal(r.grade,null);calls++;},renderReportContext:()=>{}});vm.runInContext(html.slice(start,end),ctx);vm.runInContext('renderBackendMasterModel(model)',ctx);assert.equal(calls,1);});
 diff --git a/worker/advisory-decision.mjs b/worker/advisory-decision.mjs
 index 5319a80..fa0ce57 100644
 --- a/worker/advisory-decision.mjs
