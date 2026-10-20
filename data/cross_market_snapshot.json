@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-20T01:15:38.761990+00:00",
+  "generated_at": "2026-10-20T12:09:09.167728+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -375,6 +375,13 @@
           "totalValueTwd": 866711859964.0,
           "available_at": "2026-10-19T05:30:00+00:00",
           "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json"
+        },
+        {
+          "date": "2026-10-20",
+          "value": 46292.93,
+          "totalValueTwd": 802947441658.0,
+          "available_at": "2026-10-20T05:30:00+00:00",
+          "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json"
         }
       ],
       "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json",
@@ -388,7 +395,7 @@
       "unit": "index_points",
       "warnings": [],
       "status": "ok",
-      "fetched_at": "2026-10-20T01:15:38.761990+00:00"
+      "fetched_at": "2026-10-20T12:09:09.167728+00:00"
     },
     "SP500": {
       "history": [
@@ -898,20 +905,10 @@
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-10-20T01:15:38.761990+00:00"
+      "fetched_at": "2026-10-20T12:09:09.167728+00:00"
     },
     "NASDAQCOM": {
       "history": [
-        {
-          "date": "2026-05-26",
-          "value": 26656.18,
-          "available_at": "2026-05-26T20:15:00+00:00"
-        },
-        {
-          "date": "2026-05-27",
-          "value": 26674.73,
-          "available_at": "2026-05-27T20:15:00+00:00"
-        },
         {
           "date": "2026-05-28",
           "value": 26917.47,
@@ -1401,6 +1398,16 @@
           "date": "2026-10-15",
           "value": 26713.03,
           "available_at": "2026-10-15T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-16",
+          "value": 26140.03,
+          "available_at": "2026-10-16T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-19",
+          "value": 26430.89,
+          "available_at": "2026-10-19T20:15:00+00:00"
         }
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-13",
@@ -1408,7 +1415,7 @@
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-10-20T01:15:38.761990+00:00"
+      "fetched_at": "2026-10-20T12:09:09.167728+00:00"
     },
     "SOX": {
       "history": [
@@ -1909,7 +1916,7 @@
         },
         {
           "date": "2026-10-19",
-          "value": 11316.3427734375,
+          "value": 11316.33984375,
           "available_at": "2026-10-19T20:15:00+00:00"
         }
       ],
@@ -1921,30 +1928,12 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-10-20T01:15:38.761990+00:00"
+      "fetched_at": "2026-10-20T12:09:09.167728+00:00"
     }
   },
   "errors": [],
   "flows": {
     "history": [
-      {
-        "date": "2026-10-05",
-        "fetched_at": "2026-10-14T01:22:48.348738+00:00",
-        "totalValueTwd": 1211041395113.0,
-        "status": "ok",
-        "sources": [
-          "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json",
-          "https://www.twse.com.tw/fund/BFI82U?dayDate=20261005&type=day&response=json",
-          "https://www.twse.com.tw/exchangeReport/TWTB4U?date=20261005&selectType=All&response=json"
-        ],
-        "scope": "TWSE_all_listed_securities",
-        "investmentTrustNetTwd": -5293160007.0,
-        "foreignNetTwd": 71896608245.0,
-        "dayTradeBuyTwd": 449455410790.0,
-        "dayTradeSellTwd": 450934650050.0,
-        "dayTradeValueTwd": 450195030420.0,
-        "nonDayTradeValueTwd": 760846364693.0
-      },
       {
         "date": "2026-10-06",
         "fetched_at": "2026-10-14T01:22:48.348738+00:00",
@@ -2106,6 +2095,24 @@
         "dayTradeSellTwd": 355358540150.0,
         "dayTradeValueTwd": 354702109070.0,
         "nonDayTradeValueTwd": 512009750894.0
+      },
+      {
+        "date": "2026-10-20",
+        "fetched_at": "2026-10-20T12:09:09.167728+00:00",
+        "totalValueTwd": 802947441658.0,
+        "status": "ok",
+        "sources": [
+          "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json",
+          "https://www.twse.com.tw/fund/BFI82U?dayDate=20261020&type=day&response=json",
+          "https://www.twse.com.tw/exchangeReport/TWTB4U?date=20261020&selectType=All&response=json"
+        ],
+        "scope": "TWSE_all_listed_securities",
+        "investmentTrustNetTwd": 18758508430.0,
+        "foreignNetTwd": -79539692396.0,
+        "dayTradeBuyTwd": 341571847360.0,
+        "dayTradeSellTwd": 342245373210.0,
+        "dayTradeValueTwd": 341908610285.0,
+        "nonDayTradeValueTwd": 461038831373.0
       }
     ],
     "scope": "TWSE_all_listed_securities",
