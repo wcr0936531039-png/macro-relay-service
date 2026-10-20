@@ -1,3 +1,3 @@
 9ad8c47bae31fa31008f88895b8a40e3f46fbf9ec6d94f505c6215dd69ad34e4  c2.patch
 
-Source-only, after completed fixpack. Rebuild with node build.mjs. Five targeted C2 tests passed; full npm test pending. No deployment.
+Source-only base 4aadab203b6dc7c92b91ac35572ec14b1e74eaf7. Rebuild with node build.mjs. Full npm test EXIT 0. Clean sequential replay produced byte-identical HTML and Worker. Not deployed; waiting for owner authorization.
