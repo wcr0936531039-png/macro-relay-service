@@ -1,0 +1,334 @@
+{
+  "beforeMacroScores": [
+    {
+      "market": "US",
+      "score": 65
+    },
+    {
+      "market": "TW",
+      "score": 59
+    }
+  ],
+  "afterMacroScores": [
+    {
+      "market": "US",
+      "score": 65
+    },
+    {
+      "market": "TW",
+      "score": 59
+    }
+  ],
+  "scope": "C2 only, baseline completed fixpack 4aadab203b6dc7c92b91ac35572ec14b1e74eaf7",
+  "stocks": [
+    {
+      "symbol": "8299",
+      "gradeBefore": "D",
+      "gradeAfter": null,
+      "labelAfter": "未評（估值分歧）",
+      "divergent": true,
+      "ratio": 10.691538461538462,
+      "eps": [
+        {
+          "id": "historical",
+          "label": "歷史常態EPS（跨週期中位數）",
+          "value": 39,
+          "source": "FinMind EPS＋股利／分割／面額變更資料",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "2019–2025完整年度",
+          "date": "2025-12-31",
+          "dateBasis": "資料所屬期末，非發布日",
+          "sampleYears": 7,
+          "analysts": null,
+          "included": true,
+          "reason": null
+        },
+        {
+          "id": "model",
+          "label": "今年模型EPS",
+          "value": 206.883,
+          "source": "FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "2026E",
+          "date": "2026-10-20",
+          "dateBasis": "模型評估基準日",
+          "analysts": null,
+          "reason": null,
+          "included": true
+        },
+        {
+          "id": "ttm",
+          "label": "近四季EPS",
+          "value": 220.2,
+          "source": "FinMind EPS＋股利／分割／面額變更資料",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "最近四季",
+          "date": "2026-06-30",
+          "dateBasis": "財報所屬期末，非發布日",
+          "analysts": null,
+          "included": true,
+          "reason": null
+        },
+        {
+          "id": "consensus",
+          "label": "當年度有效分析師共識",
+          "value": 416.97,
+          "source": "FactSet／鉅亨公開報導",
+          "sourceUrl": "https://gfemobile.cnyes.com/news/id/6629082",
+          "period": "2026E",
+          "date": "2026-10-13",
+          "dateBasis": "共識原更新日",
+          "analysts": 11,
+          "reason": null,
+          "included": true
+        }
+      ],
+      "nextDisclosure": {
+        "period": "2026 Q3",
+        "date": "2026-11-14",
+        "basis": "法定期限",
+        "source": "https://mops.twse.com.tw/",
+        "overdue": false,
+        "note": "非公司公告日期；採曆年制Q1 5/15、Q2 8/14、Q3 11/14、年報3/31"
+      },
+      "gateChanges": [],
+      "scoringUnchanged": true,
+      "vetoUnchanged": true,
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared",
+      "conclusion": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 10.69 倍。"
+    },
+    {
+      "symbol": "5289",
+      "gradeBefore": "D",
+      "gradeAfter": null,
+      "labelAfter": "未評（估值分歧）",
+      "divergent": true,
+      "ratio": 14.632348706455268,
+      "eps": [
+        {
+          "id": "historical",
+          "label": "歷史常態EPS（跨週期中位數）",
+          "value": 12.232083056821914,
+          "source": "FinMind EPS＋股利／分割／面額變更資料",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "2019–2025完整年度",
+          "date": "2025-12-31",
+          "dateBasis": "資料所屬期末，非發布日",
+          "sampleYears": 7,
+          "analysts": null,
+          "included": true,
+          "reason": null
+        },
+        {
+          "id": "model",
+          "label": "今年模型EPS",
+          "value": 174.80121229309555,
+          "source": "FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "2026E",
+          "date": "2026-10-20",
+          "dateBasis": "模型評估基準日",
+          "analysts": null,
+          "reason": null,
+          "included": true
+        },
+        {
+          "id": "ttm",
+          "label": "近四季EPS",
+          "value": 178.98410469374153,
+          "source": "FinMind EPS＋股利／分割／面額變更資料",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "最近四季",
+          "date": "2026-06-30",
+          "dateBasis": "財報所屬期末，非發布日",
+          "analysts": null,
+          "included": true,
+          "reason": null
+        },
+        {
+          "id": "consensus",
+          "label": "當年度有效分析師共識",
+          "value": null,
+          "source": null,
+          "sourceUrl": null,
+          "period": "2026E",
+          "date": null,
+          "dateBasis": "共識原更新日",
+          "analysts": null,
+          "reason": "缺90日內、同股票同年度TWD共識來源",
+          "included": false
+        }
+      ],
+      "nextDisclosure": {
+        "period": "2026 Q3",
+        "date": "2026-11-14",
+        "basis": "法定期限",
+        "source": "https://mops.twse.com.tw/",
+        "overdue": false,
+        "note": "非公司公告日期；採曆年制Q1 5/15、Q2 8/14、Q3 11/14、年報3/31"
+      },
+      "gateChanges": [],
+      "scoringUnchanged": true,
+      "vetoUnchanged": true,
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared",
+      "conclusion": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 14.63 倍。"
+    },
+    {
+      "symbol": "2404",
+      "gradeBefore": "D",
+      "gradeAfter": null,
+      "labelAfter": "未評（估值分歧）",
+      "divergent": true,
+      "ratio": 3.1179511278195484,
+      "eps": [
+        {
+          "id": "historical",
+          "label": "歷史常態EPS（跨週期中位數）",
+          "value": 21.28,
+          "source": "FinMind EPS＋股利／分割／面額變更資料",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "2019–2025完整年度",
+          "date": "2025-12-31",
+          "dateBasis": "資料所屬期末，非發布日",
+          "sampleYears": 7,
+          "analysts": null,
+          "included": true,
+          "reason": null
+        },
+        {
+          "id": "model",
+          "label": "今年模型EPS",
+          "value": 54.209,
+          "source": "FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "2026E",
+          "date": "2026-10-20",
+          "dateBasis": "模型評估基準日",
+          "analysts": null,
+          "reason": null,
+          "included": true
+        },
+        {
+          "id": "ttm",
+          "label": "近四季EPS",
+          "value": 66.35,
+          "source": "FinMind EPS＋股利／分割／面額變更資料",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "最近四季",
+          "date": "2026-06-30",
+          "dateBasis": "財報所屬期末，非發布日",
+          "analysts": null,
+          "included": true,
+          "reason": null
+        },
+        {
+          "id": "consensus",
+          "label": "當年度有效分析師共識",
+          "value": null,
+          "source": null,
+          "sourceUrl": null,
+          "period": "2026E",
+          "date": null,
+          "dateBasis": "共識原更新日",
+          "analysts": null,
+          "reason": "缺90日內、同股票同年度TWD共識來源",
+          "included": false
+        }
+      ],
+      "nextDisclosure": {
+        "period": "2026 Q3",
+        "date": "2026-11-14",
+        "basis": "法定期限",
+        "source": "https://mops.twse.com.tw/",
+        "overdue": false,
+        "note": "非公司公告日期；採曆年制Q1 5/15、Q2 8/14、Q3 11/14、年報3/31"
+      },
+      "gateChanges": [],
+      "scoringUnchanged": true,
+      "vetoUnchanged": true,
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared",
+      "conclusion": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 3.12 倍。"
+    },
+    {
+      "symbol": "5009",
+      "gradeBefore": "C",
+      "gradeAfter": "C",
+      "labelAfter": "保守觀察",
+      "divergent": false,
+      "ratio": 1.5171391926079276,
+      "eps": [
+        {
+          "id": "historical",
+          "label": "歷史常態EPS（跨週期中位數）",
+          "value": 2.2,
+          "source": "FinMind EPS＋股利／分割／面額變更資料",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "2019–2025完整年度",
+          "date": "2025-12-31",
+          "dateBasis": "資料所屬期末，非發布日",
+          "sampleYears": 7,
+          "analysts": null,
+          "included": true,
+          "reason": null
+        },
+        {
+          "id": "model",
+          "label": "今年模型EPS",
+          "value": 3.337706223737441,
+          "source": "FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "2026E",
+          "date": "2026-10-20",
+          "dateBasis": "模型評估基準日",
+          "analysts": null,
+          "reason": null,
+          "included": true
+        },
+        {
+          "id": "ttm",
+          "label": "近四季EPS",
+          "value": 2.2,
+          "source": "FinMind EPS＋股利／分割／面額變更資料",
+          "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+          "period": "最近四季",
+          "date": "2026-06-30",
+          "dateBasis": "財報所屬期末，非發布日",
+          "analysts": null,
+          "included": true,
+          "reason": null
+        },
+        {
+          "id": "consensus",
+          "label": "當年度有效分析師共識",
+          "value": null,
+          "source": null,
+          "sourceUrl": null,
+          "period": "2026E",
+          "date": null,
+          "dateBasis": "共識原更新日",
+          "analysts": null,
+          "reason": "缺90日內、同股票同年度TWD共識來源",
+          "included": false
+        }
+      ],
+      "nextDisclosure": {
+        "period": "2026 Q3",
+        "date": "2026-11-14",
+        "basis": "法定期限",
+        "source": "https://mops.twse.com.tw/",
+        "overdue": false,
+        "note": "非公司公告日期；採曆年制Q1 5/15、Q2 8/14、Q3 11/14、年報3/31"
+      },
+      "gateChanges": [],
+      "scoringUnchanged": true,
+      "vetoUnchanged": true,
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared",
+      "conclusion": "維持保守觀察，先追蹤獲利轉成現金的能力。"
+    }
+  ],
+  "macroScoresUnchanged": true
+}
