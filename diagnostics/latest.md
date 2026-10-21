@@ -1,13 +1,13 @@
-# 最新：C1 綜合判斷本機驗證中，未部署
+# 最新：2026-10-21 C1 綜合判斷本機完成，未部署
 
-已完成計算／顯示；針對性20/20通過。四檔同輸入40個Gate及評級／VETO／風險許可不變。完整npm test進行中。
+[完整驗收報告](c1-20261021/report.md)｜[完整來源diff](c1-20261021/c1.patch)｜[完整npm test](c1-20261021/npm-test.log)｜[逐檔前後比較](c1-20261021/before-after.json)｜[Gemini固定交接指引](GEMINI_HANDOFF.md)
 
-- [01 範圍](c1-20261021/01-scope.md)
-- [02 計算與顯示](c1-20261021/02-calculation-and-display.md)
-- [03 首次測試發現的缺口](c1-20261021/03-test-found-gap.md)
-- [04 20項通過及四檔比較](c1-20261021/04-targeted-and-replay.md)
+- 高／中／低證據信心、估值／技術／總經三類理由、具體改判條件、缺口與現金流警訊顯示完成。
+- 針對性20/20；完整npm test exit0（legacy、calendar9、advisory47、fixpack4、C2五項全過）。乾淨基線套patch後build的HTML／Worker雜湊與受測版本一致。
+- 四檔相同凍結輸入：40個Gate完整物件、scoring、VETO、adaptiveRating／風險許可、primaryValuation均不變。重播仍有證據缺項，信心均低，未宣稱來源全齊。
+- 本機完成≠已上線。**正式站仍為v231；本輪未部署，需擁有者另行授權。** 四公司指引比較面板仍暫緩。
 
-正式站仍為v231。四公司指引比較面板仍暫緩。
+每項紀錄與首次失敗均已保留在報告連結。公開檔案不含私人存取入口、憑證或Tiingo原始價格。
 
 ---
 
