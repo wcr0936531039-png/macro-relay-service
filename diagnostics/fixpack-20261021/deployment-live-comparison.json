@@ -1,0 +1,3020 @@
+{
+  "beforeScores": [
+    {
+      "market": "US",
+      "score": 59,
+      "dimensions": [
+        {
+          "name": "物價與通膨",
+          "score": 65
+        },
+        {
+          "name": "成長與就業",
+          "score": 75
+        },
+        {
+          "name": "利率、信用與流動性",
+          "score": 56.25
+        },
+        {
+          "name": "美股波動與指數動能",
+          "score": 45
+        }
+      ]
+    },
+    {
+      "market": "TW",
+      "score": 58,
+      "dimensions": [
+        {
+          "name": "物價與通膨（美國）",
+          "score": 65
+        },
+        {
+          "name": "成長與就業（美國）",
+          "score": 75
+        },
+        {
+          "name": "利率、信用與流動性（美國）",
+          "score": 56.25
+        },
+        {
+          "name": "台股本土景氣／廣度／交易",
+          "score": 41
+        }
+      ]
+    }
+  ],
+  "afterScores": [
+    {
+      "market": "US",
+      "score": 64,
+      "dimensions": [
+        {
+          "name": "物價與通膨",
+          "score": 65
+        },
+        {
+          "name": "成長與就業",
+          "score": 72
+        },
+        {
+          "name": "利率、信用與流動性",
+          "score": 56.25
+        },
+        {
+          "name": "美股波動與指數動能",
+          "score": 62.5
+        }
+      ]
+    },
+    {
+      "market": "TW",
+      "score": 60,
+      "dimensions": [
+        {
+          "name": "物價與通膨（美國）",
+          "score": 65
+        },
+        {
+          "name": "成長與就業（美國）",
+          "score": 72
+        },
+        {
+          "name": "利率、信用與流動性（美國）",
+          "score": 56.25
+        },
+        {
+          "name": "台股本土景氣／廣度／交易",
+          "score": 49.375
+        }
+      ]
+    }
+  ],
+  "stocks": [
+    {
+      "symbol": "8299",
+      "before": {
+        "status": "blocked",
+        "outputStatus": "pending",
+        "adaptiveStatus": "data_unavailable",
+        "grade": null,
+        "riskPermission": "not_cleared"
+      },
+      "after": {
+        "status": "valuation_divergence",
+        "outputStatus": "not_rated",
+        "adaptiveStatus": "valuation_divergence",
+        "grade": null,
+        "label": "未評（估值分歧）",
+        "riskPermission": "not_cleared"
+      },
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "evaluated",
+          "changed": true
+        },
+        {
+          "id": 2,
+          "before": "evaluated",
+          "after": "evaluated",
+          "changed": false
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "changed": false
+        },
+        {
+          "id": 4,
+          "before": "warning",
+          "after": "warning",
+          "changed": false
+        },
+        {
+          "id": 5,
+          "before": "partial",
+          "after": "partial",
+          "changed": false
+        },
+        {
+          "id": 6,
+          "before": "partial",
+          "after": "warning",
+          "changed": true
+        },
+        {
+          "id": 7,
+          "before": "blocked",
+          "after": "evaluated",
+          "changed": true
+        },
+        {
+          "id": 8,
+          "before": "partial",
+          "after": "partial",
+          "changed": false
+        },
+        {
+          "id": 9,
+          "before": "blocked",
+          "after": "conditional",
+          "changed": true
+        },
+        {
+          "id": 10,
+          "before": "blocked",
+          "after": "evaluated",
+          "changed": true
+        }
+      ],
+      "scoringUnchanged": true,
+      "vetoUnchanged": false,
+      "valuationDivergence": {
+        "status": "divergent",
+        "divergent": true,
+        "ratio": 10.691538461538462,
+        "threshold": 2,
+        "rows": [
+          {
+            "id": "historical",
+            "label": "歷史常態EPS（跨週期中位數）",
+            "value": 39,
+            "source": "FinMind EPS＋股利／分割／面額變更資料",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "2019–2025完整年度",
+            "date": "2025-12-31",
+            "dateBasis": "資料所屬期末，非發布日",
+            "sampleYears": 7,
+            "analysts": null,
+            "included": true,
+            "reason": null
+          },
+          {
+            "id": "model",
+            "label": "今年模型EPS",
+            "value": 206.883,
+            "source": "FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "2026E",
+            "date": "2026-10-20",
+            "dateBasis": "模型評估基準日",
+            "analysts": null,
+            "reason": null,
+            "included": true
+          },
+          {
+            "id": "ttm",
+            "label": "近四季EPS",
+            "value": 220.2,
+            "source": "FinMind EPS＋股利／分割／面額變更資料",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "最近四季",
+            "date": "2026-06-30",
+            "dateBasis": "財報所屬期末，非發布日",
+            "analysts": null,
+            "included": true,
+            "reason": null
+          },
+          {
+            "id": "consensus",
+            "label": "當年度有效分析師共識",
+            "value": 416.97,
+            "source": "FactSet／鉅亨公開報導",
+            "sourceUrl": "https://gfemobile.cnyes.com/news/id/6629082",
+            "period": "2026E",
+            "date": "2026-10-13",
+            "dateBasis": "共識原更新日",
+            "analysts": 11,
+            "reason": null,
+            "included": true
+          }
+        ],
+        "nextDisclosure": {
+          "period": "2026 Q3",
+          "date": "2026-11-14",
+          "basis": "法定期限",
+          "source": "https://mops.twse.com.tw/",
+          "overdue": false,
+          "note": "非公司公告日期；採曆年制Q1 5/15、Q2 8/14、Q3 11/14、年報3/31"
+        },
+        "reason": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 10.69 倍。",
+        "riskBudgetRelaxed": false
+      },
+      "financialWarnings": [
+        "ROIC 54.74%（2026-06-30）；CFO／淨利 -0.17x；FCF -141.57 億元；財報期間：2023-09-30 至 2026-06-30；官方交叉核對：逐份官方財報核對近12季CFO為-103.95539億元，合併淨利610.30859億元，現金轉換率約-0.17033倍；目前畫面-0.17倍的負值方向與口徑可核實，不能因資料補齊而解除警訊。。負現金流或營運資金異常是資料顯示的警訊，補齊資料不會自動解除。DSO／DIO 已計算，需按產業與期別解讀。"
+      ]
+    },
+    {
+      "symbol": "5289",
+      "before": {
+        "status": "blocked",
+        "outputStatus": "pending",
+        "adaptiveStatus": "data_unavailable",
+        "grade": null,
+        "riskPermission": "not_cleared"
+      },
+      "after": {
+        "status": "valuation_divergence",
+        "outputStatus": "not_rated",
+        "adaptiveStatus": "valuation_divergence",
+        "grade": null,
+        "label": "未評（估值分歧）",
+        "riskPermission": "not_cleared"
+      },
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "evaluated",
+          "changed": true
+        },
+        {
+          "id": 2,
+          "before": "evaluated",
+          "after": "evaluated",
+          "changed": false
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "changed": false
+        },
+        {
+          "id": 4,
+          "before": "blocked",
+          "after": "warning",
+          "changed": true
+        },
+        {
+          "id": 5,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "changed": false
+        },
+        {
+          "id": 6,
+          "before": "blocked",
+          "after": "warning",
+          "changed": true
+        },
+        {
+          "id": 7,
+          "before": "blocked",
+          "after": "evaluated",
+          "changed": true
+        },
+        {
+          "id": 8,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "changed": false
+        },
+        {
+          "id": 9,
+          "before": "blocked",
+          "after": "blocked",
+          "changed": false
+        },
+        {
+          "id": 10,
+          "before": "blocked",
+          "after": "evaluated",
+          "changed": true
+        }
+      ],
+      "scoringUnchanged": true,
+      "vetoUnchanged": false,
+      "valuationDivergence": {
+        "status": "divergent",
+        "divergent": true,
+        "ratio": 14.632348706455268,
+        "threshold": 2,
+        "rows": [
+          {
+            "id": "historical",
+            "label": "歷史常態EPS（跨週期中位數）",
+            "value": 12.232083056821914,
+            "source": "FinMind EPS＋股利／分割／面額變更資料",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "2019–2025完整年度",
+            "date": "2025-12-31",
+            "dateBasis": "資料所屬期末，非發布日",
+            "sampleYears": 7,
+            "analysts": null,
+            "included": true,
+            "reason": null
+          },
+          {
+            "id": "model",
+            "label": "今年模型EPS",
+            "value": 174.80121229309555,
+            "source": "FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "2026E",
+            "date": "2026-10-20",
+            "dateBasis": "模型評估基準日",
+            "analysts": null,
+            "reason": null,
+            "included": true
+          },
+          {
+            "id": "ttm",
+            "label": "近四季EPS",
+            "value": 178.98410469374153,
+            "source": "FinMind EPS＋股利／分割／面額變更資料",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "最近四季",
+            "date": "2026-06-30",
+            "dateBasis": "財報所屬期末，非發布日",
+            "analysts": null,
+            "included": true,
+            "reason": null
+          },
+          {
+            "id": "consensus",
+            "label": "當年度有效分析師共識",
+            "value": null,
+            "source": null,
+            "sourceUrl": null,
+            "period": "2026E",
+            "date": null,
+            "dateBasis": "共識原更新日",
+            "analysts": null,
+            "reason": "缺90日內、同股票同年度TWD共識來源",
+            "included": false
+          }
+        ],
+        "nextDisclosure": {
+          "period": "2026 Q3",
+          "date": "2026-11-14",
+          "basis": "法定期限",
+          "source": "https://mops.twse.com.tw/",
+          "overdue": false,
+          "note": "非公司公告日期；採曆年制Q1 5/15、Q2 8/14、Q3 11/14、年報3/31"
+        },
+        "reason": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 14.63 倍。",
+        "riskBudgetRelaxed": false
+      },
+      "financialWarnings": [
+        "ROIC 138.66%（2026-06-30）；CFO／淨利 0.01x；FCF -6.02 億元；財報期間：2023-09-30 至 2026-06-30；負現金流或營運資金異常是資料顯示的警訊，補齊資料不會自動解除。DSO／DIO 已計算，需按產業與期別解讀。"
+      ]
+    },
+    {
+      "symbol": "2404",
+      "before": {
+        "status": "blocked",
+        "outputStatus": "pending",
+        "adaptiveStatus": "data_unavailable",
+        "grade": null,
+        "riskPermission": "not_cleared"
+      },
+      "after": {
+        "status": "valuation_divergence",
+        "outputStatus": "not_rated",
+        "adaptiveStatus": "valuation_divergence",
+        "grade": null,
+        "label": "未評（估值分歧）",
+        "riskPermission": "not_cleared"
+      },
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "evaluated",
+          "changed": true
+        },
+        {
+          "id": 2,
+          "before": "evaluated",
+          "after": "evaluated",
+          "changed": false
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "changed": false
+        },
+        {
+          "id": 4,
+          "before": "blocked",
+          "after": "partial",
+          "changed": true
+        },
+        {
+          "id": 5,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "changed": false
+        },
+        {
+          "id": 6,
+          "before": "blocked",
+          "after": "partial",
+          "changed": true
+        },
+        {
+          "id": 7,
+          "before": "blocked",
+          "after": "evaluated",
+          "changed": true
+        },
+        {
+          "id": 8,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "changed": false
+        },
+        {
+          "id": 9,
+          "before": "blocked",
+          "after": "partial",
+          "changed": true
+        },
+        {
+          "id": 10,
+          "before": "blocked",
+          "after": "evaluated",
+          "changed": true
+        }
+      ],
+      "scoringUnchanged": true,
+      "vetoUnchanged": false,
+      "valuationDivergence": {
+        "status": "divergent",
+        "divergent": true,
+        "ratio": 3.1179511278195484,
+        "threshold": 2,
+        "rows": [
+          {
+            "id": "historical",
+            "label": "歷史常態EPS（跨週期中位數）",
+            "value": 21.28,
+            "source": "FinMind EPS＋股利／分割／面額變更資料",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "2019–2025完整年度",
+            "date": "2025-12-31",
+            "dateBasis": "資料所屬期末，非發布日",
+            "sampleYears": 7,
+            "analysts": null,
+            "included": true,
+            "reason": null
+          },
+          {
+            "id": "model",
+            "label": "今年模型EPS",
+            "value": 54.209,
+            "source": "FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "2026E",
+            "date": "2026-10-20",
+            "dateBasis": "模型評估基準日",
+            "analysts": null,
+            "reason": null,
+            "included": true
+          },
+          {
+            "id": "ttm",
+            "label": "近四季EPS",
+            "value": 66.35,
+            "source": "FinMind EPS＋股利／分割／面額變更資料",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "最近四季",
+            "date": "2026-06-30",
+            "dateBasis": "財報所屬期末，非發布日",
+            "analysts": null,
+            "included": true,
+            "reason": null
+          },
+          {
+            "id": "consensus",
+            "label": "當年度有效分析師共識",
+            "value": null,
+            "source": null,
+            "sourceUrl": null,
+            "period": "2026E",
+            "date": null,
+            "dateBasis": "共識原更新日",
+            "analysts": null,
+            "reason": "缺90日內、同股票同年度TWD共識來源",
+            "included": false
+          }
+        ],
+        "nextDisclosure": {
+          "period": "2026 Q3",
+          "date": "2026-11-14",
+          "basis": "法定期限",
+          "source": "https://mops.twse.com.tw/",
+          "overdue": false,
+          "note": "非公司公告日期；採曆年制Q1 5/15、Q2 8/14、Q3 11/14、年報3/31"
+        },
+        "reason": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 3.12 倍。",
+        "riskBudgetRelaxed": false
+      },
+      "financialWarnings": [
+        "ROIC 最新權益＋有息負債−現金為非正值；此投入資本口徑不適用 ROIC，不沿用較早期的正分母數值。；CFO／淨利 2.58x；FCF 623.57 億元；財報期間：2023-09-30 至 2026-06-30；DSO／DIO 已計算，需按產業與期別解讀。"
+      ]
+    },
+    {
+      "symbol": "5009",
+      "before": {
+        "status": "blocked",
+        "outputStatus": "pending",
+        "adaptiveStatus": "data_unavailable",
+        "grade": null,
+        "riskPermission": "not_cleared"
+      },
+      "after": {
+        "status": "degraded",
+        "outputStatus": "graded",
+        "adaptiveStatus": "degraded",
+        "grade": "C",
+        "label": "保守觀察",
+        "riskPermission": "not_cleared"
+      },
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "evaluated",
+          "changed": true
+        },
+        {
+          "id": 2,
+          "before": "evaluated",
+          "after": "evaluated",
+          "changed": false
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "changed": false
+        },
+        {
+          "id": 4,
+          "before": "blocked",
+          "after": "warning",
+          "changed": true
+        },
+        {
+          "id": 5,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "changed": false
+        },
+        {
+          "id": 6,
+          "before": "blocked",
+          "after": "warning",
+          "changed": true
+        },
+        {
+          "id": 7,
+          "before": "blocked",
+          "after": "evaluated",
+          "changed": true
+        },
+        {
+          "id": 8,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "changed": false
+        },
+        {
+          "id": 9,
+          "before": "blocked",
+          "after": "conditional",
+          "changed": true
+        },
+        {
+          "id": 10,
+          "before": "blocked",
+          "after": "evaluated",
+          "changed": true
+        }
+      ],
+      "scoringUnchanged": true,
+      "vetoUnchanged": false,
+      "valuationDivergence": {
+        "status": "within_range",
+        "divergent": false,
+        "ratio": 1.5171391926079276,
+        "threshold": 2,
+        "rows": [
+          {
+            "id": "historical",
+            "label": "歷史常態EPS（跨週期中位數）",
+            "value": 2.2,
+            "source": "FinMind EPS＋股利／分割／面額變更資料",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "2019–2025完整年度",
+            "date": "2025-12-31",
+            "dateBasis": "資料所屬期末，非發布日",
+            "sampleYears": 7,
+            "analysts": null,
+            "included": true,
+            "reason": null
+          },
+          {
+            "id": "model",
+            "label": "今年模型EPS",
+            "value": 3.337706223737441,
+            "source": "FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "2026E",
+            "date": "2026-10-20",
+            "dateBasis": "模型評估基準日",
+            "analysts": null,
+            "reason": null,
+            "included": true
+          },
+          {
+            "id": "ttm",
+            "label": "近四季EPS",
+            "value": 2.2,
+            "source": "FinMind EPS＋股利／分割／面額變更資料",
+            "sourceUrl": "https://finmind.github.io/tutor/TaiwanMarket/Fundamental/",
+            "period": "最近四季",
+            "date": "2026-06-30",
+            "dateBasis": "財報所屬期末，非發布日",
+            "analysts": null,
+            "included": true,
+            "reason": null
+          },
+          {
+            "id": "consensus",
+            "label": "當年度有效分析師共識",
+            "value": null,
+            "source": null,
+            "sourceUrl": null,
+            "period": "2026E",
+            "date": null,
+            "dateBasis": "共識原更新日",
+            "analysts": null,
+            "reason": "缺90日內、同股票同年度TWD共識來源",
+            "included": false
+          }
+        ],
+        "nextDisclosure": {
+          "period": "2026 Q3",
+          "date": "2026-11-14",
+          "basis": "法定期限",
+          "source": "https://mops.twse.com.tw/",
+          "overdue": false,
+          "note": "非公司公告日期；採曆年制Q1 5/15、Q2 8/14、Q3 11/14、年報3/31"
+        },
+        "reason": "可用EPS未超過2倍；沿用原估值核驗",
+        "riskBudgetRelaxed": false
+      },
+      "financialWarnings": [
+        "ROIC 3.46%（2026-06-30）；CFO／淨利 0.93x；FCF -15.19 億元；財報期間：2023-09-30 至 2026-06-30；負現金流或營運資金異常是資料顯示的警訊，補齊資料不會自動解除。DSO／DIO 已計算，需按產業與期別解讀。"
+      ]
+    }
+  ],
+  "catalog": {
+    "macro": {
+      "beforeRows": 65,
+      "beforeDistinct": 55,
+      "afterRows": 55,
+      "afterDistinct": 55,
+      "coverage": {
+        "usable": 55,
+        "total": 55,
+        "missingCore": []
+      },
+      "checkedAt": "2026-10-21T05:01:12.038Z"
+    },
+    "market": {
+      "beforeRows": 36,
+      "beforeDistinct": 36,
+      "afterRows": 36,
+      "afterDistinct": 36,
+      "coverage": {
+        "usable": 36,
+        "total": 36
+      },
+      "checkedAt": "2026-10-21T05:01:31.288Z"
+    },
+    "expanded": {
+      "beforeRows": 12,
+      "beforeDistinct": 12,
+      "afterRows": 12,
+      "afterDistinct": 12,
+      "coverage": null,
+      "checkedAt": "2026-10-21T04:56:05.424Z"
+    },
+    "indices": {
+      "beforeRows": 3,
+      "beforeDistinct": 3,
+      "afterRows": 3,
+      "afterDistinct": 3,
+      "coverage": null,
+      "checkedAt": "2026-10-21T05:11:15.872Z"
+    }
+  },
+  "daily": [
+    {
+      "id": "SP500",
+      "before": {
+        "date": "2026-10-19",
+        "value": 7690.73,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -1.4923327577991752,
+        "delta": -116.51000000000022,
+        "previousDate": "2026-10-12",
+        "changeLabel": "較 5 筆前",
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-20",
+        "value": 7712.57,
+        "status": "ok",
+        "is_stale": false,
+        "percent": 0.28397824393784354,
+        "delta": 21.840000000000146,
+        "previousDate": "2026-10-19",
+        "changeLabel": "較前一來源交易日",
+        "comparisonStart": "2026-10-19",
+        "comparisonEnd": "2026-10-20",
+        "comparisonObservations": 1,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "DJIA",
+      "before": {
+        "date": "2026-10-19",
+        "value": 51966.03,
+        "status": "ok",
+        "is_stale": false,
+        "percent": 0.22271702035947527,
+        "delta": 115.47999999999593,
+        "previousDate": "2026-10-12",
+        "changeLabel": "較 5 筆前",
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-20",
+        "value": 52495.88,
+        "status": "ok",
+        "is_stale": false,
+        "percent": 1.019608386478632,
+        "delta": 529.8499999999985,
+        "previousDate": "2026-10-19",
+        "changeLabel": "較前一來源交易日",
+        "comparisonStart": "2026-10-19",
+        "comparisonEnd": "2026-10-20",
+        "comparisonObservations": 1,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "NASDAQCOM",
+      "before": {
+        "date": "2026-10-19",
+        "value": 26430.89,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -2.991312454350936,
+        "delta": -815.010000000002,
+        "previousDate": "2026-10-12",
+        "changeLabel": "較 5 筆前",
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-20",
+        "value": 26424.82,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -0.022965552805820355,
+        "delta": -6.069999999999709,
+        "previousDate": "2026-10-19",
+        "changeLabel": "較前一來源交易日",
+        "comparisonStart": "2026-10-19",
+        "comparisonEnd": "2026-10-20",
+        "comparisonObservations": 1,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "DCOILWTICO",
+      "before": {
+        "date": "2026-10-14",
+        "value": 101.91,
+        "status": "ok",
+        "is_stale": false,
+        "percent": 7.251105030519889,
+        "delta": 6.890000000000001,
+        "previousDate": "2026-10-07",
+        "changeLabel": "較 5 筆前",
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-14",
+        "value": 101.91,
+        "status": "ok",
+        "is_stale": false,
+        "percent": 1.0410469958358037,
+        "delta": 1.0499999999999972,
+        "previousDate": "2026-10-13",
+        "changeLabel": "較前一來源交易日",
+        "comparisonStart": "2026-10-13",
+        "comparisonEnd": "2026-10-14",
+        "comparisonObservations": 1,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "DCOILBRENTEU",
+      "before": {
+        "date": "2026-10-14",
+        "value": 126.55,
+        "status": "ok",
+        "is_stale": false,
+        "percent": 0.43650793650793496,
+        "delta": 0.5499999999999972,
+        "previousDate": "2026-10-07",
+        "changeLabel": "較 5 筆前",
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-14",
+        "value": 126.55,
+        "status": "ok",
+        "is_stale": false,
+        "percent": 0.6121799968198394,
+        "delta": 0.769999999999996,
+        "previousDate": "2026-10-13",
+        "changeLabel": "較前一來源交易日",
+        "comparisonStart": "2026-10-13",
+        "comparisonEnd": "2026-10-14",
+        "comparisonObservations": 1,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "DHHNGSP",
+      "before": {
+        "date": "2026-10-14",
+        "value": 3.22,
+        "status": "ok",
+        "is_stale": false,
+        "percent": 1.8987341772152,
+        "delta": 0.06000000000000005,
+        "previousDate": "2026-10-07",
+        "changeLabel": "較 5 筆前",
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-14",
+        "value": 3.22,
+        "status": "ok",
+        "is_stale": false,
+        "percent": 2.547770700636942,
+        "delta": 0.08000000000000007,
+        "previousDate": "2026-10-13",
+        "changeLabel": "較前一來源交易日",
+        "comparisonStart": "2026-10-13",
+        "comparisonEnd": "2026-10-14",
+        "comparisonObservations": 1,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "TWSE_TAIEX",
+      "before": {
+        "date": "2026-10-20",
+        "value": 46292.93,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -1.13,
+        "delta": -529.15,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-20",
+        "value": 46292.93,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -1.13,
+        "delta": -529.15,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "TWSE_ELECTRONIC",
+      "before": {
+        "date": "2026-10-20",
+        "value": 2896.94,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -0.92,
+        "delta": -26.84,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-20",
+        "value": 2896.94,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -0.92,
+        "delta": -26.84,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "TWSE_SEMICONDUCTOR",
+      "before": {
+        "date": "2026-10-20",
+        "value": 1537.55,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -0.94,
+        "delta": -14.61,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-20",
+        "value": 1537.55,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -0.94,
+        "delta": -14.61,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "TWSE_FINANCIAL",
+      "before": {
+        "date": "2026-10-20",
+        "value": 3627.32,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -2.36,
+        "delta": -87.79,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-20",
+        "value": 3627.32,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -2.36,
+        "delta": -87.79,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "TWSE_SHIPPING",
+      "before": {
+        "date": "2026-10-20",
+        "value": 216.35,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -1,
+        "delta": -2.19,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-20",
+        "value": 216.35,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -1,
+        "delta": -2.19,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      }
+    },
+    {
+      "id": "TWSE_STEEL",
+      "before": {
+        "date": "2026-10-20",
+        "value": 124.89,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -0.51,
+        "delta": -0.64,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      },
+      "after": {
+        "date": "2026-10-20",
+        "value": 124.89,
+        "status": "ok",
+        "is_stale": false,
+        "percent": -0.51,
+        "delta": -0.64,
+        "previousDate": null,
+        "changeLabel": null,
+        "comparisonStart": null,
+        "comparisonEnd": null,
+        "comparisonObservations": null,
+        "periodChange": null,
+        "reason": null
+      }
+    }
+  ],
+  "credit": [
+    {
+      "id": "TWSE_MARGIN_BALANCE_NTD",
+      "date": "2026-10-20",
+      "value": 6381.00111,
+      "finality": "provisional",
+      "reportedDate": "2026-10-20",
+      "history": [
+        {
+          "date": "2026-10-19",
+          "value": 6406.17928,
+          "finality": "final",
+          "reportedDate": "2026-10-20",
+          "fetchedAt": "2026-10-21T04:56:58.257078+00:00",
+          "source": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&date=20261020&selectType=MS"
+        },
+        {
+          "date": "2026-10-20",
+          "value": 6381.00111,
+          "fetchedAt": "2026-10-21T04:56:58.257Z",
+          "source": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&date=20261020&selectType=MS"
+        }
+      ]
+    },
+    {
+      "id": "TWSE_MARGIN_CHANGE_NTD",
+      "date": "2026-10-20",
+      "value": -25.178170000000136,
+      "finality": "provisional",
+      "reportedDate": "2026-10-20",
+      "history": []
+    },
+    {
+      "id": "TWSE_MARGIN_BALANCE_UNITS",
+      "date": "2026-10-20",
+      "value": 9600627,
+      "finality": "provisional",
+      "reportedDate": "2026-10-20",
+      "history": []
+    },
+    {
+      "id": "TWSE_SHORT_BALANCE",
+      "date": "2026-10-20",
+      "value": 215912,
+      "finality": "provisional",
+      "reportedDate": "2026-10-20",
+      "history": [
+        {
+          "date": "2026-10-19",
+          "value": 201911,
+          "finality": "final",
+          "reportedDate": "2026-10-20",
+          "fetchedAt": "2026-10-21T04:56:58.257078+00:00",
+          "source": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&date=20261020&selectType=MS"
+        },
+        {
+          "date": "2026-10-20",
+          "value": 215912,
+          "fetchedAt": "2026-10-21T04:56:58.257Z",
+          "source": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&date=20261020&selectType=MS"
+        }
+      ]
+    },
+    {
+      "id": "TWSE_SHORT_CHANGE",
+      "date": "2026-10-20",
+      "value": 14001,
+      "finality": "provisional",
+      "reportedDate": "2026-10-20",
+      "history": []
+    },
+    {
+      "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+      "date": "2026-10-20",
+      "value": 0.42111958989123094,
+      "finality": "provisional",
+      "reportedDate": "2026-10-20",
+      "history": [
+        {
+          "date": "2026-10-20",
+          "value": 0.42111958989123094,
+          "fetchedAt": "2026-10-21T04:56:58.257Z",
+          "source": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN_TREND?response=json&date=20261020&days=30"
+        }
+      ]
+    }
+  ],
+  "rowChanges": [
+    {
+      "scope": "macro",
+      "id": "SP500",
+      "changes": {
+        "date": {
+          "before": "2026-10-19",
+          "after": "2026-10-20"
+        },
+        "value": {
+          "before": 7690.73,
+          "after": 7712.57
+        },
+        "percent": {
+          "before": -1.4923327577991752,
+          "after": 0.28397824393784354
+        },
+        "delta": {
+          "before": -116.51000000000022,
+          "after": 21.840000000000146
+        },
+        "previousDate": {
+          "before": "2026-10-12",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "DJIA",
+      "changes": {
+        "date": {
+          "before": "2026-10-19",
+          "after": "2026-10-20"
+        },
+        "value": {
+          "before": 51966.03,
+          "after": 52495.88
+        },
+        "percent": {
+          "before": 0.22271702035947527,
+          "after": 1.019608386478632
+        },
+        "delta": {
+          "before": 115.47999999999593,
+          "after": 529.8499999999985
+        },
+        "previousDate": {
+          "before": "2026-10-12",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "NASDAQCOM",
+      "changes": {
+        "date": {
+          "before": "2026-10-19",
+          "after": "2026-10-20"
+        },
+        "value": {
+          "before": 26430.89,
+          "after": 26424.82
+        },
+        "percent": {
+          "before": -2.991312454350936,
+          "after": -0.022965552805820355
+        },
+        "delta": {
+          "before": -815.010000000002,
+          "after": -6.069999999999709
+        },
+        "previousDate": {
+          "before": "2026-10-12",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "TWSE_TOTAL_TRADE_VALUE",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": -33.19133704698029,
+          "after": null
+        },
+        "delta": {
+          "before": -3989.1382328399995,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-13",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "TWSE_MARGIN_BALANCE_NTD",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": -0.3930294314210951,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "TWSE_MARGIN_CHANGE_NTD",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "value": {
+          "before": -25.17817,
+          "after": -25.178170000000136
+        },
+        "percent": {
+          "before": null,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "TWSE_MARGIN_BALANCE_UNITS",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": 0.08257315506177298,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "TWSE_SHORT_BALANCE",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": 6.9342433052186365,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "TWSE_SHORT_CHANGE",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": null,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "TWSE_BREADTH",
+      "changes": {
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "TWSE_DAYTRADE",
+      "changes": {
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "ICE_DXY",
+      "changes": {
+        "date": {
+          "before": "2026-10-20",
+          "after": "2026-10-21"
+        },
+        "value": {
+          "before": 101.7,
+          "after": 101.78
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "DTWEXBGS",
+      "changes": {
+        "percent": {
+          "before": -0.03466535580570751,
+          "after": -0.13531376753835866
+        },
+        "delta": {
+          "before": -0.04210000000000491,
+          "after": -0.16450000000000387
+        },
+        "previousDate": {
+          "before": "2026-10-08",
+          "after": "2026-10-15"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "DCOILWTICO",
+      "changes": {
+        "percent": {
+          "before": 7.251105030519889,
+          "after": 1.0410469958358037
+        },
+        "delta": {
+          "before": 6.890000000000001,
+          "after": 1.0499999999999972
+        },
+        "previousDate": {
+          "before": "2026-10-07",
+          "after": "2026-10-13"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "DCOILBRENTEU",
+      "changes": {
+        "percent": {
+          "before": 0.43650793650793496,
+          "after": 0.6121799968198394
+        },
+        "delta": {
+          "before": 0.5499999999999972,
+          "after": 0.769999999999996
+        },
+        "previousDate": {
+          "before": "2026-10-07",
+          "after": "2026-10-13"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "DHHNGSP",
+      "changes": {
+        "percent": {
+          "before": 1.8987341772152,
+          "after": 2.547770700636942
+        },
+        "delta": {
+          "before": 0.06000000000000005,
+          "after": 0.08000000000000007
+        },
+        "previousDate": {
+          "before": "2026-10-07",
+          "after": "2026-10-13"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "T5YIE",
+      "changes": {
+        "percent": {
+          "before": 2.5751072961373467,
+          "after": 0.42016806722691147
+        },
+        "delta": {
+          "before": 0.06000000000000005,
+          "after": 0.010000000000000231
+        },
+        "previousDate": {
+          "before": "2026-10-13",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "T10YIE",
+      "changes": {
+        "percent": {
+          "before": 0.8583690987124415,
+          "after": 0
+        },
+        "delta": {
+          "before": 0.020000000000000018,
+          "after": 0
+        },
+        "previousDate": {
+          "before": "2026-10-13",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "DFII10",
+      "changes": {
+        "percent": {
+          "before": -3.7800687285223455,
+          "after": 2.1897810218977964
+        },
+        "delta": {
+          "before": -0.11000000000000032,
+          "after": 0.05999999999999961
+        },
+        "previousDate": {
+          "before": "2026-10-09",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "BAMLC0A0CM",
+      "changes": {
+        "percent": {
+          "before": 4.8192771084337505,
+          "after": 2.35294117647058
+        },
+        "delta": {
+          "before": 0.040000000000000036,
+          "after": 0.020000000000000018
+        },
+        "previousDate": {
+          "before": "2026-10-12",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "SOFR",
+      "changes": {
+        "percent": {
+          "before": 0,
+          "after": -0.2577319587628857
+        },
+        "delta": {
+          "before": 0,
+          "after": -0.009999999999999787
+        },
+        "previousDate": {
+          "before": "2026-10-09",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "IORB",
+      "changes": {
+        "previousDate": {
+          "before": "2026-10-15",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "RPONTSYD",
+      "changes": {
+        "percent": {
+          "before": null,
+          "after": -100
+        },
+        "delta": {
+          "before": 0,
+          "after": -0.011
+        },
+        "previousDate": {
+          "before": "2026-10-13",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "NYFED_REPO",
+      "changes": {
+        "percent": {
+          "before": null,
+          "after": 509.0909090909092
+        },
+        "delta": {
+          "before": null,
+          "after": 0.05600000000000001
+        },
+        "previousDate": {
+          "before": null,
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "NYFED_SRP",
+      "changes": {
+        "percent": {
+          "before": null,
+          "after": -100
+        },
+        "delta": {
+          "before": null,
+          "after": -0.011
+        },
+        "previousDate": {
+          "before": null,
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "RRPONTSYD",
+      "changes": {
+        "percent": {
+          "before": -17.454545454545457,
+          "after": -31.212121212121215
+        },
+        "delta": {
+          "before": -0.048000000000000015,
+          "after": -0.10300000000000001
+        },
+        "previousDate": {
+          "before": "2026-10-13",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "STLFSI4",
+      "changes": {
+        "percent": {
+          "before": -8.992169739833278,
+          "after": 54.13903743315507
+        },
+        "delta": {
+          "before": 0.07119999999999993,
+          "after": -0.2531
+        },
+        "previousDate": {
+          "before": "2026-09-04",
+          "after": "2026-10-02"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "US3M",
+      "changes": {
+        "percent": {
+          "before": 0.9852216748768461,
+          "after": 0.4901960784313708
+        },
+        "delta": {
+          "before": 0.040000000000000036,
+          "after": 0.019999999999999574
+        },
+        "previousDate": {
+          "before": "2026-10-09",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "US10Y",
+      "changes": {
+        "percent": {
+          "before": -1.717557251908397,
+          "after": 1.1787819253438192
+        },
+        "delta": {
+          "before": -0.08999999999999986,
+          "after": 0.0600000000000005
+        },
+        "previousDate": {
+          "before": "2026-10-09",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "US30Y",
+      "changes": {
+        "percent": {
+          "before": -2.142857142857124,
+          "after": 0.9208103130755152
+        },
+        "delta": {
+          "before": -0.11999999999999922,
+          "after": 0.05000000000000071
+        },
+        "previousDate": {
+          "before": "2026-10-09",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "T10Y3M",
+      "changes": {
+        "percent": {
+          "before": -9.473684210526311,
+          "after": -2.2727272727272707
+        },
+        "delta": {
+          "before": -0.08999999999999997,
+          "after": -0.020000000000000018
+        },
+        "previousDate": {
+          "before": "2026-10-13",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "T10Y2Y",
+      "changes": {
+        "percent": {
+          "before": -21.42857142857142,
+          "after": -13.157894736842103
+        },
+        "delta": {
+          "before": -0.08999999999999997,
+          "after": -0.04999999999999999
+        },
+        "previousDate": {
+          "before": "2026-10-13",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "VIXCLS",
+      "changes": {
+        "percent": {
+          "before": 21.236028928336626,
+          "after": -7.753876938469217
+        },
+        "delta": {
+          "before": 3.2300000000000004,
+          "after": -1.5499999999999972
+        },
+        "previousDate": {
+          "before": "2026-10-12",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "DEXJPUS",
+      "changes": {
+        "percent": {
+          "before": -0.20842544053559786,
+          "after": -0.11379441143002378
+        },
+        "delta": {
+          "before": -0.3300000000000125,
+          "after": -0.18000000000000682
+        },
+        "previousDate": {
+          "before": "2026-10-08",
+          "after": "2026-10-15"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": null,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "TWSE_CREDIT_TRADE_VALUE",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": null,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "macro",
+      "id": "XAU",
+      "changes": {
+        "value": {
+          "before": 4115.799805,
+          "after": 4115.700195
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "XAU",
+      "changes": {
+        "value": {
+          "before": 4119.5,
+          "after": 4115.305
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "XAG",
+      "changes": {
+        "value": {
+          "before": 57.5775,
+          "after": 57.266
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "XAU_XAG",
+      "changes": {
+        "value": {
+          "before": 71.54704528678737,
+          "after": 71.86297279362974
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "NYFED_REPO",
+      "changes": {
+        "percent": {
+          "before": null,
+          "after": 509.0909090909092
+        },
+        "delta": {
+          "before": null,
+          "after": 0.05600000000000001
+        },
+        "previousDate": {
+          "before": null,
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_TAIEX",
+      "changes": {
+        "percent": {
+          "before": -1.13,
+          "after": -1.130129203999486
+        },
+        "delta": {
+          "before": -529.15,
+          "after": -529.1500000000015
+        },
+        "previousDate": {
+          "before": null,
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": null,
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_TOTAL_TRADE_VALUE",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": -33.19133704698029,
+          "after": null
+        },
+        "delta": {
+          "before": -3989.1382328399995,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-13",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_MARGIN_BALANCE_NTD",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": -0.3930294314210951,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_MARGIN_CHANGE_NTD",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "value": {
+          "before": -25.17817,
+          "after": -25.178170000000136
+        },
+        "percent": {
+          "before": null,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_MARGIN_BALANCE_UNITS",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": 0.08257315506177298,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_SHORT_BALANCE",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": 6.9342433052186365,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_SHORT_CHANGE",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": null,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": null,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        },
+        "finality": {
+          "before": null,
+          "after": "provisional"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_CREDIT_TRADE_VALUE",
+      "changes": {
+        "reason": {
+          "before": null,
+          "after": null
+        },
+        "percent": {
+          "before": null,
+          "after": null
+        },
+        "previousDate": {
+          "before": "2026-10-20",
+          "after": null
+        },
+        "changeLabel": {
+          "before": "較前日餘額",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_BREADTH",
+      "changes": {
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "TWSE_DAYTRADE",
+      "changes": {
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "NYFED_SRP",
+      "changes": {
+        "percent": {
+          "before": null,
+          "after": -100
+        },
+        "delta": {
+          "before": null,
+          "after": -0.011
+        },
+        "previousDate": {
+          "before": null,
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "ICE_DXY",
+      "changes": {
+        "date": {
+          "before": "2026-10-20",
+          "after": "2026-10-21"
+        },
+        "value": {
+          "before": 101.7,
+          "after": 101.78
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "DTWEXBGS",
+      "changes": {
+        "percent": {
+          "before": -0.03466535580570751,
+          "after": -0.13531376753835866
+        },
+        "delta": {
+          "before": -0.04210000000000491,
+          "after": -0.16450000000000387
+        },
+        "previousDate": {
+          "before": "2026-10-08",
+          "after": "2026-10-15"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "DCOILWTICO",
+      "changes": {
+        "percent": {
+          "before": 7.251105030519889,
+          "after": 1.0410469958358037
+        },
+        "delta": {
+          "before": 6.890000000000001,
+          "after": 1.0499999999999972
+        },
+        "previousDate": {
+          "before": "2026-10-07",
+          "after": "2026-10-13"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "DCOILBRENTEU",
+      "changes": {
+        "percent": {
+          "before": 0.43650793650793496,
+          "after": 0.6121799968198394
+        },
+        "delta": {
+          "before": 0.5499999999999972,
+          "after": 0.769999999999996
+        },
+        "previousDate": {
+          "before": "2026-10-07",
+          "after": "2026-10-13"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "DHHNGSP",
+      "changes": {
+        "percent": {
+          "before": 1.8987341772152,
+          "after": 2.547770700636942
+        },
+        "delta": {
+          "before": 0.06000000000000005,
+          "after": 0.08000000000000007
+        },
+        "previousDate": {
+          "before": "2026-10-07",
+          "after": "2026-10-13"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "DEXJPUS",
+      "changes": {
+        "percent": {
+          "before": -0.20842544053559786,
+          "after": -0.11379441143002378
+        },
+        "delta": {
+          "before": -0.3300000000000125,
+          "after": -0.18000000000000682
+        },
+        "previousDate": {
+          "before": "2026-10-08",
+          "after": "2026-10-15"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "US3M",
+      "changes": {
+        "percent": {
+          "before": 0.9852216748768461,
+          "after": 0.4901960784313708
+        },
+        "delta": {
+          "before": 0.040000000000000036,
+          "after": 0.019999999999999574
+        },
+        "previousDate": {
+          "before": "2026-10-09",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "US10Y",
+      "changes": {
+        "percent": {
+          "before": -1.717557251908397,
+          "after": 1.1787819253438192
+        },
+        "delta": {
+          "before": -0.08999999999999986,
+          "after": 0.0600000000000005
+        },
+        "previousDate": {
+          "before": "2026-10-09",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "US30Y",
+      "changes": {
+        "percent": {
+          "before": -2.142857142857124,
+          "after": 0.9208103130755152
+        },
+        "delta": {
+          "before": -0.11999999999999922,
+          "after": 0.05000000000000071
+        },
+        "previousDate": {
+          "before": "2026-10-09",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "market",
+      "id": "VIXCLS",
+      "changes": {
+        "percent": {
+          "before": 21.236028928336626,
+          "after": -7.753876938469217
+        },
+        "delta": {
+          "before": 3.2300000000000004,
+          "after": -1.5499999999999972
+        },
+        "previousDate": {
+          "before": "2026-10-12",
+          "after": "2026-10-16"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "PAYEMS",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "UNRATE",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "SAHMREALTIME",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "RSAFS",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "NOCDFSA066MSFRBPHI",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "NYFED_EMPIRE_ORDERS",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "DALLAS_TMOS_ORDERS",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "GDPNOW",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": null
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "BAMLH0A0HYM2",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "TW_EXPORT_ORDERS",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "TW_NDC_SIGNAL",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "expanded",
+      "id": "TW_M1B_M2",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        }
+      }
+    },
+    {
+      "scope": "indices",
+      "id": "SP500",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        },
+        "date": {
+          "before": "2026-10-19",
+          "after": "2026-10-20"
+        },
+        "value": {
+          "before": 7690.73,
+          "after": 7712.57
+        },
+        "percent": {
+          "before": -1.4923327577991752,
+          "after": 0.28397824393784354
+        },
+        "delta": {
+          "before": -116.51000000000022,
+          "after": 21.840000000000146
+        },
+        "previousDate": {
+          "before": "2026-10-12",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "indices",
+      "id": "DJIA",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        },
+        "date": {
+          "before": "2026-10-19",
+          "after": "2026-10-20"
+        },
+        "value": {
+          "before": 51966.03,
+          "after": 52495.88
+        },
+        "percent": {
+          "before": 0.22271702035947527,
+          "after": 1.019608386478632
+        },
+        "delta": {
+          "before": 115.47999999999593,
+          "after": 529.8499999999985
+        },
+        "previousDate": {
+          "before": "2026-10-12",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    },
+    {
+      "scope": "indices",
+      "id": "NASDAQCOM",
+      "changes": {
+        "status": {
+          "before": "stale",
+          "after": "ok"
+        },
+        "is_stale": {
+          "before": true,
+          "after": false
+        },
+        "reason": {
+          "before": "快取超過有效期；僅供顯示，不能作最新驗證",
+          "after": null
+        },
+        "date": {
+          "before": "2026-10-19",
+          "after": "2026-10-20"
+        },
+        "value": {
+          "before": 26430.89,
+          "after": 26424.82
+        },
+        "percent": {
+          "before": -2.991312454350936,
+          "after": -0.022965552805820355
+        },
+        "delta": {
+          "before": -815.010000000002,
+          "after": -6.069999999999709
+        },
+        "previousDate": {
+          "before": "2026-10-12",
+          "after": "2026-10-19"
+        },
+        "changeLabel": {
+          "before": "較 5 筆前",
+          "after": "較前一來源交易日"
+        }
+      }
+    }
+  ],
+  "sector": {
+    "status": "OK",
+    "sourceRole": "主要來源",
+    "priceField": "adjClose",
+    "coverage": {
+      "valid": 11,
+      "total": 11
+    },
+    "warningCodes": []
+  },
+  "http": [
+    {
+      "name": "model-8299",
+      "http": 200
+    },
+    {
+      "name": "model-5289",
+      "http": 200
+    },
+    {
+      "name": "model-2404",
+      "http": 200
+    },
+    {
+      "name": "model-5009",
+      "http": 200
+    },
+    {
+      "name": "macro",
+      "http": 200
+    },
+    {
+      "name": "market",
+      "http": 200
+    },
+    {
+      "name": "expanded",
+      "http": 200
+    },
+    {
+      "name": "indices",
+      "http": 200
+    },
+    {
+      "name": "official-status",
+      "http": 200
+    },
+    {
+      "name": "tools",
+      "http": 200
+    },
+    {
+      "name": "automation",
+      "http": 200
+    },
+    {
+      "name": "history",
+      "http": 200
+    },
+    {
+      "name": "sectors",
+      "http": 200
+    },
+    {
+      "name": "html",
+      "http": 200
+    }
+  ]
+}
