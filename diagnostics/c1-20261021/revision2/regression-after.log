@@ -1,0 +1,32 @@
+✔ same facts give byte-identical deterministic conclusion; no input mutation (5.322811ms)
+✔ missing or unapproved factors never count as zero, total and allocation stay unset (0.378067ms)
+✔ gold cannot change a factor, active rating contribution or risk budget (0.386239ms)
+✔ an existing VETO always takes precedence over positive research previews (0.33877ms)
+✔ holding mapping requires an explicit step, simulation never applies a budget (0.17701ms)
+✔ attack-defense zero axis uses all aligned eleven sectors (0.235577ms)
+✔ TAIEX annual line cannot be invented from the existing short history (0.171663ms)
+✔ real Site report adds advisory conclusion without changing original scores or gates (80.197248ms)
+✔ C1 provides exactly valuation, technical, macro reasons and high evidence confidence on complete verified inputs (0.849271ms)
+✔ C1 EPS disagreement preserves unrated valuation, weak technical facts, and never calls it cheap (0.637539ms)
+✔ C1 unknown veto lowers confidence without suppressing an actual triggered veto (0.377246ms)
+✔ C1 missing macro evidence produces low confidence, never bullish or fabricated neutral (0.232192ms)
+✔ C1 stale, future and malformed market observations remain gaps and do not crash (0.347461ms)
+✔ C1 stock switch mismatch and stale stock block inherited valuation and technical confidence (0.268506ms)
+✔ C1 partial four-line payload cannot masquerade as verified trend (0.209288ms)
+✔ C1 cash warning is visible even when EPS divergence takes precedence (0.281485ms)
+✔ C1 duplicate EPS basis cannot count as two independent evidence groups (0.240254ms)
+✔ C1 conflicting duplicate EPS basis is rejected rather than chosen by input order (0.182328ms)
+✔ C1 contradictory MA total and repeated periods cannot imply verified strength (0.287584ms)
+✔ C1 actual VETO nested assessment count overrides an inconsistent clear label (0.160126ms)
+✔ new metrics display missing facts honestly and clear immediately on ticker change (4.985885ms)
+✔ an extreme zero-axis observation cannot freeze the dashboard by creating unbounded ticks (1.641223ms)
+✔ real bundled model exposes new panels while preserving existing rating and Gate outputs (92.236093ms)
+✔ C1 renders confidence, all three reasons, warning and change conditions outside collapsed raw observations (3.795682ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 224.253784
