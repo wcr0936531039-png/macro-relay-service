@@ -1,3 +1,13 @@
+# 最新：2026-10-22 06:26巡檢被授權層阻擋，排程已暫停
+
+[本輪完整阻擋紀錄](automation-runs/20261022-0626-blocked.md)。
+
+正式站仍為v231且確認擁有者私人存取，但平台自動核准層把完整巡檢誤判成先前本機C1範圍，拒絕使用短期服務憑證讀取私人站API。本輪未取得official-data-tools／market-scanner，未收集或匯入資料，未啟動refresh-all，沒有runId或新增巡檢歷史；不可把舊覆蓋率宣稱成這一輪結果。
+
+為避免反覆產生假巡檢，既有「台股整站每日巡檢」已暫停。這不是官方來源403／503或Worker崩潰。需修正核准範圍後補跑完整巡檢，再恢復排程。沒有洩露或保存服務憑證。
+
+---
+
 # 最新：2026-10-21 C1修訂2本機驗收完成，未部署
 
 [本輪完整報告](c1-20261021/revision2/report.md)｜[完整來源diff](c1-20261021/revision2/c1.patch)｜[SHA-256](c1-20261021/revision2/manifest.json)｜[完整npm test](c1-20261021/revision2/npm-test.log)｜[相對v231前後比較](c1-20261021/revision2/before-after.json)｜[相對前一輪C1比較](c1-20261021/revision2/previous-c1-comparison.json)｜[Gemini固定交接](GEMINI_HANDOFF.md)
