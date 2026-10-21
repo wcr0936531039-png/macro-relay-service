@@ -1,0 +1,65 @@
+{
+  "scope": "Identical fresh public stock snapshots, macro/market/expanded/scanner and source-qualified company/consensus evidence supplied to both v230 and deployed v231; no private visitor impersonation. Live chronology changes are separately reported.",
+  "stocks": [
+    {
+      "symbol": "8299",
+      "inputCheckedAt": "2026-10-21T05:06:18.128Z",
+      "priceDate": "2026-10-20",
+      "beforeGrade": "D",
+      "afterGrade": null,
+      "label": "未評（估值分歧）",
+      "ratio": 10.691538461538462,
+      "gateChanges": [],
+      "gateCount": 10,
+      "scoringUnchanged": true,
+      "vetoUnchanged": true,
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared"
+    },
+    {
+      "symbol": "5289",
+      "inputCheckedAt": "2026-10-21T05:01:53.187Z",
+      "priceDate": "2026-10-20",
+      "beforeGrade": "D",
+      "afterGrade": null,
+      "label": "未評（估值分歧）",
+      "ratio": 14.632348706455268,
+      "gateChanges": [],
+      "gateCount": 10,
+      "scoringUnchanged": true,
+      "vetoUnchanged": true,
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared"
+    },
+    {
+      "symbol": "2404",
+      "inputCheckedAt": "2026-10-21T05:01:52.998Z",
+      "priceDate": "2026-10-20",
+      "beforeGrade": "D",
+      "afterGrade": null,
+      "label": "未評（估值分歧）",
+      "ratio": 3.1179511278195484,
+      "gateChanges": [],
+      "gateCount": 10,
+      "scoringUnchanged": true,
+      "vetoUnchanged": true,
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared"
+    },
+    {
+      "symbol": "5009",
+      "inputCheckedAt": "2026-10-21T05:01:50.090Z",
+      "priceDate": "2026-10-20",
+      "beforeGrade": "C",
+      "afterGrade": "C",
+      "label": "保守觀察",
+      "ratio": 1.5171391926079276,
+      "gateChanges": [],
+      "gateCount": 10,
+      "scoringUnchanged": true,
+      "vetoUnchanged": true,
+      "riskPermissionBefore": "not_cleared",
+      "riskPermissionAfter": "not_cleared"
+    }
+  ]
+}
