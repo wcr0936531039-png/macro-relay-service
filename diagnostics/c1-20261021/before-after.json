@@ -1,0 +1,373 @@
+{
+  "scope": "Local C1 versus v231, same frozen October 21 stock/macro/market/expanded/scanner and source-qualified evidence. Standardized freshness flags and public evidence context; not a new live Site readback. No cross-market historical snapshot supplied, so missing annual-line evidence stays missing.",
+  "stocks": [
+    {
+      "symbol": "8299",
+      "inputCheckedAt": "2026-10-21T05:06:18.128Z",
+      "priceDate": "2026-10-20",
+      "grade": null,
+      "label": "未評（估值分歧）",
+      "riskPermission": "not_cleared",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "gateCount": 10,
+      "before": {
+        "conclusion": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 10.69 倍。",
+        "confidence": {
+          "label": "受資料缺口限制",
+          "coverage": 5,
+          "total": 9,
+          "isReturnProbability": false
+        },
+        "reasons": [
+          "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 10.69 倍。",
+          "CFO／淨利 -0.17倍；FCF -141.57億元；此為已核算警訊。",
+          "四條均線觀測強弱 -4（範圍 −4～+4），屬草案參考。"
+        ],
+        "changeConditions": [
+          "最新季度現金流與財報警訊依實際財報重新核算。",
+          "補齊原Gate可追溯來源；草案門檻完成回測及擁有者核准後另行整合。",
+          "行情、官方產業分類與來源時效更新後重新計算，未知不視為安全。"
+        ],
+        "warnings": [],
+        "reasonDetails": [],
+        "activeScoreContribution": 0,
+        "appliedToRating": false,
+        "appliedToRiskBudget": false,
+        "holdingSuggestedRange": null
+      },
+      "after": {
+        "conclusion": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 10.69 倍。 技術偏弱。",
+        "confidence": {
+          "level": "低",
+          "label": "低",
+          "coverage": 2,
+          "total": 3,
+          "isReturnProbability": false,
+          "basis": "估值、技術、總經三類證據完整度；不表示報酬勝率或允許承擔風險",
+          "limitations": [
+            "同日台股240日線",
+            "有效高收益債20日變化",
+            "11類股同口徑攻守差",
+            "既有否決條件尚有未知",
+            "EPS口徑分歧，無法判定貴便宜"
+          ],
+          "rule": "任一類證據不齊＝低；三類齊但估值分歧／否決未知＝中；三類齊且無上述限制＝高（顯示規則，非評分門檻）"
+        },
+        "reasons": [
+          "估值：估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 10.69 倍。",
+          "技術：5／10／20／60日均線合計 -4（−4～+4）；技術偏弱，只描述現況，不調評級。",
+          "總經／市場：總經／市場可比觀測不足；未校準門檻不合成利多／利空評分。"
+        ],
+        "changeConditions": [
+          "重新核驗各EPS來源後，最大／最小不再嚴格大於既有2倍界線，才重新評估估值分歧；不自動通過Gate。",
+          "目前偏弱的5／10／20／60日均線須觀察到收盤高於各自均線且均線上行，才改列該線轉強；逐日重算，不預測轉折。",
+          "補齊台股241交易日、利差21筆與11類股同口徑觀測，才形成完整總經理由。",
+          "新一期正式財報發布後重算CFO／淨利與FCF；僅實際轉正或原始財報修訂才更新對應警訊，歷史不覆蓋。",
+          "既有否決須逐條取得可追溯證據並依原規則重算；綜合判斷完成不代表風險限制解除。"
+        ],
+        "warnings": [
+          "已核算財報警訊：CFO／淨利 -0.17倍，FCF -141.57億元；不因補充觀測解除。"
+        ],
+        "reasonDetails": [
+          {
+            "category": "valuation",
+            "complete": true
+          },
+          {
+            "category": "technical",
+            "complete": true
+          },
+          {
+            "category": "macro",
+            "complete": false
+          }
+        ],
+        "activeScoreContribution": 0,
+        "appliedToRating": false,
+        "appliedToRiskBudget": false,
+        "holdingSuggestedRange": null
+      }
+    },
+    {
+      "symbol": "5289",
+      "inputCheckedAt": "2026-10-21T05:01:53.187Z",
+      "priceDate": "2026-10-20",
+      "grade": null,
+      "label": "未評（估值分歧）",
+      "riskPermission": "not_cleared",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "gateCount": 10,
+      "before": {
+        "conclusion": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 14.63 倍。",
+        "confidence": {
+          "label": "受資料缺口限制",
+          "coverage": 5,
+          "total": 9,
+          "isReturnProbability": false
+        },
+        "reasons": [
+          "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 14.63 倍。",
+          "CFO／淨利 0.01倍；FCF -6.02億元；此為已核算警訊。",
+          "四條均線觀測強弱 -4（範圍 −4～+4），屬草案參考。"
+        ],
+        "changeConditions": [
+          "最新季度現金流與財報警訊依實際財報重新核算。",
+          "補齊原Gate可追溯來源；草案門檻完成回測及擁有者核准後另行整合。",
+          "行情、官方產業分類與來源時效更新後重新計算，未知不視為安全。"
+        ],
+        "warnings": [],
+        "reasonDetails": [],
+        "activeScoreContribution": 0,
+        "appliedToRating": false,
+        "appliedToRiskBudget": false,
+        "holdingSuggestedRange": null
+      },
+      "after": {
+        "conclusion": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 14.63 倍。 技術偏弱。",
+        "confidence": {
+          "level": "低",
+          "label": "低",
+          "coverage": 2,
+          "total": 3,
+          "isReturnProbability": false,
+          "basis": "估值、技術、總經三類證據完整度；不表示報酬勝率或允許承擔風險",
+          "limitations": [
+            "同日台股240日線",
+            "有效高收益債20日變化",
+            "11類股同口徑攻守差",
+            "既有否決條件尚有未知",
+            "EPS口徑分歧，無法判定貴便宜"
+          ],
+          "rule": "任一類證據不齊＝低；三類齊但估值分歧／否決未知＝中；三類齊且無上述限制＝高（顯示規則，非評分門檻）"
+        },
+        "reasons": [
+          "估值：估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 14.63 倍。",
+          "技術：5／10／20／60日均線合計 -4（−4～+4）；技術偏弱，只描述現況，不調評級。",
+          "總經／市場：總經／市場可比觀測不足；未校準門檻不合成利多／利空評分。"
+        ],
+        "changeConditions": [
+          "重新核驗各EPS來源後，最大／最小不再嚴格大於既有2倍界線，才重新評估估值分歧；不自動通過Gate。",
+          "目前偏弱的5／10／20／60日均線須觀察到收盤高於各自均線且均線上行，才改列該線轉強；逐日重算，不預測轉折。",
+          "補齊台股241交易日、利差21筆與11類股同口徑觀測，才形成完整總經理由。",
+          "新一期正式財報發布後重算CFO／淨利與FCF；僅實際轉正或原始財報修訂才更新對應警訊，歷史不覆蓋。",
+          "既有否決須逐條取得可追溯證據並依原規則重算；綜合判斷完成不代表風險限制解除。"
+        ],
+        "warnings": [
+          "已核算財報警訊：CFO／淨利 0.01倍，FCF -6.02億元；不因補充觀測解除。"
+        ],
+        "reasonDetails": [
+          {
+            "category": "valuation",
+            "complete": true
+          },
+          {
+            "category": "technical",
+            "complete": true
+          },
+          {
+            "category": "macro",
+            "complete": false
+          }
+        ],
+        "activeScoreContribution": 0,
+        "appliedToRating": false,
+        "appliedToRiskBudget": false,
+        "holdingSuggestedRange": null
+      }
+    },
+    {
+      "symbol": "2404",
+      "inputCheckedAt": "2026-10-21T05:01:52.998Z",
+      "priceDate": "2026-10-20",
+      "grade": null,
+      "label": "未評（估值分歧）",
+      "riskPermission": "not_cleared",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "gateCount": 10,
+      "before": {
+        "conclusion": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 3.12 倍。",
+        "confidence": {
+          "label": "受資料缺口限制",
+          "coverage": 5,
+          "total": 9,
+          "isReturnProbability": false
+        },
+        "reasons": [
+          "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 3.12 倍。",
+          "四條均線觀測強弱 -3（範圍 −4～+4），屬草案參考。"
+        ],
+        "changeConditions": [
+          "最新季度現金流與財報警訊依實際財報重新核算。",
+          "補齊原Gate可追溯來源；草案門檻完成回測及擁有者核准後另行整合。",
+          "行情、官方產業分類與來源時效更新後重新計算，未知不視為安全。"
+        ],
+        "warnings": [],
+        "reasonDetails": [],
+        "activeScoreContribution": 0,
+        "appliedToRating": false,
+        "appliedToRiskBudget": false,
+        "holdingSuggestedRange": null
+      },
+      "after": {
+        "conclusion": "估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 3.12 倍。 技術偏弱。",
+        "confidence": {
+          "level": "低",
+          "label": "低",
+          "coverage": 2,
+          "total": 3,
+          "isReturnProbability": false,
+          "basis": "估值、技術、總經三類證據完整度；不表示報酬勝率或允許承擔風險",
+          "limitations": [
+            "同日台股240日線",
+            "有效高收益債20日變化",
+            "11類股同口徑攻守差",
+            "既有否決條件尚有未知",
+            "EPS口徑分歧，無法判定貴便宜"
+          ],
+          "rule": "任一類證據不齊＝低；三類齊但估值分歧／否決未知＝中；三類齊且無上述限制＝高（顯示規則，非評分門檻）"
+        },
+        "reasons": [
+          "估值：估值分歧過大，暫不判斷貴或便宜；EPS最大／最小為 3.12 倍。",
+          "技術：5／10／20／60日均線合計 -3（−4～+4）；技術偏弱，只描述現況，不調評級。",
+          "總經／市場：總經／市場可比觀測不足；未校準門檻不合成利多／利空評分。"
+        ],
+        "changeConditions": [
+          "重新核驗各EPS來源後，最大／最小不再嚴格大於既有2倍界線，才重新評估估值分歧；不自動通過Gate。",
+          "目前偏弱的5／10／60日均線須觀察到收盤高於各自均線且均線上行，才改列該線轉強；逐日重算，不預測轉折。",
+          "補齊台股241交易日、利差21筆與11類股同口徑觀測，才形成完整總經理由。",
+          "既有否決須逐條取得可追溯證據並依原規則重算；綜合判斷完成不代表風險限制解除。"
+        ],
+        "warnings": [],
+        "reasonDetails": [
+          {
+            "category": "valuation",
+            "complete": true
+          },
+          {
+            "category": "technical",
+            "complete": true
+          },
+          {
+            "category": "macro",
+            "complete": false
+          }
+        ],
+        "activeScoreContribution": 0,
+        "appliedToRating": false,
+        "appliedToRiskBudget": false,
+        "holdingSuggestedRange": null
+      }
+    },
+    {
+      "symbol": "5009",
+      "inputCheckedAt": "2026-10-21T05:01:50.090Z",
+      "priceDate": "2026-10-20",
+      "grade": "C",
+      "label": "保守觀察",
+      "riskPermission": "not_cleared",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "gateCount": 10,
+      "before": {
+        "conclusion": "維持保守觀察，先追蹤獲利轉成現金的能力。",
+        "confidence": {
+          "label": "受資料缺口限制",
+          "coverage": 6,
+          "total": 9,
+          "isReturnProbability": false
+        },
+        "reasons": [
+          "CFO／淨利 0.93倍；FCF -15.19億元；此為已核算警訊。",
+          "既有自訂退避評級 C；原始Gate限制與未知否決條件仍保留。",
+          "四條均線觀測強弱 +2（範圍 −4～+4），屬草案參考。"
+        ],
+        "changeConditions": [
+          "最新季度現金流與財報警訊依實際財報重新核算。",
+          "補齊原Gate可追溯來源；草案門檻完成回測及擁有者核准後另行整合。",
+          "行情、官方產業分類與來源時效更新後重新計算，未知不視為安全。"
+        ],
+        "warnings": [],
+        "reasonDetails": [],
+        "activeScoreContribution": 0,
+        "appliedToRating": false,
+        "appliedToRiskBudget": false,
+        "holdingSuggestedRange": null
+      },
+      "after": {
+        "conclusion": "維持保守觀察，先追蹤獲利轉成現金的能力。 技術偏強。",
+        "confidence": {
+          "level": "低",
+          "label": "低",
+          "coverage": 1,
+          "total": 3,
+          "isReturnProbability": false,
+          "basis": "估值、技術、總經三類證據完整度；不表示報酬勝率或允許承擔風險",
+          "limitations": [
+            "至少兩組附日期來源的有效EPS",
+            "同日台股240日線",
+            "有效高收益債20日變化",
+            "11類股同口徑攻守差",
+            "既有否決條件尚有未知"
+          ],
+          "rule": "任一類證據不齊＝低；三類齊但估值分歧／否決未知＝中；三類齊且無上述限制＝高（顯示規則，非評分門檻）"
+        },
+        "reasons": [
+          "估值：估值證據不足或代號／日期未對齊，暫不判斷貴或便宜。",
+          "技術：5／10／20／60日均線合計 +2（−4～+4）；技術偏強，只描述現況，不調評級。",
+          "總經／市場：總經／市場可比觀測不足；未校準門檻不合成利多／利空評分。"
+        ],
+        "changeConditions": [
+          "估值來源新增、修訂或失效時，以相同期間及股數口徑重算；未核准貴便宜區間前保留未評。",
+          "目前偏強的10／20日均線若收盤低於各自均線且均線下行，改列該線轉弱。",
+          "補齊台股241交易日、利差21筆與11類股同口徑觀測，才形成完整總經理由。",
+          "新一期正式財報發布後重算CFO／淨利與FCF；僅實際轉正或原始財報修訂才更新對應警訊，歷史不覆蓋。",
+          "既有否決須逐條取得可追溯證據並依原規則重算；綜合判斷完成不代表風險限制解除。"
+        ],
+        "warnings": [
+          "已核算財報警訊：CFO／淨利 0.93倍，FCF -15.19億元；不因補充觀測解除。"
+        ],
+        "reasonDetails": [
+          {
+            "category": "valuation",
+            "complete": false
+          },
+          {
+            "category": "technical",
+            "complete": true
+          },
+          {
+            "category": "macro",
+            "complete": false
+          }
+        ],
+        "activeScoreContribution": 0,
+        "appliedToRating": false,
+        "appliedToRiskBudget": false,
+        "holdingSuggestedRange": null
+      }
+    }
+  ]
+}
