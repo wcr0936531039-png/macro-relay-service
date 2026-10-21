@@ -1,0 +1,159 @@
+diff --git a/dist/index.html b/dist/index.html
+index 333beca..e493c50 100644
+--- a/dist/index.html
++++ b/dist/index.html
+@@ -954,8 +954,11 @@ function renderAdvisoryDecision(host,decision){
+  const divergence=decision.valuationDivergence;
+  if(divergence?.divergent){const intro=document.createElement('p');intro.textContent=divergence.reason;box.append(intro);for(const r of divergence.rows){const row=document.createElement('p');row.textContent=r.label+'：'+(r.included?r.value.toFixed(2):'不參與（'+r.reason+'）')+'｜'+(r.date||'日期缺值')+'（'+r.dateBasis+'）｜人數：'+(r.analysts??'不適用')+'｜來源：'+(r.source||'缺值')+' '+(r.sourceUrl||'');box.append(row);}const next=document.createElement('p');next.textContent='下次財報 '+divergence.nextDisclosure.period+' '+divergence.nextDisclosure.date+'（'+divergence.nextDisclosure.basis+'）；風險限制維持。';box.append(next);}
+  const title=document.createElement('b');title.textContent='綜合觀察｜草案未啟用';const text=document.createElement('p');text.textContent=decision.conclusion;box.append(title,text);
+- const confidence=document.createElement('p');confidence.className='tiny';confidence.textContent=`核對信心：${decision.confidence.label}（所列觀測${decision.confidence.coverage}/${decision.confidence.total}，不是報酬勝率）。`;box.append(confidence);
++ const confidence=document.createElement('p');confidence.className='tiny';confidence.textContent=`證據信心：${decision.confidence.label}（三類證據${decision.confidence.coverage}/${decision.confidence.total}，不是報酬勝率）。`;box.append(confidence);
+  const reasons=document.createElement('ul');for(const reason of decision.reasons||[]){const line=document.createElement('li');line.textContent=reason;reasons.append(line);}box.append(reasons);
++ for(const warning of decision.warnings||[]){const row=document.createElement('p');row.textContent=warning;box.append(row);}
++ const changes=document.createElement('div');for(const condition of decision.changeConditions||[]){const row=document.createElement('p');row.textContent='改判條件：'+condition;changes.append(row);}box.append(changes);
++ if(decision.confidence.limitations?.length){const row=document.createElement('p');row.className='tiny';row.textContent='信心限制：'+decision.confidence.limitations.join('；');box.append(row);}
+  const holding=document.createElement('p'),h=decision.holding;holding.textContent=`建議持股區間：${h.suggestedRange?h.suggestedRange.join('～')+'%（僅模擬）':'待門檻核准，尚未產出'}；基準${h.baseRange.join('～')}%，下限${h.floorRange.join('～')}%。${h.reason||''}`;box.append(holding);
+  const totals=document.createElement('p');totals.className='tiny';totals.textContent=`草案總經因子已知部分合計 ${decision.globalSummary.knownSubtotal}（${decision.globalSummary.known}/${decision.globalSummary.required}）；個股因子已知部分 ${decision.stockSummary.knownSubtotal}（${decision.stockSummary.known}/${decision.stockSummary.required}）。未決項目不當0分，未改正式總分或風險預算。`;box.append(totals);
+  const details=document.createElement('details'),label=document.createElement('summary');label.textContent='查看加減分草案、來源與缺口';details.append(label);
+diff --git a/tests/advisory-decision.test.mjs b/tests/advisory-decision.test.mjs
+index 1f3dbe7..0c1cc49 100644
+--- a/tests/advisory-decision.test.mjs
++++ b/tests/advisory-decision.test.mjs
+@@ -5,7 +5,7 @@ import {buildAdvisoryDecision,previewHoldingRange,attackDefense,marketAnnualLine
+ import {buildStockPanels} from '../worker/panel-calculations.mjs';
+ const stock={id:'7788',price:{date:'2026-10-19'},priceHistory:[],financialQuality:{cfoToNetIncome:{value:-.17},freeCashFlow:{value:-141.57e8}}};
+ const args=()=>({stock:structuredClone(stock),panels:buildStockPanels(stock),existingRating:{available:true,grade:'D'},veto:{status:'unknown'},gates:[{id:6,status:'warning'}]});
+-test('same facts give byte-identical deterministic conclusion; no input mutation',()=>{const a=args(),before=JSON.stringify(a),x=buildAdvisoryDecision(a),y=buildAdvisoryDecision(a);assert.deepEqual(x,y);assert.equal(JSON.stringify(a),before);assert.match(x.conclusion,/保守觀察/);assert.match(x.reasons[0],/−?\-0\.17/);assert.equal(x.reasons.length,3);assert.equal(x.originalGateWarnings[0].id,6);});
++test('same facts give byte-identical deterministic conclusion; no input mutation',()=>{const a=args(),before=JSON.stringify(a),x=buildAdvisoryDecision(a),y=buildAdvisoryDecision(a);assert.deepEqual(x,y);assert.equal(JSON.stringify(a),before);assert.match(x.conclusion,/保守觀察/);assert.match(x.warnings[0],/−?\-0\.17/);assert.equal(x.reasons.length,3);assert.equal(x.originalGateWarnings[0].id,6);});
+ test('missing or unapproved factors never count as zero, total and allocation stay unset',()=>{const r=buildAdvisoryDecision(args());assert.equal(r.globalSummary.total,null);assert.ok(r.globalSummary.known<r.globalSummary.required);assert.equal(r.holding.suggestedRange,null);assert.deepEqual(r.holding.baseRange,[60,70]);assert.deepEqual(r.holding.floorRange,[20,30]);assert.ok(r.gaps.length);});
+ test('gold cannot change a factor, active rating contribution or risk budget',()=>{const a=args(),before=buildAdvisoryDecision(a);a.panels.goldZeroAxis={status:'ok',value:9999};const after=buildAdvisoryDecision(a);assert.deepEqual(after.globalSummary,before.globalSummary);assert.equal(after.activeScoreContribution,0);assert.equal(after.appliedToRating,false);assert.equal(after.appliedToRiskBudget,false);assert.equal(after.gold.activeContribution,0);assert.ok(after.globalFactors.every(f=>f.activeContribution===0&&!f.approved));});
+ test('an existing VETO always takes precedence over positive research previews',()=>{const a=args();a.veto={status:'triggered'};a.panels.movingAverages={status:'ok',score:4};assert.match(buildAdvisoryDecision(a).conclusion,/剔除/);});
+@@ -13,3 +13,19 @@ test('holding mapping requires an explicit step, simulation never applies a budg
+ test('attack-defense zero axis uses all aligned eleven sectors',()=>{const sectors=Object.fromEntries(['XLK','XLY','XLC','XLI','XLF','XLE','XLB','XLP','XLU','XLV','XLRE'].map((s,i)=>[s,{status:'OK',observedAt:'2026-10-16',relative:{return20d:i<7?3:1}}]));assert.equal(attackDefense({sectors,observedAt:'2026-10-16'}).value,2);sectors.XLK.observedAt='2026-10-15';assert.equal(attackDefense({sectors,observedAt:'2026-10-16'}).status,'insufficient');});
+ test('TAIEX annual line cannot be invented from the existing short history',()=>{assert.equal(marketAnnualLine({markets:{TWSE_TAIEX:{history:[]}}},'2026-10-19').draftPoints,undefined);});
+ test('real Site report adds advisory conclusion without changing original scores or gates',async()=>{const s=readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');const api=await import('data:text/javascript;base64,'+Buffer.from(s+'\nexport {evaluateMasterModel};').toString('base64'));const fixture=JSON.parse(readFileSync(new URL('./fixtures/master-remediation.json',import.meta.url),'utf8')).stock;const model=api.evaluateMasterModel(fixture,null,null,{stockFresh:true},{});assert.equal(model.report.advisoryDecision.appliedToRiskBudget,false);assert.equal(model.report.advisoryDecision.appliedToRating,false);assert.equal(model.report.advisoryDecision.stockFactors[0].activeContribution,0);assert.ok(model.gates.some(g=>g.id===6&&g.status==='warning'));});
++
++import {comprehensiveObservation} from '../worker/advisory-decision.mjs';
++function completeC1(){return {stock:{id:'8299',price:{date:'2026-10-20',value:90}},panels:{symbol:'8299',asOf:'2026-10-20',movingAverages:{status:'ok',date:'2026-10-20',score:-4,averages:[5,10,20,60].map(sessions=>({sessions,status:'ok',ma:100,previousMa:101,contribution:-1}))}},existingRating:{grade:'C',valuationDivergence:{divergent:false,threshold:2,rows:[10,12].map((value,i)=>({id:i?'ttm':'historical',included:true,value,date:'2026-06-30',source:'official report',label:'EPS'}))}},veto:{status:'cleared',unknown:0},freshness:{stockFresh:true,marketFresh:true},annualLine:{status:'ok',date:'2026-10-20',price:110,ma:100,previousMa:99},credit:{status:'ok',date:'2026-10-19',value:.3},rotation:{status:'ok',date:'2026-10-19',value:1}};}
++test('C1 provides exactly valuation, technical, macro reasons and high evidence confidence on complete verified inputs',()=>{const a=completeC1(),before=JSON.stringify(a),r=comprehensiveObservation(a);assert.deepEqual(r.reasonDetails.map(x=>x.category),['valuation','technical','macro']);assert.equal(r.confidence.level,'高');assert.equal(r.confidence.coverage,3);assert.equal(r.confidence.isReturnProbability,false);assert.match(r.reasons[1],/技術偏弱/);assert.match(r.reasons[2],/20日擴大 0.30/);assert.match(r.changeConditions[1],/5／10／20／60/);assert.equal(JSON.stringify(a),before);assert.deepEqual(r,comprehensiveObservation(a));});
++test('C1 EPS disagreement preserves unrated valuation, weak technical facts, and never calls it cheap',()=>{const a=completeC1();a.existingRating.valuationDivergence={...a.existingRating.valuationDivergence,divergent:true,reason:'估值分歧過大，暫不判斷貴或便宜'};const r=comprehensiveObservation(a);assert.equal(r.confidence.level,'中');assert.match(r.conclusion,/分歧.*技術偏弱/);assert.match(r.changeConditions[0],/不再嚴格大於既有2倍/);assert.ok(r.confidence.limitations.some(x=>x.includes('分歧')));});
++test('C1 unknown veto lowers confidence without suppressing an actual triggered veto',()=>{const a=completeC1();a.veto={status:'pending',unknown:4};assert.equal(comprehensiveObservation(a).confidence.level,'中');a.veto={status:'triggered'};assert.match(comprehensiveObservation(a).conclusion,/剔除/);});
++test('C1 missing macro evidence produces low confidence, never bullish or fabricated neutral',()=>{const a=completeC1();delete a.credit;const r=comprehensiveObservation(a);assert.equal(r.confidence.level,'低');assert.equal(r.reasonDetails[2].complete,false);assert.ok(r.evidenceGaps.includes('有效高收益債20日變化'));assert.match(r.reasons[2],/未校準門檻/);assert.match(r.changeConditions[2],/利差21筆/);});
++test('C1 stale, future and malformed market observations remain gaps and do not crash',()=>{for(const change of [a=>a.freshness.marketFresh=false,a=>a.credit.date='2026-10-21',a=>a.annualLine.ma=null,a=>a.rotation.value=NaN]){const a=completeC1();change(a);const r=comprehensiveObservation(a);assert.equal(r.confidence.level,'低');assert.equal(r.reasonDetails[2].complete,false);}});
++test('C1 stock switch mismatch and stale stock block inherited valuation and technical confidence',()=>{const a=completeC1();a.panels.symbol='2404';const r=comprehensiveObservation(a);assert.match(r.conclusion,/不一致/);assert.equal(r.confidence.coverage,0);assert.ok(r.reasonDetails.every(x=>!x.complete));const b=completeC1();b.freshness.stockFresh=false;assert.equal(comprehensiveObservation(b).confidence.level,'低');});
++test('C1 partial four-line payload cannot masquerade as verified trend',()=>{const a=completeC1();a.panels.movingAverages.averages.pop();const r=comprehensiveObservation(a);assert.equal(r.confidence.level,'低');assert.match(r.changeConditions[1],/至少61/);});
++test('C1 cash warning is visible even when EPS divergence takes precedence',()=>{const a=completeC1();a.stock.financialQuality={cfoToNetIncome:{value:-.17},freeCashFlow:{value:-141.57e8}};a.existingRating.valuationDivergence.divergent=true;a.existingRating.valuationDivergence.reason='估值分歧';const r=comprehensiveObservation(a);assert.match(r.conclusion,/分歧/);assert.match(r.warnings[0],/-0.17.*-141.57/);assert.ok(r.changeConditions.some(x=>x.includes('歷史不覆蓋')));});
++
++test('C1 duplicate EPS basis cannot count as two independent evidence groups',()=>{const a=completeC1();a.existingRating.valuationDivergence.rows=[a.existingRating.valuationDivergence.rows[0],structuredClone(a.existingRating.valuationDivergence.rows[0])];const r=comprehensiveObservation(a);assert.equal(r.reasonDetails[0].complete,false);assert.equal(r.confidence.level,'低');});
++test('C1 conflicting duplicate EPS basis is rejected rather than chosen by input order',()=>{const a=completeC1();a.existingRating.valuationDivergence.rows.push({...a.existingRating.valuationDivergence.rows[0],value:999});const r=comprehensiveObservation(a);assert.equal(r.reasonDetails[0].complete,false);assert.equal(r.confidence.level,'低');});
++test('C1 contradictory MA total and repeated periods cannot imply verified strength',()=>{for(const mutate of [a=>a.panels.movingAverages.score=4,a=>a.panels.movingAverages.averages.push({...a.panels.movingAverages.averages[0]})]){const a=completeC1();mutate(a);const r=comprehensiveObservation(a);assert.equal(r.reasonDetails[1].complete,false);assert.doesNotMatch(r.conclusion,/技術偏強/);}});
++test('C1 actual VETO nested assessment count overrides an inconsistent clear label',()=>{const a=completeC1();a.veto={status:'clear',assessmentCounts:{unknown:4}};const r=comprehensiveObservation(a);assert.equal(r.confidence.level,'中');assert.ok(r.evidenceGaps.includes('既有否決條件尚有未知'));});
+diff --git a/tests/panel-display.test.mjs b/tests/panel-display.test.mjs
+index 415a897..9d6879a 100644
+--- a/tests/panel-display.test.mjs
++++ b/tests/panel-display.test.mjs
+@@ -29,3 +29,11 @@ test('real bundled model exposes new panels while preserving existing rating and
+  assert.equal(b.report.advisoryPanels.symbol,stock.id);assert.equal(b.report.advisoryPanels.industryMapping.sector,'XLK');
+  assert.deepEqual(b.gates.map(g=>g.status),a.gates.map(g=>g.status));assert.deepEqual(b.scoring,a.scoring);assert.deepEqual(b.veto,a.veto);assert.deepEqual(b.adaptiveRating,a.adaptiveRating);
+ });
++test('C1 renders confidence, all three reasons, warning and change conditions outside collapsed raw observations',async()=>{
++ const {host,context}=setup();const {buildAdvisoryDecision}=await import('../worker/advisory-decision.mjs');
++ const stock={id:'7788',price:{date:'2026-10-19'},financialQuality:{freeCashFlow:{value:-1e8}}};
++ context.host=host;context.decision=buildAdvisoryDecision({stock,panels:buildStockPanels(stock),freshness:{},veto:{status:'pending'}});
++ vm.runInContext('renderAdvisoryDecision(host,decision)',context);
++ const box=host.children[0],visible=box.children.filter(x=>x.tagName!=='details').map(x=>x.textContent).join(' ');
++ for(const text of ['證據信心：低','估值：','技術：','總經／市場：','改判條件：','信心限制：','已核算財報警訊'])assert.ok(visible.includes(text),text);
++});
+diff --git a/worker/advisory-decision.mjs b/worker/advisory-decision.mjs
+index fa0ce57..37c7966 100644
+--- a/worker/advisory-decision.mjs
++++ b/worker/advisory-decision.mjs
+@@ -27,6 +27,54 @@ export function previewHoldingRange({score,stepPp=null,baseRange=[60,70],floorRa
+  if(!finite(score)||!finite(stepPp)||stepPp<=0)return {status:'policy_pending',baseRange,floorRange,suggestedRange:null,applied:false,reason:'每分換算百分點、總分級距與回測尚未核准；不自行新增數字'};
+  return {status:'draft_simulation',baseRange,floorRange,stepPp,suggestedRange:baseRange.map((n,i)=>Math.min(n,Math.max(floorRange[i],n+score*stepPp))),applied:false};
+ }
++/** C1 describes verified observations; confidence is evidence coverage, never a return forecast. */
++export function comprehensiveObservation({stock,panels,existingRating,veto,gates=[],freshness={},rotation,credit,annualLine,breadth}){
++ const asOf=panels.asOf,day=x=>typeof x==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x)&&Number.isFinite(Date.parse(x))&&new Date(x).toISOString().slice(0,10)===x;
++ const identity=!!stock.id&&stock.id===panels.symbol&&day(asOf)&&stock.price?.date===asOf;
++ const vd=existingRating?.valuationDivergence,rows=vd?.rows||[];
++ const epsByBasis=new Map();let conflictingEps=false;
++ for(const row of rows){if(!row.included||!['historical','model','ttm','consensus'].includes(row.id)||!finite(row.value)||row.value<=0||!day(row.date)||row.date>asOf||!row.source)continue;const previous=epsByBasis.get(row.id);if(previous&&['value','date','period','source','sourceUrl'].some(key=>previous[key]!==row[key]))conflictingEps=true;else epsByBasis.set(row.id,row);}
++ const valuationRows=[...epsByBasis.values()];
++ const valuationReady=identity&&freshness.stockFresh===true&&!conflictingEps&&valuationRows.length>=2;
++ const t=panels.movingAverages||{},averages=Array.isArray(t.averages)?t.averages:[],price=stock.price?.value;
++ const technicalReady=identity&&freshness.stockFresh===true&&finite(price)&&price>0&&t.status==='ok'&&t.date===asOf&&finite(t.score)&&averages.length===4&&[5,10,20,60].every(n=>averages.filter(r=>r.sessions===n).length===1)&&averages.every(r=>r.status==='ok'&&finite(r.ma)&&finite(r.previousMa)&&r.ma>0&&r.previousMa>0&&r.contribution===(price>r.ma&&r.ma>r.previousMa?1:price<r.ma&&r.ma<r.previousMa?-1:0))&&t.score===averages.reduce((sum,r)=>sum+r.contribution,0);
++ const marketUsable=x=>identity&&freshness.marketFresh===true&&x?.status==='ok'&&day(x.date)&&x.date<=asOf;
++ const annualReady=marketUsable(annualLine)&&[annualLine.price,annualLine.ma,annualLine.previousMa].every(finite),creditReady=marketUsable(credit)&&finite(credit.value),rotationReady=marketUsable(rotation)&&finite(rotation.value);
++ const macroReady=annualReady&&creditReady&&rotationReady;
++ const warnings=[];
++ const fq=stock.financialQuality||{},cfo=fq.cfoToNetIncome?.value,fcf=fq.freeCashFlow?.value;
++ if(finite(cfo)&&cfo<0||finite(fcf)&&fcf<0)warnings.push(`已核算財報警訊：CFO／淨利 ${finite(cfo)?cfo.toFixed(2):'缺值'}倍，FCF ${finite(fcf)?(fcf/1e8).toFixed(2):'缺值'}億元；不因補充觀測解除。`);
++ const valuation=vd?.divergent&&identity?vd.reason:valuationReady?`沿用既有${existingRating?.grade||'未評'}級；可核對EPS ${valuationRows.map(r=>r.label+' '+r.value).join('／')}。未核准估值區間，暫不新增貴便宜判定。`:'估值證據不足或代號／日期未對齊，暫不判斷貴或便宜。';
++ const technical=technicalReady?`5／10／20／60日均線合計 ${t.score>=0?'+':''}${t.score}（−4～+4）；${t.score<0?'技術偏弱':t.score>0?'技術偏強':'技術訊號混合'}，只描述現況，不調評級。`:'四條均線或同日行情未通過完整性檢查，技術方向待確認。';
++ const macroParts=[];
++ if(annualReady)macroParts.push(`台股收盤 ${annualLine.price.toFixed(2)}／240日線 ${annualLine.ma.toFixed(2)}，均線${annualLine.ma>annualLine.previousMa?'上行':annualLine.ma<annualLine.previousMa?'下行':'持平'}`);
++ if(creditReady)macroParts.push(`高收益債利差20日${credit.value>0?'擴大':credit.value<0?'收斂':'持平'} ${credit.value.toFixed(2)}百分點（${credit.date}）`);
++ if(rotationReady)macroParts.push(`美股攻守差 ${rotation.value.toFixed(2)}百分點（${rotation.date}）`);
++ const macro=(macroParts.length?macroParts.join('；'):'總經／市場可比觀測不足')+'；未校準門檻不合成利多／利空評分。';
++ const evidenceGaps=[];
++ if(!identity)evidenceGaps.push('代號或基準日不一致');
++ if(!valuationReady)evidenceGaps.push(conflictingEps?'同一EPS口徑存在矛盾紀錄':'至少兩組不同口徑、附日期來源的有效EPS');
++ if(!technicalReady)evidenceGaps.push('同日完整四條均線與有效行情');
++ if(!annualReady)evidenceGaps.push('同日台股240日線');
++ if(!creditReady)evidenceGaps.push('有效高收益債20日變化');
++ if(!rotationReady)evidenceGaps.push('11類股同口徑攻守差');
++ const vetoUnresolved=!['clear','cleared','triggered'].includes(veto?.status)||Number(veto?.unknown)>0||Number(veto?.assessmentCounts?.unknown)>0||veto?.rules?.some(r=>!['clear','triggered'].includes(r.state))===true;
++ if(vetoUnresolved)evidenceGaps.push('既有否決條件尚有未知');
++ const pillars=[valuationReady,technicalReady,macroReady],coverage=pillars.filter(Boolean).length;
++ const level=coverage<3?'低':vd?.divergent||vetoUnresolved?'中':'高';
++ const confidence={level,label:level,coverage,total:3,isReturnProbability:false,basis:'估值、技術、總經三類證據完整度；不表示報酬勝率或允許承擔風險',limitations:[...evidenceGaps,...(vd?.divergent?['EPS口徑分歧，無法判定貴便宜']:[])],rule:'任一類證據不齊＝低；三類齊但估值分歧／否決未知＝中；三類齊且無上述限制＝高（顯示規則，非評分門檻）'};
++ let conclusion=veto?.status==='triggered'?'既有否決已觸發，保留剔除結論。':!identity?'資料代號或基準日不一致，綜合判斷暫停。':vd?.divergent?vd.reason:warnings.length?'維持保守觀察，先追蹤獲利轉成現金的能力。':coverage<3?'資料不足，綜合方向待確認。':`沿用既有${existingRating?.grade||'未評'}級觀察，補充觀測不改評級。`;
++ if(identity&&technicalReady)conclusion+=` 技術${t.score<0?'偏弱':t.score>0?'偏強':'訊號混合'}。`;
++ const changeConditions=[];
++ if(vd?.divergent)changeConditions.push(`重新核驗各EPS來源後，最大／最小不再嚴格大於既有${vd.threshold||2}倍界線，才重新評估估值分歧；不自動通過Gate。`);
++ else changeConditions.push('估值來源新增、修訂或失效時，以相同期間及股數口徑重算；未核准貴便宜區間前保留未評。');
++ if(technicalReady){const negative=t.averages.filter(r=>r.contribution<0).map(r=>r.sessions),positive=t.averages.filter(r=>r.contribution>0).map(r=>r.sessions);changeConditions.push(negative.length?`目前偏弱的${negative.join('／')}日均線須觀察到收盤高於各自均線且均線上行，才改列該線轉強；逐日重算，不預測轉折。`:positive.length?`目前偏強的${positive.join('／')}日均線若收盤低於各自均線且均線下行，改列該線轉弱。`:'四條均線的價位與斜率同向時，更新對應技術描述。');}
++ else changeConditions.push('補齊同一股票至少61個交易日收盤，最新日對齊基準日，才重算5／10／20／60日均線。');
++ changeConditions.push(macroReady?`台股相對240日線（本次${annualLine.ma.toFixed(2)}）的位置或斜率改變，並更新利差及11類股同口徑觀測時，重寫總經理由；每日重算均線。`:'補齊台股241交易日、利差21筆與11類股同口徑觀測，才形成完整總經理由。');
++ if(warnings.length)changeConditions.push('新一期正式財報發布後重算CFO／淨利與FCF；僅實際轉正或原始財報修訂才更新對應警訊，歷史不覆蓋。');
++ if(vetoUnresolved||veto?.status==='triggered')changeConditions.push('既有否決須逐條取得可追溯證據並依原規則重算；綜合判斷完成不代表風險限制解除。');
++ return {conclusion,confidence,reasons:[`估值：${valuation}`,`技術：${technical}`,`總經／市場：${macro}`],reasonDetails:[{category:'valuation',complete:valuationReady,evidence:valuationReady?valuationRows.map(r=>({id:r.id,date:r.date,period:r.period||null,source:r.source,sourceUrl:r.sourceUrl||null})):[]},{category:'technical',complete:technicalReady,date:technicalReady?t.date:null},{category:'macro',complete:macroReady,evidence:[annualReady?{id:'annual_line',date:annualLine.date,source:annualLine.source||null}:null,creditReady?{id:'credit',date:credit.date,source:credit.source||null}:null,rotationReady?{id:'rotation',date:rotation.date,source:rotation.source||null}:null].filter(Boolean)}],changeConditions,evidenceGaps,warnings};
++}
+ export function buildAdvisoryDecision({stock,panels,sectorContext,macroRows=[],marketRows=[],crossSnapshot=null,existingRating=null,veto=null,gates=[],freshness={}}){
+  const asOf=panels.asOf,all=[...macroRows,...marketRows],get=id=>all.find(r=>r.id===id),axis=panels.dollarZeroAxis;
+  const rotation=attackDefense(sectorContext),credit=changes(get('BAMLH0A0HYM2'),20,asOf),annualLine=marketAnnualLine(crossSnapshot,asOf);
+@@ -53,14 +101,7 @@ export function buildAdvisoryDecision({stock,panels,sectorContext,macroRows=[],m
+  ];
+  const summarize=factors=>{const known=factors.filter(r=>finite(r.draftPoints)),complete=known.length===factors.length;return {knownSubtotal:known.reduce((s,r)=>s+r.draftPoints,0),total:complete?known.reduce((s,r)=>s+r.draftPoints,0):null,known:known.length,required:factors.length,complete};};
+  const globalSummary=summarize(globalFactors),stockSummary=summarize(stockFactors),fq=stock.financialQuality||{},cashRisk=fq.cfoToNetIncome?.value<0||fq.freeCashFlow?.value<0;
+- const triggered=veto?.status==='triggered';
+- const conclusion=triggered?'既有否決已觸發，保留剔除結論。':existingRating?.status==='valuation_divergence'?existingRating.valuationDivergence.reason:cashRisk?'維持保守觀察，先追蹤獲利轉成現金的能力。':existingRating?.available?`沿用既有${existingRating.grade}級觀察，補充因子尚未改級。`:'資料尚未足夠，先保留觀察，暫不產出新增評級。';
+- const reasons=[];
+- if(existingRating?.valuationDivergence?.divergent)reasons.push(existingRating.valuationDivergence.reason);
+- if(cashRisk)reasons.push(`CFO／淨利 ${finite(fq.cfoToNetIncome?.value)?fq.cfoToNetIncome.value.toFixed(2):'缺值'}倍；FCF ${finite(fq.freeCashFlow?.value)?(fq.freeCashFlow.value/1e8).toFixed(2):'缺值'}億元；此為已核算警訊。`);
+- if(existingRating?.available&&existingRating.status!=='valuation_divergence')reasons.push(`既有自訂退避評級 ${existingRating.grade}；原始Gate限制與未知否決條件仍保留。`);
+- reasons.push(t.status==='ok'?`四條均線觀測強弱 ${t.score>=0?'+':''}${t.score}（範圍 −4～+4），屬草案參考。`:`均線完整性不足：${t.reason||'待補'}。`);
++ const observation=comprehensiveObservation({stock,panels,existingRating,veto,gates,freshness,rotation,credit,annualLine,breadth});
+  const gaps=[...globalFactors,...stockFactors].filter(f=>f.draftPoints===null).map(f=>({id:f.id,label:f.label,reason:f.reason||'DATA_OR_POLICY_PENDING'}));
+- const dataChecks=[t.status==='ok',r.status==='ok',e.status==='ok',l.status==='ok',pb.status==='ok',panels.industryMapping.status==='ok',axis.status==='ok',sectorContext?.status==='OK',freshness.stockFresh===true];
+- return {version:'advisory-decision-draft-v1',approved:false,activeScoreContribution:0,asOf,conclusion,valuationDivergence:existingRating?.valuationDivergence||null,confidence:{label:dataChecks.every(Boolean)?'所列觀測已齊，策略未校準':'受資料缺口限制',coverage:dataChecks.filter(Boolean).length,total:dataChecks.length,isReturnProbability:false},reasons:reasons.slice(0,3),changeConditions:['最新季度現金流與財報警訊依實際財報重新核算。','補齊原Gate可追溯來源；草案門檻完成回測及擁有者核准後另行整合。','行情、官方產業分類與來源時效更新後重新計算，未知不視為安全。'],discipline:'均線變化已列強弱；分批比例由投資人自行決定，未新增停損規則。',globalFactors,stockFactors,globalSummary,stockSummary,holding:previewHoldingRange({score:globalSummary.total}),gold:{informationalOnly:true,activeContribution:0,zeroAxis:panels.goldZeroAxis},sentiment:{status:'partial',vix:validRow(get('VIXCLS'),asOf)?get('VIXCLS').value:null,gaps:['VIX極高門檻待回測','VIX3M、NAAIM、Cboe股票Put/Call未有已核對輸入','FINRA月度融資轉折、全市場60日線比例、估計融資維持率須獨立來源與門檻']},gaps,originalGateWarnings:gates.filter(g=>['warning','partial','blocked','needs_user_records'].includes(g.status)).map(g=>({id:g.id,status:g.status})),appliedToRating:false,appliedToRiskBudget:false};
++ return {version:'advisory-decision-c1-v1',approved:false,activeScoreContribution:0,asOf,...observation,valuationDivergence:existingRating?.valuationDivergence||null,discipline:'均線變化已列強弱；分批比例由投資人自行決定，未新增停損規則。',globalFactors,stockFactors,globalSummary,stockSummary,holding:previewHoldingRange({score:globalSummary.total}),gold:{informationalOnly:true,activeContribution:0,zeroAxis:panels.goldZeroAxis},sentiment:{status:'partial',vix:validRow(get('VIXCLS'),asOf)?get('VIXCLS').value:null,gaps:['VIX極高門檻待回測','VIX3M、NAAIM、Cboe股票Put/Call未有已核對輸入','FINRA月度融資轉折、全市場60日線比例、估計融資維持率須獨立來源與門檻']},gaps,originalGateWarnings:gates.filter(g=>['warning','partial','blocked','needs_user_records'].includes(g.status)).map(g=>({id:g.id,status:g.status})),appliedToRating:false,appliedToRiskBudget:false};
+ }
+diff --git a/worker/panel-display.js b/worker/panel-display.js
+index a381a04..e4e11dd 100644
+--- a/worker/panel-display.js
++++ b/worker/panel-display.js
+@@ -38,8 +38,11 @@ function renderAdvisoryDecision(host,decision){
+  const divergence=decision.valuationDivergence;
+  if(divergence?.divergent){const intro=document.createElement('p');intro.textContent=divergence.reason;box.append(intro);for(const r of divergence.rows){const row=document.createElement('p');row.textContent=r.label+'：'+(r.included?r.value.toFixed(2):'不參與（'+r.reason+'）')+'｜'+(r.date||'日期缺值')+'（'+r.dateBasis+'）｜人數：'+(r.analysts??'不適用')+'｜來源：'+(r.source||'缺值')+' '+(r.sourceUrl||'');box.append(row);}const next=document.createElement('p');next.textContent='下次財報 '+divergence.nextDisclosure.period+' '+divergence.nextDisclosure.date+'（'+divergence.nextDisclosure.basis+'）；風險限制維持。';box.append(next);}
+  const title=document.createElement('b');title.textContent='綜合觀察｜草案未啟用';const text=document.createElement('p');text.textContent=decision.conclusion;box.append(title,text);
+- const confidence=document.createElement('p');confidence.className='tiny';confidence.textContent=`核對信心：${decision.confidence.label}（所列觀測${decision.confidence.coverage}/${decision.confidence.total}，不是報酬勝率）。`;box.append(confidence);
++ const confidence=document.createElement('p');confidence.className='tiny';confidence.textContent=`證據信心：${decision.confidence.label}（三類證據${decision.confidence.coverage}/${decision.confidence.total}，不是報酬勝率）。`;box.append(confidence);
+  const reasons=document.createElement('ul');for(const reason of decision.reasons||[]){const line=document.createElement('li');line.textContent=reason;reasons.append(line);}box.append(reasons);
++ for(const warning of decision.warnings||[]){const row=document.createElement('p');row.textContent=warning;box.append(row);}
++ const changes=document.createElement('div');for(const condition of decision.changeConditions||[]){const row=document.createElement('p');row.textContent='改判條件：'+condition;changes.append(row);}box.append(changes);
++ if(decision.confidence.limitations?.length){const row=document.createElement('p');row.className='tiny';row.textContent='信心限制：'+decision.confidence.limitations.join('；');box.append(row);}
+  const holding=document.createElement('p'),h=decision.holding;holding.textContent=`建議持股區間：${h.suggestedRange?h.suggestedRange.join('～')+'%（僅模擬）':'待門檻核准，尚未產出'}；基準${h.baseRange.join('～')}%，下限${h.floorRange.join('～')}%。${h.reason||''}`;box.append(holding);
+  const totals=document.createElement('p');totals.className='tiny';totals.textContent=`草案總經因子已知部分合計 ${decision.globalSummary.knownSubtotal}（${decision.globalSummary.known}/${decision.globalSummary.required}）；個股因子已知部分 ${decision.stockSummary.knownSubtotal}（${decision.stockSummary.known}/${decision.stockSummary.required}）。未決項目不當0分，未改正式總分或風險預算。`;box.append(totals);
+  const details=document.createElement('details'),label=document.createElement('summary');label.textContent='查看加減分草案、來源與缺口';details.append(label);
