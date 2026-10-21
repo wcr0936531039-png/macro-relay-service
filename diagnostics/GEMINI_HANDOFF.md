@@ -17,7 +17,11 @@
 - [計算與顯示紀錄](c1-20261021/02-calculation-and-display.md)
 - [首次失敗與原因](c1-20261021/03-test-found-gap.md)
 - [針對性測試與四檔比較紀錄](c1-20261021/04-targeted-and-replay.md)
-- [完整來源差異](c1-20261021/c1.patch)（編譯Worker以build重建，避免公開私人操作說明）
-- [四檔逐項前後比較](c1-20261021/before-after.json)
+- [完整來源差異](c1-20261021/revision2/c1.patch)（編譯Worker以build重建，避免公開私人操作說明）
+- [四檔逐項前後比較](c1-20261021/revision2/before-after.json)
 
-[最終驗收報告](c1-20261021/report.md)與[完整npm test輸出](c1-20261021/npm-test.log)已上傳。全套exit0；四檔40個Gate與原評級／風險許可保持不變。這是本機驗收，正式站仍v231。
+[最終驗收報告](c1-20261021/revision2/report.md)與[完整npm test輸出](c1-20261021/revision2/npm-test.log)已上傳。全套exit0；四檔40個Gate與原評級／風險許可保持不變。這是本機驗收，正式站仍v231。
+
+## 最新修訂2審查重點
+
+EPS去重／矛盾拒收、均線價位與斜率／貢獻／總分一致、VETO assessmentCounts與rules未知條件。新增反例修補前4項失敗、修補後通過；針對性24/24，完整npm test exit0，advisory integration51/51。請以revision2完整patch審查；它相對乾淨v231，不能重疊套舊C1。四檔結論及40個Gate／評級／風險許可均未改，未部署。
