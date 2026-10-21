@@ -1,91 +1,51 @@
-# 最新：2026-10-21 修正包＋C2 已部署 v231（正式讀回核對中）
+# 最新：2026-10-21 修正包＋C2 已部署 v231，部署後驗收完成
 
-擁有者已直接授權本次部署。已按07:45條件從乾淨 f9c5f15 依序套用兩份已核准 patch、各 build，四項 SHA 均吻合；部署前完整 npm test exit 0。來源 commit `6b924076503a47e346a3d72ff3efeb5260a8078f`。原生部署 succeeded，v230 保留為回滾點，未改存取權限。
+擁有者已直接授權；按 Claude 07:45 部署條件執行。原生部署 succeeded，正式版本 **v231**，**v230 保留回滾**。正式站仍為擁有者私人存取，未擴大本次授權範圍。
 
-官方10/20信用資料已成功匯入並讀回：前一交易日final=10/19，修訂歷史9筆。全站更新已完成 partial，匹配runId的歷史已保存。正在讀回各API與Gate；不把此階段當作全部驗收通過。
+## 部署與雜湊
 
-**部署前已存在的缺口**：四檔實際Master已因行情／估值／財報快照過期或FinMind HTTP402而blocked，風險許可均not_cleared。凍結資料C2重播則仍符合三檔未評、5009 C。正式與凍結結果將分開列出。Tiingo最新交易日缺漏已退至Yahoo備援，亦先於本部署發生。
+乾淨基線 `f9c5f15b371de58d0a06ef5251ce5c8a895f217e` → fixpack.patch → build → c2.patch → build；部署前重新完整 `npm test` exit 0，全部 legacy、calendar 9、advisory 38、fixpack 4、C2 5 項通過，fail 0。git diff --check 通過。
 
-逐步紀錄：[部署前檢查](fixpack-20261021/deployment-01-preflight.md)、[真實基線缺口](fixpack-20261021/deployment-02-live-baseline.md)、[完整測試通過](fixpack-20261021/deployment-03-tests-passed.md)、[部署成功](fixpack-20261021/deployment-04-published.md)、[本輪全套測試輸出](fixpack-20261021/deployment-npm-test.log)。本頁將在讀回結束後更新最終結果。
+發布來源：`6b924076503a47e346a3d72ff3efeb5260a8078f`。部署時間 2026-10-21 13:00 台北；最後獨立股指讀回 13:11 台北。
 
----
+|項目|核對相符的 SHA-256|
+|---|---|
+|fixpack.patch|d69ac5bb2538c9b3115306eb8c490077797b284a69e9c07151dbcf560bae6d0c|
+|c2.patch|9ad8c47bae31fa31008f88895b8a40e3f46fbf9ec6d94f505c6215dd69ad34e4|
+|HTML／正式首頁讀回|93d22d219109e52161e0e85ab926ad86dab6fadfc5083c57144e5c21b1f9e638|
+|Worker／上傳包內 Worker|613ac53005c0346259bf4aff78f95e18ced8c4c29a81f1d964ff9b4a56e79675|
 
-# 修正包與C2本機驗收完成 — 未部署
+完整 diff：[fixpack.patch](fixpack-20261021/fixpack.patch)、[c2.patch](c2-20261021/c2.patch)；生成 Worker 按 build 重建，不再次公開含私人操作說明的編譯上下文。[本輪完整 npm test 輸出](fixpack-20261021/deployment-npm-test.log) 已上傳並讀回比對，內容完全一致。
 
-兩組都已依序完成全套 `npm test`，退出碼皆為0；完整diff、SHA-256、前後比較與測試輸出均已保存。
+## 正式讀回
 
-- 修正包：[完成報告](fixpack-20261021/03-fixpack-report.md)、[patch](fixpack-20261021/fixpack.patch)、[SHA](fixpack-20261021/fixpack.sha256)、[全套測試](fixpack-20261021/npm-test.log)。US59→65、TW58→59源於B1單日變化修正；四檔原退避評級D/D/D/C與Gate狀態不變。原65列含10個重複id，固定核心目錄實為55；市場固定36，缺值保留；擴展12項仍可見且分開計算覆蓋。此口徑根因已列報，沒有湊65。
-- C2：[完成報告](c2-20261021/03-c2-report.md)、[patch](c2-20261021/c2.patch)、[SHA](c2-20261021/c2.sha256)、[全套測試](c2-20261021/npm-test.log)。8299／5289／2404改為未評（估值分歧），5009維持C；四檔Gate、scoring、VETO、財報警訊與風險許可均不變。
+- 核心 **55/55**、市場／貴金屬 **36/36**、擴展 **12/12**。原核心65列含10個重複id；已固定為55個不同指標，缺值不消失。
+- B1：主總經與獨立股指均通過。獨立股指舊15分鐘持久快取自然到期後，3/3均以10/20對10/19：SP500 **+0.283978%**、DJIA **+1.019608%**、NASDAQ **−0.022966%**。能源10/14對10/13：WTI **+1.041047%**、Henry Hub **+2.547771%**；比較起訖均保存。
+- 融資／融券：官方10/20報表重抓、匯入及讀回成功；10/19 **final** 融資6406.17928億元、融券201911張；10/20 **provisional** 融資6381.00111億元、融券215912張。修訂book9筆包含初建，不宣稱9筆全為舊值更正；歷史同日市值分母缺失時不造比率。
+- B2：正式HTML早晚標示06:30／22:30；實際市場回應代入共同金銀快照後，卡片與比值operands、時間皆相同。板塊獨立API為Tiingo主要來源adjClose、10/20、11/11，新增分數貢獻仍0。
+- 本輪即時總經 **US59→64、TW58→60**。美股動能45→62.5；資料同時更新造成成長75→72、台股本土41→49.375。與原凍結資料US65／TW59分開列示；沒有改公式、權重或門檻。
 
-補丁順序：網站來源 f9c5f15 → 修正包 → build → C2 → build。修正包本機commit4aadab203b6dc7c92b91ac35572ec14b1e74eaf7；C2本機commit594b8b30d5abcb48fb1b39bfa942c02b155d580d。兩個來源補丁都在乾淨基線串接重放，最終HTML SHA-256 `93d22d219109e52161e0e85ab926ad86dab6fadfc5083c57144e5c21b1f9e638`；Worker SHA-256 `613ac53005c0346259bf4aff78f95e18ced8c4c29a81f1d964ff9b4a56e79675`，與本機一致。
+|股票|正式站 C2 結果|最大／最小 EPS|風險許可|
+|---|---|---:|---|
+|8299|未評（估值分歧）|10.69153846|not_cleared|
+|5289|未評（估值分歧）|14.63234871|not_cleared|
+|2404|未評（估值分歧）|3.11795113|not_cleared|
+|5009|C／保守觀察|1.51713919|not_cleared|
 
-沒有網站來源push、儲存部署版本或部署；正式程式仍維持v230。原始Tiingo價格與憑證未上傳。其他回測計分／持股換算／C1、C3、C4未做。請擁有者看完報告再另行授權部署。
+第一輪的過期／群聯FinMind402失敗紀錄已保留。群聯用既有refresh端點重試一次後成功，擷取時間05:06:18 UTC；其39／206.883／220.20／416.97四個EPS均可核對，沒有補造舊資料。
 
----
+**同一批新輸入的控制組**：v230對v231，40個Gate狀態、四檔scoring及VETO物件完全相同；只有核准的三檔D→未評、5009 C→C。風險許可均not_cleared。[同資料比較](fixpack-20261021/identical-live-inputs-comparison.json)。
 
-# C2估值分歧本機驗收 — 2026-10-21（未部署）
+**真實時間的前後比較**則有過期轉有效等Gate變化，不能宣稱實際40格完全不變；已在完整報告逐格列出，所有總經／市場／擴展／股指列的status、is_stale、reason變化亦已逐列保存。
 
-修正包報告03-fixpack-report.md已先完成並上傳，才在其本機commit 4aadab203b6dc7c92b91ac35572ec14b1e74eaf7之上實作C2。這份只列C2改動，不把修正包的總經變動算進C2。
+## 仍保留的 partial 與限制
 
-[僅C2補丁](c2-20261021/c2.patch) SHA-256：`9ad8c47bae31fa31008f88895b8a40e3f46fbf9ec6d94f505c6215dd69ad34e4`。
-套用順序：原網站來源f9c5f15 → fixpack.patch → node build.mjs → c2.patch → node build.mjs。兩個source patch均已在乾淨基線依序重放，生成HTML與Worker與本機逐位元相同。不包含生成Worker內的內部操作上下文；沒有Tiingo真實原始行情或憑證。
+全站run `0bacb91f-9834-4bcf-9eef-bdfc6a9872b7` 已完成 **partial**，匹配runId歷史已讀回。當輪板塊模組逾時；稍後獨立讀回恢復Tiingo 11/11，沒有倒改原run為全成功。
 
-## 規則與狀態
-四個口徑：跨週期完整年度EPS中位數、今年模型EPS、TTM EPS、Gate8已判有效的當年度共識。缺值、非正值、非當年模型或未通過Gate8的共識都不參與，保留原因。
-至少兩值且max/min嚴格大於2才觸發；恰好2不觸發。觸發後grade=null、valuationGrade=null、label=未評（估值分歧）、outputStatus=not_rated；不是拿D冒充未評。原始模型分數不變。
-現金流與財報警訊、均線下方、未知否決與原預算限制保留；實際VETO優先。沒有啟用任何新增總經加減分或持股換算。
+Gate4／5／8缺口仍在；群聯Gate6 **CFO／淨利−0.17倍、FCF−141.57億元**警訊保留。四檔VETO皆pending，仍各4條未知，風險預算未放寬。D1表格檢視器遇大型cache列的顯示限制，沒有宣稱直接讀到完整revision book；採匯入狀態與市場final歷史點交叉讀回。隔日修訂持續性待後續實際交易日觀察。
 
-## 同資料比較
-|代號|原退避評級|C2結果|max/min|Gate狀態變更|原風險許可|
-|---|---|---|---|---|---|
-|8299|D|未評（估值分歧）|10.6915|0|not_cleared（不變）|
-|5289|D|未評（估值分歧）|14.6323|0|not_cleared（不變）|
-|2404|D|未評（估值分歧）|3.1180|0|not_cleared（不變）|
-|5009|C|保守觀察|1.5171|0|not_cleared（不變）|
+未發現未處理Worker exception或整體故障，未啟用回滾。未部署其他待辦、回測門檻或新計分。未把Tiingo原始價格、憑證或私人網站入口寫進公開紀錄。
 
-四檔scoring、veto與財報風險敘述深度比對不變；總經計算C2前後完全相同，維持修正包的US65／TW59，C2沒有再動總經分數。
+[完整部署報告（含40個Gate及每列status變化）](fixpack-20261021/deployment-report.md) · [完整實際前後差異 JSON](fixpack-20261021/deployment-live-comparison.json) · [讀回與保存證據](fixpack-20261021/deployment-readback.json)。
 
-### 8299
-
-- 歷史常態EPS（跨週期中位數）：39.0000；2025-12-31（資料所屬期末，非發布日）；分析師人數 不適用；來源 FinMind EPS＋股利／分割／面額變更資料 https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 今年模型EPS：206.8830；2026-10-20（模型評估基準日）；分析師人數 不適用；來源 FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 近四季EPS：220.2000；2026-06-30（財報所屬期末，非發布日）；分析師人數 不適用；來源 FinMind EPS＋股利／分割／面額變更資料 https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 當年度有效分析師共識：416.9700；2026-10-13（共識原更新日）；分析師人數 11；來源 FactSet／鉅亨公開報導 https://gfemobile.cnyes.com/news/id/6629082。
-
-下次財報：2026 Q3 2026-11-14（法定期限）。
-
-### 5289
-
-- 歷史常態EPS（跨週期中位數）：12.2321；2025-12-31（資料所屬期末，非發布日）；分析師人數 不適用；來源 FinMind EPS＋股利／分割／面額變更資料 https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 今年模型EPS：174.8012；2026-10-20（模型評估基準日）；分析師人數 不適用；來源 FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 近四季EPS：178.9841；2026-06-30（財報所屬期末，非發布日）；分析師人數 不適用；來源 FinMind EPS＋股利／分割／面額變更資料 https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 當年度有效分析師共識：不參與：缺90日內、同股票同年度TWD共識來源；日期缺值（共識原更新日）；分析師人數 不適用；來源 缺值 。
-
-下次財報：2026 Q3 2026-11-14（法定期限）。
-
-### 2404
-
-- 歷史常態EPS（跨週期中位數）：21.2800；2025-12-31（資料所屬期末，非發布日）；分析師人數 不適用；來源 FinMind EPS＋股利／分割／面額變更資料 https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 今年模型EPS：54.2090；2026-10-20（模型評估基準日）；分析師人數 不適用；來源 FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 近四季EPS：66.3500；2026-06-30（財報所屬期末，非發布日）；分析師人數 不適用；來源 FinMind EPS＋股利／分割／面額變更資料 https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 當年度有效分析師共識：不參與：缺90日內、同股票同年度TWD共識來源；日期缺值（共識原更新日）；分析師人數 不適用；來源 缺值 。
-
-下次財報：2026 Q3 2026-11-14（法定期限）。
-
-### 5009
-
-- 歷史常態EPS（跨週期中位數）：2.2000；2025-12-31（資料所屬期末，非發布日）；分析師人數 不適用；來源 FinMind EPS＋股利／分割／面額變更資料 https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 今年模型EPS：3.3377；2026-10-20（模型評估基準日）；分析師人數 不適用；來源 FinMind TaiwanStockFinancialStatements + TaiwanStockMonthRevenue https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 近四季EPS：2.2000；2026-06-30（財報所屬期末，非發布日）；分析師人數 不適用；來源 FinMind EPS＋股利／分割／面額變更資料 https://finmind.github.io/tutor/TaiwanMarket/Fundamental/。
-- 當年度有效分析師共識：不參與：缺90日內、同股票同年度TWD共識來源；日期缺值（共識原更新日）；分析師人數 不適用；來源 缺值 。
-
-下次財報：2026 Q3 2026-11-14（法定期限）。
-
-來源日期明確區分資料期末、模型基準日與共識更新日，沒有把期末假裝成發布日。
-本輪沒有取得新的公司公告財報日，故顯示本次授權的曆年制法定期限；不是捏造已公告日期。新增經原官方來源驗證的earnings_schedule匯入契約，取得公告後可優先顯示公司日期。新季度財報進入既有資料管線，EPS分歧和下一期別自動重算。
-
-## 測試與限制
-完整npm test exit0：所有legacy、38項advisory integration、build reproducibility、4項fixpack與5項C2測試全數通過。C2測試含群聯四值、負／缺值排除、恰好2倍、無效共識排除、風險限制不放寬、實際VETO優先、已驗證公司日期優先、季度更新後重算，以及主畫面確實顯示未評面板。
-四份真實財報輸入的本機C2報告均通過DOM renderer；不是宣稱正式站已更新或完成瀏覽器／手機新畫面驗收。正式站仍v230；未push網站來源、未保存部署版本、未部署。
-
-完整數值：[before-after.json](c2-20261021/before-after.json)。完整測試輸出：npm-test.log。請擁有者審閱後另外授權部署。
+每步checkpoint已保存：deployment-01-preflight 至 deployment-06-four-models；失敗及恢復過程可追溯。修正包與C2程式部署驗收完成，不代表整站所有資料／研究Gate均已通過。
