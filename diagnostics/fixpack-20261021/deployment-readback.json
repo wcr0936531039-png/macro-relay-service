@@ -1,0 +1,135 @@
+{
+  "version": 231,
+  "deploymentStatus": "succeeded",
+  "sourceCommit": "6b924076503a47e346a3d72ff3efeb5260a8078f",
+  "rollbackVersion": 230,
+  "rollbackUsed": false,
+  "deployedAt": "2026-10-21T05:00:27.265576+00:00",
+  "fullNpmTestExit": 0,
+  "publicTestLogBlob": "dbe44e0cd3f0e31873fe8671811ff978743fc2aa",
+  "liveHtmlSha256": "93d22d219109e52161e0e85ab926ad86dab6fadfc5083c57144e5c21b1f9e638",
+  "creditImport": {
+    "ok": true,
+    "marketStatistics": {
+      "date": "2026-10-20",
+      "rows": 8,
+      "capturedAt": "2026-10-21T04:56:58.257078+00:00",
+      "previousFinalDate": "2026-10-19",
+      "revisionCount": 9
+    },
+    "readbackConfirmed": true
+  },
+  "b2": {
+    "liveCoherentMetalsPassed": true,
+    "operandsAndCardTimesEqual": true,
+    "scheduleLabel": "06:30／22:30",
+    "sector": {
+      "status": "OK",
+      "sourceRole": "主要來源",
+      "priceField": "adjClose",
+      "coverage": {
+        "valid": 11,
+        "total": 11
+      },
+      "sourceCoverage": {
+        "valid": 12,
+        "total": 12
+      },
+      "observedAt": "2026-10-20",
+      "scoreContribution": 0
+    }
+  },
+  "independentIndices": {
+    "target": "indices",
+    "passed": true,
+    "checkedAt": "2026-10-21T05:11:15.872Z",
+    "rows": [
+      {
+        "id": "SP500",
+        "date": "2026-10-20",
+        "value": 7712.57,
+        "percent": 0.28397824393784354,
+        "previousDate": "2026-10-19",
+        "comparisonStart": "2026-10-19",
+        "comparisonEnd": "2026-10-20",
+        "comparisonObservations": 1,
+        "changeLabel": "較前一來源交易日"
+      },
+      {
+        "id": "DJIA",
+        "date": "2026-10-20",
+        "value": 52495.88,
+        "percent": 1.019608386478632,
+        "previousDate": "2026-10-19",
+        "comparisonStart": "2026-10-19",
+        "comparisonEnd": "2026-10-20",
+        "comparisonObservations": 1,
+        "changeLabel": "較前一來源交易日"
+      },
+      {
+        "id": "NASDAQCOM",
+        "date": "2026-10-20",
+        "value": 26424.82,
+        "percent": -0.022965552805820355,
+        "previousDate": "2026-10-19",
+        "comparisonStart": "2026-10-19",
+        "comparisonEnd": "2026-10-20",
+        "comparisonObservations": 1,
+        "changeLabel": "較前一來源交易日"
+      }
+    ]
+  },
+  "followup8299": {
+    "target": "8299",
+    "refreshed": true,
+    "checkedAt": "2026-10-21T05:06:18.128Z",
+    "status": "valuation_divergence",
+    "adaptiveStatus": "valuation_divergence",
+    "grade": null,
+    "riskPermission": "not_cleared"
+  },
+  "refresh": {
+    "runId": "0bacb91f-9834-4bcf-9eef-bdfc6a9872b7",
+    "status": "partial",
+    "completedAt": "2026-10-21T05:01:56.696Z",
+    "historySaved": true,
+    "modules": {
+      "macro": {
+        "status": "ok",
+        "usable": 55,
+        "total": 55
+      },
+      "expandedMacro": {
+        "status": "ok",
+        "usable": 12,
+        "total": 12
+      },
+      "marketAndPreciousMetals": {
+        "status": "ok",
+        "usable": 36,
+        "total": 36
+      },
+      "usIndices": {
+        "status": "ok",
+        "usable": 3,
+        "total": 3
+      },
+      "crossMarket": {
+        "status": "ok",
+        "usable": 4,
+        "total": 4,
+        "error": null
+      },
+      "usSectors": {
+        "status": "error",
+        "error": "模組回應逾時；保留其他巡檢結果並於下次排程重試"
+      },
+      "officialNews": {
+        "status": "ok",
+        "usable": 3,
+        "total": 3
+      }
+    }
+  },
+  "apiHttpAllPassed": true
+}
