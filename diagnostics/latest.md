@@ -49,3 +49,8 @@ Gate4／5／8缺口仍在；群聯Gate6 **CFO／淨利−0.17倍、FCF−141.57�
 [完整部署報告（含40個Gate及每列status變化）](fixpack-20261021/deployment-report.md) · [完整實際前後差異 JSON](fixpack-20261021/deployment-live-comparison.json) · [讀回與保存證據](fixpack-20261021/deployment-readback.json)。
 
 每步checkpoint已保存：deployment-01-preflight 至 deployment-06-four-models；失敗及恢復過程可追溯。修正包與C2程式部署驗收完成，不代表整站所有資料／研究Gate均已通過。
+
+
+## v231後剩餘工作盤點
+
+[未完成工作與性質分類](remaining-work-20261021.md)：Gate8同業0/3及2027覆蓋、Gate4 3/10、Gate5B 0/8、C1／C3／C4、整體總經回測與持股門檻、新股自動蒐證、來源治理及跨日驗證。此為盤點，不代表新增修改或部署授權；Gate6真實警訊不列為程式待修。
