@@ -1,3 +1,15 @@
+# 最新：2026-10-21 修正包＋C2 已部署 v231（正式讀回核對中）
+
+擁有者已直接授權本次部署。已按07:45條件從乾淨 f9c5f15 依序套用兩份已核准 patch、各 build，四項 SHA 均吻合；部署前完整 npm test exit 0。來源 commit `6b924076503a47e346a3d72ff3efeb5260a8078f`。原生部署 succeeded，v230 保留為回滾點，未改存取權限。
+
+官方10/20信用資料已成功匯入並讀回：前一交易日final=10/19，修訂歷史9筆。全站更新已完成 partial，匹配runId的歷史已保存。正在讀回各API與Gate；不把此階段當作全部驗收通過。
+
+**部署前已存在的缺口**：四檔實際Master已因行情／估值／財報快照過期或FinMind HTTP402而blocked，風險許可均not_cleared。凍結資料C2重播則仍符合三檔未評、5009 C。正式與凍結結果將分開列出。Tiingo最新交易日缺漏已退至Yahoo備援，亦先於本部署發生。
+
+逐步紀錄：[部署前檢查](fixpack-20261021/deployment-01-preflight.md)、[真實基線缺口](fixpack-20261021/deployment-02-live-baseline.md)、[完整測試通過](fixpack-20261021/deployment-03-tests-passed.md)、[部署成功](fixpack-20261021/deployment-04-published.md)、[本輪全套測試輸出](fixpack-20261021/deployment-npm-test.log)。本頁將在讀回結束後更新最終結果。
+
+---
+
 # 修正包與C2本機驗收完成 — 未部署
 
 兩組都已依序完成全套 `npm test`，退出碼皆為0；完整diff、SHA-256、前後比較與測試輸出均已保存。
