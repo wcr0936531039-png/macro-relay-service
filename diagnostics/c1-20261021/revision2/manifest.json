@@ -1,0 +1,8 @@
+{
+  "c1.patch": "e0f90ba015cb04becdb92a9e70ef0504785ed7c18488cbaefc56bd21e285bf7f",
+  "before-after.json": "4ede44b3127b812535ade37c3ab991727cfa789486852feb82ff793c867be135",
+  "previous-c1-comparison.json": "106c08da5e57c5d0d5e06c6ba4f3fae0ce33121fcc04a7470b989a417c1ebea0",
+  "dist/index.html": "eae525566ee411db961d80aeab595db49184c39594de04558964687ac2815677",
+  "dist/server/index.js": "ebde53e133d2cc30ec5ccb1d7fe88c605d0dc1cd85a0907d451255e44d82c70e",
+  "npm-test.log": "8676007730064e1ef818269efd3f8bad45de64b34bc71f9a176449bf30159522"
+}
