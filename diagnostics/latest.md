@@ -1,8 +1,16 @@
-# 最新：C1續查修訂2本機驗證中，未部署
+# 最新：2026-10-21 C1修訂2本機驗收完成，未部署
 
-[05完整性問題](c1-20261021/05-integrity-review.md)、[06修補結果](c1-20261021/06-integrity-fixed.md)。新增4個反例已重現並修補，針對性24/24通過；完整npm test進行中。前一輪已通過報告保留如下，不能當成修訂2已完整驗收。
+[本輪完整報告](c1-20261021/revision2/report.md)｜[完整來源diff](c1-20261021/revision2/c1.patch)｜[SHA-256](c1-20261021/revision2/manifest.json)｜[完整npm test](c1-20261021/revision2/npm-test.log)｜[相對v231前後比較](c1-20261021/revision2/before-after.json)｜[相對前一輪C1比較](c1-20261021/revision2/previous-c1-comparison.json)｜[Gemini固定交接](GEMINI_HANDOFF.md)
 
-正式站仍v231；Gate、評級、權重、C2與風險規則不動。
+續查修補：EPS不同口徑去重／矛盾拒收、均線明細與總分核對、VETO巢狀未知數與rules核對，並保存證據日期與來源。
+
+新增4項反例在修補前均失敗，修補後針對性24/24；完整npm test exit0（legacy、calendar9、advisory51、fixpack4、C2五項全部通過）。乾淨基線套本輪完整patch後build雜湊一致。
+
+四檔40個Gate完整物件、評級、分數、VETO、風險許可均不變；與前一輪C1相比，四檔結論不變，信心仍低。來源缺口照實保留。
+
+**未部署、未合併，正式站仍v231；等待獨立審查及擁有者部署授權。** 本輪patch已含前一輪C1，應從乾淨v231套用，不要重複疊加。
+
+[05發現問題](c1-20261021/05-integrity-review.md)、[06修補紀錄](c1-20261021/06-integrity-fixed.md)。四公司指引面板仍暫緩，未啟用草案評分或持股比例。
 
 ---
 
