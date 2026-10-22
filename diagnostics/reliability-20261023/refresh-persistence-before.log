@@ -1,0 +1,71 @@
+✖ completed run persistence fails loudly when D1 is unavailable (1.720226ms)
+✖ one failed history write cannot be acknowledged as a saved run (0.821842ms)
+✖ a silent write drop is detected by readback (0.331102ms)
+✖ an explicit unsuccessful D1 result is not treated as success (0.326836ms)
+✔ successful persistence reads back run and history and preserves original timestamps (1.059224ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 1
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 136.488924
+
+✖ failing tests:
+
+test at tests/refresh-persistence.test.mjs:11:1
+✖ completed run persistence fails loudly when D1 is unavailable (1.720226ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/scratch/6b210f4f35e9/credit-window-20261022/tests/refresh-persistence.test.mjs:11:118)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /storage_error/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/refresh-persistence.test.mjs:12:1
+✖ one failed history write cannot be acknowledged as a saved run (0.821842ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/scratch/6b210f4f35e9/credit-window-20261022/tests/refresh-persistence.test.mjs:12:141)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /storage_error/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/refresh-persistence.test.mjs:13:1
+✖ a silent write drop is detected by readback (0.331102ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/scratch/6b210f4f35e9/credit-window-20261022/tests/refresh-persistence.test.mjs:13:132)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /storage_error/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/refresh-persistence.test.mjs:14:1
+✖ an explicit unsuccessful D1 result is not treated as success (0.326836ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/scratch/6b210f4f35e9/credit-window-20261022/tests/refresh-persistence.test.mjs:14:117)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /storage_error/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
