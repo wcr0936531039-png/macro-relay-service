@@ -1,3 +1,13 @@
+# 最新：信用時間閘門 revision2 本機完成，待部署授權
+
+[完整報告](credit-window-20261022/revision2/report.md)｜[完整來源patch](credit-window-20261022/revision2/credit-window.patch)｜[SHA與重建資訊](credit-window-20261022/revision2/manifest.json)｜[完整npm test](credit-window-20261022/revision2/npm-test.log)｜[逐列前後比較](credit-window-20261022/revision2/before-after.json)｜[重播工具](credit-window-20261022/revision2/compare-local.mjs)。
+
+大盤官方信用備援及個股FinMind均改為22:30後抓取；上午讀保存快照，保留原日期／擷取時間，缺值與過期照實呈現。新增11項測試、完整npm test全部通過；乾淨v231套patch重建Worker SHA相符。四檔相同凍結輸入的40 Gate、評分、VETO、風險許可均不變。revision2為完整patch，取代revision1，不要疊套。
+
+**未部署，正式站仍v231，排程保持暫停。C1修訂2獨立待審，不混入本patch。** 整站背景任務waitUntil時限取消仍未修復；第二次run輪詢遭自動核准拒絕，無匹配completedAt／持久歷史驗收，不宣稱整站完成。部署本機修補後仍需另行驗證背景執行與跨日保存。初次上線前若無獨立晚間個股信用快照，上午會deferred，不借法人日期補值。
+
+---
+
 # 最新：2026-10-22 信用時間閘門本機修補，第一版全測試通過、續補個股路徑
 
 [逐步巡檢紀錄](automation-runs/20261022-recovery.md)｜[本機檢查點](credit-window-20261022/checkpoint.md)｜[完整來源patch](credit-window-20261022/credit-window.patch)｜[SHA](credit-window-20261022/manifest.json)｜[完整npm test](credit-window-20261022/npm-test.log)｜[前後比較](credit-window-20261022/before-after.json)。
