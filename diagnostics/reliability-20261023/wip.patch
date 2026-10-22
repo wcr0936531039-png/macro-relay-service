@@ -1,0 +1,869 @@
+diff --git a/package.json b/package.json
+index 139f5fa..ce40ac7 100644
+--- a/package.json
++++ b/package.json
+@@ -5,7 +5,8 @@
+     "build": "node build.mjs",
+     "test:master-validation": "node tests/master-model-validation.test.mjs",
+     "db:generate": "drizzle-kit generate",
+-    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack && npm run test:c2",
++    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack && npm run test:c2 && npm run test:credit-window",
++    "test:credit-window": "node --test tests/credit-capture-window.test.mjs tests/refresh-persistence.test.mjs tests/refresh-resume.test.mjs",
+     "test:remediation": "node tests/master-remediation.test.mjs",
+     "test:qualified-output": "node tests/qualified-output.test.mjs",
+     "test:client-diagnostics": "node tests/client-diagnostics.test.mjs",
+diff --git a/tests/credit-capture-window.test.mjs b/tests/credit-capture-window.test.mjs
+new file mode 100644
+index 0000000..07a56bf
+--- /dev/null
++++ b/tests/credit-capture-window.test.mjs
+@@ -0,0 +1,137 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import fs from 'node:fs';
++
++const source=fs.readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');
++const stockApi=await import('data:text/javascript;base64,'+Buffer.from(source+'\nexport {loadStockCreditDataset};').toString('base64'));
++const ids=['TWSE_MARGIN_BALANCE_NTD','TWSE_MARGIN_CHANGE_NTD','TWSE_MARGIN_BALANCE_UNITS','TWSE_SHORT_BALANCE','TWSE_SHORT_CHANGE','TWSE_MARGIN_MARKET_CAP_RATIO','TWSE_CREDIT_TRADE_VALUE'];
++const savedAt='2026-10-21T15:00:00Z';
++const savedRows=()=>ids.map((id,index)=>({id,name:id,unit:'test',value:index-2,date:'2026-10-21',status:'ok',is_stale:false,verifiedAt:savedAt,fetchedAt:savedAt,source:'https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&date=20261021&selectType=MS'}));
++function dbWith(rows,checkedAt=savedAt){
++ const data=new Map(rows?[['macro-market:v7',{payload:JSON.stringify({checkedAt,rows}),updated_at:checkedAt,expires_at:'2026-10-23T00:00:00Z'}]]:[]);
++ return {prepare(sql){return {run:async()=>({success:true}),bind(key){return {all:async()=>({results:data.has(key)?[data.get(key)]:[]}),run:async()=>({success:true})}}}}};
++}
++function upstream(calls){return async input=>{
++ const url=new URL(input);calls.push(url.href);
++ if(url.pathname.endsWith('/FMTQIK'))return Response.json([{Date:'1151021',TradeValue:'900000000000'}]);
++ if(url.pathname.endsWith('/MI_MARGN'))return Response.json({stat:'OK',date:'20261021',tables:[{fields:['項目','買進','賣出','償還','前日餘額','今日餘額'],data:[['融資(交易單位)',0,0,0,100,110],['融券(交易單位)',0,0,0,200,210],['融資金額(仟元)',0,0,0,300000000,310000000]]}]});
++ if(url.pathname.endsWith('/MI_MARGN_TREND'))return Response.json({stat:'OK',date:'20261021',data:[{date:'20261021',marginAmt:310000000,marketValue:1000000}]});
++ if(url.pathname.endsWith('/BFIJ3U'))return Response.json({stat:'OK',date:'20261021',crdAmt:12000000000});
++ throw Error('Unexpected test request: '+url.pathname);
++};}
++async function runAt(time,rows){
++ const oldNow=Date.now,oldFetch=globalThis.fetch,calls=[];
++ Date.now=()=>Date.parse(time);globalThis.fetch=upstream(calls);
++ try{
++  const api=await import('data:text/javascript;base64,'+Buffer.from(source+`\nrelaySeries=async()=>null;\nexport {loadTaiwanDashboard,mergeVerifiedMacroRows};\n// window-test-${Math.random()}`).toString('base64'));
++  const result=await api.loadTaiwanDashboard({DB:dbWith(rows)});
++  return {result,calls,merged:api.mergeVerifiedMacroRows(result,[])};
++ }finally{Date.now=oldNow;globalThis.fetch=oldFetch;}
++}
++const creditCalls=calls=>calls.filter(url=>/MI_MARGN|BFIJ3U/.test(url));
++
++test('morning retains verified credit values and original timestamps without any credit request',async()=>{
++ const original=savedRows(),{result,calls,merged}=await runAt('2026-10-22T02:14:00Z',original);
++ assert.deepEqual(creditCalls(calls),[]);
++ for(const row of original){const actual=result.find(x=>x.id===row.id);assert.equal(actual.value,row.value);assert.equal(actual.date,row.date);assert.equal(actual.verifiedAt,savedAt);assert.equal(actual.fetchedAt,savedAt);assert.equal(actual.captureDeferred,true);assert.equal(merged.find(x=>x.id===row.id).verifiedAt,savedAt);}
++ assert.equal(result.find(x=>x.id==='TWSE_TOTAL_TRADE_VALUE').value,9000,'normal market turnover can still update');
++});
++test('morning without retained credit keeps every credit field missing instead of fetching or inventing values',async()=>{
++ const {result,calls}=await runAt('2026-10-22T02:14:00Z',null);
++ assert.deepEqual(creditCalls(calls),[]);
++ for(const id of ids){const row=result.find(x=>x.id===id);assert.ok(row,id);assert.equal(row.value,null);assert.equal(row.status,'missing');assert.equal(row.captureDeferred,true);}
++});
++test('expired retained credit remains dated and stale; refresh cannot renew its clock',async()=>{
++ const rows=savedRows().map(row=>({...row,verifiedAt:'2026-10-19T15:00:00Z',fetchedAt:'2026-10-19T15:00:00Z'}));
++ const {result,calls,merged}=await runAt('2026-10-22T02:14:00Z',rows);
++ assert.deepEqual(creditCalls(calls),[]);
++ for(const id of ids){const row=result.find(x=>x.id===id);assert.equal(row.status,'stale');assert.equal(row.is_stale,true);assert.equal(row.verifiedAt,'2026-10-19T15:00:00Z');assert.equal(merged.find(x=>x.id===id).verifiedAt,row.verifiedAt);}
++});
++test('22:29 Taipei remains closed, 22:30 permits the existing official credit route',async()=>{
++ const before=await runAt('2026-10-22T14:29:59Z',savedRows());assert.deepEqual(creditCalls(before.calls),[]);
++ const after=await runAt('2026-10-22T14:30:00Z',savedRows());assert.ok(creditCalls(after.calls).length>=3);assert.equal(after.result.find(x=>x.id==='TWSE_MARGIN_BALANCE_NTD').value,3100);
++});
++test('midnight closes the window again and unverified or future evidence cannot become retained valid data',async()=>{
++ const rows=savedRows().map((row,index)=>index%2?{...row,status:'unverified'}:{...row,verifiedAt:'2026-10-23T15:00:00Z'});
++ const {result,calls}=await runAt('2026-10-22T16:00:00Z',rows);assert.deepEqual(creditCalls(calls),[]);
++ assert.ok(ids.every(id=>result.find(row=>row.id===id)?.status==='missing'));
++});
++test('a source-marked stale row is not promoted by a recent capture time',async()=>{
++ const {result,calls}=await runAt('2026-10-22T02:14:00Z',savedRows().map(row=>({...row,status:'stale',is_stale:true,reason:'source verification failed'})));
++ assert.deepEqual(creditCalls(calls),[]);assert.ok(ids.every(id=>result.find(row=>row.id===id)?.status==='stale'));
++});
++test('invalid source provenance and future observation dates stay missing',async()=>{
++ const {result,calls}=await runAt('2026-10-22T02:14:00Z',savedRows().map((row,index)=>index%2?{...row,date:'2026-10-23'}:{...row,source:'http://www.twse.com.tw/credit'}));
++ assert.deepEqual(creditCalls(calls),[]);assert.ok(ids.every(id=>result.find(row=>row.id===id)?.status==='missing'));
++});
++function stockDb(seed){
++ const data=new Map(seed?[['stock-credit:v1:8299',{payload:JSON.stringify(seed),updated_at:seed.capturedAt,expires_at:'2026-11-01T00:00:00Z'}]]:[]);
++ return {
++  prepare(sql){
++   return {
++    run:async()=>({success:true}),
++    bind(...args){
++     return {
++      all:async()=>({results:data.has(args[0])?[data.get(args[0])]:[]}),
++      run:async()=>{
++       if(sql.includes('INSERT'))data.set(args[0],{payload:args[1],updated_at:args[2],expires_at:args[3]});
++       return {success:true};
++      }
++     };
++    }
++   };
++  }
++ };
++}
++const stockCapture=()=>({symbol:'8299',dataset:'TaiwanStockMarginPurchaseShortSale',source:'https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockMarginPurchaseShortSale',capturedAt:savedAt,rows:[{stock_id:'8299',date:'2026-10-21',MarginPurchaseTodayBalance:110,MarginPurchaseYesterdayBalance:100,ShortSaleTodayBalance:210}]});
++test('individual stock credit does not call FinMind before 22:30 and keeps the actual credit date/capture',async()=>{
++ let calls=0;const result=await stockApi.loadStockCreditDataset('8299',{DB:stockDb(stockCapture())},async()=>{calls++;throw Error('must not fetch');},Date.parse('2026-10-22T02:14:00Z'));
++ assert.equal(calls,0);assert.equal(result.status,'snapshot');assert.equal(result.capturedAt,savedAt);assert.equal(result.rows[0].date,'2026-10-21');assert.equal(result.captureDeferred,true);
++});
++test('individual stock credit without a stored snapshot remains deferred/missing',async()=>{
++ let calls=0;const result=await stockApi.loadStockCreditDataset('8299',{DB:stockDb()},async()=>{calls++;return {rows:[]};},Date.parse('2026-10-22T02:14:00Z'));
++ assert.equal(calls,0);assert.equal(result.status,'deferred');assert.equal(result.capturedAt,null);assert.deepEqual(result.rows,[]);
++});
++test('individual stock credit allows 22:30 collection and can read that durable snapshot the next morning',async()=>{
++ const env={DB:stockDb()};let calls=0;
++ const evening=await stockApi.loadStockCreditDataset('8299',env,async()=>{calls++;return {rows:stockCapture().rows,error:null};},Date.parse('2026-10-22T14:30:00Z'));
++ assert.equal(evening.status,'ok');assert.equal(evening.recorded,true);assert.equal(calls,1);
++ const morning=await stockApi.loadStockCreditDataset('8299',env,async()=>{calls++;throw Error('must not fetch');},Date.parse('2026-10-23T02:14:00Z'));
++ assert.equal(calls,1);assert.equal(morning.status,'snapshot');assert.equal(morning.capturedAt,'2026-10-22T14:30:00.000Z');assert.equal(morning.rows[0].date,'2026-10-21');
++});
++test('individual stock credit keeps expired evidence stale and rejects mismatched or future cache contents',async()=>{
++ const old={...stockCapture(),capturedAt:'2026-10-19T15:00:00Z',rows:[{...stockCapture().rows[0],date:'2026-10-19'}]};
++ const fetch=async()=>{throw Error('must not fetch');};
++ assert.equal((await stockApi.loadStockCreditDataset('8299',{DB:stockDb(old)},fetch,Date.parse('2026-10-22T02:14:00Z'))).status,'stale');
++ for(const bad of [{...stockCapture(),symbol:'5289'},{...stockCapture(),capturedAt:'2026-10-23T15:00:00Z'},{...stockCapture(),rows:[{...stockCapture().rows[0],date:'2026-10-23'}]}])assert.equal((await stockApi.loadStockCreditDataset('8299',{DB:stockDb(bad)},fetch,Date.parse('2026-10-22T02:14:00Z'))).status,'deferred');
++});
++test('a recent retrieval cannot renew an old stock credit observation',async()=>{
++ const seed={...stockCapture(),rows:[{...stockCapture().rows[0],date:'2020-01-02'}]};
++ const result=await stockApi.loadStockCreditDataset('8299',{DB:stockDb(seed)},async()=>{throw Error('must not fetch');},Date.parse('2026-10-22T02:14:00Z'));
++ assert.equal(result.status,'stale');assert.equal(result.is_stale,true);assert.equal(result.rows[0].date,'2020-01-02');assert.equal(result.capturedAt,savedAt);
++});
++test('an evening retrieval of old observations remains stale instead of ok',async()=>{
++ const result=await stockApi.loadStockCreditDataset('8299',{DB:stockDb()},async()=>({rows:[{...stockCapture().rows[0],date:'2020-01-02'}]}),Date.parse('2026-10-22T14:30:00Z'));
++ assert.equal(result.status,'stale');assert.equal(result.is_stale,true);assert.equal(result.recorded,true);
++});
++test('stock credit rejects missing, empty, negative, fractional, nonfinite and boolean balances',async()=>{
++ for(const field of ['MarginPurchaseTodayBalance','MarginPurchaseYesterdayBalance','ShortSaleTodayBalance'])for(const value of [undefined,null,'',' ',NaN,Infinity,-1,1.5,true,'invalid']){
++  const seed={...stockCapture(),rows:[{...stockCapture().rows[0],[field]:value}]};
++  const result=await stockApi.loadStockCreditDataset('8299',{DB:stockDb(seed)},async()=>{throw Error('must not fetch');},Date.parse('2026-10-22T02:14:00Z'));
++  assert.equal(result.status,'deferred',`${field}=${String(value)}`);assert.deepEqual(result.rows,[]);
++ }
++});
++test('evening invalid balances are rejected before persistence while real zero is accepted',async()=>{
++ const result=await stockApi.loadStockCreditDataset('8299',{DB:stockDb()},async()=>({rows:[{stock_id:'8299',date:'2026-10-22'}]}),Date.parse('2026-10-22T14:30:00Z'));
++ assert.equal(result.status,'error');assert.deepEqual(result.rows,[]);assert.notEqual(result.recorded,true);
++ const valid={...stockCapture().rows[0],MarginPurchaseTodayBalance:'0',MarginPurchaseYesterdayBalance:0,ShortSaleTodayBalance:0};
++ const zero=await stockApi.loadStockCreditDataset('8299',{DB:stockDb()},async()=>({rows:[valid]}),Date.parse('2026-10-22T14:30:00Z'));
++ assert.equal(zero.status,'ok');assert.equal(zero.rows[0].MarginPurchaseTodayBalance,'0');
++});
++test('duplicate credit dates and observations later than their original capture are rejected',async()=>{
++ const row=stockCapture().rows[0];
++ for(const rows of [[row,{...row}],[row,{...row,MarginPurchaseTodayBalance:111}],[{...row,date:'2026-10-22'}]]){
++  const result=await stockApi.loadStockCreditDataset('8299',{DB:stockDb({...stockCapture(),rows})},async()=>{throw Error('must not fetch');},Date.parse('2026-10-22T02:14:00Z'));
++  assert.equal(result.status,'deferred');assert.deepEqual(result.rows,[]);
++ }
++});
+diff --git a/tests/financial-quality.test.mjs b/tests/financial-quality.test.mjs
+index 3f42b50..6ec1fb3 100644
+--- a/tests/financial-quality.test.mjs
++++ b/tests/financial-quality.test.mjs
+@@ -1,7 +1,8 @@
+ import assert from 'node:assert/strict';
+ import { readFile } from 'node:fs/promises';
+ 
+-const workerSource = await readFile(new URL('../worker/stock-relay.js', import.meta.url), 'utf8')+'\n'+await readFile(new URL('../worker/macro.js', import.meta.url), 'utf8');
++// Exercise the built Worker so shared capture-policy dependencies are present.
++const workerSource = await readFile(new URL('../dist/server/index.js', import.meta.url), 'utf8');
+ const worker = await import(`data:text/javascript;base64,${Buffer.from(workerSource).toString('base64')}`);
+ const quarterlyDates = [];
+ for (let key = 2020 * 4; key <= 2026 * 4 + 1; key++) {
+@@ -46,10 +47,11 @@ const datasets = {
+   TaiwanStockBalanceSheet: balance,
+   TaiwanStockCashFlowsStatement: cashFlow,
+   TaiwanStockInstitutionalInvestorsBuySell: Array.from({length:5},(_,i)=>({date:`2026-06-${String(26+i).padStart(2,'0')}`,name:'Foreign_Investor',buy:120+i,sell:100})),
+-  TaiwanStockMarginPurchaseShortSale: [{date:'2026-06-30',MarginPurchaseTodayBalance:3200,MarginPurchaseYesterdayBalance:3100,ShortSaleTodayBalance:120,ShortSaleYesterdayBalance:115}],
++  TaiwanStockMarginPurchaseShortSale: [{stock_id:'8299',date:'2026-06-30',MarginPurchaseTodayBalance:3200,MarginPurchaseYesterdayBalance:3100,ShortSaleTodayBalance:120,ShortSaleYesterdayBalance:115}],
+   TaiwanStockDividend: [{ StockExDividendTradingDate:'2025-01-01', StockEarningsDistribution:1, StockStatutorySurplus:0 }]
+ };
+ const originalFetch = globalThis.fetch;
++const originalNow = Date.now;
+ const originalCaches = Object.getOwnPropertyDescriptor(globalThis, 'caches');
+ Object.defineProperty(globalThis, 'caches', { configurable: true, get() { throw new Error('default cache is disabled in Sites runtime'); } });
+ globalThis.fetch = async input => {
+@@ -71,6 +73,8 @@ async function getStock(id, refresh = false, env = {}) {
+   return { response, result };
+ }
+ try {
++  // Financial arithmetic fixtures use an allowed evening collection time.
++  Date.now=()=>Date.parse('2026-07-01T14:31:00Z');
+   const { response, result } = await getStock('8299');
+   assert.equal(response.status, 200);
+   assert.ok(Math.abs(result.financialQuality.roic.value - (5000 / 12300 * 100)) < 0.001);
+@@ -177,6 +181,7 @@ try {
+   globalThis.fetch = quotaFetch;
+   console.log('stock model: current-year EPS estimate, historical PER scenarios, 8/10/12% equity discount PV, normalized ROIC, CFO/NI, FCF, and missing-data guards passed');
+ } finally {
++  Date.now = originalNow;
+   globalThis.fetch = originalFetch;
+   if (originalCaches) Object.defineProperty(globalThis, 'caches', originalCaches);
+   else delete globalThis.caches;
+diff --git a/tests/helpers/refresh-lease.mjs b/tests/helpers/refresh-lease.mjs
+new file mode 100644
+index 0000000..34d391c
+--- /dev/null
++++ b/tests/helpers/refresh-lease.mjs
+@@ -0,0 +1,17 @@
++// D1 lease fixture with atomic conflict/expiry semantics for local tests.
++export function refreshLeaseStatement(db,sql){
++ if(!sql.includes('site_refresh_leases'))return null;
++ db.leases??=new Map();
++ return {run:async()=>({success:true}),bind:(...args)=>({
++  run:async()=>{
++   if(sql.startsWith('INSERT')){
++    const [id,token,expires,now]=args,old=db.leases.get(id);
++    if(old&&old.expires_at>now)return {success:true,meta:{changes:0}};
++    db.leases.set(id,{token,expires_at:expires});return {success:true,meta:{changes:1}};
++   }
++   if(sql.startsWith('DELETE')){if(db.leases.get(args[0])?.token===args[1])db.leases.delete(args[0]);return {success:true,meta:{changes:1}};}
++   return {success:true,meta:{changes:0}};
++  },
++  all:async()=>({results:db.leases.has(args[0])?[db.leases.get(args[0])]:[]})
++ })};
++}
+diff --git a/tests/refresh-persistence.test.mjs b/tests/refresh-persistence.test.mjs
+new file mode 100644
+index 0000000..69d1cb6
+--- /dev/null
++++ b/tests/refresh-persistence.test.mjs
+@@ -0,0 +1,15 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import fs from 'node:fs';
++const source=fs.readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');
++const api=await import('data:text/javascript;base64,'+Buffer.from(source+'\nexport {persistSiteRefreshStatus};').toString('base64'));
++class DB{
++ rows=new Map();failKey=null;dropKey=null;unavailable=false;falseResult=false;
++ prepare(sql){return {run:async()=>{if(this.unavailable)throw Error('synthetic unavailable');return {success:true};},bind:(...args)=>({all:async()=>({results:this.rows.has(args[0])?[this.rows.get(args[0])]:[]}),run:async()=>{if(args[0]===this.failKey)throw Error('synthetic write failure');if(this.falseResult)return {success:false};if(args[0]!==this.dropKey)this.rows.set(args[0],{payload:args[1],updated_at:args[2],expires_at:args[3]});return {success:true};}})}};
++}
++const run=()=>({runId:'synthetic-run',startedAt:'2026-10-22T15:00:00Z',status:'partial',completedAt:'2026-10-22T15:01:00Z',modules:{macro:{status:'partial'}}});
++test('completed run persistence fails loudly when D1 is unavailable',async()=>{const db=new DB();db.unavailable=true;await assert.rejects(api.persistSiteRefreshStatus({DB:db},run()),/storage_error/);});
++test('one failed history write cannot be acknowledged as a saved run',async()=>{const db=new DB();db.failKey='site-auto-refresh-history:v1';await assert.rejects(api.persistSiteRefreshStatus({DB:db},run()),/storage_error/);});
++test('a silent write drop is detected by readback',async()=>{const db=new DB();db.dropKey='site-auto-refresh-run:v1:synthetic-run';await assert.rejects(api.persistSiteRefreshStatus({DB:db},run()),/storage_error/);});
++test('an explicit unsuccessful D1 result is not treated as success',async()=>{const db=new DB();db.falseResult=true;await assert.rejects(api.persistSiteRefreshStatus({DB:db},run()),/storage_error/);});
++test('successful persistence reads back run and history and preserves original timestamps',async()=>{const db=new DB(),payload=run();await api.persistSiteRefreshStatus({DB:db},payload);const stored=JSON.parse(db.rows.get('site-auto-refresh-run:v1:synthetic-run').payload),history=JSON.parse(db.rows.get('site-auto-refresh-history:v1').payload);assert.deepEqual(stored,payload);assert.equal(history.runs[0].completedAt,payload.completedAt);});
+diff --git a/tests/refresh-resume.test.mjs b/tests/refresh-resume.test.mjs
+new file mode 100644
+index 0000000..bb41547
+--- /dev/null
++++ b/tests/refresh-resume.test.mjs
+@@ -0,0 +1,85 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import fs from 'node:fs';
++import {refreshLeaseStatement} from './helpers/refresh-lease.mjs';
++const source=fs.readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');
++class DB{
++ rows=new Map();leases=new Map();failKey=null;
++ prepare(sql){const lease=refreshLeaseStatement(this,sql);if(lease)return lease;return {run:async()=>({success:true}),bind:(...args)=>({all:async()=>({results:this.rows.has(args[0])?[this.rows.get(args[0])]:[]}),run:async()=>{if(this.failKey===args[0])throw Error('synthetic write failure');this.rows.set(args[0],{payload:args[1],updated_at:args[2],expires_at:args[3]});return {success:true};}})}};
++}
++let serial=0;
++async function api(){
++ const hooks=`
++ captureFullMarketSnapshot=async env=>{env.calls.push('scanner');if(env.holdScanner)await env.holdScanner;return {status:'collecting_history',date:'2026-10-21',sessions:71,captured:{total:600},universe:{total:600}};};
++ runSiteModule=async id=>({id,status:'ok',observations:[]});
++ refreshSiteStock=async(row,env)=>{env.calls.push('stock:'+row.id);return {id:row.id,status:'ok'};};
++ stockSourceResearchResponse=async(request,env)=>{const id=new URL(request.url).searchParams.get('id');env.calls.push('research:'+id);if(env.failResearch===id)throw Error('synthetic source failure');return Response.json({status:'ok',records:[{symbol:id}]});};
++ masterModelResponse=async(request,env)=>{const id=new URL(request.url).searchParams.get('id');env.calls.push('gate:'+id);return Response.json({status:'partial',symbol:id,gates:[{id:'gate6',status:'warning'}],riskPermission:'not_cleared'});};
++ export {boundedSiteRefreshStep,claimSiteRefreshLease};
++ // isolated-module-${serial++}`;
++ return import('data:text/javascript;base64,'+Buffer.from(source+hooks).toString('base64'));
++}
++const request=(path='status',headers)=>new Request('https://site.test/api/automation/'+path,{method:path==='refresh-all'?'POST':'GET',headers});
++const env=()=>({DB:new DB(),calls:[]});
++async function poll(module,e,headers){const response=await module.default.fetch(request('status',headers),e,{});return {http:response.status,data:await response.json()};}
++async function finish(e,headers){for(let i=0;i<60;i++){const result=await poll(await api(),e,headers);assert.equal(result.http,200,JSON.stringify(result.data));if(result.data.completedAt)return result.data;}throw Error('not finished');}
++
++test('a cold Worker continues the same durable cursor each poll without a background promise',async()=>{
++ const e=env(),module=await api();
++ const response=await module.default.fetch(request('refresh-all'),e,{}),started=await response.json();
++ assert.equal(response.status,202);assert.equal(started.executionMode,'poll_driven_checkpoint');assert.deepEqual(e.calls,[]);
++ const first=await poll(module,e);assert.equal(first.data.checkpoint.stage,'scanner');assert.equal(first.data.runId,started.runId);
++ const result=await finish(e);assert.equal(result.runId,started.runId);assert.equal(result.status,'partial');assert.equal(result.checkpoint.stage,'done');
++ assert.equal(e.calls.filter(x=>x==='scanner').length,1);assert.equal(result.stocks.length,4);assert.equal(result.gateAudits.filter(x=>x.recorded).length,4);
++ for(const id of ['8299','5289','2404','5009'])assert.equal(e.calls.filter(x=>x==='stock:'+id).length,1);
++ const history=JSON.parse(e.DB.rows.get('site-auto-refresh-history:v1').payload);assert.equal(history.runs.length,1);assert.equal(history.runs[0].completedAt,result.completedAt);
++ const calls=e.calls.length;await poll(await api(),e);assert.equal(e.calls.length,calls,'completed polling performs no new upstream work');
++});
++test('one failed company source is kept as a gap without losing other companies or Gate snapshots',async()=>{
++ const e=env();e.failResearch='8299';await (await api()).default.fetch(request('refresh-all'),e,{});
++ const result=await finish(e);assert.equal(result.research[0].status,'source_error');assert.match(result.research[0].errors[0],/synthetic source failure/);assert.equal(result.research.filter(x=>x.status==='ok').length,3);assert.equal(result.gateAudits.filter(x=>x.recorded).length,4);assert.equal(result.status,'partial');
++});
++test('a stopped run resumes its original runId even after the former 60-second lock window',async()=>{
++ const e=env(),module=await api();const started=await(await module.default.fetch(request('refresh-all'),e,{})).json();await poll(module,e);
++ const row=e.DB.rows.get('site-auto-refresh:v1'),saved=JSON.parse(row.payload);saved.startedAt='2020-01-02T15:00:00Z';row.payload=JSON.stringify(saved);
++ const second=await(await(await api()).default.fetch(request('refresh-all'),e,{})).json();assert.equal(second.runId,started.runId);assert.equal(second.alreadyRunning,true);assert.equal(second.checkpoint.stage,'scanner');
++});
++test('an active database lease blocks concurrent work and expiration permits a new owner',async()=>{
++ const e=env(),module=await api();const started=await(await module.default.fetch(request('refresh-all'),e,{})).json();
++ e.DB.leases.set(started.runId,{token:'other-worker',expires_at:Date.now()+25000});
++ const blocked=await poll(await api(),e);assert.equal(blocked.data.alreadyRunning,true);assert.equal(blocked.data.checkpoint.stage,'initialize');assert.deepEqual(e.calls,[]);
++ e.DB.leases.get(started.runId).expires_at=0;const resumed=await poll(await api(),e);assert.equal(resumed.data.checkpoint.stage,'scanner');
++});
++test('a caller with a different actual user identity cannot take over or observe the active run',async()=>{
++ const e=env(),module=await api();await module.default.fetch(request('refresh-all',{'oai-authenticated-user-id':'owner-a'}),e,{});
++ const denied=await poll(await api(),e);assert.equal(denied.http,403);assert.equal(denied.data.status,'auth_required');
++ const response=await(await api()).default.fetch(request('refresh-all',{'oai-authenticated-user-id':'owner-b'}),e,{});assert.equal(response.status,403);assert.deepEqual(e.calls,[]);
++ assert.equal((await poll(await api(),e,{'oai-authenticated-user-id':'owner-a'})).data.checkpoint.stage,'scanner');
++});
++test('a failed checkpoint history write returns 503 and cannot advance the published cursor',async()=>{
++ const e=env(),module=await api();await module.default.fetch(request('refresh-all'),e,{});e.DB.failKey='site-auto-refresh-history:v1';
++ const result=await poll(module,e);assert.equal(result.http,503);assert.equal(result.data.persisted,false);assert.equal(result.data.status,'storage_error');
++ assert.equal(JSON.parse(e.DB.rows.get('site-auto-refresh:v1').payload).checkpoint.stage,'initialize');
++ e.DB.failKey=null;assert.equal((await poll(await api(),e)).data.checkpoint.stage,'scanner');
++});
++test('a failed initial save is not acknowledged with HTTP202',async()=>{
++ const e=env();e.DB.failKey='site-auto-refresh-history:v1';const response=await(await api()).default.fetch(request('refresh-all'),e,{});assert.equal(response.status,503);const result=await response.json();assert.equal(result.persisted,false);assert.equal(e.DB.rows.has('site-auto-refresh:v1'),false);
++});
++test('a bounded step times out without waiting for an indefinitely stuck source',async()=>{
++ const module=await api();await assert.rejects(module.boundedSiteRefreshStep(()=>new Promise(()=>{}),5),/step_timeout/);
++});
++test('simultaneous polls cannot execute the same scanner step twice',async()=>{
++ const e=env(),module=await api();await module.default.fetch(request('refresh-all'),e,{});await poll(module,e);
++ let release;e.holdScanner=new Promise(resolve=>{release=resolve;});
++ const first=poll(module,e);for(let i=0;i<50&&!e.calls.includes('scanner');i++)await new Promise(resolve=>setTimeout(resolve,1));
++ assert.equal(e.calls.filter(x=>x==='scanner').length,1);
++ const second=await poll(await api(),e);assert.equal(second.data.alreadyRunning,true);assert.equal(second.data.checkpoint.stage,'scanner');
++ release();assert.equal((await first).data.checkpoint.stage,'modules');assert.equal(e.calls.filter(x=>x==='scanner').length,1);
++});
++test('a lost lease cannot publish a late scanner checkpoint',async()=>{
++ const e=env(),module=await api();const started=await(await module.default.fetch(request('refresh-all'),e,{})).json();await poll(module,e);
++ let release;e.holdScanner=new Promise(resolve=>{release=resolve;});
++ const pending=poll(module,e);for(let i=0;i<50&&!e.calls.includes('scanner');i++)await new Promise(resolve=>setTimeout(resolve,1));
++ e.DB.leases.set(started.runId,{token:'replacement-owner',expires_at:Date.now()+25000});release();
++ const late=await pending;assert.equal(late.http,409);assert.equal(late.data.status,'lease_lost');assert.equal(JSON.parse(e.DB.rows.get('site-auto-refresh:v1').payload).checkpoint.stage,'scanner');assert.equal(e.DB.leases.get(started.runId).token,'replacement-owner');
++});
+diff --git a/tests/runtime-cache.test.mjs b/tests/runtime-cache.test.mjs
+index 6a2f7ec..360769e 100644
+--- a/tests/runtime-cache.test.mjs
++++ b/tests/runtime-cache.test.mjs
+@@ -53,7 +53,9 @@ try {
+   const second = await request(), secondBody = await second.json();
+   assert.equal(secondBody.cacheState, 'fresh', 'stock response survives a new Worker isolate through D1');
+   assert.equal(secondBody.pending, undefined);
+-  assert.equal(calls.length, 14, 'the official quote pool adds one shared fetch; persistent financial and source cache hits do not repeat upstream requests');
++  const taipeiClock=new Date(Date.now()+8*3600000),creditOpen=taipeiClock.getUTCHours()*60+taipeiClock.getUTCMinutes()>=22*60+30;
++  assert.equal(calls.length,creditOpen?14:13,'shared quotes and persistent financial caches do not repeat requests; stock credit is deferred before 22:30');
++  assert.equal(calls.filter(url=>url.includes('TaiwanStockMarginPurchaseShortSale')).length,creditOpen?1:0,'individual stock credit follows the same capture window');
+ 
+   // A restarted isolate receives only the remaining persistent lifetime.
+   // Previously this load restarted six hours, so expired quotes stayed fresh.
+diff --git a/tests/site-automation.test.mjs b/tests/site-automation.test.mjs
+index e43b440..c046691 100644
+--- a/tests/site-automation.test.mjs
++++ b/tests/site-automation.test.mjs
+@@ -1,5 +1,6 @@
+ import assert from 'node:assert/strict';
+ import { pathToFileURL } from 'node:url';
++import {refreshLeaseStatement} from './helpers/refresh-lease.mjs';
+ 
+ const workerUrl = pathToFileURL(new URL('../dist/server/index.js', import.meta.url).pathname).href;
+ const { default: worker } = await import(workerUrl);
+@@ -7,6 +8,7 @@ const { default: worker } = await import(workerUrl);
+ class MemoryD1 {
+   rows = new Map();
+   prepare(sql) {
++    const lease=refreshLeaseStatement(this,sql);if(lease)return lease;
+     return {
+       bind: (...args) => ({
+         run: async () => {
+@@ -70,11 +72,19 @@ for (const [id, name] of [['8299', '群聯'], ['5289', '宜鼎'], ['2404', '漢
+ const env = { DB: db };
+ let background;
+ const ctx = { waitUntil(promise) { background = promise; } };
++async function drain(headers){
++ for(let i=0;i<60;i++){
++  const response=await worker.fetch(new Request('https://site.test/api/automation/status',{headers}),env,ctx);
++  const result=await response.json();assert.equal(response.status,200,JSON.stringify(result));
++  if(background){await background;background=null;}
++  if(result.completedAt)return result;
++ }
++ throw Error('checkpoint refresh did not finish');
++}
+ let response = await worker.fetch(new Request('https://site.test/api/automation/refresh-all', { method: 'POST' }), env, ctx);
+-assert.equal(response.status, 202, 'scheduled refresh starts in the background');
++assert.equal(response.status, 202, 'scheduled refresh durably starts a poll-driven checkpoint run');
+ assert.equal((await response.json()).status, 'running');
+-assert.ok(background instanceof Promise);
+-await background;
++await drain();
+ 
+ response = await worker.fetch(new Request('https://site.test/api/automation/status'), env);
+ const result = await response.json();
+@@ -121,7 +131,7 @@ globalThis.fetch = async (input, init) => {
+ };
+ response = await worker.fetch(new Request('https://site.test/api/automation/refresh-all', { method: 'POST' }), env, ctx);
+ assert.equal(response.status, 202);
+-await background;
++await drain();
+ response = await worker.fetch(new Request('https://site.test/api/automation/status'), env);
+ const fallbackRun = await response.json();
+ assert.equal(fallbackRun.fullMarketScanner.sessions, 1, 'same-date retries replace one snapshot rather than creating duplicate sessions');
+@@ -143,7 +153,7 @@ globalThis.fetch = async (input, init) => {
+ };
+ response = await worker.fetch(new Request('https://site.test/api/automation/refresh-all', { method: 'POST' }), env, ctx);
+ assert.equal(response.status, 202);
+-await background;
++await drain();
+ response = await worker.fetch(new Request('https://site.test/api/automation/status'), env);
+ const tpexFallbackRun = await response.json();
+ assert.equal(tpexFallbackRun.fullMarketScanner.captured.tpex, 300);
+@@ -165,7 +175,7 @@ globalThis.fetch = async input => {
+ const tokenWithoutAllMarketEntitlement = { ...env, FINMIND_API_TOKEN: 'configured' };
+ response = await worker.fetch(new Request('https://site.test/api/automation/refresh-all', { method: 'POST' }), tokenWithoutAllMarketEntitlement, ctx);
+ assert.equal(response.status, 202);
+-await background;
++await drain();
+ response = await worker.fetch(new Request('https://site.test/api/automation/status'), tokenWithoutAllMarketEntitlement);
+ const noTpexRun = await response.json();
+ assert.equal(noTpexRun.status, 'partial');
+@@ -184,8 +194,8 @@ assert.equal(response.status, 202, 'a stale background run must not block a new
+ const replacement = await response.json();
+ assert.notEqual(replacement.runId, staleRunId);
+ assert.notEqual(replacement.alreadyRunning, true);
+-await background;
+-response = await worker.fetch(new Request('https://site.test/api/automation/status'), tokenWithoutAllMarketEntitlement);
++await drain({'oai-authenticated-user-id':'test-user'});
++response = await worker.fetch(new Request('https://site.test/api/automation/status',{headers:{'oai-authenticated-user-id':'test-user'}}), tokenWithoutAllMarketEntitlement);
+ const replacementRun = await response.json();
+ assert.equal(replacementRun.runId, replacement.runId, 'the replacement run must own the latest-status slot');
+ assert.equal(replacementRun.status, 'partial');
+diff --git a/tests/site-module-contract.test.mjs b/tests/site-module-contract.test.mjs
+index d9485e7..e4a3aef 100644
+--- a/tests/site-module-contract.test.mjs
++++ b/tests/site-module-contract.test.mjs
+@@ -1,5 +1,6 @@
+ import assert from 'node:assert/strict';
+ import {readFileSync} from 'node:fs';
++import {refreshLeaseStatement} from './helpers/refresh-lease.mjs';
+ 
+ const RealDate=globalThis.Date;
+ const fixedTime=RealDate.parse('2026-10-14T07:10:00Z');
+@@ -16,6 +17,7 @@ const sectors=JSON.parse(readFileSync(new URL('./fixtures/us-sector-live-2026101
+ class MemoryD1 {
+   rows=new Map();
+   prepare(sql){
++    const lease=refreshLeaseStatement(this,sql);if(lease)return lease;
+     return {
+       run:async()=>({success:true}),
+       bind:(...args)=>({
+@@ -49,8 +51,12 @@ async function refresh(){
+   const response=await api.default.fetch(new Request('https://site.test/api/automation/refresh-all',{method:'POST'}),env,{waitUntil:task=>tasks.push(task)});
+   assert.equal(response.status,202);
+   const started=await response.json();
+-  for(let count=0;count<tasks.length;)await Promise.all(tasks.slice(count,count=tasks.length));
+-  const status=await(await api.default.fetch(new Request('https://site.test/api/automation/status'),env)).json();
++  let status;
++  for(let i=0;i<60;i++){
++    status=await(await api.default.fetch(new Request('https://site.test/api/automation/status'),env,{waitUntil:task=>tasks.push(task)})).json();
++    for(let count=0;count<tasks.length;)await Promise.all(tasks.splice(count));
++    if(status.completedAt)break;
++  }
+   assert.equal(status.runId,started.runId);
+   assert.ok(status.completedAt);
+   return status;
+diff --git a/worker/macro.js b/worker/macro.js
+index b2ad75e..08c6dc2 100644
+--- a/worker/macro.js
++++ b/worker/macro.js
+@@ -34,7 +34,7 @@ async function ensureRuntimeCache(env = {}) {
+   if (!db || (typeof db !== 'object' && typeof db !== 'function')) return false;
+   if (runtimeCacheReady.has(db)) return runtimeCacheReady.get(db);
+   const ready = db.prepare('CREATE TABLE IF NOT EXISTS site_runtime_cache (cache_key TEXT PRIMARY KEY, payload TEXT NOT NULL, updated_at TEXT NOT NULL, expires_at TEXT NOT NULL)').run()
+-    .then(() => true).catch(() => false);
++    .then(result => result?.success!==false).catch(() => false);
+   runtimeCacheReady.set(db, ready);
+   const ok = await ready;
+   if (!ok) runtimeCacheReady.delete(db);
+@@ -54,8 +54,8 @@ async function writeRuntimeCache(env, key, payload, ttlMs) {
+   if (!await ensureRuntimeCache(env)) return false;
+   const now = new Date(), updatedAt = now.toISOString(), expiresAt = new Date(now.getTime() + ttlMs).toISOString();
+   try {
+-    await env.DB.prepare('INSERT INTO site_runtime_cache (cache_key, payload, updated_at, expires_at) VALUES (?, ?, ?, ?) ON CONFLICT(cache_key) DO UPDATE SET payload = excluded.payload, updated_at = excluded.updated_at, expires_at = excluded.expires_at').bind(key, JSON.stringify(payload), updatedAt, expiresAt).run();
+-    return true;
++    const result=await env.DB.prepare('INSERT INTO site_runtime_cache (cache_key, payload, updated_at, expires_at) VALUES (?, ?, ?, ?) ON CONFLICT(cache_key) DO UPDATE SET payload = excluded.payload, updated_at = excluded.updated_at, expires_at = excluded.expires_at').bind(key, JSON.stringify(payload), updatedAt, expiresAt).run();
++    return result?.success!==false;
+   } catch { return false; }
+ }
+ const jsonHeaders = { 'Cache-Control': 'no-store' };
+@@ -446,7 +446,7 @@ async function buildTaiwanStockSnapshot(id, env = {}) {
+     dataset('TaiwanStockFinancialStatements', financialSince), dataset('TaiwanStockBalanceSheet', financialSince), dataset('TaiwanStockCashFlowsStatement', financialSince),
+     dataset('TaiwanStockDividend', financialSince), dataset('TaiwanStockSplitPrice', financialSince, false), dataset('TaiwanStockParValueChange', financialSince, false),
+     dataset('TaiwanStockInstitutionalInvestorsBuySell',new Date(Date.now()-45*86400000).toISOString().slice(0,10)),
+-    dataset('TaiwanStockMarginPurchaseShortSale',new Date(Date.now()-45*86400000).toISOString().slice(0,10)),
++    loadStockCreditDataset(id,env,()=>dataset('TaiwanStockMarginPurchaseShortSale',new Date(Date.now()-45*86400000).toISOString().slice(0,10))),
+     getOfficialIssuedShares(env)
+   ]);
+   const financialQuality = calculateFinancialQuality(income.rows, balance.rows, cashFlow.rows);
+@@ -473,6 +473,9 @@ async function buildTaiwanStockSnapshot(id, env = {}) {
+     marginBalance:finiteNumber(latestMargin?.MarginPurchaseTodayBalance)?Number(latestMargin.MarginPurchaseTodayBalance):null,
+     marginChange:finiteNumber(latestMargin?.MarginPurchaseTodayBalance)&&finiteNumber(latestMargin?.MarginPurchaseYesterdayBalance)?Number(latestMargin.MarginPurchaseTodayBalance)-Number(latestMargin.MarginPurchaseYesterdayBalance):null,
+     shortBalance:finiteNumber(latestMargin?.ShortSaleTodayBalance)?Number(latestMargin.ShortSaleTodayBalance):null,
++    marginDate:latestMargin?.date||null,marginCapturedAt:margin.capturedAt||null,
++    marginStatus:margin.status||(margin.error?'error':margin.rows.length?'ok':'empty'),marginIsStale:margin.is_stale===true,
++    marginCaptureDeferred:margin.captureDeferred===true,marginReason:margin.reason||margin.error||null,
+     source:'FinMind TaiwanStockInstitutionalInvestorsBuySell + TaiwanStockMarginPurchaseShortSale'};
+   const latestRevenue = revenueRows.at(-1);
+   const previous = latestRevenue && revenueRows.find(x => Number(x.revenue_year) === Number(latestRevenue.revenue_year)-1 && Number(x.revenue_month) === Number(latestRevenue.revenue_month));
+@@ -538,7 +541,8 @@ async function buildTaiwanStockSnapshot(id, env = {}) {
+   const datasetStatus = Object.fromEntries([
+     ['price', prices], ['revenue', revenues], ['historicalPER', per], ['income', income],
+     ['balance', balance], ['cashFlow', cashFlow], ['dividends', dividends], ['splits', splits], ['parValueChanges', parChanges],['institutionalFlows',institutions],['marginCredit',margin],['officialIssuedShares',{rows:issuedShares?[{stock_id:id}]:[],error:issuedShares?null:officialShares.errors.join('；')||'官方資料中無此代號的有效普通股股數'}]
+-  ].map(([key, value]) => [key, { status: value.error ? 'error' : value.rows.length ? 'ok' : 'empty', records: value.rows.length, error: value.error }]));
++  ].map(([key, value]) => [key, { status: value.error ? 'error' : value.status|| (value.rows.length ? 'ok' : 'empty'), records: value.rows.length, error: value.error,
++    ...(key==='marginCredit'?{capturedAt:value.capturedAt||null,captureDeferred:value.captureDeferred===true,is_stale:value.is_stale===true,reason:value.reason||null}: {}) }]));
+   const result = { checkedAt: new Date().toISOString(), id,
+     source: 'FinMind', documentation: 'https://finmind.github.io/tutor/TaiwanMarket/Fundamental/',
+     price: latestPrice ? { value: Number(latestPrice.close), date: latestPrice.date, source: 'FinMind: TaiwanStockPrice' } : null,
+@@ -976,8 +980,8 @@ const SITE_AUTO_REFRESH_HISTORY_LIMIT = 180;
+ const SITE_AUTO_STOCKS_PER_RUN = 6;
+ const SITE_AUTO_REFRESH_LOCK_TIMEOUT_MS = 60 * 1000;
+ const SITE_AUTO_REFRESH_MODULE_TIMEOUT_MS = 6000;
+-let siteAutoRefreshTask = null;
+-let siteAutoRefreshTaskStartedAt = null;
++const SITE_AUTO_REFRESH_STEP_TIMEOUT_MS = 16000;
++const SITE_AUTO_REFRESH_LEASE_MS = 25000;
+ const MARKET_SCANNER_SNAPSHOT_PREFIX = 'market-scanner-snapshot:v1:';
+ const MARKET_SCANNER_LATEST_KEY = 'market-scanner-latest:v1';
+ const MARKET_SCANNER_KEEP_DAYS = 90;
+@@ -1330,7 +1334,7 @@ async function persistSiteRefreshStatus(env, payload) {
+   const payloadStartedAt = Date.parse(payload?.startedAt || '');
+   const latestStartedAt = Date.parse(latest?.payload?.startedAt || '');
+   const ownsLatestSlot = !payload?.runId || !latest?.payload?.runId || latest.payload.runId === payload.runId || (Number.isFinite(payloadStartedAt) && Number.isFinite(latestStartedAt) && payloadStartedAt >= latestStartedAt);
+-  const writes = ownsLatestSlot ? [writeRuntimeCache(env, SITE_AUTO_REFRESH_KEY, payload, ttl)] : [];
++  const writes = [];
+   if (payload?.runId) {
+     writes.push(writeRuntimeCache(env, `site-auto-refresh-run:v1:${payload.runId}`, payload, ttl));
+     const prior = await readRuntimeCache(env, SITE_AUTO_REFRESH_HISTORY_KEY);
+@@ -1349,15 +1353,39 @@ async function persistSiteRefreshStatus(env, payload) {
+       .slice(-SITE_AUTO_REFRESH_HISTORY_LIMIT);
+     writes.push(writeRuntimeCache(env, SITE_AUTO_REFRESH_HISTORY_KEY, { runs: next }, ttl));
+   }
+-  await Promise.all(writes);
++  const written=await Promise.all(writes);
++  if(written.some(value=>value!==true))throw Error('storage_error: 巡檢狀態或歷史寫入失敗，不能宣稱保存完成');
++  if(payload?.runId){
++    const [saved,history]=await Promise.all([readRuntimeCache(env,`site-auto-refresh-run:v1:${payload.runId}`),readRuntimeCache(env,SITE_AUTO_REFRESH_HISTORY_KEY)]);
++    const summary=history?.payload?.runs?.find(row=>row.runId===payload.runId);
++    if(JSON.stringify(saved?.payload)!==JSON.stringify(payload)||!summary||summary.status!==payload.status||summary.completedAt!==(payload.completedAt||null))throw Error('storage_error: 巡檢狀態或歷史讀回不符');
++  }
++  // Publish the resumable cursor only after its run and history are durable.
++  if(ownsLatestSlot){
++    if(!await writeRuntimeCache(env,SITE_AUTO_REFRESH_KEY,payload,ttl))throw Error('storage_error: 最新巡檢checkpoint寫入失敗');
++    const saved=await readRuntimeCache(env,SITE_AUTO_REFRESH_KEY);
++    if(JSON.stringify(saved?.payload)!==JSON.stringify(payload))throw Error('storage_error: 最新巡檢checkpoint讀回不符');
++  }
+ }
+ 
+-async function executeFullSiteRefresh(request, env, ctx, run) {
++async function executeFullSiteRefresh(request, env, ctx, run, leaseToken) {
+   const userId = researchUserId(request);
+-  let watchlist = DEFAULT_SITE_WATCHLIST;
+-  if (userId) {
+-    const saved = await readRuntimeCache(env, `site-watchlist:v1:${userId}`);
+-    watchlist = normalizeSiteWatchlist(saved?.payload?.watchlist) || DEFAULT_SITE_WATCHLIST;
++  const step=run.checkpoint,commit=async()=>{
++    if(!await siteRefreshLeaseOwned(env,run.runId,leaseToken))throw Error('lease_lost: 巡檢步驟租約已失效，保留原checkpoint等待重試');
++    run.updatedAt=new Date().toISOString();await persistSiteRefreshStatus(env,run);return run;
++  };
++  if(step.stage==='initialize'){
++    let watchlist=DEFAULT_SITE_WATCHLIST;
++    if(userId){const saved=await readRuntimeCache(env,`site-watchlist:v1:${userId}`);watchlist=normalizeSiteWatchlist(saved?.payload?.watchlist)||DEFAULT_SITE_WATCHLIST;}
++    const history=await readRuntimeCache(env,SITE_AUTO_REFRESH_HISTORY_KEY);
++    const priorRuns=(history?.payload?.runs||[]).filter(row=>row.runId!==run.runId&&row.completedAt);
++    const previousCursor=Number(priorRuns.at(-1)?.stockCursor||0)%Math.max(1,watchlist.length);
++    const batch=watchlist.length<=SITE_AUTO_STOCKS_PER_RUN?watchlist:Array.from({length:SITE_AUTO_STOCKS_PER_RUN},(_,index)=>watchlist[(previousCursor+index)%watchlist.length]);
++    run.watchlist=watchlist.map(row=>({id:row.id,name:row.name}));run.stockBatch=batch;
++    run.stockCursor=watchlist.length?(previousCursor+batch.length)%watchlist.length:0;
++    const ids=new Set(batch.map(row=>row.id));run.deferredStocks=watchlist.filter(row=>!ids.has(row.id)).map(row=>({id:row.id,name:row.name,status:'deferred',reason:'本次每日個股更新批次上限；保留於後續輪替'}));
++    run.deferredStockCount=run.deferredStocks.length;run.stockRotation=run.deferredStockCount?'輪替更新；其餘追蹤股會在後續每日巡檢依序更新':'追蹤清單全數納入本次巡檢';
++    run.checkpoint={version:1,stage:'scanner',index:0};return commit();
+   }
+   const modules = [
+     ['macro', () => macroResponse(false, env, ctx)],
+@@ -1370,41 +1398,36 @@ async function executeFullSiteRefresh(request, env, ctx, run) {
+     ['usSectors', async () => Response.json(await readUSSectorSnapshot(env, ctx, true))],
+     ['officialNews', () => macroNewsResponse(env, ctx)],
+   ];
+-  // Capture and persist the market-wide snapshot before waiting on unrelated
+-  // macro/news feeds, so a slow module cannot prevent daily breadth history.
+-  try {
+-    run.fullMarketScanner = await captureFullMarketSnapshot(env);
+-  } catch (error) {
+-    // A market snapshot failure should be recorded as one failed module; it
+-    // must not prevent macro/market data and the watchlist from being saved.
+-    run.fullMarketScanner = { status: 'source_error', capturedAt: new Date().toISOString(), sessions: (await readMarketScannerSnapshots(env)).length, errors: { scanner: String(error?.message || error).slice(0, 240) } };
++  if(step.stage==='scanner'){
++    try{run.fullMarketScanner=await boundedSiteRefreshStep(()=>captureFullMarketSnapshot(env));}
++    catch(error){run.fullMarketScanner={status:'source_error',capturedAt:new Date().toISOString(),sessions:(await readMarketScannerSnapshots(env)).length,errors:{scanner:String(error?.message||error).slice(0,240)}};}
++    run.status='updating_market_modules';run.checkpoint={version:1,stage:'modules',index:0};return commit();
++  }
++  if(step.stage==='modules'){
++    const [id,start]=modules[step.index];run.modules[id]=await runSiteModule(id,start);
++    run.checkpoint=step.index+1<modules.length?{version:1,stage:'modules',index:step.index+1}:{version:1,stage:'stocks',index:0};
++    if(run.checkpoint.stage==='stocks')run.status='updating_stocks';return commit();
++  }
++  const stockBatch=run.stockBatch||[];
++  if(step.stage==='stocks'){
++    const row=stockBatch[step.index];
++    if(row)try{run.stocks[step.index]=await boundedSiteRefreshStep(()=>refreshSiteStock(row,env,ctx));}catch(error){run.stocks[step.index]={id:row.id,name:row.name,status:'error',error:String(error?.message||error).slice(0,240)};}
++    run.checkpoint=step.index+1<stockBatch.length?{version:1,stage:'stocks',index:step.index+1}:{version:1,stage:'research',index:0};
++    if(run.checkpoint.stage==='research')run.status='updating_research';return commit();
++  }
++  if(step.stage==='research'){
++    const row=stockBatch[step.index];
++    if(row)try{run.research[step.index]=await boundedSiteRefreshStep(async()=>{
++      const response=await stockSourceResearchResponse(new Request(`https://site.internal/api/stock-source-research?id=${row.id}`),env,{}),result=await response.json();
++      if(!response.ok)throw Error(`source_research HTTP ${response.status}`);
++      return {symbol:row.id,status:result.status,checkedAt:result.checkedAt,records:result.records?.length||0,gaps:result.gaps,errors:result.errors};
++    });}catch(error){run.research[step.index]={symbol:row.id,status:'source_error',records:0,errors:[String(error?.message||error).slice(0,240)]};}
++    run.checkpoint=step.index+1<stockBatch.length?{version:1,stage:'research',index:step.index+1}:{version:1,stage:'gates',index:0};return commit();
+   }
+-  run.status = 'updating_market_modules';
+-  await persistSiteRefreshStatus(env, run);
+-  const moduleResults = await Promise.all(modules.map(async ([id, start]) => [id, await runSiteModule(id, start)]));
+-  run.modules = Object.fromEntries(moduleResults);
+-  run.status = 'updating_stocks';
+-  await persistSiteRefreshStatus(env, run);
+-
+-  run.watchlist = watchlist.map(row => ({ id: row.id, name: row.name }));
+-  const history = await readRuntimeCache(env, SITE_AUTO_REFRESH_HISTORY_KEY);
+-  const previousCursor = Number(history?.payload?.runs?.at(-1)?.stockCursor || 0) % Math.max(1, watchlist.length);
+-  const stockBatch = watchlist.length <= SITE_AUTO_STOCKS_PER_RUN
+-    ? watchlist
+-    : Array.from({ length: SITE_AUTO_STOCKS_PER_RUN }, (_, index) => watchlist[(previousCursor + index) % watchlist.length]);
+-  const stockBatchIds = new Set(stockBatch.map(row => row.id));
+-  run.stockCursor = watchlist.length ? (previousCursor + stockBatch.length) % watchlist.length : 0;
+-  run.deferredStockCount = Math.max(0, watchlist.length - stockBatch.length);
+-  run.stockRotation = run.deferredStockCount ? '輪替更新；其餘追蹤股會在後續每日巡檢依序更新' : '追蹤清單全數納入本次巡檢';
+-  run.stocks = await limitedMap(stockBatch, 3, row => refreshSiteStock(row, env, ctx));
+-  run.deferredStocks = watchlist.filter(row => !stockBatchIds.has(row.id)).map(row => ({ id: row.id, name: row.name, status: 'deferred', reason: '本次每日個股更新批次上限；保留於後續輪替' }));
+-  run.status = 'updating_stocks';
+-  await persistSiteRefreshStatus(env, run);
+-
+-  run.status='updating_research';await persistSiteRefreshStatus(env,run);
+-  run.research = await limitedMap(stockBatch,3,async row=>{const response=await stockSourceResearchResponse(new Request(`https://site.internal/api/stock-source-research?id=${row.id}`),env,{});const result=await response.json();return {symbol:row.id,status:result.status,checkedAt:result.checkedAt,records:result.records?.length||0,gaps:result.gaps,errors:result.errors};});
+   run.researchAllowance = { enabled: true, reason: '依股票代號抓取原始公告與產業 RSS，保存來源；不呼叫模型服務或自動通過 Gate。' };
+-  run.gateAudits=await limitedMap(stockBatch,3,async row=>{
++  if(step.stage==='gates'){
++    const row=stockBatch[step.index];
++    if(row)try{run.gateAudits[step.index]=await boundedSiteRefreshStep(async()=>{
+     try {
+       // Preserve the caller's actual identity; service access never creates one.
+       const headers=userId?{'oai-authenticated-user-id':userId}:{};
+@@ -1415,7 +1438,10 @@ async function executeFullSiteRefresh(request, env, ctx, run) {
+       const recorded=Boolean(written&&saved?.payload?.runId===run.runId&&saved.payload.symbol===row.id);
+       return {symbol:row.id,status:model.status||'unknown',auditStatus:model.auditStatus||null,recorded,key,gates:(model.gates||[]).map(gate=>({id:gate.id,status:gate.status,dataState:gate.dataState}))};
+     }catch(error){return {symbol:row.id,status:'error',recorded:false,error:String(error?.message||error).slice(0,240)};}
+-  });
++    });}catch(error){run.gateAudits[step.index]={symbol:row.id,status:'error',recorded:false,error:String(error?.message||error).slice(0,240)};}
++    run.checkpoint=step.index+1<stockBatch.length?{version:1,stage:'gates',index:step.index+1}:{version:1,stage:'finalize',index:0};return commit();
++  }
++  if(step.stage!=='finalize')throw Error('invalid_refresh_checkpoint');
+   run.coverage = [
+     { id: 'macro', label: '總經五大維度與既有風險判讀', status: 'automatic', detail: '取數、計算與既有判斷摘要保存；保留灰燈與風險預算規則。' },
+     { id: 'market', label: '美股指數、美元、利率、能源、信用、台股市場與貴金屬', status: 'automatic', detail: '保存觀測值、觀測日、來源、有效狀態；金銀比每日累積。' },
+@@ -1431,8 +1457,41 @@ async function executeFullSiteRefresh(request, env, ctx, run) {
+   run.status = coverageIncomplete || states.some(x => ['error', 'missing', 'pending', 'auth_required', 'daily_limit', 'partial', 'deferred'].includes(x)) ? 'partial' : 'complete';
+   run.completedAt = new Date().toISOString();
+   run.manualCheckpoints = ['管理層指引、財報前 EPS 共識與實際 EPS surprise 仍需可追溯原始來源；候選資料不自動通過 Gate 5A／5B／8。', 'DCF 與總經判讀按已保存資料重新計算；任何缺值保留缺項，不自動升級風險預算。'];
+-  await persistSiteRefreshStatus(env, run);
+-  return run;
++  run.checkpoint={version:1,stage:'done',index:0};return commit();
++}
++
++async function boundedSiteRefreshStep(start,timeout=SITE_AUTO_REFRESH_STEP_TIMEOUT_MS){
++  let timer;try{return await Promise.race([Promise.resolve().then(start),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('step_timeout: 本步驟逾時；保存缺項並繼續其他項目')),timeout);})]);}finally{clearTimeout(timer);}
++}
++async function claimSiteRefreshLease(env,runId){
++  if(!env.DB)throw Error('storage_error: 無巡檢租約儲存');
++  await env.DB.prepare('CREATE TABLE IF NOT EXISTS site_refresh_leases (run_id TEXT PRIMARY KEY, token TEXT NOT NULL, expires_at INTEGER NOT NULL)').run();
++  const token=crypto.randomUUID(),now=Date.now();
++  const result=await env.DB.prepare('INSERT INTO site_refresh_leases (run_id, token, expires_at) VALUES (?, ?, ?) ON CONFLICT(run_id) DO UPDATE SET token = excluded.token, expires_at = excluded.expires_at WHERE site_refresh_leases.expires_at <= ?').bind(runId,token,now+SITE_AUTO_REFRESH_LEASE_MS,now).run();
++  if(result?.success===false||!Number.isFinite(result?.meta?.changes))throw Error('storage_error: 無法核對巡檢租約');
++  return result.meta.changes===1?token:null;
++}
++async function siteRefreshLeaseOwned(env,runId,token){
++  const result=await env.DB.prepare('SELECT token, expires_at FROM site_refresh_leases WHERE run_id = ?').bind(runId).all();
++  const row=result?.results?.[0];return row?.token===token&&row.expires_at>Date.now();
++}
++async function releaseSiteRefreshLease(env,runId,token){
++  try{await env.DB.prepare('DELETE FROM site_refresh_leases WHERE run_id = ? AND token = ?').bind(runId,token).run();}catch{}
++}
++async function pollSiteRefresh(request,env,ctx){
++  const saved=await siteAutoRefreshStatus(env);
++  if(saved.completedAt||saved.checkpoint?.version!==1)return Response.json(saved,{headers:jsonHeaders});
++  if((researchUserId(request)||null)!==(saved.userScope||null))return Response.json({runId:saved.runId,status:'auth_required',reason:'巡檢接續需維持啟動時的實際使用者身分。'},{status:403,headers:jsonHeaders});
++  let token;
++  try{
++    token=await claimSiteRefreshLease(env,saved.runId);
++    if(!token)return Response.json({...saved,alreadyRunning:true},{headers:jsonHeaders});
++    const latest=await siteAutoRefreshStatus(env);
++    if(latest.runId!==saved.runId||latest.completedAt)return Response.json(latest,{headers:jsonHeaders});
++    const run=structuredClone(latest);
++    return Response.json(await executeFullSiteRefresh(request,env,ctx,run,token),{headers:jsonHeaders});
++  }catch(error){const reason=String(error?.message||error).slice(0,240),lost=reason.startsWith('lease_lost:'),status=lost?'lease_lost':reason.startsWith('storage_error:')?'storage_error':'error';return Response.json({runId:saved.runId,status,persisted:false,checkpoint:saved.checkpoint,reason},{status:lost?409:503,headers:jsonHeaders});}
++  finally{if(token)await releaseSiteRefreshLease(env,saved.runId,token);}
+ }
+ 
+ async function siteAutoRefreshStatus(env = {}) {
+@@ -1460,29 +1519,16 @@ function scannerCoverageDetail(scan) {
+ async function siteAutoRefreshResponse(request, env = {}, ctx = {}) {
+   if (request.method !== 'POST') return Response.json({ error: 'method_not_allowed', message: '全站更新需使用 POST。' }, { status: 405, headers: jsonHeaders });
+   const previous = await siteAutoRefreshStatus(env);
++  if(!previous.completedAt&&previous.checkpoint?.version===1&&(researchUserId(request)||null)!==(previous.userScope||null))return Response.json({status:'auth_required',reason:'巡檢接續需維持啟動時的實際使用者身分。'},{status:403,headers:jsonHeaders});
+   const previousAge = Date.now() - Date.parse(previous.startedAt || '');
+-  const taskAge = Date.now() - Date.parse(siteAutoRefreshTaskStartedAt || previous.startedAt || '');
+   const activeStatus = ['running', 'updating_market_modules', 'updating_stocks', 'updating_research'].includes(previous.status);
+-  const localTaskFresh = Boolean(siteAutoRefreshTask) && Number.isFinite(taskAge) && taskAge < SITE_AUTO_REFRESH_LOCK_TIMEOUT_MS;
+   const storedRunFresh = activeStatus && Number.isFinite(previousAge) && previousAge < SITE_AUTO_REFRESH_LOCK_TIMEOUT_MS;
+-  if (localTaskFresh || storedRunFresh) {
++  if (activeStatus&&(previous.checkpoint?.version===1||storedRunFresh)) {
+     return Response.json({ ...previous, alreadyRunning: true }, { status: 202, headers: jsonHeaders });
+   }
+-  // A lost background promise must not permanently lock daily collection.
+-  // Older tasks may finish later, but persistSiteRefreshStatus prevents them
+-  // from replacing a newer run in the latest-status slot.
+-  if (siteAutoRefreshTask) siteAutoRefreshTask = null;
+-  const run = { runId: crypto.randomUUID(), status: 'running', startedAt: new Date().toISOString(), trigger: 'scheduled_site_refresh', modules: {}, stocks: [], research: [] };
+-  await persistSiteRefreshStatus(env, run);
+-  const task = executeFullSiteRefresh(request, env, ctx, run).catch(async error => {
+-    run.status = 'error'; run.completedAt = new Date().toISOString(); run.error = String(error?.message || error).slice(0, 300);
+-    await persistSiteRefreshStatus(env, run);
+-    return run;
+-  }).finally(() => { if (siteAutoRefreshTask === task) { siteAutoRefreshTask = null; siteAutoRefreshTaskStartedAt = null; } });
+-  siteAutoRefreshTask = task;
+-  siteAutoRefreshTaskStartedAt = run.startedAt;
+-  try { ctx.waitUntil?.(task); } catch {}
+-  return Response.json({ ...run, message: '全站後台更新已啟動；完成狀態會保存於站內。' }, { status: 202, headers: jsonHeaders });
++  const run={runId:crypto.randomUUID(),status:'running',startedAt:new Date().toISOString(),trigger:'scheduled_site_refresh',executionMode:'poll_driven_checkpoint',userScope:researchUserId(request)||null,checkpoint:{version:1,stage:'initialize',index:0},modules:{},stocks:[],research:[],gateAudits:[]};
++  try{await persistSiteRefreshStatus(env,run);}catch(error){return Response.json({runId:run.runId,status:'storage_error',persisted:false,reason:String(error?.message||error).slice(0,240)},{status:503,headers:jsonHeaders});}
++  return Response.json({...run,message:'全站巡檢已保存起點；持續輪詢status逐步執行並接續，同一runId完成後再核對history。'},{status:202,headers:jsonHeaders});
+ }
+ 
+ export default {
+@@ -1490,7 +1536,7 @@ export default {
+     const path = new URL(request.url).pathname;
+     if (path === '/' || path === '/index.html') return new Response(HTML, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
+     if (path === '/api/watchlist') return siteWatchlistResponse(request, env);
+-    if (path === '/api/automation/status' && request.method === 'GET') return Response.json(await siteAutoRefreshStatus(env), { headers: jsonHeaders });
++    if (path === '/api/automation/status' && request.method === 'GET') return pollSiteRefresh(request,env,ctx);
+     if (path === '/api/automation/history' && request.method === 'GET') return Response.json(await siteAutoRefreshHistory(env), { headers: jsonHeaders });
+     if (path === '/api/market-scanner' && request.method === 'GET') return Response.json((await readRuntimeCache(env, MARKET_SCANNER_LATEST_KEY))?.payload || { status: 'waiting', sessions: 0, message: '首次整站排程抓取全市場行情快照後開始累積。' }, { headers: jsonHeaders });
+     if (path === '/api/official-data-tools' && request.method === 'GET') return Response.json(OFFICIAL_UPDATE_TOOLS,{headers:jsonHeaders});
+diff --git a/worker/observation-freshness.js b/worker/observation-freshness.js
+index d415fe4..2c90b97 100644
+--- a/worker/observation-freshness.js
++++ b/worker/observation-freshness.js
+@@ -1,6 +1,76 @@
+ // Refresh cadence and source observation validity are separate clocks.
+ const OFFICIAL_CAPTURE_MAX_AGE_MS=36*3600000;
+ const TWSE_STATISTICS_KEY='official-taiwan-statistics:v1';
++const TAIWAN_CREDIT_FIELDS=[
++  ['TWSE_MARGIN_BALANCE_NTD','融資餘額','億元'],
++  ['TWSE_MARGIN_CHANGE_NTD','融資餘額日增減','億元'],
++  ['TWSE_MARGIN_BALANCE_UNITS','融資餘額','張'],
++  ['TWSE_SHORT_BALANCE','融券餘額','張'],
++  ['TWSE_SHORT_CHANGE','融券餘額日增減','張'],
++  ['TWSE_MARGIN_MARKET_CAP_RATIO','融資餘額占市值比','%'],
++  ['TWSE_CREDIT_TRADE_VALUE','信用交易成交值','億元'],
++];
++function taiwanCreditCaptureAllowed(now=Date.now()) {
++  const local=new Date(now+8*3600000);
++  return local.getUTCHours()*60+local.getUTCMinutes()>=22*60+30;
++}
++async function loadStockCreditDataset(symbol,env,fetchDataset,now=Date.now()) {
++  const key=`stock-credit:v1:${symbol}`,dataset='TaiwanStockMarginPurchaseShortSale';
++  const source=`https://api.finmindtrade.com/api/v4/data?dataset=${dataset}`;
++  const localDate=new Date(now+8*3600000).toISOString().slice(0,10);
++  const balanceFields=['MarginPurchaseTodayBalance','MarginPurchaseYesterdayBalance','ShortSaleTodayBalance'];
++  const balanceValid=value=>(typeof value==='number'||typeof value==='string'&&/^\d+$/.test(value))&&Number.isSafeInteger(Number(value))&&Number(value)>=0;
++  const validRows=(rows,asOfDate=localDate)=>Array.isArray(rows)&&new Set(rows.map(row=>row?.date)).size===rows.length&&rows.every(row=>row&&String(row.stock_id)===symbol&&officialImportDate(row.date)&&row.date<=asOfDate&&balanceFields.every(field=>balanceValid(row[field])));
++  // Use the existing five-calendar-day Taiwan observation bound independently
++  // of the 36-hour retrieval clock. A fresh fetch never renews an old quote.
++  const observationCurrent=rows=>{const date=rows.map(row=>row.date).sort().at(-1);return date&&Date.parse(localDate)-Date.parse(date)<=5*86400000;};
++  if(taiwanCreditCaptureAllowed(now)){
++    const result=await fetchDataset();
++    if(result.error)return result;
++    if(!validRows(result.rows))return {rows:[],error:'個股信用資料的代號、日期唯一性或必要餘額欄位不符',status:'error'};
++    const capturedAt=new Date(now).toISOString();
++    if(!result.rows.length)return {...result,capturedAt,status:'empty'};
++    const payload={symbol,dataset,source,capturedAt,rows:result.rows};
++    const recorded=await writeRuntimeCache(env,key,payload,7*86400000);
++    const current=observationCurrent(result.rows);
++    return {...result,capturedAt,status:recorded?current?'ok':'stale':'error',is_stale:!current,reason:current?null:'信用觀測日已過有效期；本次擷取不更新觀測日期。',error:recorded?null:'個股信用快照儲存失敗',recorded};
++  }
++  const saved=(await readRuntimeCache(env,key))?.payload,captured=Date.parse(saved?.capturedAt||'');
++  const deferred={captureDeferred:true,reason:'22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。'};
++  if(saved?.symbol!==symbol||saved?.dataset!==dataset||saved?.source!==source||!Number.isFinite(captured)||captured>now||!taiwanCreditCaptureAllowed(captured)||!validRows(saved?.rows,new Date(captured+8*3600000).toISOString().slice(0,10))||!saved.rows.length)return {rows:[],error:null,status:'deferred',capturedAt:null,...deferred};
++  const current=recentOfficialCapture(saved.capturedAt,now)&&observationCurrent(saved.rows);
++  return {rows:saved.rows,error:null,capturedAt:saved.capturedAt,status:current?'snapshot':'stale',is_stale:!current,...deferred,reason:current?deferred.reason:'信用觀測日或原擷取時間已過有效期；保留舊證據但不列有效信用觀測。'};
++}
++async function retainedTaiwanCreditRows(env,now=Date.now()) {
++  const snapshots=await Promise.all(['macro-market:v7','macro:v1'].map(key=>readRuntimeCache(env,key)));
++  const ids=new Set(TAIWAN_CREDIT_FIELDS.map(([id])=>id));
++  const candidates=snapshots.flatMap(saved=>(saved?.payload?.rows||[]).filter(row=>ids.has(row.id)).map(row=>({row,checkedAt:saved.payload.checkedAt})));
++  // An expired import can still supply historical evidence. Validate it at its
++  // original capture time, then apply the current freshness clock below.
++  const imported=await readRuntimeCache(env,TWSE_STATISTICS_KEY);
++  if(imported?.payload){
++    const captured=Date.parse(imported.payload.capturedAt||'');
++    if(Number.isFinite(captured)&&captured<=now)try{
++      const rows=validateTaiwanStatistics(imported.payload,captured);
++      candidates.push(...rows.filter(row=>ids.has(row.id)).map(row=>({row,checkedAt:imported.payload.capturedAt})));
++    }catch{}
++  }
++  const localDate=new Date(now+8*3600000).toISOString().slice(0,10);
++  return TAIWAN_CREDIT_FIELDS.map(([id,name,unit])=>{
++    const valid=candidates.filter(({row,checkedAt})=>{
++      const stamp=Date.parse(row.verifiedAt||row.fetchedAt||checkedAt||'');
++      if(row.id!==id||!['ok','snapshot','stale'].includes(row.status)||!Number.isFinite(row.value)||!officialImportDate(row.date)||row.date>localDate||!Number.isFinite(stamp)||stamp>now)return false;
++      try{const source=new URL(row.source);return source.protocol==='https:'&&!source.username&&!source.password&&!source.port&&['www.twse.com.tw','openapi.twse.com.tw'].includes(source.hostname);}catch{return false;}
++    }).sort((a,b)=>b.row.date.localeCompare(a.row.date)||Date.parse(b.row.verifiedAt||b.row.fetchedAt||b.checkedAt)-Date.parse(a.row.verifiedAt||a.row.fetchedAt||a.checkedAt));
++    const selected=valid[0],deferred={captureDeferred:true,capturePolicy:'after_2230_taipei',capturePolicyReason:'台北時間22:30前不重抓信用統計；保留原觀測日及原核對時間。'};
++    if(!selected)return {id,name,unit,group:'台股市場',value:null,date:null,status:'missing',is_stale:false,reason:'22:30前未抓取信用統計，且沒有可核對的既有觀測。',...deferred};
++    const {row,checkedAt}=selected,stamp=row.verifiedAt||row.fetchedAt||checkedAt;
++    const candidate={...row,verifiedAt:stamp,status:row.snapshot?'snapshot':'ok',is_stale:false};
++    const current=row.status!=='stale'&&!row.is_stale&&macroObservationCurrent(candidate,{checkedAt,rows:[candidate]},now);
++    return {...row,verifiedAt:stamp,status:current?'snapshot':'stale',snapshot:true,is_stale:!current,
++      reason:current?row.reason||null:'既有信用觀測已過有效期；22:30後再抓取核對。',...deferred};
++  });
++}
+ function officialFredSeriesId(id){return {US3M:'DTB3',US10Y:'DGS10',US30Y:'DGS30'}[id]||id}
+ function recentOfficialCapture(value,now=Date.now()) {
+   const stamp=Date.parse(value);return Number.isFinite(stamp)&&stamp<=now+60000&&now-stamp<OFFICIAL_CAPTURE_MAX_AGE_MS;
+diff --git a/worker/observations.js b/worker/observations.js
+index e288c98..5f01c95 100644
+--- a/worker/observations.js
++++ b/worker/observations.js
+@@ -1724,6 +1724,9 @@ async function loadTaiwanDashboard(env={}) {
+     finally {clearTimeout(timer);}
+    }
+   } catch {}
++  // Reading saved observations is allowed all day; direct credit collection is
++  // restricted to the owner's evening window. Turnover remains independent.
++  if(!taiwanCreditCaptureAllowed())return [tradeValueFail,...await retainedTaiwanCreditRows(env)];
+   if(!trade) {
+     const ids=['TWSE_MARGIN_BALANCE_NTD','TWSE_MARGIN_CHANGE_NTD','TWSE_MARGIN_BALANCE_UNITS','TWSE_SHORT_BALANCE','TWSE_SHORT_CHANGE'];
+     const relayed=await Promise.all(ids.map(id=>relaySeries(id)));
+@@ -1741,6 +1744,7 @@ async function loadTaiwanDashboard(env={}) {
+   // lag it, so try the latest published sessions and use the newest valid one.
+   const dates=[...new Set([trade?.date,...tradingDates].filter(Boolean))].sort((a,b)=>b.localeCompare(a)).slice(0,5);
+   for(const date of dates){
++    if(!taiwanCreditCaptureAllowed())return [tradeValueFail,...await retainedTaiwanCreditRows(env)];
+     const source=`${marginApi}?response=json&date=${date.replaceAll('-','')}&selectType=MS`;
+       const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
+       try {
+@@ -1800,7 +1804,10 @@ async function loadTaiwanDashboard(env={}) {
+   const dateKey=creditDate.replaceAll('-','');
+   const marginTrendSource=`${marginTrendApi}?response=json&date=${dateKey}&days=30`;
+   const creditSummarySource=`${creditSummaryApi}?response=json&date=${dateKey}`;
+-  const fetchSupplement=officialTwseJson;
++  const fetchSupplement=source=>{
++    if(!taiwanCreditCaptureAllowed())throw Error('22:30前不抓取信用補充統計');
++    return officialTwseJson(source);
++  };
+   const [trendResult,summaryResult]=await Promise.allSettled([fetchSupplement(marginTrendSource),fetchSupplement(creditSummarySource)]);
+   let marginRatio=null,marginRatioReason='證交所同日市值資料暫不可用',marginRatioProvider='臺灣證券交易所｜MI_MARGN + MI_MARGN_TREND';
+   if(trendResult.status==='fulfilled') {
