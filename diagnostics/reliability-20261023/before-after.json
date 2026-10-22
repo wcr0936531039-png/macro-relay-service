@@ -1,0 +1,622 @@
+{
+  "scope": "Local-only replay against v231. Four stocks use identical frozen 2026-10-21 inputs and explicit freshness flags; this is not a fresh production readback.",
+  "stocks": [
+    {
+      "symbol": "8299",
+      "sourceInputDate": "2026-10-21T05:06:18.128Z",
+      "grade": null,
+      "label": "未評（估值分歧）",
+      "riskPermission": "not_cleared",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 2,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 4,
+          "before": "warning",
+          "after": "warning",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 5,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 6,
+          "before": "warning",
+          "after": "warning",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 7,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 8,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 9,
+          "before": "conditional",
+          "after": "conditional",
+          "beforeDataState": "not_applicable",
+          "afterDataState": "not_applicable",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 10,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        }
+      ]
+    },
+    {
+      "symbol": "5289",
+      "sourceInputDate": "2026-10-21T05:01:53.187Z",
+      "grade": null,
+      "label": "未評（估值分歧）",
+      "riskPermission": "not_cleared",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 2,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 4,
+          "before": "warning",
+          "after": "warning",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 5,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 6,
+          "before": "warning",
+          "after": "warning",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 7,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 8,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 9,
+          "before": "blocked",
+          "after": "blocked",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 10,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        }
+      ]
+    },
+    {
+      "symbol": "2404",
+      "sourceInputDate": "2026-10-21T05:01:52.998Z",
+      "grade": null,
+      "label": "未評（估值分歧）",
+      "riskPermission": "not_cleared",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 2,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 4,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 5,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 6,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "not_applicable",
+          "afterDataState": "not_applicable",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 7,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 8,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 9,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 10,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        }
+      ]
+    },
+    {
+      "symbol": "5009",
+      "sourceInputDate": "2026-10-21T05:01:50.090Z",
+      "grade": "C",
+      "label": "保守觀察",
+      "riskPermission": "not_cleared",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 2,
+          "before": "partial",
+          "after": "partial",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 4,
+          "before": "warning",
+          "after": "warning",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 5,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 6,
+          "before": "warning",
+          "after": "warning",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 7,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 8,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "beforeDataState": "partial",
+          "afterDataState": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 9,
+          "before": "conditional",
+          "after": "conditional",
+          "beforeDataState": "not_applicable",
+          "afterDataState": "not_applicable",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 10,
+          "before": "evaluated",
+          "after": "evaluated",
+          "beforeDataState": "verified",
+          "afterDataState": "verified",
+          "fullObjectUnchanged": true
+        }
+      ]
+    }
+  ],
+  "capturePolicy": {
+    "synthetic": true,
+    "clock": "2026-10-22T02:14:00Z",
+    "savedCaptureAt": "2026-10-21T15:00:00Z",
+    "beforeCreditRequests": 3,
+    "afterCreditRequests": 0,
+    "rows": [
+      {
+        "id": "TWSE_MARGIN_BALANCE_NTD",
+        "before": {
+          "id": "TWSE_MARGIN_BALANCE_NTD",
+          "value": 3100,
+          "date": "2026-10-21",
+          "status": "ok",
+          "is_stale": null,
+          "verifiedAt": "2026-10-22T02:14:00.000Z",
+          "fetchedAt": null,
+          "captureDeferred": null,
+          "capturePolicy": null
+        },
+        "after": {
+          "id": "TWSE_MARGIN_BALANCE_NTD",
+          "value": -2,
+          "date": "2026-10-21",
+          "status": "snapshot",
+          "is_stale": false,
+          "verifiedAt": "2026-10-21T15:00:00Z",
+          "fetchedAt": "2026-10-21T15:00:00Z",
+          "captureDeferred": true,
+          "capturePolicy": "after_2230_taipei"
+        }
+      },
+      {
+        "id": "TWSE_MARGIN_CHANGE_NTD",
+        "before": {
+          "id": "TWSE_MARGIN_CHANGE_NTD",
+          "value": 100,
+          "date": "2026-10-21",
+          "status": "ok",
+          "is_stale": null,
+          "verifiedAt": "2026-10-22T02:14:00.000Z",
+          "fetchedAt": null,
+          "captureDeferred": null,
+          "capturePolicy": null
+        },
+        "after": {
+          "id": "TWSE_MARGIN_CHANGE_NTD",
+          "value": -1,
+          "date": "2026-10-21",
+          "status": "snapshot",
+          "is_stale": false,
+          "verifiedAt": "2026-10-21T15:00:00Z",
+          "fetchedAt": "2026-10-21T15:00:00Z",
+          "captureDeferred": true,
+          "capturePolicy": "after_2230_taipei"
+        }
+      },
+      {
+        "id": "TWSE_MARGIN_BALANCE_UNITS",
+        "before": {
+          "id": "TWSE_MARGIN_BALANCE_UNITS",
+          "value": 110,
+          "date": "2026-10-21",
+          "status": "ok",
+          "is_stale": null,
+          "verifiedAt": "2026-10-22T02:14:00.000Z",
+          "fetchedAt": null,
+          "captureDeferred": null,
+          "capturePolicy": null
+        },
+        "after": {
+          "id": "TWSE_MARGIN_BALANCE_UNITS",
+          "value": 0,
+          "date": "2026-10-21",
+          "status": "snapshot",
+          "is_stale": false,
+          "verifiedAt": "2026-10-21T15:00:00Z",
+          "fetchedAt": "2026-10-21T15:00:00Z",
+          "captureDeferred": true,
+          "capturePolicy": "after_2230_taipei"
+        }
+      },
+      {
+        "id": "TWSE_SHORT_BALANCE",
+        "before": {
+          "id": "TWSE_SHORT_BALANCE",
+          "value": 210,
+          "date": "2026-10-21",
+          "status": "ok",
+          "is_stale": null,
+          "verifiedAt": "2026-10-22T02:14:00.000Z",
+          "fetchedAt": null,
+          "captureDeferred": null,
+          "capturePolicy": null
+        },
+        "after": {
+          "id": "TWSE_SHORT_BALANCE",
+          "value": 1,
+          "date": "2026-10-21",
+          "status": "snapshot",
+          "is_stale": false,
+          "verifiedAt": "2026-10-21T15:00:00Z",
+          "fetchedAt": "2026-10-21T15:00:00Z",
+          "captureDeferred": true,
+          "capturePolicy": "after_2230_taipei"
+        }
+      },
+      {
+        "id": "TWSE_SHORT_CHANGE",
+        "before": {
+          "id": "TWSE_SHORT_CHANGE",
+          "value": 10,
+          "date": "2026-10-21",
+          "status": "ok",
+          "is_stale": null,
+          "verifiedAt": "2026-10-22T02:14:00.000Z",
+          "fetchedAt": null,
+          "captureDeferred": null,
+          "capturePolicy": null
+        },
+        "after": {
+          "id": "TWSE_SHORT_CHANGE",
+          "value": 2,
+          "date": "2026-10-21",
+          "status": "snapshot",
+          "is_stale": false,
+          "verifiedAt": "2026-10-21T15:00:00Z",
+          "fetchedAt": "2026-10-21T15:00:00Z",
+          "captureDeferred": true,
+          "capturePolicy": "after_2230_taipei"
+        }
+      },
+      {
+        "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+        "before": {
+          "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+          "value": 0.31,
+          "date": "2026-10-21",
+          "status": "ok",
+          "is_stale": null,
+          "verifiedAt": "2026-10-22T02:14:00.000Z",
+          "fetchedAt": null,
+          "captureDeferred": null,
+          "capturePolicy": null
+        },
+        "after": {
+          "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+          "value": 3,
+          "date": "2026-10-21",
+          "status": "snapshot",
+          "is_stale": false,
+          "verifiedAt": "2026-10-21T15:00:00Z",
+          "fetchedAt": "2026-10-21T15:00:00Z",
+          "captureDeferred": true,
+          "capturePolicy": "after_2230_taipei"
+        }
+      },
+      {
+        "id": "TWSE_CREDIT_TRADE_VALUE",
+        "before": {
+          "id": "TWSE_CREDIT_TRADE_VALUE",
+          "value": 120,
+          "date": "2026-10-21",
+          "status": "ok",
+          "is_stale": null,
+          "verifiedAt": "2026-10-22T02:14:00.000Z",
+          "fetchedAt": null,
+          "captureDeferred": null,
+          "capturePolicy": null
+        },
+        "after": {
+          "id": "TWSE_CREDIT_TRADE_VALUE",
+          "value": 4,
+          "date": "2026-10-21",
+          "status": "snapshot",
+          "is_stale": false,
+          "verifiedAt": "2026-10-21T15:00:00Z",
+          "fetchedAt": "2026-10-21T15:00:00Z",
+          "captureDeferred": true,
+          "capturePolicy": "after_2230_taipei"
+        }
+      }
+    ],
+    "stockCredit": {
+      "symbol": "8299",
+      "beforeRequests": 1,
+      "afterRequests": 0,
+      "before": {
+        "marketActivity": {
+          "date": "2026-10-21",
+          "institutional5dNet": null,
+          "institutionalDaily": null,
+          "institutional5dObservations": 0,
+          "marginBalance": 120,
+          "marginChange": 20,
+          "shortBalance": 220,
+          "source": "FinMind TaiwanStockInstitutionalInvestorsBuySell + TaiwanStockMarginPurchaseShortSale"
+        },
+        "datasetStatus": {
+          "status": "ok",
+          "records": 1,
+          "error": null
+        }
+      },
+      "after": {
+        "marketActivity": {
+          "date": "2026-10-21",
+          "institutional5dNet": null,
+          "institutionalDaily": null,
+          "institutional5dObservations": 0,
+          "marginBalance": 110,
+          "marginChange": 10,
+          "shortBalance": 210,
+          "marginDate": "2026-10-21",
+          "marginCapturedAt": "2026-10-21T15:00:00Z",
+          "marginStatus": "snapshot",
+          "marginIsStale": false,
+          "marginCaptureDeferred": true,
+          "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。",
+          "source": "FinMind TaiwanStockInstitutionalInvestorsBuySell + TaiwanStockMarginPurchaseShortSale"
+        },
+        "datasetStatus": {
+          "status": "snapshot",
+          "records": 1,
+          "error": null,
+          "capturedAt": "2026-10-21T15:00:00Z",
+          "captureDeferred": true,
+          "is_stale": false,
+          "reason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+        }
+      }
+    }
+  }
+}
