@@ -1,3 +1,13 @@
+# 最新：2026-10-22 信用時間閘門本機修補，第一版全測試通過、續補個股路徑
+
+[逐步巡檢紀錄](automation-runs/20261022-recovery.md)｜[本機檢查點](credit-window-20261022/checkpoint.md)｜[完整來源patch](credit-window-20261022/credit-window.patch)｜[SHA](credit-window-20261022/manifest.json)｜[完整npm test](credit-window-20261022/npm-test.log)｜[前後比較](credit-window-20261022/before-after.json)。
+
+10/21全市場1956／1984（98.59%）、71交易日及8組來源193筆已成功匯入。FRED維護造成8條CSV與CPI核對缺失，照實留缺。第一個整站run因waitUntil時限取消而停在updating_research；後續輪詢被自動核准擋下，因正式站上午仍抓信用，未繞過該限制。無匹配completedAt與歷史完成驗收，不宣稱巡檢全數完成。
+
+官方大盤信用端點第一版本機修補7/7、完整npm test exit0，四檔40 Gate及評分／VETO／風險許可不變；續查個股FinMind融資融券路徑尚未受限，正在補revision2。**正式站仍v231，未部署；排程保持暫停。C1修訂2仍獨立待審，未混入本補丁。**
+
+---
+
 # 最新：2026-10-22 10:12 台北，巡檢恢復讀取、資料收集中
 
 本輪已沿原私人服務存取方式讀回操作說明、全市場狀態與歷史，HTTP 200；前次核准層阻擋本次未再出現。確認正式站 v231、擁有者私人存取、原排程仍暫停。已有70個交易日，因此行情收集只用 sessions=1。上午不抓融資融券／信用統計，保留昨晚觀測及原擷取時間。
