@@ -1,0 +1,117 @@
+✔ morning retains verified credit values and original timestamps without any credit request (55.072331ms)
+✔ morning without retained credit keeps every credit field missing instead of fetching or inventing values (51.342252ms)
+✔ expired retained credit remains dated and stale; refresh cannot renew its clock (46.983746ms)
+✔ 22:29 Taipei remains closed, 22:30 permits the existing official credit route (100.334734ms)
+✔ midnight closes the window again and unverified or future evidence cannot become retained valid data (55.859967ms)
+✔ a source-marked stale row is not promoted by a recent capture time (49.590179ms)
+✔ invalid source provenance and future observation dates stay missing (48.778492ms)
+✔ individual stock credit does not call FinMind before 22:30 and keeps the actual credit date/capture (0.595665ms)
+✔ individual stock credit without a stored snapshot remains deferred/missing (0.336561ms)
+✔ individual stock credit allows 22:30 collection and can read that durable snapshot the next morning (0.585019ms)
+✔ individual stock credit keeps expired evidence stale and rejects mismatched or future cache contents (0.448997ms)
+✖ a recent retrieval cannot renew an old stock credit observation (1.180495ms)
+✖ an evening retrieval of old observations remains stale instead of ok (0.24908ms)
+✖ stock credit rejects missing, empty, negative, fractional, nonfinite and boolean balances (0.38968ms)
+✖ evening invalid balances are rejected before persistence while real zero is accepted (0.323421ms)
+✖ duplicate credit dates and observations later than their original capture are rejected (0.26935ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 11
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 560.005977
+
+✖ failing tests:
+
+test at tests/credit-capture-window.test.mjs:108:1
+✖ a recent retrieval cannot renew an old stock credit observation (1.180495ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'snapshot'
+  - 'stale'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/6b210f4f35e9/credit-window-20261022/tests/credit-capture-window.test.mjs:111:9)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'snapshot',
+    expected: 'stale',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/credit-capture-window.test.mjs:113:1
+✖ an evening retrieval of old observations remains stale instead of ok (0.24908ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'ok' !== 'stale'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/6b210f4f35e9/credit-window-20261022/tests/credit-capture-window.test.mjs:115:9)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ok',
+    expected: 'stale',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/credit-capture-window.test.mjs:117:1
+✖ stock credit rejects missing, empty, negative, fractional, nonfinite and boolean balances (0.38968ms)
+  AssertionError [ERR_ASSERTION]: MarginPurchaseTodayBalance=undefined
+  + actual - expected
+  
+  + 'snapshot'
+  - 'deferred'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/6b210f4f35e9/credit-window-20261022/tests/credit-capture-window.test.mjs:121:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'snapshot',
+    expected: 'deferred',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/credit-capture-window.test.mjs:124:1
+✖ evening invalid balances are rejected before persistence while real zero is accepted (0.323421ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'ok' !== 'error'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/6b210f4f35e9/credit-window-20261022/tests/credit-capture-window.test.mjs:126:9)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ok',
+    expected: 'error',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/credit-capture-window.test.mjs:131:1
+✖ duplicate credit dates and observations later than their original capture are rejected (0.26935ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'snapshot'
+  - 'deferred'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/6b210f4f35e9/credit-window-20261022/tests/credit-capture-window.test.mjs:135:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'snapshot',
+    expected: 'deferred',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
