@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-21T12:22:49.980989+00:00",
+  "generated_at": "2026-10-22T00:53:02.256809+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -402,7 +402,7 @@
       "unit": "index_points",
       "warnings": [],
       "status": "ok",
-      "fetched_at": "2026-10-21T12:22:49.980989+00:00"
+      "fetched_at": "2026-10-22T00:53:02.256809+00:00"
     },
     "SP500": {
       "history": [
@@ -911,8 +911,9 @@
       "provider": "FRED official published price-index history | SP500",
       "market": "US",
       "unit": "index_points",
-      "status": "ok",
-      "fetched_at": "2026-10-21T12:22:49.980989+00:00"
+      "status": "stale",
+      "fetched_at": "2026-10-21T12:22:49.980989+00:00",
+      "error": "only 0/21 completed closes"
     },
     "NASDAQCOM": {
       "history": [
@@ -1421,16 +1422,12 @@
       "provider": "FRED official published price-index history | NASDAQCOM",
       "market": "US",
       "unit": "index_points",
-      "status": "ok",
-      "fetched_at": "2026-10-21T12:22:49.980989+00:00"
+      "status": "stale",
+      "fetched_at": "2026-10-21T12:22:49.980989+00:00",
+      "error": "only 0/21 completed closes"
     },
     "SOX": {
       "history": [
-        {
-          "date": "2026-05-29",
-          "value": 12829.3798828125,
-          "available_at": "2026-05-29T20:15:00+00:00"
-        },
         {
           "date": "2026-06-01",
           "value": 12965.650390625,
@@ -1925,6 +1922,11 @@
           "date": "2026-10-20",
           "value": 11283.8095703125,
           "available_at": "2026-10-20T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-21",
+          "value": 11505.5556640625,
+          "available_at": "2026-10-21T20:15:00+00:00"
         }
       ],
       "source": "https://query1.finance.yahoo.com/v8/finance/chart/%5ESOX?range=6mo&interval=1d",
@@ -1935,10 +1937,19 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-10-21T12:22:49.980989+00:00"
+      "fetched_at": "2026-10-22T00:53:02.256809+00:00"
     }
   },
-  "errors": [],
+  "errors": [
+    {
+      "id": "SP500",
+      "error": "only 0/21 completed closes"
+    },
+    {
+      "id": "NASDAQCOM",
+      "error": "only 0/21 completed closes"
+    }
+  ],
   "flows": {
     "history": [
       {
@@ -2125,5 +2136,5 @@
     "scope": "TWSE_all_listed_securities",
     "method": "nonDayTradeValueTwd = FMTQIK total value minus (TWTB4U day-trade buy value + sell value)/2; institutions are BFI82U net TWD"
   },
-  "status": "ok"
+  "status": "partial"
 }
