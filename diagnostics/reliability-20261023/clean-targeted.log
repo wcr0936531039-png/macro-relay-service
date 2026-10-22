@@ -1,0 +1,39 @@
+✔ morning retains verified credit values and original timestamps without any credit request (63.294762ms)
+✔ morning without retained credit keeps every credit field missing instead of fetching or inventing values (48.030645ms)
+✔ expired retained credit remains dated and stale; refresh cannot renew its clock (45.325174ms)
+✔ 22:29 Taipei remains closed, 22:30 permits the existing official credit route (100.071812ms)
+✔ midnight closes the window again and unverified or future evidence cannot become retained valid data (57.185152ms)
+✔ a source-marked stale row is not promoted by a recent capture time (45.992827ms)
+✔ invalid source provenance and future observation dates stay missing (48.271574ms)
+✔ individual stock credit does not call FinMind before 22:30 and keeps the actual credit date/capture (0.615635ms)
+✔ individual stock credit without a stored snapshot remains deferred/missing (0.311803ms)
+✔ individual stock credit allows 22:30 collection and can read that durable snapshot the next morning (0.490329ms)
+✔ individual stock credit keeps expired evidence stale and rejects mismatched or future cache contents (0.539031ms)
+✔ a recent retrieval cannot renew an old stock credit observation (0.191114ms)
+✔ an evening retrieval of old observations remains stale instead of ok (0.189291ms)
+✔ stock credit rejects missing, empty, negative, fractional, nonfinite and boolean balances (1.337998ms)
+✔ evening invalid balances are rejected before persistence while real zero is accepted (0.259255ms)
+✔ duplicate credit dates and observations later than their original capture are rejected (0.190353ms)
+✔ completed run persistence fails loudly when D1 is unavailable (1.577454ms)
+✔ one failed history write cannot be acknowledged as a saved run (0.705309ms)
+✔ a silent write drop is detected by readback (0.353856ms)
+✔ an explicit unsuccessful D1 result is not treated as success (0.222741ms)
+✔ successful persistence reads back run and history and preserves original timestamps (1.010933ms)
+✔ a cold Worker continues the same durable cursor each poll without a background promise (1206.694755ms)
+✔ one failed company source is kept as a gap without losing other companies or Gate snapshots (1477.092093ms)
+✔ a stopped run resumes its original runId even after the former 60-second lock window (150.116511ms)
+✔ an active database lease blocks concurrent work and expiration permits a new owner (222.786095ms)
+✔ a caller with a different actual user identity cannot take over or observe the active run (303.659293ms)
+✔ a failed checkpoint history write returns 503 and cannot advance the published cursor (156.109769ms)
+✔ a failed initial save is not acknowledged with HTTP202 (82.876826ms)
+✔ a bounded step times out without waiting for an indefinitely stuck source (83.553852ms)
+✔ simultaneous polls cannot execute the same scanner step twice (173.805398ms)
+✔ a lost lease cannot publish a late scanner checkpoint (84.532341ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4043.357825
