@@ -1,0 +1,173 @@
+diff --git a/package.json b/package.json
+index 139f5fa..9428ccc 100644
+--- a/package.json
++++ b/package.json
+@@ -5,7 +5,8 @@
+     "build": "node build.mjs",
+     "test:master-validation": "node tests/master-model-validation.test.mjs",
+     "db:generate": "drizzle-kit generate",
+-    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack && npm run test:c2",
++    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack && npm run test:c2 && npm run test:credit-window",
++    "test:credit-window": "node --test tests/credit-capture-window.test.mjs",
+     "test:remediation": "node tests/master-remediation.test.mjs",
+     "test:qualified-output": "node tests/qualified-output.test.mjs",
+     "test:client-diagnostics": "node tests/client-diagnostics.test.mjs",
+diff --git a/tests/credit-capture-window.test.mjs b/tests/credit-capture-window.test.mjs
+new file mode 100644
+index 0000000..18210d2
+--- /dev/null
++++ b/tests/credit-capture-window.test.mjs
+@@ -0,0 +1,65 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import fs from 'node:fs';
++
++const source=fs.readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');
++const ids=['TWSE_MARGIN_BALANCE_NTD','TWSE_MARGIN_CHANGE_NTD','TWSE_MARGIN_BALANCE_UNITS','TWSE_SHORT_BALANCE','TWSE_SHORT_CHANGE','TWSE_MARGIN_MARKET_CAP_RATIO','TWSE_CREDIT_TRADE_VALUE'];
++const savedAt='2026-10-21T15:00:00Z';
++const savedRows=()=>ids.map((id,index)=>({id,name:id,unit:'test',value:index-2,date:'2026-10-21',status:'ok',is_stale:false,verifiedAt:savedAt,fetchedAt:savedAt,source:'https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&date=20261021&selectType=MS'}));
++function dbWith(rows,checkedAt=savedAt){
++ const data=new Map(rows?[['macro-market:v7',{payload:JSON.stringify({checkedAt,rows}),updated_at:checkedAt,expires_at:'2026-10-23T00:00:00Z'}]]:[]);
++ return {prepare(sql){return {run:async()=>({success:true}),bind(key){return {all:async()=>({results:data.has(key)?[data.get(key)]:[]}),run:async()=>({success:true})}}}}};
++}
++function upstream(calls){return async input=>{
++ const url=new URL(input);calls.push(url.href);
++ if(url.pathname.endsWith('/FMTQIK'))return Response.json([{Date:'1151021',TradeValue:'900000000000'}]);
++ if(url.pathname.endsWith('/MI_MARGN'))return Response.json({stat:'OK',date:'20261021',tables:[{fields:['項目','買進','賣出','償還','前日餘額','今日餘額'],data:[['融資(交易單位)',0,0,0,100,110],['融券(交易單位)',0,0,0,200,210],['融資金額(仟元)',0,0,0,300000000,310000000]]}]});
++ if(url.pathname.endsWith('/MI_MARGN_TREND'))return Response.json({stat:'OK',date:'20261021',data:[{date:'20261021',marginAmt:310000000,marketValue:1000000}]});
++ if(url.pathname.endsWith('/BFIJ3U'))return Response.json({stat:'OK',date:'20261021',crdAmt:12000000000});
++ throw Error('Unexpected test request: '+url.pathname);
++};}
++async function runAt(time,rows){
++ const oldNow=Date.now,oldFetch=globalThis.fetch,calls=[];
++ Date.now=()=>Date.parse(time);globalThis.fetch=upstream(calls);
++ try{
++  const api=await import('data:text/javascript;base64,'+Buffer.from(source+`\nrelaySeries=async()=>null;\nexport {loadTaiwanDashboard,mergeVerifiedMacroRows};\n// window-test-${Math.random()}`).toString('base64'));
++  const result=await api.loadTaiwanDashboard({DB:dbWith(rows)});
++  return {result,calls,merged:api.mergeVerifiedMacroRows(result,[])};
++ }finally{Date.now=oldNow;globalThis.fetch=oldFetch;}
++}
++const creditCalls=calls=>calls.filter(url=>/MI_MARGN|BFIJ3U/.test(url));
++
++test('morning retains verified credit values and original timestamps without any credit request',async()=>{
++ const original=savedRows(),{result,calls,merged}=await runAt('2026-10-22T02:14:00Z',original);
++ assert.deepEqual(creditCalls(calls),[]);
++ for(const row of original){const actual=result.find(x=>x.id===row.id);assert.equal(actual.value,row.value);assert.equal(actual.date,row.date);assert.equal(actual.verifiedAt,savedAt);assert.equal(actual.fetchedAt,savedAt);assert.equal(actual.captureDeferred,true);assert.equal(merged.find(x=>x.id===row.id).verifiedAt,savedAt);}
++ assert.equal(result.find(x=>x.id==='TWSE_TOTAL_TRADE_VALUE').value,9000,'normal market turnover can still update');
++});
++test('morning without retained credit keeps every credit field missing instead of fetching or inventing values',async()=>{
++ const {result,calls}=await runAt('2026-10-22T02:14:00Z',null);
++ assert.deepEqual(creditCalls(calls),[]);
++ for(const id of ids){const row=result.find(x=>x.id===id);assert.ok(row,id);assert.equal(row.value,null);assert.equal(row.status,'missing');assert.equal(row.captureDeferred,true);}
++});
++test('expired retained credit remains dated and stale; refresh cannot renew its clock',async()=>{
++ const rows=savedRows().map(row=>({...row,verifiedAt:'2026-10-19T15:00:00Z',fetchedAt:'2026-10-19T15:00:00Z'}));
++ const {result,calls,merged}=await runAt('2026-10-22T02:14:00Z',rows);
++ assert.deepEqual(creditCalls(calls),[]);
++ for(const id of ids){const row=result.find(x=>x.id===id);assert.equal(row.status,'stale');assert.equal(row.is_stale,true);assert.equal(row.verifiedAt,'2026-10-19T15:00:00Z');assert.equal(merged.find(x=>x.id===id).verifiedAt,row.verifiedAt);}
++});
++test('22:29 Taipei remains closed, 22:30 permits the existing official credit route',async()=>{
++ const before=await runAt('2026-10-22T14:29:59Z',savedRows());assert.deepEqual(creditCalls(before.calls),[]);
++ const after=await runAt('2026-10-22T14:30:00Z',savedRows());assert.ok(creditCalls(after.calls).length>=3);assert.equal(after.result.find(x=>x.id==='TWSE_MARGIN_BALANCE_NTD').value,3100);
++});
++test('midnight closes the window again and unverified or future evidence cannot become retained valid data',async()=>{
++ const rows=savedRows().map((row,index)=>index%2?{...row,status:'unverified'}:{...row,verifiedAt:'2026-10-23T15:00:00Z'});
++ const {result,calls}=await runAt('2026-10-22T16:00:00Z',rows);assert.deepEqual(creditCalls(calls),[]);
++ assert.ok(ids.every(id=>result.find(row=>row.id===id)?.status==='missing'));
++});
++test('a source-marked stale row is not promoted by a recent capture time',async()=>{
++ const {result,calls}=await runAt('2026-10-22T02:14:00Z',savedRows().map(row=>({...row,status:'stale',is_stale:true,reason:'source verification failed'})));
++ assert.deepEqual(creditCalls(calls),[]);assert.ok(ids.every(id=>result.find(row=>row.id===id)?.status==='stale'));
++});
++test('invalid source provenance and future observation dates stay missing',async()=>{
++ const {result,calls}=await runAt('2026-10-22T02:14:00Z',savedRows().map((row,index)=>index%2?{...row,date:'2026-10-23'}:{...row,source:'http://www.twse.com.tw/credit'}));
++ assert.deepEqual(creditCalls(calls),[]);assert.ok(ids.every(id=>result.find(row=>row.id===id)?.status==='missing'));
++});
+diff --git a/worker/observation-freshness.js b/worker/observation-freshness.js
+index d415fe4..8cbc32c 100644
+--- a/worker/observation-freshness.js
++++ b/worker/observation-freshness.js
+@@ -1,6 +1,49 @@
+ // Refresh cadence and source observation validity are separate clocks.
+ const OFFICIAL_CAPTURE_MAX_AGE_MS=36*3600000;
+ const TWSE_STATISTICS_KEY='official-taiwan-statistics:v1';
++const TAIWAN_CREDIT_FIELDS=[
++  ['TWSE_MARGIN_BALANCE_NTD','融資餘額','億元'],
++  ['TWSE_MARGIN_CHANGE_NTD','融資餘額日增減','億元'],
++  ['TWSE_MARGIN_BALANCE_UNITS','融資餘額','張'],
++  ['TWSE_SHORT_BALANCE','融券餘額','張'],
++  ['TWSE_SHORT_CHANGE','融券餘額日增減','張'],
++  ['TWSE_MARGIN_MARKET_CAP_RATIO','融資餘額占市值比','%'],
++  ['TWSE_CREDIT_TRADE_VALUE','信用交易成交值','億元'],
++];
++function taiwanCreditCaptureAllowed(now=Date.now()) {
++  const local=new Date(now+8*3600000);
++  return local.getUTCHours()*60+local.getUTCMinutes()>=22*60+30;
++}
++async function retainedTaiwanCreditRows(env,now=Date.now()) {
++  const snapshots=await Promise.all(['macro-market:v7','macro:v1'].map(key=>readRuntimeCache(env,key)));
++  const ids=new Set(TAIWAN_CREDIT_FIELDS.map(([id])=>id));
++  const candidates=snapshots.flatMap(saved=>(saved?.payload?.rows||[]).filter(row=>ids.has(row.id)).map(row=>({row,checkedAt:saved.payload.checkedAt})));
++  // An expired import can still supply historical evidence. Validate it at its
++  // original capture time, then apply the current freshness clock below.
++  const imported=await readRuntimeCache(env,TWSE_STATISTICS_KEY);
++  if(imported?.payload){
++    const captured=Date.parse(imported.payload.capturedAt||'');
++    if(Number.isFinite(captured)&&captured<=now)try{
++      const rows=validateTaiwanStatistics(imported.payload,captured);
++      candidates.push(...rows.filter(row=>ids.has(row.id)).map(row=>({row,checkedAt:imported.payload.capturedAt})));
++    }catch{}
++  }
++  const localDate=new Date(now+8*3600000).toISOString().slice(0,10);
++  return TAIWAN_CREDIT_FIELDS.map(([id,name,unit])=>{
++    const valid=candidates.filter(({row,checkedAt})=>{
++      const stamp=Date.parse(row.verifiedAt||row.fetchedAt||checkedAt||'');
++      if(row.id!==id||!['ok','snapshot','stale'].includes(row.status)||!Number.isFinite(row.value)||!officialImportDate(row.date)||row.date>localDate||!Number.isFinite(stamp)||stamp>now)return false;
++      try{const source=new URL(row.source);return source.protocol==='https:'&&!source.username&&!source.password&&!source.port&&['www.twse.com.tw','openapi.twse.com.tw'].includes(source.hostname);}catch{return false;}
++    }).sort((a,b)=>b.row.date.localeCompare(a.row.date)||Date.parse(b.row.verifiedAt||b.row.fetchedAt||b.checkedAt)-Date.parse(a.row.verifiedAt||a.row.fetchedAt||a.checkedAt));
++    const selected=valid[0],deferred={captureDeferred:true,capturePolicy:'after_2230_taipei',capturePolicyReason:'台北時間22:30前不重抓信用統計；保留原觀測日及原核對時間。'};
++    if(!selected)return {id,name,unit,group:'台股市場',value:null,date:null,status:'missing',is_stale:false,reason:'22:30前未抓取信用統計，且沒有可核對的既有觀測。',...deferred};
++    const {row,checkedAt}=selected,stamp=row.verifiedAt||row.fetchedAt||checkedAt;
++    const candidate={...row,verifiedAt:stamp,status:row.snapshot?'snapshot':'ok',is_stale:false};
++    const current=row.status!=='stale'&&!row.is_stale&&macroObservationCurrent(candidate,{checkedAt,rows:[candidate]},now);
++    return {...row,verifiedAt:stamp,status:current?'snapshot':'stale',snapshot:true,is_stale:!current,
++      reason:current?row.reason||null:'既有信用觀測已過有效期；22:30後再抓取核對。',...deferred};
++  });
++}
+ function officialFredSeriesId(id){return {US3M:'DTB3',US10Y:'DGS10',US30Y:'DGS30'}[id]||id}
+ function recentOfficialCapture(value,now=Date.now()) {
+   const stamp=Date.parse(value);return Number.isFinite(stamp)&&stamp<=now+60000&&now-stamp<OFFICIAL_CAPTURE_MAX_AGE_MS;
+diff --git a/worker/observations.js b/worker/observations.js
+index e288c98..5f01c95 100644
+--- a/worker/observations.js
++++ b/worker/observations.js
+@@ -1724,6 +1724,9 @@ async function loadTaiwanDashboard(env={}) {
+     finally {clearTimeout(timer);}
+    }
+   } catch {}
++  // Reading saved observations is allowed all day; direct credit collection is
++  // restricted to the owner's evening window. Turnover remains independent.
++  if(!taiwanCreditCaptureAllowed())return [tradeValueFail,...await retainedTaiwanCreditRows(env)];
+   if(!trade) {
+     const ids=['TWSE_MARGIN_BALANCE_NTD','TWSE_MARGIN_CHANGE_NTD','TWSE_MARGIN_BALANCE_UNITS','TWSE_SHORT_BALANCE','TWSE_SHORT_CHANGE'];
+     const relayed=await Promise.all(ids.map(id=>relaySeries(id)));
+@@ -1741,6 +1744,7 @@ async function loadTaiwanDashboard(env={}) {
+   // lag it, so try the latest published sessions and use the newest valid one.
+   const dates=[...new Set([trade?.date,...tradingDates].filter(Boolean))].sort((a,b)=>b.localeCompare(a)).slice(0,5);
+   for(const date of dates){
++    if(!taiwanCreditCaptureAllowed())return [tradeValueFail,...await retainedTaiwanCreditRows(env)];
+     const source=`${marginApi}?response=json&date=${date.replaceAll('-','')}&selectType=MS`;
+       const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
+       try {
+@@ -1800,7 +1804,10 @@ async function loadTaiwanDashboard(env={}) {
+   const dateKey=creditDate.replaceAll('-','');
+   const marginTrendSource=`${marginTrendApi}?response=json&date=${dateKey}&days=30`;
+   const creditSummarySource=`${creditSummaryApi}?response=json&date=${dateKey}`;
+-  const fetchSupplement=officialTwseJson;
++  const fetchSupplement=source=>{
++    if(!taiwanCreditCaptureAllowed())throw Error('22:30前不抓取信用補充統計');
++    return officialTwseJson(source);
++  };
+   const [trendResult,summaryResult]=await Promise.allSettled([fetchSupplement(marginTrendSource),fetchSupplement(creditSummarySource)]);
+   let marginRatio=null,marginRatioReason='證交所同日市值資料暫不可用',marginRatioProvider='臺灣證券交易所｜MI_MARGN + MI_MARGN_TREND';
+   if(trendResult.status==='fulfilled') {
