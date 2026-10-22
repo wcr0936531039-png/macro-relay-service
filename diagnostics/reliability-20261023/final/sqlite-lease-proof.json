@@ -1,0 +1,15 @@
+{
+  "scope": "Actual SQLite SQL semantics, not production D1",
+  "passed": true,
+  "results": {
+    "first_claim": 1,
+    "blocked_claim": 0,
+    "expired_claim": 1,
+    "new_owner": [
+      "b",
+      51000
+    ],
+    "old_owner_release": 0,
+    "owner_release": 1
+  }
+}
