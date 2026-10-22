@@ -1,3 +1,15 @@
+# 最新：可靠性修補＋C1本機整合完成，兩套完整測試通過，未部署
+
+[最終報告](reliability-20261023/final/report.md)｜[C1整合完整patch](reliability-20261023/final/combined.patch)｜[可靠性單獨patch](reliability-20261023/final/reliability-only.patch)｜[SHA／套用方式](reliability-20261023/final/manifest.json)｜[整合完整npm test](reliability-20261023/final/combined-npm-test.log)｜[單獨完整npm test](reliability-20261023/final/reliability-npm-test.log)｜[四檔前後比較](reliability-20261023/final/combined-before-after.json)｜[已知問題原表](issue-inventory-20261023/report.md)。
+
+N01／N02信用驗證與N03保存失敗已本機修補；整站改持久checkpoint，GET輪詢每次執行一步，冷Worker接續同一runId，單股研究失敗隔離。新發現的前端輪詢時間／次數不足、同時POST啟動競態也已記錄並修補。32項可靠性測試全過；兩套最終npm test皆exit0，C1整合版advisory51，單獨版38。兩份完整patch各從乾淨v231重建，HTML／Worker雜湊吻合。四檔40 Gate完整物件、評分、VETO、評級與風險許可在相同輸入下不變。
+
+**正式站最後核實仍v231，未部署、未恢復排程。** 不宣稱正式waitUntil問題已解除；需授權部署後用真來源、D1、匹配runId／completedAt／history及跨日信用快照驗收。此架構必須持續輪詢才推進，不能寫成POST後無人輪詢也會自行完成。Gate4／5／8資料缺口、Gate6警訊、FRED與全市場缺項均未以本輪程式修補掩蓋。
+
+最終兩份patch二選一，不疊套信用r2、舊C1或中途patch。各步01～08、修補前失敗及中途全過結果保留在reliability-20261023，接手先讀final/report.md與manifest.json。
+
+---
+
 # 最新：已知問題全表已補齊，新增3項本機重現漏洞
 
 [完整問題清單](issue-inventory-20261023/report.md)｜[可重現檢查](issue-inventory-20261023/reproduce.mjs)｜[實際合成輸出](issue-inventory-20261023/reproduction.json)。本輪核對診斷／交接及本機程式，未重跑正式站即時巡檢。
