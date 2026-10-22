@@ -35,5 +35,11 @@
     "tests/runtime-cache.test.mjs",
     "package.json"
   ],
-  "generatedWorker": "Rebuild via npm run build; compiled private operation context omitted from public patch."
+  "generatedWorker": "Rebuild via npm run build; compiled private operation context omitted from public patch.",
+  "releaseReady": false,
+  "knownUnfixedIssues": [
+    "N01: stale observation date accepted as current snapshot",
+    "N02: missing balance fields accepted as snapshot"
+  ],
+  "issueInventory": "../../issue-inventory-20261023/report.md"
 }
