@@ -1,0 +1,24 @@
+✔ morning retains verified credit values and original timestamps without any credit request (52.001569ms)
+✔ morning without retained credit keeps every credit field missing instead of fetching or inventing values (47.218657ms)
+✔ expired retained credit remains dated and stale; refresh cannot renew its clock (44.925848ms)
+✔ 22:29 Taipei remains closed, 22:30 permits the existing official credit route (101.229366ms)
+✔ midnight closes the window again and unverified or future evidence cannot become retained valid data (54.52846ms)
+✔ a source-marked stale row is not promoted by a recent capture time (45.500593ms)
+✔ invalid source provenance and future observation dates stay missing (45.470128ms)
+✔ individual stock credit does not call FinMind before 22:30 and keeps the actual credit date/capture (0.649245ms)
+✔ individual stock credit without a stored snapshot remains deferred/missing (0.423229ms)
+✔ individual stock credit allows 22:30 collection and can read that durable snapshot the next morning (0.583958ms)
+✔ individual stock credit keeps expired evidence stale and rejects mismatched or future cache contents (0.38409ms)
+✔ a recent retrieval cannot renew an old stock credit observation (0.213728ms)
+✔ an evening retrieval of old observations remains stale instead of ok (0.190753ms)
+✔ stock credit rejects missing, empty, negative, fractional, nonfinite and boolean balances (1.287253ms)
+✔ evening invalid balances are rejected before persistence while real zero is accepted (0.22929ms)
+✔ duplicate credit dates and observations later than their original capture are rejected (0.211775ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 616.734607
