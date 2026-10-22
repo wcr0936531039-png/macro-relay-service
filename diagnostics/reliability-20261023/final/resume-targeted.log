@@ -1,0 +1,19 @@
+✔ a cold Worker continues the same durable cursor each poll without a background promise (1229.539064ms)
+✔ one failed company source is kept as a gap without losing other companies or Gate snapshots (1419.182947ms)
+✔ a stopped run resumes its original runId even after the former 60-second lock window (149.86911ms)
+✔ an active database lease blocks concurrent work and expiration permits a new owner (204.300908ms)
+✔ a caller with a different actual user identity cannot take over or observe the active run (293.12017ms)
+✔ a failed checkpoint history write returns 503 and cannot advance the published cursor (163.445502ms)
+✔ a failed initial save is not acknowledged with HTTP202 (86.98703ms)
+✔ a bounded step times out without waiting for an indefinitely stuck source (85.475215ms)
+✔ simultaneous POST starts cannot create competing runIds (79.438528ms)
+✔ simultaneous polls cannot execute the same scanner step twice (166.263758ms)
+✔ a lost lease cannot publish a late scanner checkpoint (79.196218ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4051.717572
