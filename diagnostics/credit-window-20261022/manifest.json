@@ -1,0 +1,21 @@
+{
+  "baseline": "6b924076503a47e346a3d72ff3efeb5260a8078f",
+  "productionVersion": 231,
+  "deployed": false,
+  "patch": "credit-window.patch",
+  "patchSha256": "671db743ee7df079259871ece4feb677e08a33467c0f3b46f47940663d2a70dc",
+  "htmlSha256": "93d22d219109e52161e0e85ab926ad86dab6fadfc5083c57144e5c21b1f9e638",
+  "workerSha256": "af7334e7ca0debc0fe8ef0074bd55df491ac210486031eb981c5099ca6e270d8",
+  "targetedTests": {
+    "passed": 7,
+    "failed": 0
+  },
+  "fullTest": "previous attempt interrupted by approval review usage limit; rerun pending",
+  "scope": [
+    "worker/observations.js",
+    "worker/observation-freshness.js",
+    "tests/credit-capture-window.test.mjs",
+    "package.json"
+  ],
+  "generatedWorker": "rebuild with npm run build; not included in public source patch because compiled context contains private operation instructions"
+}
