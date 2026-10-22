@@ -1,0 +1,9 @@
+# 分段可恢復巡檢：本機檢查點
+
+已把整輪waitUntil改為POST保存起點、GET status每次執行一個持久步驟。步驟為initialize、scanner、七個modules、各檔stocks／research／gates、finalize。同一runId接續，完成才寫completedAt；必須持續輪詢才會前進。SQL租約25秒避免並行執行同一步，步驟等待上限16秒，模組沿既有6秒。不同實際使用者不能接管。租約失效不發布晚到checkpoint。
+
+冷Worker接續、單檔來源失敗隔離、60秒後仍同run、有效／過期租約、身分不同拒絕、保存失敗503且游標不前移、初始保存失敗不回202、逾時、同時輪詢、晚到結果共10項本機測試全部通過。新舊模組契約整合測試已過。
+
+既有site-automation測試第一次失敗：輪詢測試helper沒有沿用啟動時的FinMind環境，導致備援錯誤文字不同；已修helper讓每個poll用同一runEnv，正在重跑。原失敗保留，不藉改正式判定繞過。
+
+WIP完整來源patch已存wip.patch，SHA-256 f994dcaa951d91f73ccbd2d08e47c3ae419d1ec6f538405b6061556a5846bb65；為當時檢查點，測試helper後續修正及完整全測試仍待最終版。不部署、不恢復排程；C1獨立。
