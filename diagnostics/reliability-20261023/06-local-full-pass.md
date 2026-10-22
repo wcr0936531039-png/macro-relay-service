@@ -1,0 +1,9 @@
+# 可靠性單獨版完整測試通過；C1整合驗收進行中
+
+可靠性單獨版完整npm test exit0：legacy、calendar9、advisory38、fixpack4、C2五項、可靠性31項均通過；完整log已上傳npm-test.log。乾淨v231套reliability.patch後build HTML／Worker SHA與受測版一致。前端timeout22秒、最多60次輪詢，dashboard-interactions另跑通過。來源patch SHA e021932eec14569d853c1d6c5a038195a21ecaf8aad4426de2b0e84e48c2b060。
+
+原本機反例再跑：舊2020觀測變stale、缺餘額變deferred／空rows、保存失敗拋storage_error，reproduction-after.json已保存。它沿用舊檢查器scope文字，內容為修補後結果，非正式站讀回。
+
+C1修訂2已在另一乾淨v231工作目錄與可靠性修補整合，無衝突，正在跑完整npm test。整合完整patch另從乾淨v231重建，HTML 080f721d52eb610eb245a5a7f6a1fa630bc42e12740828d3fc3e5207c4186d3d、Worker db2f536196475b816b44432180cdc8134c107edcd2a341797a31bfdb2511fe35一致。
+
+四檔40個Gate完整物件、scoring、VETO、adaptiveRating與primaryValuation不變；C1信心皆低，既有來源缺項與現金流警訊保留。尚未部署／恢復排程，等待整合全套結果再給最終報告。
