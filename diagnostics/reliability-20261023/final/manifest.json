@@ -1,0 +1,74 @@
+{
+  "baseline": "6b924076503a47e346a3d72ff3efeb5260a8078f",
+  "productionLastVerifiedVersion": 231,
+  "deployed": false,
+  "automationResumed": false,
+  "localValidation": "passed; production validation pending owner authorization",
+  "variants": {
+    "reliability": {
+      "patch": "reliability-only.patch",
+      "patchSha256": "19bb3cc5a68f27c4fb95897db10460943a1a2f87103259c72cdfe7db9de506c8",
+      "htmlSha256": "b21668457402bf51bcc0b94cff6be2cf3add286d12d6d417312d28833344fbe0",
+      "workerSha256": "a8066682214ac53a7e6de357023b272b053bf04adbe0b5b68bc312534b81d8b7",
+      "fullTest": {
+        "command": "npm test",
+        "exitCode": 0,
+        "log": "reliability-npm-test.log",
+        "groups": {
+          "calendar": 9,
+          "advisory": 38,
+          "fixpack": 4,
+          "c2": 5,
+          "reliability": 32
+        }
+      },
+      "cleanBuildHashMatches": true
+    },
+    "combinedC1": {
+      "patch": "combined.patch",
+      "patchSha256": "79aa2a79d4f8111eb24800f2e57d0b6ef6d946c5f739e6ca878641ff1c5b5af5",
+      "htmlSha256": "080f721d52eb610eb245a5a7f6a1fa630bc42e12740828d3fc3e5207c4186d3d",
+      "workerSha256": "cee5f3724e4ea9a32abb0a84985d80c7b63561e47fd846c21bd4c2733978f4fa",
+      "fullTest": {
+        "command": "npm test",
+        "exitCode": 0,
+        "log": "combined-npm-test.log",
+        "groups": {
+          "calendar": 9,
+          "advisory": 51,
+          "fixpack": 4,
+          "c2": 5,
+          "reliability": 32
+        }
+      },
+      "cleanBuildHashMatches": true
+    }
+  },
+  "targeted": {
+    "credit": 16,
+    "persistence": 5,
+    "resumeConcurrency": 11,
+    "total": 32,
+    "failed": 0
+  },
+  "comparison": {
+    "scope": "same frozen local inputs; not live production",
+    "stocks": 4,
+    "gates": 40,
+    "existingDecisionsUnchanged": true,
+    "riskPermission": "not_cleared"
+  },
+  "application": "Choose one full patch from the clean baseline; do not stack previous credit/C1/intermediate patches.",
+  "executionContract": {
+    "post": "persist start",
+    "getStatus": "advance one checkpoint",
+    "history": "read only",
+    "requiresPolling": true,
+    "identity": "same actual caller identity",
+    "leaseMs": 25000,
+    "stepWaitTimeoutMs": 16000,
+    "moduleTimeoutMs": 6000,
+    "clientPollTimeoutMs": 22000
+  },
+  "generatedWorker": "Rebuild; omitted from public patch to avoid private compiled operation context."
+}
