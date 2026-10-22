@@ -1,0 +1,21 @@
+{
+  "synthetic": true,
+  "scope": "local revision2 only; no production requests",
+  "oldObservation": {
+    "date": "2020-01-02",
+    "status": "snapshot",
+    "is_stale": false
+  },
+  "missingBalances": {
+    "status": "snapshot",
+    "rows": [
+      {
+        "stock_id": "8299",
+        "date": "2026-10-22"
+      }
+    ]
+  },
+  "storageUnavailable": {
+    "persistSiteRefreshStatus": "resolved"
+  }
+}
