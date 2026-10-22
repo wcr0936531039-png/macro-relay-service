@@ -1,0 +1,13 @@
+✔ completed run persistence fails loudly when D1 is unavailable (1.391697ms)
+✔ one failed history write cannot be acknowledged as a saved run (0.776273ms)
+✔ a silent write drop is detected by readback (0.441656ms)
+✔ an explicit unsuccessful D1 result is not treated as success (0.251894ms)
+✔ successful persistence reads back run and history and preserves original timestamps (1.019985ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 141.098623
