@@ -1,0 +1,39 @@
+{
+  "baseline": "6b924076503a47e346a3d72ff3efeb5260a8078f",
+  "productionVersion": 231,
+  "deployed": false,
+  "revision": 2,
+  "patch": "credit-window.patch",
+  "patchSha256": "d8641baf67ed1e75910b24dfcad7612d6a1d33a5d2ce3bc5abcddf82dcbf7b4c",
+  "htmlSha256": "93d22d219109e52161e0e85ab926ad86dab6fadfc5083c57144e5c21b1f9e638",
+  "workerSha256": "a5b2d79df69bef42080420e14a1513e83fd5d98a60a65b54415881c7ef2b79f8",
+  "targetedTests": {
+    "passed": 11,
+    "failed": 0
+  },
+  "fullTest": {
+    "command": "npm test",
+    "exitCode": 0,
+    "log": "npm-test.log"
+  },
+  "cleanReplay": {
+    "applied": true,
+    "buildExitCode": 0,
+    "workerHashMatches": true
+  },
+  "frozenComparison": {
+    "stocks": 4,
+    "gates": 40,
+    "unchanged": true
+  },
+  "scope": [
+    "worker/observations.js",
+    "worker/observation-freshness.js",
+    "worker/macro.js",
+    "tests/credit-capture-window.test.mjs",
+    "tests/financial-quality.test.mjs",
+    "tests/runtime-cache.test.mjs",
+    "package.json"
+  ],
+  "generatedWorker": "Rebuild via npm run build; compiled private operation context omitted from public patch."
+}
