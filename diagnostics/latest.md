@@ -1,3 +1,13 @@
+# 最新：已知問題全表已補齊，新增3項本機重現漏洞
+
+[完整問題清單](issue-inventory-20261023/report.md)｜[可重現檢查](issue-inventory-20261023/reproduce.mjs)｜[實際合成輸出](issue-inventory-20261023/reproduction.json)。本輪核對診斷／交接及本機程式，未重跑正式站即時巡檢。
+
+新發現：信用r2只檢查擷取時間、可把2020舊觀測列snapshot；缺餘額欄位仍可列snapshot；巡檢保存失敗false未上拋、函式仍resolved。三項已本機合成重現。**上一輪11項及完整npm test通過仍屬實，但未涵蓋上述反例，信用patch目前不具直接部署準備度，先補修與測試。**報告與manifest已加更正，不竄改歷史結果。
+
+完整清單另列waitUntil取消、無resume、研究失敗隔離、FRED／CPI、全市場28檔缺口、Gate4／5／8、CB／VETO、C1待部署、金價／美元及回測待辦、舊交接過時與歷史已修項。正式站最後核實v231；未部署，排程維持暫停，不放寬權重、評級或風險許可。
+
+---
+
 # 最新：信用時間閘門 revision2 本機完成，待部署授權
 
 [完整報告](credit-window-20261022/revision2/report.md)｜[完整來源patch](credit-window-20261022/revision2/credit-window.patch)｜[SHA與重建資訊](credit-window-20261022/revision2/manifest.json)｜[完整npm test](credit-window-20261022/revision2/npm-test.log)｜[逐列前後比較](credit-window-20261022/revision2/before-after.json)｜[重播工具](credit-window-20261022/revision2/compare-local.mjs)。
