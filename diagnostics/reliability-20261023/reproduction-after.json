@@ -1,0 +1,16 @@
+{
+  "synthetic": true,
+  "scope": "local revision2 only; no production requests",
+  "oldObservation": {
+    "date": "2020-01-02",
+    "status": "stale",
+    "is_stale": true
+  },
+  "missingBalances": {
+    "status": "deferred",
+    "rows": []
+  },
+  "storageUnavailable": {
+    "persistSiteRefreshStatus": "rejected: storage_error: 巡檢狀態或歷史寫入失敗，不能宣稱保存完成"
+  }
+}
