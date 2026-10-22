@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-22T00:53:02.256809+00:00",
+  "generated_at": "2026-10-22T12:23:25.123489+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -389,6 +389,13 @@
           "totalValueTwd": 874614166736.0,
           "available_at": "2026-10-21T05:30:00+00:00",
           "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json"
+        },
+        {
+          "date": "2026-10-22",
+          "value": 46041.43,
+          "totalValueTwd": 933437473560.0,
+          "available_at": "2026-10-22T05:30:00+00:00",
+          "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json"
         }
       ],
       "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json",
@@ -402,15 +409,10 @@
       "unit": "index_points",
       "warnings": [],
       "status": "ok",
-      "fetched_at": "2026-10-22T00:53:02.256809+00:00"
+      "fetched_at": "2026-10-22T12:23:25.123489+00:00"
     },
     "SP500": {
       "history": [
-        {
-          "date": "2026-05-29",
-          "value": 7580.06,
-          "available_at": "2026-05-29T20:15:00+00:00"
-        },
         {
           "date": "2026-06-01",
           "value": 7599.96,
@@ -905,23 +907,22 @@
           "date": "2026-10-20",
           "value": 7712.57,
           "available_at": "2026-10-20T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-21",
+          "value": 7757.17,
+          "available_at": "2026-10-21T20:15:00+00:00"
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-04-14",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-04-15",
       "provider": "FRED official published price-index history | SP500",
       "market": "US",
       "unit": "index_points",
-      "status": "stale",
-      "fetched_at": "2026-10-21T12:22:49.980989+00:00",
-      "error": "only 0/21 completed closes"
+      "status": "ok",
+      "fetched_at": "2026-10-22T12:23:25.123489+00:00"
     },
     "NASDAQCOM": {
       "history": [
-        {
-          "date": "2026-05-29",
-          "value": 26972.62,
-          "available_at": "2026-05-29T20:15:00+00:00"
-        },
         {
           "date": "2026-06-01",
           "value": 27086.81,
@@ -1416,15 +1417,19 @@
           "date": "2026-10-20",
           "value": 26424.82,
           "available_at": "2026-10-20T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-21",
+          "value": 26702.86,
+          "available_at": "2026-10-21T20:15:00+00:00"
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-14",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-15",
       "provider": "FRED official published price-index history | NASDAQCOM",
       "market": "US",
       "unit": "index_points",
-      "status": "stale",
-      "fetched_at": "2026-10-21T12:22:49.980989+00:00",
-      "error": "only 0/21 completed closes"
+      "status": "ok",
+      "fetched_at": "2026-10-22T12:23:25.123489+00:00"
     },
     "SOX": {
       "history": [
@@ -1925,7 +1930,7 @@
         },
         {
           "date": "2026-10-21",
-          "value": 11505.5556640625,
+          "value": 11505.5595703125,
           "available_at": "2026-10-21T20:15:00+00:00"
         }
       ],
@@ -1937,39 +1942,12 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-10-22T00:53:02.256809+00:00"
+      "fetched_at": "2026-10-22T12:23:25.123489+00:00"
     }
   },
-  "errors": [
-    {
-      "id": "SP500",
-      "error": "only 0/21 completed closes"
-    },
-    {
-      "id": "NASDAQCOM",
-      "error": "only 0/21 completed closes"
-    }
-  ],
+  "errors": [],
   "flows": {
     "history": [
-      {
-        "date": "2026-10-07",
-        "fetched_at": "2026-10-14T01:22:48.348738+00:00",
-        "totalValueTwd": 986280041197.0,
-        "status": "ok",
-        "sources": [
-          "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json",
-          "https://www.twse.com.tw/fund/BFI82U?dayDate=20261007&type=day&response=json",
-          "https://www.twse.com.tw/exchangeReport/TWTB4U?date=20261007&selectType=All&response=json"
-        ],
-        "scope": "TWSE_all_listed_securities",
-        "investmentTrustNetTwd": -3323384085.0,
-        "foreignNetTwd": -13043886365.0,
-        "dayTradeBuyTwd": 394687636390.0,
-        "dayTradeSellTwd": 395655913980.0,
-        "dayTradeValueTwd": 395171775185.0,
-        "nonDayTradeValueTwd": 591108266012.0
-      },
       {
         "date": "2026-10-08",
         "fetched_at": "2026-10-14T01:22:48.348738+00:00",
@@ -2131,10 +2109,28 @@
         "dayTradeSellTwd": 364302009980.0,
         "dayTradeValueTwd": 363930740045.0,
         "nonDayTradeValueTwd": 510683426691.0
+      },
+      {
+        "date": "2026-10-22",
+        "fetched_at": "2026-10-22T12:23:25.123489+00:00",
+        "totalValueTwd": 933437473560.0,
+        "status": "ok",
+        "sources": [
+          "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json",
+          "https://www.twse.com.tw/fund/BFI82U?dayDate=20261022&type=day&response=json",
+          "https://www.twse.com.tw/exchangeReport/TWTB4U?date=20261022&selectType=All&response=json"
+        ],
+        "scope": "TWSE_all_listed_securities",
+        "investmentTrustNetTwd": 9492200518.0,
+        "foreignNetTwd": -81582101452.0,
+        "dayTradeBuyTwd": 386310900950.0,
+        "dayTradeSellTwd": 386174044270.0,
+        "dayTradeValueTwd": 386242472610.0,
+        "nonDayTradeValueTwd": 547195000950.0
       }
     ],
     "scope": "TWSE_all_listed_securities",
     "method": "nonDayTradeValueTwd = FMTQIK total value minus (TWTB4U day-trade buy value + sell value)/2; institutions are BFI82U net TWD"
   },
-  "status": "partial"
+  "status": "ok"
 }
