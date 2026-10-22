@@ -10,12 +10,13 @@
     "passed": 7,
     "failed": 0
   },
-  "fullTest": "previous attempt interrupted by approval review usage limit; rerun pending",
+  "fullTest": "npm test exit 0 (revision1); final revision2 also passed",
   "scope": [
     "worker/observations.js",
     "worker/observation-freshness.js",
     "tests/credit-capture-window.test.mjs",
     "package.json"
   ],
-  "generatedWorker": "rebuild with npm run build; not included in public source patch because compiled context contains private operation instructions"
+  "generatedWorker": "rebuild with npm run build; not included in public source patch because compiled context contains private operation instructions",
+  "supersededBy": "revision2/manifest.json"
 }
