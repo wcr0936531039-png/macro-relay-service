@@ -1,0 +1,328 @@
+diff --git a/package.json b/package.json
+index 139f5fa..9428ccc 100644
+--- a/package.json
++++ b/package.json
+@@ -5,7 +5,8 @@
+     "build": "node build.mjs",
+     "test:master-validation": "node tests/master-model-validation.test.mjs",
+     "db:generate": "drizzle-kit generate",
+-    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack && npm run test:c2",
++    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack && npm run test:c2 && npm run test:credit-window",
++    "test:credit-window": "node --test tests/credit-capture-window.test.mjs",
+     "test:remediation": "node tests/master-remediation.test.mjs",
+     "test:qualified-output": "node tests/qualified-output.test.mjs",
+     "test:client-diagnostics": "node tests/client-diagnostics.test.mjs",
+diff --git a/tests/credit-capture-window.test.mjs b/tests/credit-capture-window.test.mjs
+new file mode 100644
+index 0000000..a477d5a
+--- /dev/null
++++ b/tests/credit-capture-window.test.mjs
+@@ -0,0 +1,107 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import fs from 'node:fs';
++
++const source=fs.readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');
++const stockApi=await import('data:text/javascript;base64,'+Buffer.from(source+'\nexport {loadStockCreditDataset};').toString('base64'));
++const ids=['TWSE_MARGIN_BALANCE_NTD','TWSE_MARGIN_CHANGE_NTD','TWSE_MARGIN_BALANCE_UNITS','TWSE_SHORT_BALANCE','TWSE_SHORT_CHANGE','TWSE_MARGIN_MARKET_CAP_RATIO','TWSE_CREDIT_TRADE_VALUE'];
++const savedAt='2026-10-21T15:00:00Z';
++const savedRows=()=>ids.map((id,index)=>({id,name:id,unit:'test',value:index-2,date:'2026-10-21',status:'ok',is_stale:false,verifiedAt:savedAt,fetchedAt:savedAt,source:'https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&date=20261021&selectType=MS'}));
++function dbWith(rows,checkedAt=savedAt){
++ const data=new Map(rows?[['macro-market:v7',{payload:JSON.stringify({checkedAt,rows}),updated_at:checkedAt,expires_at:'2026-10-23T00:00:00Z'}]]:[]);
++ return {prepare(sql){return {run:async()=>({success:true}),bind(key){return {all:async()=>({results:data.has(key)?[data.get(key)]:[]}),run:async()=>({success:true})}}}}};
++}
++function upstream(calls){return async input=>{
++ const url=new URL(input);calls.push(url.href);
++ if(url.pathname.endsWith('/FMTQIK'))return Response.json([{Date:'1151021',TradeValue:'900000000000'}]);
++ if(url.pathname.endsWith('/MI_MARGN'))return Response.json({stat:'OK',date:'20261021',tables:[{fields:['項目','買進','賣出','償還','前日餘額','今日餘額'],data:[['融資(交易單位)',0,0,0,100,110],['融券(交易單位)',0,0,0,200,210],['融資金額(仟元)',0,0,0,300000000,310000000]]}]});
++ if(url.pathname.endsWith('/MI_MARGN_TREND'))return Response.json({stat:'OK',date:'20261021',data:[{date:'20261021',marginAmt:310000000,marketValue:1000000}]});
++ if(url.pathname.endsWith('/BFIJ3U'))return Response.json({stat:'OK',date:'20261021',crdAmt:12000000000});
++ throw Error('Unexpected test request: '+url.pathname);
++};}
++async function runAt(time,rows){
++ const oldNow=Date.now,oldFetch=globalThis.fetch,calls=[];
++ Date.now=()=>Date.parse(time);globalThis.fetch=upstream(calls);
++ try{
++  const api=await import('data:text/javascript;base64,'+Buffer.from(source+`\nrelaySeries=async()=>null;\nexport {loadTaiwanDashboard,mergeVerifiedMacroRows};\n// window-test-${Math.random()}`).toString('base64'));
++  const result=await api.loadTaiwanDashboard({DB:dbWith(rows)});
++  return {result,calls,merged:api.mergeVerifiedMacroRows(result,[])};
++ }finally{Date.now=oldNow;globalThis.fetch=oldFetch;}
++}
++const creditCalls=calls=>calls.filter(url=>/MI_MARGN|BFIJ3U/.test(url));
++
++test('morning retains verified credit values and original timestamps without any credit request',async()=>{
++ const original=savedRows(),{result,calls,merged}=await runAt('2026-10-22T02:14:00Z',original);
++ assert.deepEqual(creditCalls(calls),[]);
++ for(const row of original){const actual=result.find(x=>x.id===row.id);assert.equal(actual.value,row.value);assert.equal(actual.date,row.date);assert.equal(actual.verifiedAt,savedAt);assert.equal(actual.fetchedAt,savedAt);assert.equal(actual.captureDeferred,true);assert.equal(merged.find(x=>x.id===row.id).verifiedAt,savedAt);}
++ assert.equal(result.find(x=>x.id==='TWSE_TOTAL_TRADE_VALUE').value,9000,'normal market turnover can still update');
++});
++test('morning without retained credit keeps every credit field missing instead of fetching or inventing values',async()=>{
++ const {result,calls}=await runAt('2026-10-22T02:14:00Z',null);
++ assert.deepEqual(creditCalls(calls),[]);
++ for(const id of ids){const row=result.find(x=>x.id===id);assert.ok(row,id);assert.equal(row.value,null);assert.equal(row.status,'missing');assert.equal(row.captureDeferred,true);}
++});
++test('expired retained credit remains dated and stale; refresh cannot renew its clock',async()=>{
++ const rows=savedRows().map(row=>({...row,verifiedAt:'2026-10-19T15:00:00Z',fetchedAt:'2026-10-19T15:00:00Z'}));
++ const {result,calls,merged}=await runAt('2026-10-22T02:14:00Z',rows);
++ assert.deepEqual(creditCalls(calls),[]);
++ for(const id of ids){const row=result.find(x=>x.id===id);assert.equal(row.status,'stale');assert.equal(row.is_stale,true);assert.equal(row.verifiedAt,'2026-10-19T15:00:00Z');assert.equal(merged.find(x=>x.id===id).verifiedAt,row.verifiedAt);}
++});
++test('22:29 Taipei remains closed, 22:30 permits the existing official credit route',async()=>{
++ const before=await runAt('2026-10-22T14:29:59Z',savedRows());assert.deepEqual(creditCalls(before.calls),[]);
++ const after=await runAt('2026-10-22T14:30:00Z',savedRows());assert.ok(creditCalls(after.calls).length>=3);assert.equal(after.result.find(x=>x.id==='TWSE_MARGIN_BALANCE_NTD').value,3100);
++});
++test('midnight closes the window again and unverified or future evidence cannot become retained valid data',async()=>{
++ const rows=savedRows().map((row,index)=>index%2?{...row,status:'unverified'}:{...row,verifiedAt:'2026-10-23T15:00:00Z'});
++ const {result,calls}=await runAt('2026-10-22T16:00:00Z',rows);assert.deepEqual(creditCalls(calls),[]);
++ assert.ok(ids.every(id=>result.find(row=>row.id===id)?.status==='missing'));
++});
++test('a source-marked stale row is not promoted by a recent capture time',async()=>{
++ const {result,calls}=await runAt('2026-10-22T02:14:00Z',savedRows().map(row=>({...row,status:'stale',is_stale:true,reason:'source verification failed'})));
++ assert.deepEqual(creditCalls(calls),[]);assert.ok(ids.every(id=>result.find(row=>row.id===id)?.status==='stale'));
++});
++test('invalid source provenance and future observation dates stay missing',async()=>{
++ const {result,calls}=await runAt('2026-10-22T02:14:00Z',savedRows().map((row,index)=>index%2?{...row,date:'2026-10-23'}:{...row,source:'http://www.twse.com.tw/credit'}));
++ assert.deepEqual(creditCalls(calls),[]);assert.ok(ids.every(id=>result.find(row=>row.id===id)?.status==='missing'));
++});
++function stockDb(seed){
++ const data=new Map(seed?[['stock-credit:v1:8299',{payload:JSON.stringify(seed),updated_at:seed.capturedAt,expires_at:'2026-11-01T00:00:00Z'}]]:[]);
++ return {
++  prepare(sql){
++   return {
++    run:async()=>({success:true}),
++    bind(...args){
++     return {
++      all:async()=>({results:data.has(args[0])?[data.get(args[0])]:[]}),
++      run:async()=>{
++       if(sql.includes('INSERT'))data.set(args[0],{payload:args[1],updated_at:args[2],expires_at:args[3]});
++       return {success:true};
++      }
++     };
++    }
++   };
++  }
++ };
++}
++const stockCapture=()=>({symbol:'8299',dataset:'TaiwanStockMarginPurchaseShortSale',source:'https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockMarginPurchaseShortSale',capturedAt:savedAt,rows:[{stock_id:'8299',date:'2026-10-21',MarginPurchaseTodayBalance:110,MarginPurchaseYesterdayBalance:100,ShortSaleTodayBalance:210}]});
++test('individual stock credit does not call FinMind before 22:30 and keeps the actual credit date/capture',async()=>{
++ let calls=0;const result=await stockApi.loadStockCreditDataset('8299',{DB:stockDb(stockCapture())},async()=>{calls++;throw Error('must not fetch');},Date.parse('2026-10-22T02:14:00Z'));
++ assert.equal(calls,0);assert.equal(result.status,'snapshot');assert.equal(result.capturedAt,savedAt);assert.equal(result.rows[0].date,'2026-10-21');assert.equal(result.captureDeferred,true);
++});
++test('individual stock credit without a stored snapshot remains deferred/missing',async()=>{
++ let calls=0;const result=await stockApi.loadStockCreditDataset('8299',{DB:stockDb()},async()=>{calls++;return {rows:[]};},Date.parse('2026-10-22T02:14:00Z'));
++ assert.equal(calls,0);assert.equal(result.status,'deferred');assert.equal(result.capturedAt,null);assert.deepEqual(result.rows,[]);
++});
++test('individual stock credit allows 22:30 collection and can read that durable snapshot the next morning',async()=>{
++ const env={DB:stockDb()};let calls=0;
++ const evening=await stockApi.loadStockCreditDataset('8299',env,async()=>{calls++;return {rows:stockCapture().rows,error:null};},Date.parse('2026-10-22T14:30:00Z'));
++ assert.equal(evening.status,'ok');assert.equal(evening.recorded,true);assert.equal(calls,1);
++ const morning=await stockApi.loadStockCreditDataset('8299',env,async()=>{calls++;throw Error('must not fetch');},Date.parse('2026-10-23T02:14:00Z'));
++ assert.equal(calls,1);assert.equal(morning.status,'snapshot');assert.equal(morning.capturedAt,'2026-10-22T14:30:00.000Z');assert.equal(morning.rows[0].date,'2026-10-21');
++});
++test('individual stock credit keeps expired evidence stale and rejects mismatched or future cache contents',async()=>{
++ const old={...stockCapture(),capturedAt:'2026-10-19T15:00:00Z'};
++ const fetch=async()=>{throw Error('must not fetch');};
++ assert.equal((await stockApi.loadStockCreditDataset('8299',{DB:stockDb(old)},fetch,Date.parse('2026-10-22T02:14:00Z'))).status,'stale');
++ for(const bad of [{...stockCapture(),symbol:'5289'},{...stockCapture(),capturedAt:'2026-10-23T15:00:00Z'},{...stockCapture(),rows:[{...stockCapture().rows[0],date:'2026-10-23'}]}])assert.equal((await stockApi.loadStockCreditDataset('8299',{DB:stockDb(bad)},fetch,Date.parse('2026-10-22T02:14:00Z'))).status,'deferred');
++});
+diff --git a/tests/financial-quality.test.mjs b/tests/financial-quality.test.mjs
+index 3f42b50..6ec1fb3 100644
+--- a/tests/financial-quality.test.mjs
++++ b/tests/financial-quality.test.mjs
+@@ -1,7 +1,8 @@
+ import assert from 'node:assert/strict';
+ import { readFile } from 'node:fs/promises';
+ 
+-const workerSource = await readFile(new URL('../worker/stock-relay.js', import.meta.url), 'utf8')+'\n'+await readFile(new URL('../worker/macro.js', import.meta.url), 'utf8');
++// Exercise the built Worker so shared capture-policy dependencies are present.
++const workerSource = await readFile(new URL('../dist/server/index.js', import.meta.url), 'utf8');
+ const worker = await import(`data:text/javascript;base64,${Buffer.from(workerSource).toString('base64')}`);
+ const quarterlyDates = [];
+ for (let key = 2020 * 4; key <= 2026 * 4 + 1; key++) {
+@@ -46,10 +47,11 @@ const datasets = {
+   TaiwanStockBalanceSheet: balance,
+   TaiwanStockCashFlowsStatement: cashFlow,
+   TaiwanStockInstitutionalInvestorsBuySell: Array.from({length:5},(_,i)=>({date:`2026-06-${String(26+i).padStart(2,'0')}`,name:'Foreign_Investor',buy:120+i,sell:100})),
+-  TaiwanStockMarginPurchaseShortSale: [{date:'2026-06-30',MarginPurchaseTodayBalance:3200,MarginPurchaseYesterdayBalance:3100,ShortSaleTodayBalance:120,ShortSaleYesterdayBalance:115}],
++  TaiwanStockMarginPurchaseShortSale: [{stock_id:'8299',date:'2026-06-30',MarginPurchaseTodayBalance:3200,MarginPurchaseYesterdayBalance:3100,ShortSaleTodayBalance:120,ShortSaleYesterdayBalance:115}],
+   TaiwanStockDividend: [{ StockExDividendTradingDate:'2025-01-01', StockEarningsDistribution:1, StockStatutorySurplus:0 }]
+ };
+ const originalFetch = globalThis.fetch;
++const originalNow = Date.now;
+ const originalCaches = Object.getOwnPropertyDescriptor(globalThis, 'caches');
+ Object.defineProperty(globalThis, 'caches', { configurable: true, get() { throw new Error('default cache is disabled in Sites runtime'); } });
+ globalThis.fetch = async input => {
+@@ -71,6 +73,8 @@ async function getStock(id, refresh = false, env = {}) {
+   return { response, result };
+ }
+ try {
++  // Financial arithmetic fixtures use an allowed evening collection time.
++  Date.now=()=>Date.parse('2026-07-01T14:31:00Z');
+   const { response, result } = await getStock('8299');
+   assert.equal(response.status, 200);
+   assert.ok(Math.abs(result.financialQuality.roic.value - (5000 / 12300 * 100)) < 0.001);
+@@ -177,6 +181,7 @@ try {
+   globalThis.fetch = quotaFetch;
+   console.log('stock model: current-year EPS estimate, historical PER scenarios, 8/10/12% equity discount PV, normalized ROIC, CFO/NI, FCF, and missing-data guards passed');
+ } finally {
++  Date.now = originalNow;
+   globalThis.fetch = originalFetch;
+   if (originalCaches) Object.defineProperty(globalThis, 'caches', originalCaches);
+   else delete globalThis.caches;
+diff --git a/tests/runtime-cache.test.mjs b/tests/runtime-cache.test.mjs
+index 6a2f7ec..360769e 100644
+--- a/tests/runtime-cache.test.mjs
++++ b/tests/runtime-cache.test.mjs
+@@ -53,7 +53,9 @@ try {
+   const second = await request(), secondBody = await second.json();
+   assert.equal(secondBody.cacheState, 'fresh', 'stock response survives a new Worker isolate through D1');
+   assert.equal(secondBody.pending, undefined);
+-  assert.equal(calls.length, 14, 'the official quote pool adds one shared fetch; persistent financial and source cache hits do not repeat upstream requests');
++  const taipeiClock=new Date(Date.now()+8*3600000),creditOpen=taipeiClock.getUTCHours()*60+taipeiClock.getUTCMinutes()>=22*60+30;
++  assert.equal(calls.length,creditOpen?14:13,'shared quotes and persistent financial caches do not repeat requests; stock credit is deferred before 22:30');
++  assert.equal(calls.filter(url=>url.includes('TaiwanStockMarginPurchaseShortSale')).length,creditOpen?1:0,'individual stock credit follows the same capture window');
+ 
+   // A restarted isolate receives only the remaining persistent lifetime.
+   // Previously this load restarted six hours, so expired quotes stayed fresh.
+diff --git a/worker/macro.js b/worker/macro.js
+index b2ad75e..db55ec3 100644
+--- a/worker/macro.js
++++ b/worker/macro.js
+@@ -446,7 +446,7 @@ async function buildTaiwanStockSnapshot(id, env = {}) {
+     dataset('TaiwanStockFinancialStatements', financialSince), dataset('TaiwanStockBalanceSheet', financialSince), dataset('TaiwanStockCashFlowsStatement', financialSince),
+     dataset('TaiwanStockDividend', financialSince), dataset('TaiwanStockSplitPrice', financialSince, false), dataset('TaiwanStockParValueChange', financialSince, false),
+     dataset('TaiwanStockInstitutionalInvestorsBuySell',new Date(Date.now()-45*86400000).toISOString().slice(0,10)),
+-    dataset('TaiwanStockMarginPurchaseShortSale',new Date(Date.now()-45*86400000).toISOString().slice(0,10)),
++    loadStockCreditDataset(id,env,()=>dataset('TaiwanStockMarginPurchaseShortSale',new Date(Date.now()-45*86400000).toISOString().slice(0,10))),
+     getOfficialIssuedShares(env)
+   ]);
+   const financialQuality = calculateFinancialQuality(income.rows, balance.rows, cashFlow.rows);
+@@ -473,6 +473,9 @@ async function buildTaiwanStockSnapshot(id, env = {}) {
+     marginBalance:finiteNumber(latestMargin?.MarginPurchaseTodayBalance)?Number(latestMargin.MarginPurchaseTodayBalance):null,
+     marginChange:finiteNumber(latestMargin?.MarginPurchaseTodayBalance)&&finiteNumber(latestMargin?.MarginPurchaseYesterdayBalance)?Number(latestMargin.MarginPurchaseTodayBalance)-Number(latestMargin.MarginPurchaseYesterdayBalance):null,
+     shortBalance:finiteNumber(latestMargin?.ShortSaleTodayBalance)?Number(latestMargin.ShortSaleTodayBalance):null,
++    marginDate:latestMargin?.date||null,marginCapturedAt:margin.capturedAt||null,
++    marginStatus:margin.status||(margin.error?'error':margin.rows.length?'ok':'empty'),marginIsStale:margin.is_stale===true,
++    marginCaptureDeferred:margin.captureDeferred===true,marginReason:margin.reason||margin.error||null,
+     source:'FinMind TaiwanStockInstitutionalInvestorsBuySell + TaiwanStockMarginPurchaseShortSale'};
+   const latestRevenue = revenueRows.at(-1);
+   const previous = latestRevenue && revenueRows.find(x => Number(x.revenue_year) === Number(latestRevenue.revenue_year)-1 && Number(x.revenue_month) === Number(latestRevenue.revenue_month));
+@@ -538,7 +541,8 @@ async function buildTaiwanStockSnapshot(id, env = {}) {
+   const datasetStatus = Object.fromEntries([
+     ['price', prices], ['revenue', revenues], ['historicalPER', per], ['income', income],
+     ['balance', balance], ['cashFlow', cashFlow], ['dividends', dividends], ['splits', splits], ['parValueChanges', parChanges],['institutionalFlows',institutions],['marginCredit',margin],['officialIssuedShares',{rows:issuedShares?[{stock_id:id}]:[],error:issuedShares?null:officialShares.errors.join('；')||'官方資料中無此代號的有效普通股股數'}]
+-  ].map(([key, value]) => [key, { status: value.error ? 'error' : value.rows.length ? 'ok' : 'empty', records: value.rows.length, error: value.error }]));
++  ].map(([key, value]) => [key, { status: value.error ? 'error' : value.status|| (value.rows.length ? 'ok' : 'empty'), records: value.rows.length, error: value.error,
++    ...(key==='marginCredit'?{capturedAt:value.capturedAt||null,captureDeferred:value.captureDeferred===true,is_stale:value.is_stale===true,reason:value.reason||null}: {}) }]));
+   const result = { checkedAt: new Date().toISOString(), id,
+     source: 'FinMind', documentation: 'https://finmind.github.io/tutor/TaiwanMarket/Fundamental/',
+     price: latestPrice ? { value: Number(latestPrice.close), date: latestPrice.date, source: 'FinMind: TaiwanStockPrice' } : null,
+diff --git a/worker/observation-freshness.js b/worker/observation-freshness.js
+index d415fe4..4c5342c 100644
+--- a/worker/observation-freshness.js
++++ b/worker/observation-freshness.js
+@@ -1,6 +1,70 @@
+ // Refresh cadence and source observation validity are separate clocks.
+ const OFFICIAL_CAPTURE_MAX_AGE_MS=36*3600000;
+ const TWSE_STATISTICS_KEY='official-taiwan-statistics:v1';
++const TAIWAN_CREDIT_FIELDS=[
++  ['TWSE_MARGIN_BALANCE_NTD','融資餘額','億元'],
++  ['TWSE_MARGIN_CHANGE_NTD','融資餘額日增減','億元'],
++  ['TWSE_MARGIN_BALANCE_UNITS','融資餘額','張'],
++  ['TWSE_SHORT_BALANCE','融券餘額','張'],
++  ['TWSE_SHORT_CHANGE','融券餘額日增減','張'],
++  ['TWSE_MARGIN_MARKET_CAP_RATIO','融資餘額占市值比','%'],
++  ['TWSE_CREDIT_TRADE_VALUE','信用交易成交值','億元'],
++];
++function taiwanCreditCaptureAllowed(now=Date.now()) {
++  const local=new Date(now+8*3600000);
++  return local.getUTCHours()*60+local.getUTCMinutes()>=22*60+30;
++}
++async function loadStockCreditDataset(symbol,env,fetchDataset,now=Date.now()) {
++  const key=`stock-credit:v1:${symbol}`,dataset='TaiwanStockMarginPurchaseShortSale';
++  const source=`https://api.finmindtrade.com/api/v4/data?dataset=${dataset}`;
++  const localDate=new Date(now+8*3600000).toISOString().slice(0,10);
++  const validRows=rows=>Array.isArray(rows)&&rows.every(row=>String(row.stock_id)===symbol&&officialImportDate(row.date)&&row.date<=localDate);
++  if(taiwanCreditCaptureAllowed(now)){
++    const result=await fetchDataset();
++    if(result.error)return result;
++    if(!validRows(result.rows))return {rows:[],error:'個股信用來源的股票代號或觀測日不符',status:'error'};
++    const capturedAt=new Date(now).toISOString();
++    if(!result.rows.length)return {...result,capturedAt,status:'empty'};
++    const payload={symbol,dataset,source,capturedAt,rows:result.rows};
++    const recorded=await writeRuntimeCache(env,key,payload,7*86400000);
++    return {...result,capturedAt,status:recorded?'ok':'error',error:recorded?null:'個股信用快照儲存失敗',recorded};
++  }
++  const saved=(await readRuntimeCache(env,key))?.payload,captured=Date.parse(saved?.capturedAt||'');
++  const deferred={captureDeferred:true,reason:'22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。'};
++  if(saved?.symbol!==symbol||saved?.dataset!==dataset||saved?.source!==source||!Number.isFinite(captured)||captured>now||!taiwanCreditCaptureAllowed(captured)||!validRows(saved?.rows)||!saved.rows.length)return {rows:[],error:null,status:'deferred',capturedAt:null,...deferred};
++  const current=recentOfficialCapture(saved.capturedAt,now);
++  return {rows:saved.rows,error:null,capturedAt:saved.capturedAt,status:current?'snapshot':'stale',is_stale:!current,...deferred};
++}
++async function retainedTaiwanCreditRows(env,now=Date.now()) {
++  const snapshots=await Promise.all(['macro-market:v7','macro:v1'].map(key=>readRuntimeCache(env,key)));
++  const ids=new Set(TAIWAN_CREDIT_FIELDS.map(([id])=>id));
++  const candidates=snapshots.flatMap(saved=>(saved?.payload?.rows||[]).filter(row=>ids.has(row.id)).map(row=>({row,checkedAt:saved.payload.checkedAt})));
++  // An expired import can still supply historical evidence. Validate it at its
++  // original capture time, then apply the current freshness clock below.
++  const imported=await readRuntimeCache(env,TWSE_STATISTICS_KEY);
++  if(imported?.payload){
++    const captured=Date.parse(imported.payload.capturedAt||'');
++    if(Number.isFinite(captured)&&captured<=now)try{
++      const rows=validateTaiwanStatistics(imported.payload,captured);
++      candidates.push(...rows.filter(row=>ids.has(row.id)).map(row=>({row,checkedAt:imported.payload.capturedAt})));
++    }catch{}
++  }
++  const localDate=new Date(now+8*3600000).toISOString().slice(0,10);
++  return TAIWAN_CREDIT_FIELDS.map(([id,name,unit])=>{
++    const valid=candidates.filter(({row,checkedAt})=>{
++      const stamp=Date.parse(row.verifiedAt||row.fetchedAt||checkedAt||'');
++      if(row.id!==id||!['ok','snapshot','stale'].includes(row.status)||!Number.isFinite(row.value)||!officialImportDate(row.date)||row.date>localDate||!Number.isFinite(stamp)||stamp>now)return false;
++      try{const source=new URL(row.source);return source.protocol==='https:'&&!source.username&&!source.password&&!source.port&&['www.twse.com.tw','openapi.twse.com.tw'].includes(source.hostname);}catch{return false;}
++    }).sort((a,b)=>b.row.date.localeCompare(a.row.date)||Date.parse(b.row.verifiedAt||b.row.fetchedAt||b.checkedAt)-Date.parse(a.row.verifiedAt||a.row.fetchedAt||a.checkedAt));
++    const selected=valid[0],deferred={captureDeferred:true,capturePolicy:'after_2230_taipei',capturePolicyReason:'台北時間22:30前不重抓信用統計；保留原觀測日及原核對時間。'};
++    if(!selected)return {id,name,unit,group:'台股市場',value:null,date:null,status:'missing',is_stale:false,reason:'22:30前未抓取信用統計，且沒有可核對的既有觀測。',...deferred};
++    const {row,checkedAt}=selected,stamp=row.verifiedAt||row.fetchedAt||checkedAt;
++    const candidate={...row,verifiedAt:stamp,status:row.snapshot?'snapshot':'ok',is_stale:false};
++    const current=row.status!=='stale'&&!row.is_stale&&macroObservationCurrent(candidate,{checkedAt,rows:[candidate]},now);
++    return {...row,verifiedAt:stamp,status:current?'snapshot':'stale',snapshot:true,is_stale:!current,
++      reason:current?row.reason||null:'既有信用觀測已過有效期；22:30後再抓取核對。',...deferred};
++  });
++}
+ function officialFredSeriesId(id){return {US3M:'DTB3',US10Y:'DGS10',US30Y:'DGS30'}[id]||id}
+ function recentOfficialCapture(value,now=Date.now()) {
+   const stamp=Date.parse(value);return Number.isFinite(stamp)&&stamp<=now+60000&&now-stamp<OFFICIAL_CAPTURE_MAX_AGE_MS;
+diff --git a/worker/observations.js b/worker/observations.js
+index e288c98..5f01c95 100644
+--- a/worker/observations.js
++++ b/worker/observations.js
+@@ -1724,6 +1724,9 @@ async function loadTaiwanDashboard(env={}) {
+     finally {clearTimeout(timer);}
+    }
+   } catch {}
++  // Reading saved observations is allowed all day; direct credit collection is
++  // restricted to the owner's evening window. Turnover remains independent.
++  if(!taiwanCreditCaptureAllowed())return [tradeValueFail,...await retainedTaiwanCreditRows(env)];
+   if(!trade) {
+     const ids=['TWSE_MARGIN_BALANCE_NTD','TWSE_MARGIN_CHANGE_NTD','TWSE_MARGIN_BALANCE_UNITS','TWSE_SHORT_BALANCE','TWSE_SHORT_CHANGE'];
+     const relayed=await Promise.all(ids.map(id=>relaySeries(id)));
+@@ -1741,6 +1744,7 @@ async function loadTaiwanDashboard(env={}) {
+   // lag it, so try the latest published sessions and use the newest valid one.
+   const dates=[...new Set([trade?.date,...tradingDates].filter(Boolean))].sort((a,b)=>b.localeCompare(a)).slice(0,5);
+   for(const date of dates){
++    if(!taiwanCreditCaptureAllowed())return [tradeValueFail,...await retainedTaiwanCreditRows(env)];
+     const source=`${marginApi}?response=json&date=${date.replaceAll('-','')}&selectType=MS`;
+       const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
+       try {
+@@ -1800,7 +1804,10 @@ async function loadTaiwanDashboard(env={}) {
+   const dateKey=creditDate.replaceAll('-','');
+   const marginTrendSource=`${marginTrendApi}?response=json&date=${dateKey}&days=30`;
+   const creditSummarySource=`${creditSummaryApi}?response=json&date=${dateKey}`;
+-  const fetchSupplement=officialTwseJson;
++  const fetchSupplement=source=>{
++    if(!taiwanCreditCaptureAllowed())throw Error('22:30前不抓取信用補充統計');
++    return officialTwseJson(source);
++  };
+   const [trendResult,summaryResult]=await Promise.allSettled([fetchSupplement(marginTrendSource),fetchSupplement(creditSummarySource)]);
+   let marginRatio=null,marginRatioReason='證交所同日市值資料暫不可用',marginRatioProvider='臺灣證券交易所｜MI_MARGN + MI_MARGN_TREND';
+   if(trendResult.status==='fulfilled') {
