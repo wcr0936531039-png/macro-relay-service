@@ -2,6 +2,38 @@
   "baselineVersion": 232,
   "baselineCommit": "3cf3a936ba80b94aa184054a2a75b53244668476",
   "patchSha256": "32661f62f100831b504a2d133ea758915077ffcdbbee452bae8fe7c045a10d34",
-  "deployed": false,
-  "fullTests": "running"
+  "deployed": true,
+  "fullTests": {
+    "exitCode": 0,
+    "sha256": "1e891b07788e5ed830c7536bc311d685ac184c0e807eefc9857cd22eb493c058"
+  },
+  "version": 233,
+  "sourceCommit": "488b8bc9ab0402472496a80abb1cee17aea35fae",
+  "deployedAt": "2026-10-23T06:47:04.292748Z",
+  "rollbackVersion": 232,
+  "htmlSha256": "080f721d52eb610eb245a5a7f6a1fa630bc42e12740828d3fc3e5207c4186d3d",
+  "workerSha256": "8911e3a03ce5bbea9a2ed116d6cd9ce2454e3c9c7cac8a68439e16b7ca8b3016",
+  "archiveSha256": "5d4cb8571715064978535ca689656f3accac39449973016feb768237bfcb32b1",
+  "existingGateObjectsUnchanged": 40,
+  "sourceImport": {
+    "feeds": 8,
+    "records": 275,
+    "consumer": 5,
+    "readBack": true,
+    "originalCaptureTimesPreserved": true
+  },
+  "automation": {
+    "enabled": true,
+    "scheduleUnchanged": true,
+    "promptReadBack": true,
+    "nextRunTimeReturnedByTool": null
+  },
+  "liveRunAcceptance": "in_progress",
+  "unresolved": [
+    "MOEA official sources HTTP 403",
+    "Actual night/morning credit pair",
+    "Actual browser mobile/desktop QA",
+    "Natural next-session Tiingo cold batch"
+  ],
+  "riskBudgetOrGateCriteriaChanged": false
 }
