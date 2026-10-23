@@ -1,0 +1,48 @@
+{
+  "verifiedOn": "2026-10-23",
+  "scope": "GitHub artifact readback; no production deployment or live API checks",
+  "repository": "wcr0936531039-png/macro-relay-service",
+  "artifacts": [
+    {
+      "path": "reliability-only.patch",
+      "exactMatchToLocal": true
+    },
+    {
+      "path": "combined.patch",
+      "exactMatchToLocal": true
+    },
+    {
+      "path": "reliability-npm-test.log",
+      "exactMatchToLocal": true
+    },
+    {
+      "path": "combined-npm-test.log",
+      "exactMatchToLocal": true
+    },
+    {
+      "path": "combined-before-after.json",
+      "exactMatchToLocal": true
+    },
+    {
+      "path": "credit-before-after.json",
+      "exactMatchToLocal": true
+    },
+    {
+      "path": "sqlite-lease-proof.json",
+      "exactMatchToLocal": true
+    },
+    {
+      "path": "resume-targeted.log",
+      "exactMatchToLocal": true
+    }
+  ],
+  "patches": {
+    "reliability": "19bb3cc5a68f27c4fb95897db10460943a1a2f87103259c72cdfe7db9de506c8",
+    "combined": "79aa2a79d4f8111eb24800f2e57d0b6ef6d946c5f739e6ca878641ff1c5b5af5"
+  },
+  "manifestRead": true,
+  "reportRead": true,
+  "latestIndexRead": true,
+  "deployed": false,
+  "automationResumed": false
+}
