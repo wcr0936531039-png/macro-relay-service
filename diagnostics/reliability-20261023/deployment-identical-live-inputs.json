@@ -1,0 +1,309 @@
+{
+  "scope": "Controlled local v231 versus deployed v232 source, identical fresh readback inputs with standardized freshness flags; distinct from real-time before/after market movement.",
+  "stocks": [
+    {
+      "symbol": "8299",
+      "inputCheckedAt": "2026-10-23T00:50:47.337Z",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "grade": null,
+      "label": "未評（估值分歧）",
+      "riskPermission": "not_cleared",
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 2,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 4,
+          "before": "warning",
+          "after": "warning",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 5,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 6,
+          "before": "warning",
+          "after": "warning",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 7,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 8,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 9,
+          "before": "conditional",
+          "after": "conditional",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 10,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        }
+      ]
+    },
+    {
+      "symbol": "5289",
+      "inputCheckedAt": "2026-10-23T00:54:48.590Z",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "grade": null,
+      "label": "未評（估值分歧）",
+      "riskPermission": "not_cleared",
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 2,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 4,
+          "before": "warning",
+          "after": "warning",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 5,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 6,
+          "before": "warning",
+          "after": "warning",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 7,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 8,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 9,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 10,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        }
+      ]
+    },
+    {
+      "symbol": "2404",
+      "inputCheckedAt": "2026-10-23T00:54:55.612Z",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "grade": null,
+      "label": "未評（估值分歧）",
+      "riskPermission": "not_cleared",
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 2,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 4,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 5,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 6,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 7,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 8,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 9,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 10,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        }
+      ]
+    },
+    {
+      "symbol": "5009",
+      "inputCheckedAt": "2026-10-23T00:54:56.185Z",
+      "unchanged": {
+        "gates": true,
+        "scoring": true,
+        "veto": true,
+        "adaptiveRating": true,
+        "primaryValuation": true
+      },
+      "grade": "C",
+      "label": "保守觀察",
+      "riskPermission": "not_cleared",
+      "gates": [
+        {
+          "id": 1,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 2,
+          "before": "partial",
+          "after": "partial",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 3,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 4,
+          "before": "warning",
+          "after": "warning",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 5,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 6,
+          "before": "warning",
+          "after": "warning",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 7,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 8,
+          "before": "needs_user_records",
+          "after": "needs_user_records",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 9,
+          "before": "conditional",
+          "after": "conditional",
+          "fullObjectUnchanged": true
+        },
+        {
+          "id": 10,
+          "before": "evaluated",
+          "after": "evaluated",
+          "fullObjectUnchanged": true
+        }
+      ]
+    }
+  ]
+}
