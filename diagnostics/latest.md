@@ -1,3 +1,21 @@
+# 最新：v232已部署，本輪正式保存驗收完成，原巡檢排程已恢復
+
+[完整部署報告](reliability-20261023/deployment-report.md)｜[正式讀回證據](reliability-20261023/deployment-readback.json)｜[四檔相同輸入比較](reliability-20261023/deployment-identical-live-inputs.json)｜[部署manifest／SHA](reliability-20261023/deployment-manifest.json)｜[完整已部署diff](reliability-20261023/deployed-source.patch)｜[完整npm test](reliability-20261023/deployment-final-npm-test.log)。
+
+擁有者優先指定的第一項已部署v232，2026-10-23 08:49:56台北原生部署succeeded；v231保留回滾，私人受眾不變。C1綜合判斷、信用觀測／擷取／內容驗證、保存錯誤讀回、可恢復checkpoint與失敗隔離均已上線。部署前完整npm test exit0（含reliability32、advisory51）；首次測試漏mock外網及helper封裝失敗的定位／處理紀錄皆保留。
+
+第二項本輪正式保存驗收完成：run `11fa1981-e6b8-49d7-bdb1-5f872c7e458a` 於08:58:47台北完成 **partial**，匹配runId／completedAt的history及四檔audit **4/4**讀回，每檔10 Gate。原有06:30／22:30巡檢已恢復，Automations與Sites均確認enabled；沒有另建重複任務。工具next_run_time仍null，下一次實際觸發未預先宣稱完成。此架構需持續GET輪詢才能推進；提示已保存其操作與早晚信用限制。[排程讀回](reliability-20261023/deployment-13-automation-resumed.md)。
+
+上午大盤7項信用保留10/21觀測及原10/22上午擷取時間；四檔個股信用皆deferred、capturedAt:null，未把0筆當0餘額。**今晚22:30後新信用捕獲、翌晨跨日保留及final修訂連續性仍待實際驗證**，不是這次單輪驗收已完成的項目。
+
+核心總經55/55、擴展11/12、市場36/36、股指3/3、跨市場4/4、公告3/3；八條FRED及核心CPI雙來源恢復，2026-09=338.896。全市場10/22為1947／1985、72交易日，仍缺38檔；八來源236筆但consumer0。外銷訂單403、8299 TrendForce403仍保留；板塊在run內逾時，後續獨立讀回Tiingo 11/11、觀測10/21，沒有倒改原run成功。金銀比歷史17/21，20日趨勢仍缺樣本。
+
+四檔40 Gate、scoring／VETO／adaptiveRating／primaryValuation在同一批控制輸入下不變；正式8299／5289／2404仍未評（估值分歧），5009 C／保守觀察，全部not_cleared、C1低信心。Gate4／5／8、CB與VETO未知、群聯Gate6財報警訊繼續保留；權重、總分公式、風險預算未放寬。
+
+下方是歷史檢查點，其「未部署／排程暫停／驗收中」僅描述當時狀態；目前以本節與deployment-report.md為準。下一輪先驗真實跨日信用、記錄板塊間歇逾時與來源缺口，不重複部署已完成成果。
+
+---
+
 # 最新：整合版已部署v232，正式巡檢驗收中，排程尚未恢復
 
 [部署成功紀錄](reliability-20261023/deployment-06-published.md)｜[官方匯入讀回](reliability-20261023/deployment-07-official-import.md)｜[部署前完整測試](reliability-20261023/deployment-final-npm-test.log)。
