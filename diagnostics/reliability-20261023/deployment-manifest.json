@@ -11,7 +11,32 @@
   "archiveSha256": "dc06d8c44e331a056d56f3e9502bec520dc9f4e35d8194bda37ad557b96135b3",
   "deployedSourceDiffSha256": "ae5a3addc52d64245a1c0430c6e17ff49ca9d14df504615cad1663d866214f3a",
   "testOnlySupplementSha256": "21366a9f32662d6c2e22066d1ec495eec82283c6e5430bc3d0addf7d7c5cfe6d",
-  "liveAcceptance": "in_progress",
+  "liveAcceptance": "passed_with_recorded_partial_sources",
   "runId": "11fa1981-e6b8-49d7-bdb1-5f872c7e458a",
-  "automationResumed": false
+  "automationResumed": true,
+  "deployedAt": "2026-10-23T00:49:56.060397Z",
+  "overallSourceStatus": "partial",
+  "runStartedAt": "2026-10-23T00:51:16.474Z",
+  "runCompletedAt": "2026-10-23T00:58:47.699Z",
+  "historySaved": true,
+  "gateAuditCount": 4,
+  "gateCount": 40,
+  "controlledGateObjectsUnchanged": 40,
+  "automationEnabledReadbackConfirmed": true,
+  "automationSchedule": {
+    "timezone": "Asia/Taipei",
+    "times": [
+      "06:30",
+      "22:30"
+    ],
+    "nextRunTimeReturnedByTool": null,
+    "nextExecutionVerified": false
+  },
+  "crossDayCreditAcceptance": "pending actual nighttime capture and following morning retention",
+  "evidenceFiles": {
+    "deployment-readback.json": "91fb50079d0eb0f4e14c31f249aab950a97887f12c597b5856ed371176578ee8",
+    "deployment-identical-live-inputs.json": "c98d9a20c615d52919d07dc24854d5d4c5986b921bc569b40276801a8f6aedbc",
+    "deployment-report.md": "f591ba02cd239f55d28c95bdee372def4ae63846b3a8b14c0326a91ca03bdbb8"
+  },
+  "fullTestLogSha256": "ee6da8d8aab4abe4b484e7cf1f8bd60f27863612fb5968e23bf877016f5727f5"
 }
