@@ -1,3 +1,15 @@
+# 最新：整合版已部署v232，正式巡檢驗收中，排程尚未恢復
+
+[部署成功紀錄](reliability-20261023/deployment-06-published.md)｜[官方匯入讀回](reliability-20261023/deployment-07-official-import.md)｜[部署前完整測試](reliability-20261023/deployment-final-npm-test.log)。
+
+擁有者已授權優先完成部署與正式驗收。2026-10-23 08:49:56台北原生部署succeeded、版本232；v231保留回滾、私人受眾不變。正式HTML／Worker與核准整合版相同；部署前重跑測試的外網依賴失敗已定位並以純測試fixture補丁處理，完整npm test再跑exit0。
+
+八條FRED及核心CPI雙來源已恢復且正式匯入讀回；市場10/22保存1947／1985、72交易日；八來源236筆、consumer仍0。上午未抓外部信用。
+
+新run 11fa1981-e6b8-49d7-bdb1-5f872c7e458a 已啟動、逐checkpoint進行；尚未宣稱完成與4檔快照全保存。10/22第二run則本輪已補讀回其partial完成、history及4/4audit，保留當時未驗收的歷史紀錄。排程仍暫停，待本輪正式保存驗收可靠後才恢復。
+
+---
+
 # 最新：可靠性修補＋C1本機整合完成，兩套完整測試通過，未部署
 
 [最終報告](reliability-20261023/final/report.md)｜[C1整合完整patch](reliability-20261023/final/combined.patch)｜[可靠性單獨patch](reliability-20261023/final/reliability-only.patch)｜[SHA／套用方式](reliability-20261023/final/manifest.json)｜[整合完整npm test](reliability-20261023/final/combined-npm-test.log)｜[單獨完整npm test](reliability-20261023/final/reliability-npm-test.log)｜[四檔前後比較](reliability-20261023/final/combined-before-after.json)｜[已知問題原表](issue-inventory-20261023/report.md)。
