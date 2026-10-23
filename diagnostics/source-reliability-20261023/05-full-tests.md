@@ -1,0 +1,9 @@
+# 完整測試已通過；畫面驗收限制
+
+部署前完整npm test exit0：legacy、calendar9、advisory51、fixpack4、C2五項、credit/resume/persistence34及source-recovery6項均通過。同一批10/23上午已保存輸入下，四檔40Gate完整物件、scoring／VETO／adaptiveRating／primaryValuation均不變，風險許可仍not_cleared；不是聲稱不同時間的行情不會變。
+
+完整日誌SHA-256：1e891b07788e5ed830c7536bc311d685ac184c0e807eefc9857cd22eb493c058。
+
+手機／桌面瀏覽器驗收仍未完成：原Worker ESM專案沒有dev script或static.directory，受管理preview回傳此設定限制，status確認stopped。未為截圖改動正式站hosting或工作中的前端，亦未宣稱從手機登入正式站驗收。API／既有dashboard互動回歸測試已過；實際畫面驗收另列未核。
+
+MOEA官方CSV／PDF仍403不解除stale；今晚／翌晨真實信用尚未到時。來源與Tiingo修補正在封裝，正式版本仍v232，後續另記原生部署結果與真來源讀回。
