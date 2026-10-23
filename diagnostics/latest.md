@@ -1,3 +1,15 @@
+# 最新：第一、二項來源／穩定性修補進行中（正式仍v232）
+
+[開始與範圍](source-reliability-20261023/01-start.md)｜[已重測根因](source-reliability-20261023/02-findings.md)｜[本機與真來源進展](source-reliability-20261023/03-local-progress.md)｜[目前完整patch](source-reliability-20261023/source-recovery.patch)｜[SHA／狀態](source-reliability-20261023/manifest.json)｜[八來源實測](source-reliability-20261023/source-collection-status.json)。
+
+依擁有者「1.2先完成」繼續：Tiingo序列22檔與6秒模組預算不相容，改逐檔保存／同checkpoint分批接續；consumer官方RSS實際空白，官方分類HTML備援已真抓5筆，八來源275筆。外部有效快照與強制重建來源池交接已補測。19項針對性通過，完整npm test正在跑；patch已先保存，尚未部署／未匯入275筆。
+
+MOEA原月表、圖表、新聞、首頁、官方CSV及兩份官方PDF在此環境均403，尚未解決，不用搜尋摘要代替原始擷取或解除stale。原排程啟用；真實今晚22:30新信用捕獲與翌晨保持、手機畫面驗收仍未完成，不預支結果。其餘Gate／面板／回測不混入。
+
+以下v232部署及更早紀錄保留為歷史；本輪未完成項以本節及source-reliability-20261023為準。
+
+---
+
 # 最新：v232已部署，本輪正式保存驗收完成，原巡檢排程已恢復
 
 [完整部署報告](reliability-20261023/deployment-report.md)｜[正式讀回證據](reliability-20261023/deployment-readback.json)｜[四檔相同輸入比較](reliability-20261023/deployment-identical-live-inputs.json)｜[部署manifest／SHA](reliability-20261023/deployment-manifest.json)｜[完整已部署diff](reliability-20261023/deployed-source.patch)｜[完整npm test](reliability-20261023/deployment-final-npm-test.log)。
