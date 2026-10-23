@@ -1,0 +1,124 @@
+{
+  "checkedAt": "2026-10-23T06:38:24.732Z",
+  "feeds": [
+    {
+      "key": "twse",
+      "source": "https://openapi.twse.com.tw/v1/opendata/t187ap04_L",
+      "fetchedAt": "2026-10-23T06:38:24.730Z",
+      "records": 119,
+      "attempts": [
+        {
+          "source": "https://openapi.twse.com.tw/v1/opendata/t187ap04_L",
+          "httpStatus": 200,
+          "status": "ok",
+          "records": 119
+        }
+      ]
+    },
+    {
+      "key": "tpex",
+      "source": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O",
+      "fetchedAt": "2026-10-23T06:38:22.232Z",
+      "records": 64,
+      "attempts": [
+        {
+          "source": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O",
+          "httpStatus": 200,
+          "status": "ok",
+          "records": 64
+        }
+      ]
+    },
+    {
+      "key": "semiconductors",
+      "source": "https://www.trendforce.com/feed/Semiconductors.html",
+      "fetchedAt": "2026-10-23T06:38:22.573Z",
+      "records": 10,
+      "attempts": [
+        {
+          "source": "https://www.trendforce.com/feed/Semiconductors.html",
+          "httpStatus": 200,
+          "status": "ok",
+          "records": 10
+        }
+      ]
+    },
+    {
+      "key": "display",
+      "source": "https://www.trendforce.com/feed/Display.html",
+      "fetchedAt": "2026-10-23T06:38:22.685Z",
+      "records": 10,
+      "attempts": [
+        {
+          "source": "https://www.trendforce.com/feed/Display.html",
+          "httpStatus": 200,
+          "status": "ok",
+          "records": 10
+        }
+      ]
+    },
+    {
+      "key": "energy",
+      "source": "https://www.trendforce.com/feed/Energy.html",
+      "fetchedAt": "2026-10-23T06:38:22.526Z",
+      "records": 10,
+      "attempts": [
+        {
+          "source": "https://www.trendforce.com/feed/Energy.html",
+          "httpStatus": 200,
+          "status": "ok",
+          "records": 10
+        }
+      ]
+    },
+    {
+      "key": "consumer",
+      "source": "https://www.trendforce.com/presscenter/news/Consumer%20Electronics",
+      "fetchedAt": "2026-10-23T06:38:22.986Z",
+      "records": 5,
+      "attempts": [
+        {
+          "source": "https://www.trendforce.com/feed/Consumer_electronics.html",
+          "httpStatus": 200,
+          "status": "error",
+          "error": "empty_report_feed"
+        },
+        {
+          "source": "https://www.trendforce.com/presscenter/news/Consumer%20Electronics",
+          "httpStatus": 200,
+          "status": "ok",
+          "records": 5
+        }
+      ]
+    },
+    {
+      "key": "steel",
+      "source": "https://worldsteel.org/feed/",
+      "fetchedAt": "2026-10-23T06:38:22.362Z",
+      "records": 7,
+      "attempts": [
+        {
+          "source": "https://worldsteel.org/feed/",
+          "httpStatus": 200,
+          "status": "ok",
+          "records": 7
+        }
+      ]
+    },
+    {
+      "key": "aviation",
+      "source": "https://www.iata.org/api/rss/pressrelease",
+      "fetchedAt": "2026-10-23T06:38:22.840Z",
+      "records": 50,
+      "attempts": [
+        {
+          "source": "https://www.iata.org/api/rss/pressrelease",
+          "httpStatus": 200,
+          "status": "ok",
+          "records": 50
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
