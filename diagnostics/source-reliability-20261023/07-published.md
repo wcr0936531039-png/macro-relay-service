@@ -1,0 +1,9 @@
+# 來源與板塊可靠性修補已部署
+
+2026-10-23 14:47:04台北，原生私人部署succeeded；來源commit 488b8bc9ab0402472496a80abb1cee17aea35fae，原v232保留回滾，私人受眾及環境修訂7不變。HTML未變，原版面未改。
+
+HTML SHA-256：080f721d52eb610eb245a5a7f6a1fa630bc42e12740828d3fc3e5207c4186d3d。
+Worker SHA-256：8911e3a03ce5bbea9a2ed116d6cd9ce2454e3c9c7cac8a68439e16b7ca8b3016。
+封裝SHA-256：5d4cb8571715064978535ca689656f3accac39449973016feb768237bfcb32b1。
+
+完整npm test exit0、40Gate同輸入控制不變已另存。正在匯入新來源並啟動正式checkpoint驗收，尚未宣稱板塊真來源恢復或本輪run完成。MOEA403與晚間／翌晨、手機畫面未驗收維持原狀。
