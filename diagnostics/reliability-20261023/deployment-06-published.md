@@ -1,0 +1,7 @@
+# 第一項：已成功部署整合版
+
+原生私人發布回傳succeeded；來源commit 3cf3a936ba80b94aa184054a2a75b53244668476，正式HTML／Worker為080f721d52eb610eb245a5a7f6a1fa630bc42e12740828d3fc3e5207c4186d3d／cee5f3724e4ea9a32abb0a84985d80c7b63561e47fd846c21bd4c2733978f4fa。部署完成時間2026-10-23 08:49:56台北。v231保留回滾，私人受眾不變。
+
+打包helper缺shell檔後，使用已部署v231 archive的同一10檔格式，從本次乾淨已推送commit的manifest、migration、HTML與Worker重新封裝；逐檔存在與雜湊均核對，archive SHA dc06d8c44e331a056d56f3e9502bec520dc9f4e35d8194bda37ad557b96135b3。沒有從舊archive拷貝舊Worker，也沒改受測輸出。
+
+目前開始第二項正式資料匯入／巡檢保存驗收，排程仍暫停，尚未宣稱正式流程全數通過。上午不抓信用；夜間與翌日連續性另保留待驗。
