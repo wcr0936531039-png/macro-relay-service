@@ -1,0 +1,1013 @@
+{
+  "scope": "Production v232 acceptance. Run snapshots, later independent reads and controlled source comparison are separate evidence.",
+  "version": 232,
+  "run": {
+    "runId": "11fa1981-e6b8-49d7-bdb1-5f872c7e458a",
+    "status": "partial",
+    "startedAt": "2026-10-23T00:51:16.474Z",
+    "completedAt": "2026-10-23T00:58:47.699Z",
+    "executionMode": "poll_driven_checkpoint",
+    "checkpoint": {
+      "version": 1,
+      "stage": "done",
+      "index": 0
+    }
+  },
+  "historyReadback": {
+    "runId": "11fa1981-e6b8-49d7-bdb1-5f872c7e458a",
+    "status": "partial",
+    "startedAt": "2026-10-23T00:51:16.474Z",
+    "completedAt": "2026-10-23T00:58:47.699Z",
+    "stockCount": 4,
+    "researchCount": 4,
+    "gateAuditCount": 4
+  },
+  "historyMatchesRun": true,
+  "runModules": {
+    "macro": {
+      "status": "ok",
+      "checkedAt": "2026-10-23T00:50:50.994Z",
+      "usable": 55,
+      "total": 55,
+      "error": null,
+      "httpStatus": 200
+    },
+    "expandedMacro": {
+      "status": "partial",
+      "checkedAt": "2026-10-23T00:50:43.818Z",
+      "usable": 11,
+      "total": 12,
+      "error": null,
+      "httpStatus": 200
+    },
+    "marketAndPreciousMetals": {
+      "status": "ok",
+      "checkedAt": "2026-10-23T00:50:52.802Z",
+      "usable": 36,
+      "total": 36,
+      "error": null,
+      "httpStatus": 200
+    },
+    "usIndices": {
+      "status": "ok",
+      "checkedAt": "2026-10-23T00:50:40.368Z",
+      "usable": 3,
+      "total": 3,
+      "error": null,
+      "httpStatus": 200
+    },
+    "crossMarket": {
+      "status": "ok",
+      "checkedAt": "2026-10-22T12:23:25.123489+00:00",
+      "usable": 4,
+      "total": 4,
+      "error": null,
+      "httpStatus": 200
+    },
+    "usSectors": {
+      "status": "error",
+      "checkedAt": "2026-10-23T00:53:45.459Z",
+      "usable": null,
+      "total": null,
+      "error": "模組回應逾時；保留其他巡檢結果並於下次排程重試",
+      "httpStatus": null
+    },
+    "officialNews": {
+      "status": "ok",
+      "checkedAt": "2026-10-23T00:46:49.348Z",
+      "usable": 3,
+      "total": 3,
+      "error": null,
+      "httpStatus": 200
+    }
+  },
+  "runStocks": [
+    {
+      "id": "8299",
+      "status": "fresh",
+      "checkedAt": "2026-10-23T00:50:47.337Z",
+      "dataAsOf": "2026-10-22",
+      "error": null
+    },
+    {
+      "id": "5289",
+      "status": "pending",
+      "checkedAt": "2026-10-22T02:14:23.132Z",
+      "dataAsOf": "2026-10-22",
+      "error": null
+    },
+    {
+      "id": "2404",
+      "status": "fresh",
+      "checkedAt": "2026-10-23T00:54:55.612Z",
+      "dataAsOf": "2026-10-22",
+      "error": null
+    },
+    {
+      "id": "5009",
+      "status": "fresh",
+      "checkedAt": "2026-10-23T00:54:56.185Z",
+      "dataAsOf": "2026-10-22",
+      "error": null
+    }
+  ],
+  "runGateAudits": [
+    {
+      "symbol": "8299",
+      "status": "valuation_divergence",
+      "auditStatus": "blocked",
+      "recorded": true,
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "warning",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 6,
+          "status": "warning",
+          "dataState": "verified"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 9,
+          "status": "conditional",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    },
+    {
+      "symbol": "5289",
+      "status": "valuation_divergence",
+      "auditStatus": "blocked",
+      "recorded": true,
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "warning",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 6,
+          "status": "warning",
+          "dataState": "verified"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 9,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    },
+    {
+      "symbol": "2404",
+      "status": "valuation_divergence",
+      "auditStatus": "blocked",
+      "recorded": true,
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 6,
+          "status": "partial",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 9,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    },
+    {
+      "symbol": "5009",
+      "status": "degraded",
+      "auditStatus": "blocked",
+      "recorded": true,
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "warning",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 6,
+          "status": "warning",
+          "dataState": "verified"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 9,
+          "status": "conditional",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    }
+  ],
+  "laterIndependentSectorRead": {
+    "status": "OK",
+    "coverage": {
+      "valid": 11,
+      "total": 11
+    },
+    "observedAt": "2026-10-21",
+    "generatedAt": "2026-10-23T00:53:40.984Z",
+    "source": "Tiingo EOD (private owner; adjClose)",
+    "sourceRole": "主要來源",
+    "priceField": "adjClose",
+    "sourceCoverage": {
+      "valid": 12,
+      "total": 12
+    },
+    "sourceComparison": {
+      "status": "within_guard",
+      "maxDifferencePp": 1.2146001671098361e-05,
+      "limitPp": 0.25,
+      "limitPurpose": "source_quality_guard_pending_owner_review"
+    },
+    "doesNotRewriteRunModuleTimeout": true,
+    "calendarRule": "Existing NYSE 8-hour publication grace after close plus 15 minutes; do not relabel 2026-10-21 as 2026-10-22."
+  },
+  "marketScanner": {
+    "status": "scan_ready",
+    "date": "2026-10-22",
+    "checkedAt": "2026-10-23T00:46:10.048153+00:00",
+    "universe": {
+      "twse": 1091,
+      "tpex": 894,
+      "total": 1985
+    },
+    "captured": {
+      "twse": 1081,
+      "tpex": 866,
+      "total": 1947
+    },
+    "coveragePercent": 98.08564231738035,
+    "sessions": 72,
+    "historyCoverage": {
+      "warmup": 5,
+      "needsReview": 13
+    }
+  },
+  "cpiVerification": {
+    "checkedAt": "2026-10-23T00:50:42.274Z",
+    "series": "CPILFESL",
+    "passed": true,
+    "state": "passed",
+    "requiredVotes": 2,
+    "channelsAttempted": 3,
+    "channelsAvailable": 2,
+    "difference": 0,
+    "sameObservationDate": true,
+    "sourceFamilies": [
+      "BLS",
+      "FRED"
+    ],
+    "readings": [
+      {
+        "sourceId": "bls-flat-file",
+        "sourceFamily": "BLS",
+        "date": "2026-09-01",
+        "value": 338.896,
+        "capturedAt": "2026-10-23T00:47:13.518819+00:00",
+        "status": "snapshot"
+      },
+      {
+        "sourceId": "fred-public-csv",
+        "sourceFamily": "FRED",
+        "date": "2026-09-01",
+        "value": 338.896,
+        "capturedAt": "2026-10-23T00:47:19.818672+00:00",
+        "status": "snapshot"
+      }
+    ]
+  },
+  "expandedMacroGaps": [
+    {
+      "id": "TW_EXPORT_ORDERS",
+      "date": "2026-09-01",
+      "status": "stale",
+      "is_stale": true,
+      "reason": "HTTP Error 403: Forbidden",
+      "source": "https://service.moea.gov.tw/EE521/common/Common.aspx?code=B&no=1"
+    }
+  ],
+  "externalSourceImport": {
+    "feedsSucceeded": 8,
+    "feedsTotal": 8,
+    "records": 236,
+    "errors": 0,
+    "counts": {
+      "twse": 119,
+      "tpex": 30,
+      "semiconductors": 10,
+      "display": 10,
+      "energy": 10,
+      "consumer": 0,
+      "steel": 7,
+      "aviation": 50
+    }
+  },
+  "perStockSourcePools": [
+    {
+      "symbol": "8299",
+      "status": "partial",
+      "checkedAt": "2026-10-23T00:50:59.701Z",
+      "errors": [
+        {
+          "source": "https://www.trendforce.com/feed/Semiconductors.html",
+          "error": "HTTP 403",
+          "stale": true
+        }
+      ],
+      "recordCount": 5
+    },
+    {
+      "symbol": "5289",
+      "status": "sources_ready",
+      "checkedAt": "2026-10-23T00:56:07.268Z",
+      "errors": [],
+      "recordCount": 4
+    },
+    {
+      "symbol": "2404",
+      "status": "sources_ready",
+      "checkedAt": "2026-10-23T00:56:28.723Z",
+      "errors": [],
+      "recordCount": 1
+    },
+    {
+      "symbol": "5009",
+      "status": "sources_ready",
+      "checkedAt": "2026-10-23T00:56:51.553Z",
+      "errors": [],
+      "recordCount": 2
+    }
+  ],
+  "morningCredit": {
+    "market": [
+      {
+        "id": "TWSE_MARGIN_BALANCE_NTD",
+        "before": {
+          "date": "2026-10-21",
+          "value": 6443.73559,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "ok"
+        },
+        "after": {
+          "date": "2026-10-21",
+          "value": 6443.73559,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "snapshot",
+          "captureDeferred": true
+        },
+        "originalCapturePreserved": true,
+        "originalObservationPreserved": true
+      },
+      {
+        "id": "TWSE_MARGIN_CHANGE_NTD",
+        "before": {
+          "date": "2026-10-21",
+          "value": 62.73448,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "ok"
+        },
+        "after": {
+          "date": "2026-10-21",
+          "value": 62.73448,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "snapshot",
+          "captureDeferred": true
+        },
+        "originalCapturePreserved": true,
+        "originalObservationPreserved": true
+      },
+      {
+        "id": "TWSE_MARGIN_BALANCE_UNITS",
+        "before": {
+          "date": "2026-10-21",
+          "value": 9632327,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "ok"
+        },
+        "after": {
+          "date": "2026-10-21",
+          "value": 9632327,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "snapshot",
+          "captureDeferred": true
+        },
+        "originalCapturePreserved": true,
+        "originalObservationPreserved": true
+      },
+      {
+        "id": "TWSE_SHORT_BALANCE",
+        "before": {
+          "date": "2026-10-21",
+          "value": 192598,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "ok"
+        },
+        "after": {
+          "date": "2026-10-21",
+          "value": 192598,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "snapshot",
+          "captureDeferred": true
+        },
+        "originalCapturePreserved": true,
+        "originalObservationPreserved": true
+      },
+      {
+        "id": "TWSE_SHORT_CHANGE",
+        "before": {
+          "date": "2026-10-21",
+          "value": -23314,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "ok"
+        },
+        "after": {
+          "date": "2026-10-21",
+          "value": -23314,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "snapshot",
+          "captureDeferred": true
+        },
+        "originalCapturePreserved": true,
+        "originalObservationPreserved": true
+      },
+      {
+        "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+        "before": {
+          "date": "2026-10-21",
+          "value": 0.4198475467354647,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "ok"
+        },
+        "after": {
+          "date": "2026-10-21",
+          "value": 0.4198475467354647,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "snapshot",
+          "captureDeferred": true
+        },
+        "originalCapturePreserved": true,
+        "originalObservationPreserved": true
+      },
+      {
+        "id": "TWSE_CREDIT_TRADE_VALUE",
+        "before": {
+          "date": "2026-10-21",
+          "value": 1018.0747316,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "ok"
+        },
+        "after": {
+          "date": "2026-10-21",
+          "value": 1018.0747316,
+          "verifiedAt": "2026-10-22T02:19:38.764Z",
+          "status": "snapshot",
+          "captureDeferred": true
+        },
+        "originalCapturePreserved": true,
+        "originalObservationPreserved": true
+      }
+    ],
+    "stocks": [
+      {
+        "symbol": "8299",
+        "checkedAt": "2026-10-23T00:50:47.337Z",
+        "margin": {
+          "status": "deferred",
+          "records": 0,
+          "error": null,
+          "capturedAt": null,
+          "captureDeferred": true,
+          "is_stale": false,
+          "reason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+        },
+        "marginDate": null,
+        "marginCapturedAt": null,
+        "marginStatus": "deferred"
+      },
+      {
+        "symbol": "5289",
+        "checkedAt": "2026-10-23T00:54:48.590Z",
+        "margin": {
+          "status": "deferred",
+          "records": 0,
+          "error": null,
+          "capturedAt": null,
+          "captureDeferred": true,
+          "is_stale": false,
+          "reason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+        },
+        "marginDate": null,
+        "marginCapturedAt": null,
+        "marginStatus": "deferred"
+      },
+      {
+        "symbol": "2404",
+        "checkedAt": "2026-10-23T00:54:55.612Z",
+        "margin": {
+          "status": "deferred",
+          "records": 0,
+          "error": null,
+          "capturedAt": null,
+          "captureDeferred": true,
+          "is_stale": false,
+          "reason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+        },
+        "marginDate": null,
+        "marginCapturedAt": null,
+        "marginStatus": "deferred"
+      },
+      {
+        "symbol": "5009",
+        "checkedAt": "2026-10-23T00:54:56.185Z",
+        "margin": {
+          "status": "deferred",
+          "records": 0,
+          "error": null,
+          "capturedAt": null,
+          "captureDeferred": true,
+          "is_stale": false,
+          "reason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+        },
+        "marginDate": null,
+        "marginCapturedAt": null,
+        "marginStatus": "deferred"
+      }
+    ],
+    "noFabricatedNightCapture": true,
+    "legacyCaptureWarning": "Market credit original capture is 2026-10-22 morning, not a newly captured previous-night observation. Original dates and capture times remain unchanged.",
+    "futureCrossDayAcceptance": "pending actual nighttime capture and following morning retention"
+  },
+  "laterIndependentMasterReads": [
+    {
+      "symbol": "8299",
+      "status": "valuation_divergence",
+      "generatedAt": "2026-10-23T00:58:54.854Z",
+      "stockCheckedAt": "2026-10-23T00:50:47.337Z",
+      "adaptiveRating": {
+        "status": "valuation_divergence",
+        "grade": null,
+        "label": "未評（估值分歧）",
+        "riskPermission": "not_cleared"
+      },
+      "advisoryConfidence": {
+        "level": "低",
+        "coverage": 2,
+        "total": 3,
+        "isReturnProbability": false
+      },
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "warning",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 6,
+          "status": "warning",
+          "dataState": "verified"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 9,
+          "status": "conditional",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    },
+    {
+      "symbol": "5289",
+      "status": "valuation_divergence",
+      "generatedAt": "2026-10-23T00:58:56.337Z",
+      "stockCheckedAt": "2026-10-23T00:54:48.590Z",
+      "adaptiveRating": {
+        "status": "valuation_divergence",
+        "grade": null,
+        "label": "未評（估值分歧）",
+        "riskPermission": "not_cleared"
+      },
+      "advisoryConfidence": {
+        "level": "低",
+        "coverage": 2,
+        "total": 3,
+        "isReturnProbability": false
+      },
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "warning",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 6,
+          "status": "warning",
+          "dataState": "verified"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 9,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    },
+    {
+      "symbol": "2404",
+      "status": "valuation_divergence",
+      "generatedAt": "2026-10-23T00:58:59.295Z",
+      "stockCheckedAt": "2026-10-23T00:54:55.612Z",
+      "adaptiveRating": {
+        "status": "valuation_divergence",
+        "grade": null,
+        "label": "未評（估值分歧）",
+        "riskPermission": "not_cleared"
+      },
+      "advisoryConfidence": {
+        "level": "低",
+        "coverage": 2,
+        "total": 3,
+        "isReturnProbability": false
+      },
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 6,
+          "status": "partial",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 9,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    },
+    {
+      "symbol": "5009",
+      "status": "degraded",
+      "generatedAt": "2026-10-23T00:59:02.270Z",
+      "stockCheckedAt": "2026-10-23T00:54:56.185Z",
+      "adaptiveRating": {
+        "status": "degraded",
+        "grade": "C",
+        "label": "保守觀察",
+        "riskPermission": "not_cleared"
+      },
+      "advisoryConfidence": {
+        "level": "低",
+        "coverage": 1,
+        "total": 3,
+        "isReturnProbability": false
+      },
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "warning",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 6,
+          "status": "warning",
+          "dataState": "verified"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "needs_user_records",
+          "dataState": "partial"
+        },
+        {
+          "id": 9,
+          "status": "conditional",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    }
+  ],
+  "controlledComparison": {
+    "stocks": 4,
+    "gateObjectsUnchanged": 40,
+    "scoringUnchanged": true,
+    "vetoUnchanged": true,
+    "adaptiveRatingUnchanged": true,
+    "primaryValuationUnchanged": true,
+    "riskPermissions": [
+      "not_cleared",
+      "not_cleared",
+      "not_cleared",
+      "not_cleared"
+    ],
+    "scope": "Controlled local v231 versus deployed v232 source, identical fresh readback inputs with standardized freshness flags; distinct from real-time before/after market movement."
+  },
+  "preciousMetalsHistory": {
+    "id": "XAU_XAG",
+    "date": "2026-10-23",
+    "status": "ok",
+    "historyObservations": 17,
+    "trendValidationState": "sample_insufficient",
+    "change20d": null
+  },
+  "automationReadback": {
+    "existingTaskResumed": true,
+    "enabledConfirmedByAutomationAndSite": true,
+    "updatedAt": "2026-10-23T00:59:34Z",
+    "timezone": "Asia/Taipei",
+    "times": [
+      "06:30",
+      "22:30"
+    ],
+    "nextRunTimeReturnedByTool": null,
+    "nextExecutionNotYetVerified": true,
+    "checkpointEvidence": "deployment-13-automation-resumed.md",
+    "privateTaskIdentityAndPromptOmitted": true
+  },
+  "unchangedConstraints": [
+    "weights",
+    "Gate criteria",
+    "risk budgets",
+    "no retrospective consensus fabrication",
+    "no raw Tiingo prices in public repository"
+  ]
+}
