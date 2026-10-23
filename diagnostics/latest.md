@@ -8,6 +8,8 @@ N01／N02信用驗證與N03保存失敗已本機修補；整站改持久checkpoi
 
 最終兩份patch二選一，不疊套信用r2、舊C1或中途patch。各步01～08、修補前失敗及中途全過結果保留在reliability-20261023，接手先讀final/report.md與manifest.json。
 
+2026-10-23補驗：最終8份來源patch／測試／比較檔均已從GitHub重新讀回，與本機逐字相同；manifest與交接索引已核對。[讀回紀錄](reliability-20261023/final/readback.json)。沒有部署或恢復排程。
+
 ---
 
 # 最新：已知問題全表已補齊，新增3項本機重現漏洞
