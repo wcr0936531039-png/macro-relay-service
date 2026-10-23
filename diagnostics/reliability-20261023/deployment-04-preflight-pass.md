@@ -1,0 +1,7 @@
+# 部署前全測試重跑通過，開始原生打包
+
+乾淨正式v231來源＋核准combined.patch＋純測試fixture補丁（SHA 21366a9f32662d6c2e22066d1ec495eec82283c6e5430bc3d0addf7d7c5cfe6d），npm test exit0；calendar9、advisory51、fixpack4、C2五項、可靠性32項及legacy全部通過。完整log已上傳deployment-final-npm-test.log。
+
+正式HTML／Worker與先前核准整合版完全一致：080f721d52eb610eb245a5a7f6a1fa630bc42e12740828d3fc3e5207c4186d3d／cee5f3724e4ea9a32abb0a84985d80c7b63561e47fd846c21bd4c2733978f4fa。只修單元測試未設定來源的fallback，不調整正式計分或逾時。
+
+原生來源helper正在保存精確來源及打包，尚未宣稱發布成功。新官方來源收集：八條FRED已恢復；核心CPI的BLS與FRED皆2026-09=338.896，收集核對通過，仍需匯入讀回；八產業來源236筆、錯誤0，consumer仍0筆。早上外部信用收集未執行。
