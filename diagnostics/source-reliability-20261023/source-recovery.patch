@@ -1,0 +1,354 @@
+diff --git a/package.json b/package.json
+index ce40ac7..af3520f 100644
+--- a/package.json
++++ b/package.json
+@@ -5,7 +5,8 @@
+     "build": "node build.mjs",
+     "test:master-validation": "node tests/master-model-validation.test.mjs",
+     "db:generate": "drizzle-kit generate",
+-    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack && npm run test:c2 && npm run test:credit-window",
++    "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack && npm run test:c2 && npm run test:credit-window && npm run test:source-recovery",
++    "test:source-recovery": "node --test tests/source-recovery.test.mjs",
+     "test:credit-window": "node --test tests/credit-capture-window.test.mjs tests/refresh-persistence.test.mjs tests/refresh-resume.test.mjs",
+     "test:remediation": "node tests/master-remediation.test.mjs",
+     "test:qualified-output": "node tests/qualified-output.test.mjs",
+diff --git a/scripts/collect-source-research.mjs b/scripts/collect-source-research.mjs
+index 359c57b..6b9790c 100644
+--- a/scripts/collect-source-research.mjs
++++ b/scripts/collect-source-research.mjs
+@@ -6,16 +6,16 @@ let newsModule = '__OFFICIAL_NEWS_MODULE__';
+ if(newsModule==='__OFFICIAL_NEWS_MODULE__')newsModule=await readFile(new URL('../worker/official-news.js',import.meta.url),'utf8');
+ if(sourceModule==='__SOURCE_RESEARCH_MODULE__')sourceModule=await readFile(new URL('../worker/source-research.js',import.meta.url),'utf8');
+ const isDate=value=>{const t=Date.parse(`${value}T00:00:00Z`);return /^\d{4}-\d{2}-\d{2}$/.test(value)&&Number.isFinite(t)&&new Date(t).toISOString().slice(0,10)===value;};
+-const {SOURCE_FEED_REGISTRY,parseSourceFeed}=new Function('officialImportDate',sourceModule+'\nreturn {SOURCE_FEED_REGISTRY,parseSourceFeed};')(isDate);
++const {SOURCE_FEED_REGISTRY,collectSourceFeed}=new Function('officialImportDate',sourceModule+'\nreturn {SOURCE_FEED_REGISTRY,collectSourceFeed};')(isDate);
+ const folder=process.argv[2];if(!folder)throw Error('Usage: node collect-source-research.mjs <payload-folder>');
+ await mkdir(folder,{recursive:true});
+ const results=await Promise.all(Object.entries(SOURCE_FEED_REGISTRY).map(async([key,spec])=>{
+-  try {const response=await fetch(spec.url,{signal:AbortSignal.timeout(25000)});if(!response.ok)throw Error(`HTTP ${response.status}`);const text=await response.text();if(text.length>2500000)throw Error('source_too_large');const records=parseSourceFeed(text,key);return {key,source:spec.url,fetchedAt:new Date().toISOString(),records,content_version:2};}
+-  catch(error){return {key,error:String(error.message||error)};}
++  try {return await collectSourceFeed(key,{timeoutMs:15000});}
++  catch(error){return {key,source:spec.url,error:String(error.message||error),attempts:error.sourceAttempts||[]};}
+ }));
+ const feeds=results.filter(x=>!x.error),errors=results.filter(x=>x.error);
+ if(feeds.length)await writeFile(path.join(folder,'sources.json'),JSON.stringify({schema_version:1,researchFeeds:feeds}));
+-await writeFile(path.join(folder,'source-collection-status.json'),JSON.stringify({checkedAt:new Date().toISOString(),feeds:feeds.map(({key,records})=>({key,records:records.length})),errors}));
++await writeFile(path.join(folder,'source-collection-status.json'),JSON.stringify({checkedAt:new Date().toISOString(),feeds:feeds.map(({key,source,fetchedAt,records,attempts})=>({key,source,fetchedAt,records:records.length,attempts})),errors}));
+ console.log(JSON.stringify({saved:feeds.length,records:feeds.reduce((n,x)=>n+x.records.length,0),errors}));
+ const newsApi=new Function(newsModule+'\nreturn {NEWS_FEEDS,officialNews};')();
+ const newsFeeds=await Promise.all(newsApi.NEWS_FEEDS.map(newsApi.officialNews));
+diff --git a/tests/refresh-resume.test.mjs b/tests/refresh-resume.test.mjs
+index d509f4a..681cec7 100644
+--- a/tests/refresh-resume.test.mjs
++++ b/tests/refresh-resume.test.mjs
+@@ -8,7 +8,7 @@ class DB{
+  prepare(sql){const lease=refreshLeaseStatement(this,sql);if(lease)return lease;return {run:async()=>({success:true}),bind:(...args)=>({all:async()=>({results:this.rows.has(args[0])?[this.rows.get(args[0])]:[]}),run:async()=>{if(this.failKey===args[0])throw Error('synthetic write failure');this.rows.set(args[0],{payload:args[1],updated_at:args[2],expires_at:args[3]});return {success:true};}})}};
+ }
+ let serial=0;
+-async function api(){
++async function api(extra=''){
+  const hooks=`
+  captureFullMarketSnapshot=async env=>{env.calls.push('scanner');if(env.holdScanner)await env.holdScanner;return {status:'collecting_history',date:'2026-10-21',sessions:71,captured:{total:600},universe:{total:600}};};
+  runSiteModule=async id=>({id,status:'ok',observations:[]});
+@@ -17,7 +17,7 @@ async function api(){
+  masterModelResponse=async(request,env)=>{const id=new URL(request.url).searchParams.get('id');env.calls.push('gate:'+id);return Response.json({status:'partial',symbol:id,gates:[{id:'gate6',status:'warning'}],riskPermission:'not_cleared'});};
+  export {boundedSiteRefreshStep,claimSiteRefreshLease};
+  // isolated-module-${serial++}`;
+- return import('data:text/javascript;base64,'+Buffer.from(source+hooks).toString('base64'));
++ return import('data:text/javascript;base64,'+Buffer.from(source+hooks+'\n'+extra).toString('base64'));
+ }
+ const request=(path='status',headers)=>new Request('https://site.test/api/automation/'+path,{method:path==='refresh-all'?'POST':'GET',headers});
+ const env=()=>({DB:new DB(),calls:[]});
+@@ -68,6 +68,19 @@ test('a failed initial save is not acknowledged with HTTP202',async()=>{
+ test('a bounded step times out without waiting for an indefinitely stuck source',async()=>{
+  const module=await api();await assert.rejects(module.boundedSiteRefreshStep(()=>new Promise(()=>{}),5),/step_timeout/);
+ });
++test('pending Tiingo batches retain the same durable module cursor and runId until ready',async()=>{
++ const e=env(),module=await api(`let sectorReads=0;runSiteModule=async id=>({status:id==='usSectors'&&++sectorReads<4?'pending':'ok',observations:[]});`);
++ const started=await(await module.default.fetch(request('refresh-all'),e,{})).json();
++ let pending=0,done;
++ for(let i=0;i<60;i++){const r=await poll(module,e);assert.equal(r.data.runId,started.runId);if(r.data.modules?.usSectors?.status==='pending'){pending++;assert.equal(r.data.checkpoint.stage,'modules');assert.equal(r.data.checkpoint.index,5);}if(r.data.completedAt){done=r.data;break;}}
++ assert.equal(pending,3);assert.equal(done.modules.usSectors.status,'ok');assert.equal(done.gateAudits.filter(a=>a.recorded).length,4);
++});
++test('perpetually pending sectors are bounded, preserve the gap and do not prevent other Gate saves',async()=>{
++ const e=env(),module=await api(`runSiteModule=async id=>({status:id==='usSectors'?'pending':'ok',observations:[]});`);
++ await module.default.fetch(request('refresh-all'),e,{});let done;
++ for(let i=0;i<65;i++){const r=await poll(module,e);if(r.data.completedAt){done=r.data;break;}}
++ assert.equal(done.moduleAttempts.usSectors,30);assert.equal(done.modules.usSectors.status,'partial');assert.match(done.modules.usSectors.error,/分批/);assert.equal(done.gateAudits.filter(a=>a.recorded).length,4);
++});
+ test('simultaneous POST starts cannot create competing runIds',async()=>{
+  const e=env(),module=await api();
+  const responses=await Promise.all([module.default.fetch(request('refresh-all'),e,{}),module.default.fetch(request('refresh-all'),e,{})]);
+diff --git a/tests/source-recovery.test.mjs b/tests/source-recovery.test.mjs
+new file mode 100644
+index 0000000..5f2236e
+--- /dev/null
++++ b/tests/source-recovery.test.mjs
+@@ -0,0 +1,60 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {readFileSync} from 'node:fs';
++import {refreshPrivateMarket,SYMBOLS} from '../worker/tiingo-market.mjs';
++
++test('cold Tiingo batches resume all 22 symbols, persist each success and never reserve quota twice',async()=>{
++ const values=new Map(),reservations=[],calls=[];
++ const options={token:'synthetic-only',expectedSession:'2026-10-22',now:new Date('2026-10-23T06:30:00Z'),maxRequests:1,
++  cache:{get:async k=>values.get(k),set:async(k,v)=>{values.set(k,v);return true;}},
++  quota:{reserve:async symbol=>{reservations.push(symbol);return true;}},
++  fetchImpl:async url=>{calls.push(url);return Response.json([{date:'2026-10-21T00:00:00Z',adjClose:100},{date:'2026-10-22T00:00:00Z',adjClose:101}]);}};
++ let payload;
++ for(let i=0;i<22;i++){
++  payload=await refreshPrivateMarket(options);
++  assert.equal(payload.requestCount,1);assert.equal(payload.pendingSymbols.length,21-i);
++  assert.equal(values.size,i+1,'unattempted symbols are not overwritten by invented failures');
++ }
++ assert.equal(payload.pending,false);assert.equal(Object.values(payload.snapshots).filter(x=>x.status==='ok').length,22);
++ assert.equal(new Set(reservations).size,22);assert.equal(calls.length,22);
++ const reread=await refreshPrivateMarket(options);assert.equal(reread.requestCount,0);assert.equal(reread.pending,false);assert.equal(calls.length,22);
++ assert.deepEqual(reservations,SYMBOLS);
++});
++test('Tiingo authentication failure stops spending quota and completes explicitly as failed rather than pending forever',async()=>{
++ const values=new Map();let calls=0,reserved=0;
++ const result=await refreshPrivateMarket({token:'synthetic-only',expectedSession:'2026-10-22',now:new Date('2026-10-23T06:30:00Z'),maxRequests:1,
++  cache:{get:async k=>values.get(k),set:async(k,v)=>{values.set(k,v);return true;}},quota:{reserve:async()=>{reserved++;return true;}},fetchImpl:async()=>{calls++;return new Response('',{status:401});}});
++ assert.equal(calls,1);assert.equal(reserved,1);assert.equal(result.pending,false);assert.equal(result.snapshots.SPY.status,'source_failed');
++ assert.ok(Object.values(result.snapshots).every(r=>r.reasonCode==='unauthorized'));
++});
++
++const source=readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');
++const api=await import('data:text/javascript;base64,'+Buffer.from(source+'\nexport {parseSourceFeed,parseSourceReportPage,freshSourceFeed};').toString('base64'));
++test('official consumer category HTML becomes dated excerpts; missing dates and foreign links remain rejected',()=>{
++ const item=(link,date)=>`<h3><a class="title-link" href="${link}">Notebook demand report</a></h3><h4><strong>${date}</strong></h4><p>Public category excerpt.</p>`;
++ const rows=api.parseSourceReportPage(item('/presscenter/news/20261008-13264.html','8 October 2026')+item('/presscenter/news/20261007-13263.html','')+item('https://foreign.test/report','8 October 2026'),'consumer');
++ assert.equal(rows.length,1);assert.equal(rows[0].source_date,'2026-10-08');assert.equal(rows[0].read_state,'category_excerpt');assert.equal(rows[0].source_excerpt,'Public category excerpt.');
++ assert.throws(()=>api.parseSourceFeed('<rss><channel></channel></rss>','consumer'),/empty_report_feed/);
++});
++test('imported feed capture time must be recent independently of cache expiry',()=>{
++ const now=Date.parse('2026-10-23T06:30:00Z');
++ const saved={fresh:true,payload:{key:'semiconductors',status:'ok',captureMode:'external_collector',content_version:2,fetchedAt:'2026-10-23T06:00:00Z',records:[]}};
++ assert.equal(api.freshSourceFeed(saved,'semiconductors',now),false,'empty reports are not usable snapshots');
++ saved.payload.records=api.parseSourceFeed('<rss><channel><item><title>Memory report</title><link>https://www.trendforce.com/presscenter/news/20261008-13264.html</link><pubDate>Thu, 8 Oct 2026 08:00:00 GMT</pubDate></item></channel></rss>','semiconductors');
++ assert.equal(api.freshSourceFeed(saved,'semiconductors',now),true);
++ saved.payload.fetchedAt='2026-10-22T00:00:00Z';assert.equal(api.freshSourceFeed(saved,'semiconductors',now),false);
++});
++test('consumer collection records an empty RSS failure before a successful category-page fallback',async()=>{
++ const mod=readFileSync(new URL('../worker/source-research.js',import.meta.url),'utf8');
++ const {collectSourceFeed}=new Function('officialImportDate',mod+'\nreturn {collectSourceFeed};')(s=>/^\d{4}-\d{2}-\d{2}$/.test(s));
++ const result=await collectSourceFeed('consumer',{fetchImpl:async url=>new Response(url.includes('/feed/')?'<rss><channel/></rss>':'<h3><a href="/presscenter/news/20261008-13264.html">Notebook report</a></h3><h4>8 October 2026</h4><p>Public excerpt.</p>')});
++ assert.equal(result.records.length,1);assert.equal(result.attempts.length,2);assert.equal(result.attempts[0].error,'empty_report_feed');assert.equal(result.attempts[1].status,'ok');assert.equal(result.source,'https://www.trendforce.com/presscenter/news/Consumer%20Electronics');
++});
++test('forcing the stock pool consumes a fresh external import without a redundant blocked Worker fetch',async()=>{
++ const mod=readFileSync(new URL('../worker/source-research.js',import.meta.url),'utf8'),now=new Date().toISOString();let calls=0;
++ const make=new Function('officialImportDate','readRuntimeCache','writeRuntimeCache','fetch',mod+'\nreturn {fetchSourceFeed};');
++ const saved={fresh:true,payload:{key:'semiconductors',status:'ok',source:'https://www.trendforce.com/feed/Semiconductors.html',captureMode:'external_collector',content_version:2,fetchedAt:now,records:[{id:'official-report',kind:'industry_report',title:'Memory report',source_url:'https://www.trendforce.com/presscenter/news/20261008-13264.html',source_date:'2026-10-08'}]}};
++ const local=make(s=>/^\d{4}-\d{2}-\d{2}$/.test(s),async()=>saved,async()=>true,async()=>{calls++;return new Response('',{status:403});});
++ const result=await local.fetchSourceFeed('semiconductors',{},true);assert.equal(calls,0);assert.equal(result.status,'ok');assert.equal(result.fetchedAt,now);assert.equal(result.cache,'fresh');
++ saved.payload.fetchedAt='2020-01-01T00:00:00Z';const expired=await local.fetchSourceFeed('semiconductors',{},true);assert.equal(calls,1);assert.equal(expired.status,'stale');assert.equal(expired.fetchedAt,'2020-01-01T00:00:00Z');assert.match(expired.error,/403/);
++});
+diff --git a/worker/data-import.js b/worker/data-import.js
+index 8ef337e..a2cf124 100644
+--- a/worker/data-import.js
++++ b/worker/data-import.js
+@@ -73,9 +73,9 @@ async function officialDataImport(request, env) {
+     if((input.series?.length||0)>5||(input.marketSnapshots?.length||0)>5||(input.companies?.length||0)>10||(input.researchFeeds?.length||0)>12)throw Error('batch_too_large');
+     for(const item of input.researchFeeds||[]) {
+       const spec=SOURCE_FEED_REGISTRY[item.key];
+-      if(!spec||item.source!==spec.url||!Array.isArray(item.records)||item.records.length>5000||item.records.some(row=>!validSourceRecord(row,item.key)))throw Error('invalid_research_feed');
++      if(!spec||!validSourceFeedUrl(item.key,item.source)||!Array.isArray(item.records)||item.records.length>5000||spec.kind==='industry_report'&&!item.records.length||item.records.some(row=>!validSourceRecord(row,item.key)))throw Error('invalid_research_feed');
+       const fetched=Date.parse(item.fetchedAt);if(!Number.isFinite(fetched)||fetched>now.getTime()+60000||now.getTime()-fetched>36*3600000)throw Error('invalid_research_capture');
+-      researchFeeds.push({...item,status:'ok',error:null});
++      researchFeeds.push({...item,status:'ok',error:null,captureMode:'external_collector'});
+     }
+     for(const item of input.series || []) {
+       if(!OFFICIAL_IMPORT_SERIES.has(item.id))throw Error('invalid_series');
+diff --git a/worker/macro.js b/worker/macro.js
+index f1225a3..b519e34 100644
+--- a/worker/macro.js
++++ b/worker/macro.js
+@@ -1298,7 +1298,7 @@ async function runSiteModule(id, start) {
+     try {
+       return await Promise.race([
+         start().then(async response => ({ response, payload: await response.json() })),
+-        new Promise((_, reject) => { timer = setTimeout(() => reject(Error('模組回應逾時；保留其他巡檢結果並於下次排程重試')), SITE_AUTO_REFRESH_MODULE_TIMEOUT_MS); }),
++        new Promise((_, reject) => { timer = setTimeout(() => reject(Error('模組回應逾時；保留其他巡檢結果並於下次排程重試')), id==='usSectors'?SITE_AUTO_REFRESH_STEP_TIMEOUT_MS:SITE_AUTO_REFRESH_MODULE_TIMEOUT_MS); }),
+       ]);
+     } finally { clearTimeout(timer); }
+   };
+@@ -1405,6 +1405,11 @@ async function executeFullSiteRefresh(request, env, ctx, run, leaseToken) {
+   }
+   if(step.stage==='modules'){
+     const [id,start]=modules[step.index];run.modules[id]=await runSiteModule(id,start);
++    if(id==='usSectors'&&run.modules[id].status==='pending'){
++      run.moduleAttempts={...run.moduleAttempts,[id]:(run.moduleAttempts?.[id]||0)+1};
++      if(run.moduleAttempts[id]<30)return commit();
++      run.modules[id]={...run.modules[id],status:'partial',error:'板塊分批更新尚未完成；保留缺項並繼續其餘巡檢'};
++    }
+     run.checkpoint=step.index+1<modules.length?{version:1,stage:'modules',index:step.index+1}:{version:1,stage:'stocks',index:0};
+     if(run.checkpoint.stage==='stocks')run.status='updating_stocks';return commit();
+   }
+diff --git a/worker/source-research.js b/worker/source-research.js
+index d77d346..abdf54e 100644
+--- a/worker/source-research.js
++++ b/worker/source-research.js
+@@ -6,7 +6,7 @@ const SOURCE_FEED_REGISTRY = {
+   semiconductors: {url:'https://www.trendforce.com/feed/Semiconductors.html',name:'TrendForce 半導體研究',kind:'industry_report'},
+   display: {url:'https://www.trendforce.com/feed/Display.html',name:'TrendForce 顯示器研究',kind:'industry_report'},
+   energy: {url:'https://www.trendforce.com/feed/Energy.html',name:'TrendForce 能源研究',kind:'industry_report'},
+-  consumer: {url:'https://www.trendforce.com/feed/Consumer_electronics.html',name:'TrendForce 消費電子研究',kind:'industry_report'},
++  consumer: {url:'https://www.trendforce.com/feed/Consumer_electronics.html',fallbackUrls:['https://www.trendforce.com/presscenter/news/Consumer%20Electronics'],name:'TrendForce 消費電子研究',kind:'industry_report'},
+   steel: {url:'https://worldsteel.org/feed/',name:'世界鋼鐵協會產業資料',kind:'industry_report'},
+   aviation: {url:'https://www.iata.org/api/rss/pressrelease',name:'IATA 航空市場資料',kind:'industry_report'},
+ };
+@@ -55,10 +55,47 @@ function parseSourceFeed(text,key) {
+       if(record.source_excerpt)record.summary=`RSS 原文摘要：${record.source_excerpt}；僅作產業研究參考，未核對全文，不替代公司指引或 EPS 共識。`;
+       if(validSourceRecord(record,key))records.push(record);
+     }
+-    if(blocks.length&&!records.length)throw Error('no_valid_report_dates');
++    if(!blocks.length)throw Error('empty_report_feed');
++    if(!records.length)throw Error('no_valid_report_dates');
+   }
+   return [...new Map(records.map(row=>[row.id,row])).values()].sort((a,b)=>b.source_date.localeCompare(a.source_date));
+ }
++function validSourceFeedUrl(key,url){const spec=SOURCE_FEED_REGISTRY[key];return !!spec&&[spec.url,...(spec.fallbackUrls||[])].includes(url);}
++function parseSourceReportPage(text,key){
++  const spec=SOURCE_FEED_REGISTRY[key];if(!spec?.fallbackUrls?.length)throw Error('unsupported_report_page');
++  const records=[];
++  const pattern=/<h3\b[^>]*>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>[\s\S]*?<\/h3>\s*<h4\b[^>]*>([\s\S]*?)<\/h4>(?:\s*<p\b[^>]*>([\s\S]*?)<\/p>)?/gi;
++  for(const match of text.matchAll(pattern)){
++    const dateText=sourceText(match[3]),timestamp=Date.parse(dateText);
++    if(!/^\d{1,2} [A-Za-z]+ 20\d{2}$/.test(dateText)||!Number.isFinite(timestamp)||timestamp>Date.now())continue;
++    const date=new Date(timestamp).toISOString().slice(0,10),url=new URL(match[1],spec.url).href;
++    if(!url.includes('/'+date.replaceAll('-','')+'-'))continue;
++    const excerpt=sourceText(match[4],360),row={id:url,kind:'industry_report',title:sourceText(match[2],200),source_url:url,source_date:date,published_at:null,date_precision:'day',provider:spec.name,validation_status:'VERIFIED_SOURCE',source_excerpt:excerpt,read_state:excerpt?'category_excerpt':'metadata_only',summary:excerpt?`官方分類頁原文摘要：${excerpt}；僅作產業研究參考，未核對全文，不替代公司指引或EPS共識。`:'官方分類頁標題與發布日；未核對全文，不替代公司指引或EPS共識。'};
++    if(validSourceRecord(row,key))records.push(row);
++  }
++  if(!records.length)throw Error('no_valid_report_page_records');
++  return [...new Map(records.map(r=>[r.id,r])).values()].sort((a,b)=>b.source_date.localeCompare(a.source_date));
++}
++async function collectSourceFeed(key,{fetchImpl=fetch,timeoutMs=9000}={}){
++  const spec=SOURCE_FEED_REGISTRY[key];if(!spec)throw Error('unknown_source');
++  const attempts=[];
++  for(const source of [spec.url,...(spec.fallbackUrls||[])]){
++    let httpStatus=null;
++    try{
++      const response=await fetchImpl(source,{headers:{Accept:spec.kind==='industry_report'?'application/rss+xml,application/xml,text/html':'application/json'},signal:AbortSignal.timeout(timeoutMs)});httpStatus=response.status;
++      if(!response.ok)throw Error(`HTTP ${httpStatus}`);
++      const text=await response.text();if(text.length>2500000)throw Error('source_too_large');
++      const records=source===spec.url?parseSourceFeed(text,key):parseSourceReportPage(text,key);
++      attempts.push({source,httpStatus,status:'ok',records:records.length});
++      return {key,source,primarySource:spec.url,fetchedAt:new Date().toISOString(),records,status:'ok',error:null,attempts,content_version:2};
++    }catch(error){attempts.push({source,httpStatus,status:'error',error:String(error.message||error).slice(0,160)});}
++  }
++  throw Object.assign(Error(attempts.map(a=>a.error).join('; ')),{sourceAttempts:attempts});
++}
++function freshSourceFeed(saved,key,now=Date.now()){
++  const row=saved?.payload,captured=Date.parse(row?.fetchedAt||'');
++  return saved?.fresh===true&&row?.status==='ok'&&row?.content_version===2&&validSourceFeedUrl(key,row.source||SOURCE_FEED_REGISTRY[key]?.url)&&Number.isFinite(captured)&&captured<=now+60000&&now-captured<=6*3600000&&Array.isArray(row.records)&&(SOURCE_FEED_REGISTRY[key]?.kind==='company_announcement'||row.records.length>0)&&row.records.every(r=>validSourceRecord(r,key));
++}
+ function sourceIndustryProfile(issuer) {
+   const code=String(issuer.industry_code||'').padStart(2,'0');
+   const memory=new Set(['8299','5289','2408','2344','3260','4967','2451']);
+@@ -74,21 +111,18 @@ function sourceIndustryProfile(issuer) {
+ }
+ async function fetchSourceFeed(key,env,force=false) {
+   const cacheKey=`source-feed:v1:${key}`,saved=await readRuntimeCache(env,cacheKey);
+-  if(saved?.fresh&&!force&&saved.payload.content_version===2)return {...saved.payload,cache:'fresh'};
++  if(freshSourceFeed(saved,key)&&(!force||saved.payload.captureMode==='external_collector'))return {...saved.payload,cache:'fresh'};
+   if(sourceFeedTasks.has(key))return sourceFeedTasks.get(key);
+   const task=(async()=>{
+     const spec=SOURCE_FEED_REGISTRY[key],fetchedAt=new Date().toISOString();
+     try {
+-      const response=await fetch(spec.url,{headers:{Accept:spec.kind==='industry_report'?'application/rss+xml,application/xml,text/xml':'application/json'},signal:AbortSignal.timeout(9000)});
+-      if(!response.ok)throw Error(`HTTP ${response.status}`);
+-      const text=await response.text();if(text.length>2500000)throw Error('source_too_large');
+-      const records=parseSourceFeed(text,key),payload={key,source:spec.url,fetchedAt,records,status:'ok',error:null,content_version:2};
++      const payload=await collectSourceFeed(key);
+       if(!await writeRuntimeCache(env,cacheKey,payload,6*3600000))throw Error('source_storage_failed');
+       return payload;
+     }catch(error){
+       const latest=await readRuntimeCache(env,cacheKey);
+-      if(latest?.fresh&&(!saved||Date.parse(latest.updatedAt)>Date.parse(saved.updatedAt)))return {...latest.payload,cache:'external_saved',primaryError:String(error.message||error).slice(0,160)};
+-      return {key,source:spec.url,fetchedAt:saved?.payload?.fetchedAt||null,records:saved?.payload?.records||[],status:saved?.payload?'stale':'source_error',error:String(error.message||error).slice(0,160)};
++      if(freshSourceFeed(latest,key)&&(!saved||Date.parse(latest.updatedAt)>Date.parse(saved.updatedAt)))return {...latest.payload,cache:'external_saved',primaryError:String(error.message||error).slice(0,160)};
++      return {key,source:spec.url,fetchedAt:saved?.payload?.fetchedAt||null,records:saved?.payload?.records||[],status:saved?.payload?'stale':'source_error',error:String(error.message||error).slice(0,160),attempts:error.sourceAttempts||[]};
+     }
+   })().finally(()=>sourceFeedTasks.delete(key));sourceFeedTasks.set(key,task);return task;
+ }
+@@ -112,7 +146,7 @@ async function collectStockSources(id,env,force=false) {
+   const roster=await readRuntimeCache(env,'market-official-universe:v1');
+   const peers=(roster?.payload?.rows||[]).filter(row=>row.id!==id&&(issuer.industry_code?row.industry_code===issuer.industry_code:row.industry===issuer.industry)).slice(0,8).map(row=>({symbol:row.id,name:row.name,industry:row.industry,relation:'同名冊產業候選；尚未核對直接競爭關係',production_eligible:false}));
+   const errors=feeds.filter(feed=>feed.error).map(feed=>({source:feed.source,error:feed.error,stale:feed.status==='stale'}));
+-  const payload={version:SOURCE_RESEARCH_VERSION,content_version:2,symbol:id,name:issuer.name,industry:issuer.industry,identitySource:issuer.identitySource,identityStale:issuer.identityStale,profile:{label:profile.label,basis:profile.basis},checkedAt:new Date().toISOString(),status:errors.length?'partial':industry.length?'sources_ready':'partial',records,errors,feeds:feeds.map(({key,source,fetchedAt,status,error})=>({key,source,fetchedAt,status,error})),peerCandidates:peers,gaps:[...(!profile.category?['此產業的研究報告來源尚未接入']:industry.length?[]:['目前原始 RSS 未找到符合產品分類的產業報告']),...(!announcements.length?['每日重大訊息來源本次無此公司公告；不代表沒有歷史法說或風險']:[]),'2026／2027 可追溯 EPS 共識及至少三家直接同業估值仍待核對','八期事前公司指引與財報前 EPS 共識尚未由此來源建立'],gatesPromoted:false};
++  const payload={version:SOURCE_RESEARCH_VERSION,content_version:2,symbol:id,name:issuer.name,industry:issuer.industry,identitySource:issuer.identitySource,identityStale:issuer.identityStale,profile:{label:profile.label,basis:profile.basis},checkedAt:new Date().toISOString(),status:errors.length?'partial':industry.length?'sources_ready':'partial',records,errors,feeds:feeds.map(({key,source,fetchedAt,status,error,attempts})=>({key,source,fetchedAt,status,error,attempts})),peerCandidates:peers,gaps:[...(!profile.category?['此產業的研究報告來源尚未接入']:industry.length?[]:['目前原始來源未找到符合產品分類的產業報告']),...(!announcements.length?['每日重大訊息來源本次無此公司公告；不代表沒有歷史法說或風險']:[]),'2026／2027 可追溯 EPS 共識及至少三家直接同業估值仍待核對','八期事前公司指引與財報前 EPS 共識尚未由此來源建立'],gatesPromoted:false};
+   const remaining=feeds.map(feed=>6*3600000-(Date.now()-Date.parse(feed.fetchedAt))).filter(Number.isFinite);
+   const ttl=errors.length?5*60000:Math.max(60000,Math.min(6*3600000,...remaining));
+   if(!await writeRuntimeCache(env,`${SOURCE_RESEARCH_VERSION}:${id}`,payload,ttl))throw Error('research_storage_failed');
+diff --git a/worker/tiingo-market.mjs b/worker/tiingo-market.mjs
+index f20ab34..3416049 100644
+--- a/worker/tiingo-market.mjs
++++ b/worker/tiingo-market.mjs
+@@ -59,13 +59,17 @@ export function breadth(snapshots){
+   const spyAvailable=sma200(spy)!==null;
+   return {priceField:PRICE_FIELD,sectorBreadth:{...sectors,complete:sectors.coverage===11},globalBreadth:{...global,spyAvailable,ratio:spyAvailable&&global.coverage?global.above/global.coverage:null,denominator:spyAvailable?global.coverage:null,complete:global.coverage===10},equalWeightRatio20d,ratioObservedAt,ratioDirection:equalWeightRatio20d===null?'missing':equalWeightRatio20d>0?'rising':equalWeightRatio20d<0?'falling':'flat'};
+ }
+-export async function refreshPrivateMarket({token,expectedSession,cache,quota,now=new Date(),fetchImpl=fetch}){
++export async function refreshPrivateMarket({token,expectedSession,cache,quota,now=new Date(),fetchImpl=fetch,maxRequests=Infinity}){
+   if(!cache?.get||!cache?.set||!quota?.reserve)throw Error('PRIVATE_PERSISTENT_CACHE_AND_ATOMIC_QUOTA_REQUIRED');
+-  const snapshots={};let requests=0,stopCode=null;
++  if(maxRequests!==Infinity&&(!Number.isInteger(maxRequests)||maxRequests<1))throw Error('INVALID_REQUEST_BATCH_LIMIT');
++  const snapshots={},pendingSymbols=[];let requests=0,stopCode=null;
+   for(const symbol of SYMBOLS){
+     const old=await cache.get(`tiingo:${symbol}`);
+     if(old?.status==='ok'&&old.observedAt===expectedSession&&old.priceField===PRICE_FIELD){snapshots[symbol]=selectSession(old,expectedSession);continue;}
+     if(old?.expectedSession===expectedSession&&Date.parse(old.retryAt)>now.getTime()){snapshots[symbol]=old;continue;}
++    // Leave unattempted symbols untouched in durable storage. A later request
++    // resumes from the per-symbol cache without spending the quota twice.
++    if(token&&!stopCode&&requests>=maxRequests){pendingSymbols.push(symbol);snapshots[symbol]={status:'pending',expectedSession,previous:old||null};continue;}
+     let result;
+     if(!token)result={status:'source_failed',code:'not_configured'};
+     else if(stopCode)result={status:'source_failed',code:stopCode};
+@@ -77,5 +81,5 @@ export async function refreshPrivateMarket({token,expectedSession,cache,quota,no
+     if(!await cache.set(`tiingo:${symbol}`,resolved))throw Error('PRIVATE_CACHE_WRITE_FAILED');
+     snapshots[symbol]=resolved;
+   }
+-  return {provider:PROVIDER,expectedSession,checkedAt:now.toISOString(),snapshots,summary:breadth(snapshots),requestCount:requests};
++  return {provider:PROVIDER,expectedSession,checkedAt:now.toISOString(),snapshots,summary:breadth(snapshots),requestCount:requests,pending:pendingSymbols.length>0,pendingSymbols};
+ }
+diff --git a/worker/tiingo-site.js b/worker/tiingo-site.js
+index be22cfa..76ead1e 100644
+--- a/worker/tiingo-site.js
++++ b/worker/tiingo-site.js
+@@ -44,8 +44,8 @@ async function refreshTiingoSite(env,now=Date.now()){
+     const expectedSession=US_SECTOR_SESSION.expectedLatestSession(now);
+     store=await TIINGO_STORE.createPrivateStore({db:env.DB,read:key=>readRuntimeCache(env,key),write:(key,value,ttl)=>writeRuntimeCache(env,key,value,ttl)});
+     owner=crypto.randomUUID();
+-    if(!await store.acquire(owner,now))return {...previous?.payload,pending:!previous?.payload,refreshing:true,fetchError:'PRIVATE_REFRESH_IN_PROGRESS'};
+-    const payload=await TIINGO_MARKET.refreshPrivateMarket({token:env.TIINGO_API_TOKEN,expectedSession,now:new Date(now),cache:store.cache,quota:store.quota});
++    if(!await store.acquire(owner,now))return {...previous?.payload,pending:true,refreshing:true,fetchError:'PRIVATE_REFRESH_IN_PROGRESS'};
++    const payload=await TIINGO_MARKET.refreshPrivateMarket({token:env.TIINGO_API_TOKEN,expectedSession,now:new Date(now),cache:store.cache,quota:store.quota,maxRequests:1});
+     if(!await writeRuntimeCache(env,TIINGO_PRIVATE_KEY,payload,370*86400000))throw Error('PRIVATE_CACHE_WRITE_FAILED');
+     return payload;
+   }catch{return {...previous?.payload,pending:false,fetchError:'PRIVATE_REFRESH_FAILED'};}
+@@ -57,16 +57,17 @@ async function readUSSectorSnapshot(env={},ctx={},force=false){
+   const saved=await readRuntimeCache(env,TIINGO_PRIVATE_KEY);
+   let payload=saved?.payload;
+   let ready=false;try{const checked=normalizeTiingoSnapshot(payload);ready=TIINGO_MARKET.SYMBOLS.every(id=>checked.status[id].status==='ok');}catch{}
+-  const retryAllowed=!payload?.checkedAt||Date.now()-Date.parse(payload.checkedAt)>=3600000;
++  const retryAllowed=payload?.pending===true||!payload?.checkedAt||Date.now()-Date.parse(payload.checkedAt)>=3600000;
+   if((force||!ready&&retryAllowed)&&(force||typeof ctx.waitUntil==='function')){
+     if(!tiingoSiteTask)tiingoSiteTask=refreshTiingoSite(env).finally(()=>{tiingoSiteTask=null;});
+     if(force)payload=await tiingoSiteTask;
+     else if(typeof ctx.waitUntil==='function')try{ctx.waitUntil(tiingoSiteTask);}catch{}
+   }
+   let primary;
+-  try{primary=normalizeTiingoSnapshot(payload);}catch(error){return {...fallback,sourceRole:'備援來源',primaryError:payload?.fetchError||error.message,tiingoRefreshing:!!tiingoSiteTask};}
+-  if(['SPY',...TIINGO_MARKET.SECTORS].some(id=>primary.status[id].status!=='ok'))return {...fallback,sourceRole:'備援來源',primaryError:'TIINGO_PARTIAL_SECTOR_HISTORY',privateBreadthSource:primary};
++  const progress={pending:payload?.pending===true,tiingoRefreshing:!!tiingoSiteTask||payload?.pending===true,pendingSymbols:payload?.pendingSymbols||[]};
++  try{primary=normalizeTiingoSnapshot(payload);}catch(error){return {...fallback,...progress,sourceRole:'備援來源',primaryError:payload?.fetchError||error.message};}
++  if(['SPY',...TIINGO_MARKET.SECTORS].some(id=>primary.status[id].status!=='ok'))return {...fallback,...progress,sourceRole:'備援來源',primaryError:'TIINGO_PARTIAL_SECTOR_HISTORY',privateBreadthSource:primary};
+   const comparison=compareMarketProviders(primary,fallback);
+-  if(comparison.status==='blocked')return {...fallback,sourceRole:'備援來源',primaryError:'TIINGO_CROSS_SOURCE_DIFFERENCE',sourceComparison:comparison};
+-  return {...primary,sourceRole:'主要來源',sourceComparison:comparison};
++  if(comparison.status==='blocked')return {...fallback,...progress,sourceRole:'備援來源',primaryError:'TIINGO_CROSS_SOURCE_DIFFERENCE',sourceComparison:comparison};
++  return {...primary,...progress,sourceRole:'主要來源',sourceComparison:comparison};
+ }
