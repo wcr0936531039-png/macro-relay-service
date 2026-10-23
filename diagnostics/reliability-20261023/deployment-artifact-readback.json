@@ -1,0 +1,40 @@
+{
+  "version": 232,
+  "verification": "GitHub readback compared with exact submitted UTF-8 content",
+  "allExactMatch": true,
+  "files": [
+    {
+      "path": "diagnostics/reliability-20261023/deployment-report.md",
+      "blobSha": "6edb3c455526f130ebca6c1326d54f85ce0a86e5",
+      "exactContentMatch": true
+    },
+    {
+      "path": "diagnostics/reliability-20261023/deployment-identical-live-inputs.json",
+      "blobSha": "df0879c27352d847edc54cde9a724cc6906b6f1e",
+      "exactContentMatch": true
+    },
+    {
+      "path": "diagnostics/reliability-20261023/deployment-readback.json",
+      "blobSha": "281951ab40569ed793119b0ceadf90c4f29db13e",
+      "exactContentMatch": true
+    },
+    {
+      "path": "diagnostics/reliability-20261023/deployment-manifest.json",
+      "blobSha": "86d4eddf207d89d9c2302e5dac82f6bc7993e970",
+      "exactContentMatch": true
+    },
+    {
+      "path": "diagnostics/issue-inventory-20261023/report.md",
+      "blobSha": "6ce629b6be5216592573153d0c6279be1b86ab0a",
+      "exactContentMatch": true
+    },
+    {
+      "path": "diagnostics/latest.md",
+      "blobSha": "8486eea63eb46d388d5fcafab97913198b3075a8",
+      "exactContentMatch": true
+    }
+  ],
+  "liveRunId": "11fa1981-e6b8-49d7-bdb1-5f872c7e458a",
+  "liveRunStatus": "partial",
+  "pending": "Actual next nighttime credit capture and following morning retention"
+}
