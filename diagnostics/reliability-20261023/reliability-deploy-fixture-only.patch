@@ -1,0 +1,38 @@
+--- a/tests/site-automation.test.mjs
++++ b/tests/site-automation.test.mjs
+@@ -46,7 +46,7 @@
+   if (url.includes('dataset=TaiwanStockInfo')) return Response.json({ status: 200, data: universeRows });
+   if (url.includes('/exchangeReport/STOCK_DAY_ALL')) return Response.json(twseRows);
+   if (url.includes('/tpex_mainboard_daily_close_quotes')) return Response.json(tpexRows);
+-  return originalFetch(input, init);
++  return new Response('No upstream test fixture configured', {status:503});
+ };
+ const now = new Date().toISOString(), future = new Date(Date.now() + 86400000).toISOString(), currentDate=now.slice(0,10);
+ const seed = (key, payload, updatedAt = now, expiresAt = future) => db.rows.set(key, {
+@@ -127,7 +127,7 @@
+   if (String(input).includes('dataset=TaiwanStockInfo')) throw new DOMException('The operation was aborted', 'AbortError');
+   if (String(input).includes('/exchangeReport/STOCK_DAY_ALL')) return Response.json(twseRows);
+   if (String(input).includes('/tpex_mainboard_daily_close_quotes')) return Response.json(tpexRows);
+-  return originalFetch(input, init);
++  return new Response('No upstream test fixture configured', {status:503});
+ };
+ response = await worker.fetch(new Request('https://site.test/api/automation/refresh-all', { method: 'POST' }), env, ctx);
+ assert.equal(response.status, 202);
+@@ -149,7 +149,7 @@
+   if (url.includes('/exchangeReport/STOCK_DAY_ALL')) return Response.json(twseRows);
+   if (url.includes('/tpex_mainboard_daily_close_quotes')) throw new DOMException('The operation was aborted', 'AbortError');
+   if (url.includes('/stk_quote_result.php')) return Response.json({ iTotalRecords: tpexLegacyRows.length, aaData: tpexLegacyRows });
+-  return originalFetch(input, init);
++  return new Response('No upstream test fixture configured', {status:503});
+ };
+ response = await worker.fetch(new Request('https://site.test/api/automation/refresh-all', { method: 'POST' }), env, ctx);
+ assert.equal(response.status, 202);
+@@ -170,7 +170,7 @@
+   if (url.includes('dataset=TaiwanStockInfo')) return Response.json({ status: 200, data: universeRows });
+   if (url.includes('/exchangeReport/STOCK_DAY_ALL')) return Response.json(twseRows);
+   if (url.includes('/tpex_mainboard_daily_close_quotes') || url.includes('/stk_quote_result.php')) throw new DOMException('The operation was aborted', 'AbortError');
+-  return originalFetch(input);
++  return new Response('No upstream test fixture configured', {status:503});
+ };
+ const tokenWithoutAllMarketEntitlement = { ...env, FINMIND_API_TOKEN: 'configured' };
+ response = await worker.fetch(new Request('https://site.test/api/automation/refresh-all', { method: 'POST' }), tokenWithoutAllMarketEntitlement, ctx);
