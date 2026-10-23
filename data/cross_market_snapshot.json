@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-23T00:55:55.234361+00:00",
+  "generated_at": "2026-10-23T12:04:54.806743+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -409,7 +409,7 @@
       "unit": "index_points",
       "warnings": [],
       "status": "ok",
-      "fetched_at": "2026-10-23T00:55:55.234361+00:00"
+      "fetched_at": "2026-10-23T12:04:54.806743+00:00"
     },
     "SP500": {
       "history": [
@@ -919,15 +919,10 @@
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-10-23T00:55:55.234361+00:00"
+      "fetched_at": "2026-10-23T12:04:54.806743+00:00"
     },
     "NASDAQCOM": {
       "history": [
-        {
-          "date": "2026-06-01",
-          "value": 27086.81,
-          "available_at": "2026-06-01T20:15:00+00:00"
-        },
         {
           "date": "2026-06-02",
           "value": 27093.9,
@@ -1422,6 +1417,11 @@
           "date": "2026-10-21",
           "value": 26702.86,
           "available_at": "2026-10-21T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-22",
+          "value": 26008.86,
+          "available_at": "2026-10-22T20:15:00+00:00"
         }
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-16",
@@ -1429,7 +1429,7 @@
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-10-23T00:55:55.234361+00:00"
+      "fetched_at": "2026-10-23T12:04:54.806743+00:00"
     },
     "SOX": {
       "history": [
@@ -1930,7 +1930,7 @@
         },
         {
           "date": "2026-10-22",
-          "value": 10731.9775390625,
+          "value": 10731.98046875,
           "available_at": "2026-10-22T20:15:00+00:00"
         }
       ],
@@ -1942,7 +1942,7 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-10-23T00:55:55.234361+00:00"
+      "fetched_at": "2026-10-23T12:04:54.806743+00:00"
     }
   },
   "errors": [],
