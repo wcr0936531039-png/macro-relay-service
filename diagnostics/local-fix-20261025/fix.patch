@@ -1,0 +1,370 @@
+diff --git a/dist/server/index.js b/dist/server/index.js
+index aa5cbc2..59b4bea 100644
+--- a/dist/server/index.js
++++ b/dist/server/index.js
+@@ -599,7 +599,7 @@ async function expandedMacroResponse(env={},ctx={}){
+  if(cached?.fresh)return Response.json(cached.payload,{headers:{'Cache-Control':'private, no-store'}});
+  if(!expandedPending)expandedPending=buildExpandedMacroSnapshot(env).then(async payload=>{expandedCache={at:Date.now(),payload};await writeRuntimeCache(env,key,payload,ttl);return payload}).finally(()=>{expandedPending=null});
+  try{ctx.waitUntil?.(expandedPending.catch(()=>{}))}catch{}
+- return Response.json(cached?.payload?{...markSnapshotStale(cached.payload),refreshing:true,cacheState:'stale_refreshing'}:{checkedAt:new Date().toISOString(),pending:true,rows:[],derived:[]},{headers:{'Cache-Control':'private, no-store'}});
++ return Response.json(cached?.payload?refreshingMacroSnapshot(cached.payload,true):{checkedAt:new Date().toISOString(),pending:true,rows:[],derived:[]},{headers:{'Cache-Control':'private, no-store'}});
+ }
+ // Core CPI source captures are stored in the same durable D1 runtime cache as
+ // macro refreshes. The latest released observations remain dated and auditable
+@@ -2210,7 +2210,7 @@ async function usIndicesResponse(env={},ctx={}) {
+     usIndicesCache={at:Date.now(),payload};await writeRuntimeCache(env,key,payload,ttl);return payload;
+   }).finally(()=>{usIndicesPending=null});
+   try{ctx.waitUntil?.(usIndicesPending.catch(()=>{}))}catch{}
+-  return Response.json(cached?.payload?{...markSnapshotStale(cached.payload),refreshing:true,cacheState:'stale_refreshing'}:{checkedAt:new Date().toISOString(),pending:true,rows:US_INDEXES.map(([id,symbol])=>({id,value:null,date:null,status:'pending',reason:'指數資料正在背景查詢；完成前不納入判讀。',provider:'Yahoo Finance｜延遲日資料',source:`https://finance.yahoo.com/quote/${encodeURIComponent(symbol)}/`}))},{headers:{'Cache-Control':'private, no-store'}});
++  return Response.json(cached?.payload?refreshingMacroSnapshot(cached.payload,true):{checkedAt:new Date().toISOString(),pending:true,rows:US_INDEXES.map(([id,symbol])=>({id,value:null,date:null,status:'pending',reason:'指數資料正在背景查詢；完成前不納入判讀。',provider:'Yahoo Finance｜延遲日資料',source:`https://finance.yahoo.com/quote/${encodeURIComponent(symbol)}/`}))},{headers:{'Cache-Control':'private, no-store'}});
+ }
+ 
+ // Authorized data/label corrections; no new weights or investment thresholds.
+@@ -2337,16 +2337,16 @@ async function retainedTaiwanCreditRows(env,now=Date.now()) {
+   const localDate=new Date(now+8*3600000).toISOString().slice(0,10);
+   return TAIWAN_CREDIT_FIELDS.map(([id,name,unit])=>{
+     const valid=candidates.filter(({row,checkedAt})=>{
+-      const stamp=Date.parse(row.verifiedAt||row.fetchedAt||checkedAt||'');
++      const stamp=Date.parse(row.verifiedAt||row.fetchedAt||'');
+       if(row.id!==id||!['ok','snapshot','stale'].includes(row.status)||!Number.isFinite(row.value)||!officialImportDate(row.date)||row.date>localDate||!Number.isFinite(stamp)||stamp>now)return false;
+       try{const source=new URL(row.source);return source.protocol==='https:'&&!source.username&&!source.password&&!source.port&&['www.twse.com.tw','openapi.twse.com.tw'].includes(source.hostname);}catch{return false;}
+     }).sort((a,b)=>b.row.date.localeCompare(a.row.date)||Date.parse(b.row.verifiedAt||b.row.fetchedAt||b.checkedAt)-Date.parse(a.row.verifiedAt||a.row.fetchedAt||a.checkedAt));
+     const selected=valid[0],deferred={captureDeferred:true,capturePolicy:'after_2230_taipei',capturePolicyReason:'台北時間22:30前不重抓信用統計；保留原觀測日及原核對時間。'};
+     if(!selected)return {id,name,unit,group:'台股市場',value:null,date:null,status:'missing',is_stale:false,reason:'22:30前未抓取信用統計，且沒有可核對的既有觀測。',...deferred};
+-    const {row,checkedAt}=selected,stamp=row.verifiedAt||row.fetchedAt||checkedAt;
++    const {row,checkedAt}=selected,stamp=row.verifiedAt||row.fetchedAt;
+     const candidate={...row,verifiedAt:stamp,status:row.snapshot?'snapshot':'ok',is_stale:false};
+     const current=row.status!=='stale'&&!row.is_stale&&macroObservationCurrent(candidate,{checkedAt,rows:[candidate]},now);
+-    return {...row,verifiedAt:stamp,status:current?'snapshot':'stale',snapshot:true,is_stale:!current,
++    return {...row,verifiedAt:stamp,checkedAt:new Date(now).toISOString(),status:current?'snapshot':'stale',snapshot:true,is_stale:!current,
+       reason:current?row.reason||null:'既有信用觀測已過有效期；22:30後再抓取核對。',...deferred};
+   });
+ }
+@@ -2396,7 +2396,11 @@ function validateTaiwanStatistics(item,now=Date.now()) {
+   if(monthly&&(report?.stat!=='OK'||report.date!==dateKey.slice(0,6)+'01'||!Array.isArray(report.fields)||report.fields[0]!=='日期'||report.fields[2]!=='成交金額'||!Array.isArray(report.data)))throw Error('invalid_statistics_monthly_report');
+   const tradingRows=monthly?report.data.map(row=>({Date:/^\d{3}\/\d{2}\/\d{2}$/.test(String(row[0]))?String(row[0]).replaceAll('/',''):null,TradeValue:row[2]})):Array.isArray(report)?report:[];
+   const sessions=tradingRows.map(row=>({date:twseDate(row.Date),value:numeric(row.TradeValue)})).filter(row=>officialImportDate(row.date)&&Number.isFinite(row.value)&&row.value>0).sort((a,b)=>a.date.localeCompare(b.date));
+-  if(calendarDate!==item.date||sessions.at(-1)?.date!==item.date)throw Error('statistics_not_latest_session');
++  const localDate=new Date(now+8*3600000).toISOString().slice(0,10);
++  // The calendar describes planned sessions. Actual FMTQIK publications also
++  // account for emergency closures; a calendar-only expected day cannot veto
++  // a freshly captured, cross-checked official latest trading day.
++  if(!calendarDate||sessions.some(row=>row.date>localDate)||sessions.at(-1)?.date!==item.date||Date.parse(localDate)-Date.parse(item.date)>20*86400000)throw Error('statistics_not_latest_session');
+   const margin=item.margin,trend=item.marginTrend,summary=item.creditSummary;
+   if(margin?.stat!=='OK'||margin.date!==dateKey||trend?.stat!=='OK'||trend.date!==dateKey||summary?.stat!=='OK'||summary.date!==dateKey)throw Error('statistics_date_mismatch');
+   const table=margin.tables?.find(t=>Array.isArray(t.data)&&t.fields?.includes('今日餘額'));
+@@ -2404,7 +2408,7 @@ function validateTaiwanStatistics(item,now=Date.now()) {
+   const units=metric('融資(交易單位)'),shorts=metric('融券(交易單位)'),amount=metric('融資金額(仟元)');
+   const matched=trend.data?.find(row=>row.date===dateKey);
+   if(!units||!shorts||!amount||![units[3],units[4],shorts[3],shorts[4],amount[3],amount[4],matched?.marginAmt,matched?.marketValue,summary.crdAmt].every(Number.isFinite)||amount[4]<=0||matched.marketValue<=0||summary.crdAmt<=0||Math.abs(amount[4]-matched.marginAmt)>1||units[4]!==matched.marginShr||shorts[4]!==matched.shortShr)throw Error('statistics_value_mismatch');
+-  const verification={source:sources.calendar,year:item.calendar.queryYear,calendar:item.calendar,fetchedAt:item.capturedAt,latestSession:item.date};
++  const verification={source:sources.tradingDates,calendarSource:sources.calendar,year:item.calendar.queryYear,calendar:item.calendar,fetchedAt:item.capturedAt,latestSession:item.date,expectedSession:calendarDate,basis:'official_actual_sessions',calendarDiscrepancy:calendarDate!==item.date,tradingDates:sessions.map(row=>row.date)};
+   const make=(id,name,unit,value,delta,source,detail)=>({id,name,unit,group:'台股市場',date:item.date,value,delta,status:'ok',is_stale:false,snapshot:true,provider:'臺灣證券交易所｜官方統計外部擷取備援',source,fetchedAt:item.capturedAt,verifiedAt:item.capturedAt,sessionVerification:verification,sourceValidation:{state:'passed',method:'官方交易日／休市表核對；MI_MARGN 與 MI_MARGN_TREND 同日餘額交叉驗證'},detail:`${detail}；觀測 ${item.date}，核對 ${item.capturedAt}。`});
+   return [
+     make('TWSE_TOTAL_TRADE_VALUE','集中市場成交值','億元',sessions.at(-1).value/1e8,null,sources.tradingDates,'FMTQIK TradeValue（元）÷ 1 億'),
+@@ -2461,6 +2465,7 @@ function macroObservationCurrent(row,payload,now=Date.now()) {
+   if(releaseObservationCurrent(row.id,row,now))return true;
+   if(cbcMonthlyReleaseCurrent(row,now))return true;
+   const v=row.sessionVerification;
++  if(v&&recentOfficialCapture(v.fetchedAt,now)&&v.latestSession===row.date&&v.basis==='official_actual_sessions'&&v.tradingDates?.at(-1)===row.date&&/^https:\/\/(www\.twse\.com\.tw\/exchangeReport\/FMTQIK\?|openapi\.twse\.com\.tw\/v1\/exchangeReport\/FMTQIK$)/.test(v.source||''))return true;
+   if(v&&recentOfficialCapture(v.fetchedAt,now)&&v.latestSession===row.date&&expectedTaiwanSession(v.calendar,now)===row.date)return true;
+   let limit=SERIES[row.id]?.[3]??(/^TWSE_|^TPEX_/.test(row.id)?5:7);
+   // Preserve the energy relay's bounded publication-lag window across cache
+@@ -2475,6 +2480,9 @@ function macroSnapshotRecent(payload) {
+ }
+ function mergeVerifiedMacroRows(rows,previous) {
+   return rows.map(row=>{
++    // Deferred means no new source check occurred. A response/cache timestamp
++    // must never manufacture a verification timestamp for an inherited row.
++    if(row.captureDeferred)return {...row,verifiedAt:row.verifiedAt||row.fetchedAt||null,checkedAt:new Date().toISOString()};
+     if(['ok','snapshot'].includes(row?.status)&&!row.is_stale&&Number.isFinite(row.value))return {...row,verifiedAt:row.id==='CPILFESL'&&coreCpiVerificationCurrent(row)?row.sourceVerification.checkedAt:row.verifiedAt||row.fetchedAt||new Date().toISOString(),reason:obsoleteObservationReason(row.reason)?null:row.reason};
+     const candidates=previous.flatMap(p=>(p?.rows||[]).filter(old=>old.id===row.id&&macroObservationCurrent(old,p)).map(old=>({old,p}))).sort((a,b)=>b.old.date.localeCompare(a.old.date)||Date.parse(b.old.verifiedAt||b.old.fetchedAt||b.p.checkedAt)-Date.parse(a.old.verifiedAt||a.old.fetchedAt||a.p.checkedAt));
+     const best=candidates[0];
+@@ -6576,7 +6584,7 @@ function summarizeSiteModule(id, payload) {
+     return {status:payload?.pending?'pending':payload?.snapshotStale?'missing':usable===4&&payload?.status==='ok'?'ok':usable?'partial':'missing',usable,total:4,checkedAt:payload?.generated_at||null,observations:entries.map(([key,entry])=>({id:key,name:CM_NAMES[key],date:entry.history?.at(-1)?.date||null,value:entry.history?.at(-1)?.value??null,status:entry.status,source:entry.source,provider:entry.provider})),judgment:[`四個指數歷史來源 ${usable}/4；上市資金歷史 ${payload?.flows?.history?.length||0}/10 日。資料取得狀態不等於健康脫鉤；個股Forward EPS前後共識另行核驗。`],error:payload?.error||null};
+   }
+   const rows = Array.isArray(payload?.rows) ? payload.rows : [];
+-  const usable = rows.filter(row => ['ok', 'snapshot'].includes(row.status)).length;
++  const usable = rows.filter(row => ['ok', 'snapshot'].includes(row.status)&&!row.is_stale&&finiteNumber(row.value)).length;
+   const dates = rows.map(row => row.date).filter(value => /^\d{4}-\d\d-\d\d$/.test(String(value || ''))).sort();
+   const feeds = Array.isArray(payload?.feeds) ? payload.feeds : [];
+   const usableFeeds = feeds.filter(feed => Array.isArray(feed.items) && feed.items.length > 0).length;
+@@ -6772,6 +6780,16 @@ async function executeFullSiteRefresh(request, env, ctx, run, leaseToken) {
+     run.checkpoint=step.index+1<stockBatch.length?{version:1,stage:'gates',index:step.index+1}:{version:1,stage:'finalize',index:0};return commit();
+   }
+   if(step.stage!=='finalize')throw Error('invalid_refresh_checkpoint');
++  // Final summaries are read again through the same routes as the dashboard.
++  // One durable read per poll keeps the lease bounded even for cross-night runs.
++  if(step.index<modules.length){
++    const [id,start]=modules[step.index];
++    const readback=id==='crossMarket'?async()=>Response.json(await readCrossMarketSnapshot(env,ctx)):id==='usSectors'?async()=>Response.json(await readUSSectorSnapshot(env,ctx)):start;
++    const result=await runSiteModule(id,readback);
++    const exhausted=id==='usSectors'&&result.status==='pending'&&run.moduleAttempts?.[id]>=30;
++    run.modules[id]={...result,...(exhausted?{status:'partial',readbackStatus:result.status,error:'板塊分批更新尚未完成；已達本輪重試上限'}:{}),summaryScope:'final_readback',readbackAt:new Date().toISOString()};
++    run.checkpoint={version:1,stage:'finalize',index:step.index+1};return commit();
++  }
+   run.coverage = [
+     { id: 'macro', label: '總經五大維度與既有風險判讀', status: 'automatic', detail: '取數、計算與既有判斷摘要保存；保留灰燈與風險預算規則。' },
+     { id: 'market', label: '美股指數、美元、利率、能源、信用、台股市場與貴金屬', status: 'automatic', detail: '保存觀測值、觀測日、來源、有效狀態；金銀比每日累積。' },
+diff --git a/package.json b/package.json
+index af3520f..cad3063 100644
+--- a/package.json
++++ b/package.json
+@@ -6,7 +6,7 @@
+     "test:master-validation": "node tests/master-model-validation.test.mjs",
+     "db:generate": "drizzle-kit generate",
+     "test": "npm run test:legacy && npm run test:advisory-integration && npm run test:fixpack && npm run test:c2 && npm run test:credit-window && npm run test:source-recovery",
+-    "test:source-recovery": "node --test tests/source-recovery.test.mjs",
++    "test:source-recovery": "node --test tests/source-recovery.test.mjs tests/official-session-regression.test.mjs",
+     "test:credit-window": "node --test tests/credit-capture-window.test.mjs tests/refresh-persistence.test.mjs tests/refresh-resume.test.mjs",
+     "test:remediation": "node tests/master-remediation.test.mjs",
+     "test:qualified-output": "node tests/qualified-output.test.mjs",
+diff --git a/tests/refresh-resume.test.mjs b/tests/refresh-resume.test.mjs
+index 681cec7..08f3f8d 100644
+--- a/tests/refresh-resume.test.mjs
++++ b/tests/refresh-resume.test.mjs
+@@ -39,6 +39,21 @@ test('one failed company source is kept as a gap without losing other companies
+  const e=env();e.failResearch='8299';await (await api()).default.fetch(request('refresh-all'),e,{});
+  const result=await finish(e);assert.equal(result.research[0].status,'source_error');assert.match(result.research[0].errors[0],/synthetic source failure/);assert.equal(result.research.filter(x=>x.status==='ok').length,3);assert.equal(result.gateAudits.filter(x=>x.recorded).length,4);assert.equal(result.status,'partial');
+ });
++test('finalize rereads modules after a cross-night pause and persists the final counts to history',async()=>{
++ const e=env(),module=await api(`runSiteModule=async(id)=>{envPlaceholder;};`.replace('envPlaceholder;',"return {status:'pending',usable:0,total:3};"));
++ await module.default.fetch(request('refresh-all'),e,{});
++ // Simulate an already durable run paused after the last Gate, while source
++ // caches have completed since its initial module snapshots were recorded.
++ const entry=e.DB.rows.get('site-auto-refresh:v1'),run=JSON.parse(entry.payload);
++ run.checkpoint={version:1,stage:'finalize',index:0};run.modules={macro:{status:'pending',usable:0,total:3}};entry.payload=JSON.stringify(run);
++ const refreshed=await api(`runSiteModule=async id=>({status:'ok',usable:3,total:3,observations:[{id:'fresh',status:'ok'}]});`);
++ let result;for(let i=0;i<10;i++){result=(await poll(refreshed,e)).data;if(result.completedAt)break;}
++ assert.ok(result.completedAt);assert.equal(result.runId,run.runId);
++ assert.equal(result.modules.macro.usable,3);assert.equal(result.modules.macro.status,'ok');
++ assert.equal(result.modules.macro.summaryScope,'final_readback');assert.ok(result.modules.macro.readbackAt);
++ const history=JSON.parse(e.DB.rows.get('site-auto-refresh-history:v1').payload);
++ assert.equal(history.runs[0].moduleCounts.macro,'ok');
++});
+ test('a stopped run resumes its original runId even after the former 60-second lock window',async()=>{
+  const e=env(),module=await api();const started=await(await module.default.fetch(request('refresh-all'),e,{})).json();await poll(module,e);
+  const row=e.DB.rows.get('site-auto-refresh:v1'),saved=JSON.parse(row.payload);saved.startedAt='2020-01-02T15:00:00Z';row.payload=JSON.stringify(saved);
+diff --git a/worker/macro.js b/worker/macro.js
+index b519e34..dbc9e95 100644
+--- a/worker/macro.js
++++ b/worker/macro.js
+@@ -1251,7 +1251,7 @@ function summarizeSiteModule(id, payload) {
+     return {status:payload?.pending?'pending':payload?.snapshotStale?'missing':usable===4&&payload?.status==='ok'?'ok':usable?'partial':'missing',usable,total:4,checkedAt:payload?.generated_at||null,observations:entries.map(([key,entry])=>({id:key,name:CM_NAMES[key],date:entry.history?.at(-1)?.date||null,value:entry.history?.at(-1)?.value??null,status:entry.status,source:entry.source,provider:entry.provider})),judgment:[`四個指數歷史來源 ${usable}/4；上市資金歷史 ${payload?.flows?.history?.length||0}/10 日。資料取得狀態不等於健康脫鉤；個股Forward EPS前後共識另行核驗。`],error:payload?.error||null};
+   }
+   const rows = Array.isArray(payload?.rows) ? payload.rows : [];
+-  const usable = rows.filter(row => ['ok', 'snapshot'].includes(row.status)).length;
++  const usable = rows.filter(row => ['ok', 'snapshot'].includes(row.status)&&!row.is_stale&&finiteNumber(row.value)).length;
+   const dates = rows.map(row => row.date).filter(value => /^\d{4}-\d\d-\d\d$/.test(String(value || ''))).sort();
+   const feeds = Array.isArray(payload?.feeds) ? payload.feeds : [];
+   const usableFeeds = feeds.filter(feed => Array.isArray(feed.items) && feed.items.length > 0).length;
+@@ -1447,6 +1447,16 @@ async function executeFullSiteRefresh(request, env, ctx, run, leaseToken) {
+     run.checkpoint=step.index+1<stockBatch.length?{version:1,stage:'gates',index:step.index+1}:{version:1,stage:'finalize',index:0};return commit();
+   }
+   if(step.stage!=='finalize')throw Error('invalid_refresh_checkpoint');
++  // Final summaries are read again through the same routes as the dashboard.
++  // One durable read per poll keeps the lease bounded even for cross-night runs.
++  if(step.index<modules.length){
++    const [id,start]=modules[step.index];
++    const readback=id==='crossMarket'?async()=>Response.json(await readCrossMarketSnapshot(env,ctx)):id==='usSectors'?async()=>Response.json(await readUSSectorSnapshot(env,ctx)):start;
++    const result=await runSiteModule(id,readback);
++    const exhausted=id==='usSectors'&&result.status==='pending'&&run.moduleAttempts?.[id]>=30;
++    run.modules[id]={...result,...(exhausted?{status:'partial',readbackStatus:result.status,error:'板塊分批更新尚未完成；已達本輪重試上限'}:{}),summaryScope:'final_readback',readbackAt:new Date().toISOString()};
++    run.checkpoint={version:1,stage:'finalize',index:step.index+1};return commit();
++  }
+   run.coverage = [
+     { id: 'macro', label: '總經五大維度與既有風險判讀', status: 'automatic', detail: '取數、計算與既有判斷摘要保存；保留灰燈與風險預算規則。' },
+     { id: 'market', label: '美股指數、美元、利率、能源、信用、台股市場與貴金屬', status: 'automatic', detail: '保存觀測值、觀測日、來源、有效狀態；金銀比每日累積。' },
+diff --git a/worker/observation-freshness.js b/worker/observation-freshness.js
+index 2c90b97..0cd91f4 100644
+--- a/worker/observation-freshness.js
++++ b/worker/observation-freshness.js
+@@ -58,16 +58,16 @@ async function retainedTaiwanCreditRows(env,now=Date.now()) {
+   const localDate=new Date(now+8*3600000).toISOString().slice(0,10);
+   return TAIWAN_CREDIT_FIELDS.map(([id,name,unit])=>{
+     const valid=candidates.filter(({row,checkedAt})=>{
+-      const stamp=Date.parse(row.verifiedAt||row.fetchedAt||checkedAt||'');
++      const stamp=Date.parse(row.verifiedAt||row.fetchedAt||'');
+       if(row.id!==id||!['ok','snapshot','stale'].includes(row.status)||!Number.isFinite(row.value)||!officialImportDate(row.date)||row.date>localDate||!Number.isFinite(stamp)||stamp>now)return false;
+       try{const source=new URL(row.source);return source.protocol==='https:'&&!source.username&&!source.password&&!source.port&&['www.twse.com.tw','openapi.twse.com.tw'].includes(source.hostname);}catch{return false;}
+     }).sort((a,b)=>b.row.date.localeCompare(a.row.date)||Date.parse(b.row.verifiedAt||b.row.fetchedAt||b.checkedAt)-Date.parse(a.row.verifiedAt||a.row.fetchedAt||a.checkedAt));
+     const selected=valid[0],deferred={captureDeferred:true,capturePolicy:'after_2230_taipei',capturePolicyReason:'台北時間22:30前不重抓信用統計；保留原觀測日及原核對時間。'};
+     if(!selected)return {id,name,unit,group:'台股市場',value:null,date:null,status:'missing',is_stale:false,reason:'22:30前未抓取信用統計，且沒有可核對的既有觀測。',...deferred};
+-    const {row,checkedAt}=selected,stamp=row.verifiedAt||row.fetchedAt||checkedAt;
++    const {row,checkedAt}=selected,stamp=row.verifiedAt||row.fetchedAt;
+     const candidate={...row,verifiedAt:stamp,status:row.snapshot?'snapshot':'ok',is_stale:false};
+     const current=row.status!=='stale'&&!row.is_stale&&macroObservationCurrent(candidate,{checkedAt,rows:[candidate]},now);
+-    return {...row,verifiedAt:stamp,status:current?'snapshot':'stale',snapshot:true,is_stale:!current,
++    return {...row,verifiedAt:stamp,checkedAt:new Date(now).toISOString(),status:current?'snapshot':'stale',snapshot:true,is_stale:!current,
+       reason:current?row.reason||null:'既有信用觀測已過有效期；22:30後再抓取核對。',...deferred};
+   });
+ }
+@@ -117,7 +117,11 @@ function validateTaiwanStatistics(item,now=Date.now()) {
+   if(monthly&&(report?.stat!=='OK'||report.date!==dateKey.slice(0,6)+'01'||!Array.isArray(report.fields)||report.fields[0]!=='日期'||report.fields[2]!=='成交金額'||!Array.isArray(report.data)))throw Error('invalid_statistics_monthly_report');
+   const tradingRows=monthly?report.data.map(row=>({Date:/^\d{3}\/\d{2}\/\d{2}$/.test(String(row[0]))?String(row[0]).replaceAll('/',''):null,TradeValue:row[2]})):Array.isArray(report)?report:[];
+   const sessions=tradingRows.map(row=>({date:twseDate(row.Date),value:numeric(row.TradeValue)})).filter(row=>officialImportDate(row.date)&&Number.isFinite(row.value)&&row.value>0).sort((a,b)=>a.date.localeCompare(b.date));
+-  if(calendarDate!==item.date||sessions.at(-1)?.date!==item.date)throw Error('statistics_not_latest_session');
++  const localDate=new Date(now+8*3600000).toISOString().slice(0,10);
++  // The calendar describes planned sessions. Actual FMTQIK publications also
++  // account for emergency closures; a calendar-only expected day cannot veto
++  // a freshly captured, cross-checked official latest trading day.
++  if(!calendarDate||sessions.some(row=>row.date>localDate)||sessions.at(-1)?.date!==item.date||Date.parse(localDate)-Date.parse(item.date)>20*86400000)throw Error('statistics_not_latest_session');
+   const margin=item.margin,trend=item.marginTrend,summary=item.creditSummary;
+   if(margin?.stat!=='OK'||margin.date!==dateKey||trend?.stat!=='OK'||trend.date!==dateKey||summary?.stat!=='OK'||summary.date!==dateKey)throw Error('statistics_date_mismatch');
+   const table=margin.tables?.find(t=>Array.isArray(t.data)&&t.fields?.includes('今日餘額'));
+@@ -125,7 +129,7 @@ function validateTaiwanStatistics(item,now=Date.now()) {
+   const units=metric('融資(交易單位)'),shorts=metric('融券(交易單位)'),amount=metric('融資金額(仟元)');
+   const matched=trend.data?.find(row=>row.date===dateKey);
+   if(!units||!shorts||!amount||![units[3],units[4],shorts[3],shorts[4],amount[3],amount[4],matched?.marginAmt,matched?.marketValue,summary.crdAmt].every(Number.isFinite)||amount[4]<=0||matched.marketValue<=0||summary.crdAmt<=0||Math.abs(amount[4]-matched.marginAmt)>1||units[4]!==matched.marginShr||shorts[4]!==matched.shortShr)throw Error('statistics_value_mismatch');
+-  const verification={source:sources.calendar,year:item.calendar.queryYear,calendar:item.calendar,fetchedAt:item.capturedAt,latestSession:item.date};
++  const verification={source:sources.tradingDates,calendarSource:sources.calendar,year:item.calendar.queryYear,calendar:item.calendar,fetchedAt:item.capturedAt,latestSession:item.date,expectedSession:calendarDate,basis:'official_actual_sessions',calendarDiscrepancy:calendarDate!==item.date,tradingDates:sessions.map(row=>row.date)};
+   const make=(id,name,unit,value,delta,source,detail)=>({id,name,unit,group:'台股市場',date:item.date,value,delta,status:'ok',is_stale:false,snapshot:true,provider:'臺灣證券交易所｜官方統計外部擷取備援',source,fetchedAt:item.capturedAt,verifiedAt:item.capturedAt,sessionVerification:verification,sourceValidation:{state:'passed',method:'官方交易日／休市表核對；MI_MARGN 與 MI_MARGN_TREND 同日餘額交叉驗證'},detail:`${detail}；觀測 ${item.date}，核對 ${item.capturedAt}。`});
+   return [
+     make('TWSE_TOTAL_TRADE_VALUE','集中市場成交值','億元',sessions.at(-1).value/1e8,null,sources.tradingDates,'FMTQIK TradeValue（元）÷ 1 億'),
+@@ -182,6 +186,7 @@ function macroObservationCurrent(row,payload,now=Date.now()) {
+   if(releaseObservationCurrent(row.id,row,now))return true;
+   if(cbcMonthlyReleaseCurrent(row,now))return true;
+   const v=row.sessionVerification;
++  if(v&&recentOfficialCapture(v.fetchedAt,now)&&v.latestSession===row.date&&v.basis==='official_actual_sessions'&&v.tradingDates?.at(-1)===row.date&&/^https:\/\/(www\.twse\.com\.tw\/exchangeReport\/FMTQIK\?|openapi\.twse\.com\.tw\/v1\/exchangeReport\/FMTQIK$)/.test(v.source||''))return true;
+   if(v&&recentOfficialCapture(v.fetchedAt,now)&&v.latestSession===row.date&&expectedTaiwanSession(v.calendar,now)===row.date)return true;
+   let limit=SERIES[row.id]?.[3]??(/^TWSE_|^TPEX_/.test(row.id)?5:7);
+   // Preserve the energy relay's bounded publication-lag window across cache
+@@ -196,6 +201,9 @@ function macroSnapshotRecent(payload) {
+ }
+ function mergeVerifiedMacroRows(rows,previous) {
+   return rows.map(row=>{
++    // Deferred means no new source check occurred. A response/cache timestamp
++    // must never manufacture a verification timestamp for an inherited row.
++    if(row.captureDeferred)return {...row,verifiedAt:row.verifiedAt||row.fetchedAt||null,checkedAt:new Date().toISOString()};
+     if(['ok','snapshot'].includes(row?.status)&&!row.is_stale&&Number.isFinite(row.value))return {...row,verifiedAt:row.id==='CPILFESL'&&coreCpiVerificationCurrent(row)?row.sourceVerification.checkedAt:row.verifiedAt||row.fetchedAt||new Date().toISOString(),reason:obsoleteObservationReason(row.reason)?null:row.reason};
+     const candidates=previous.flatMap(p=>(p?.rows||[]).filter(old=>old.id===row.id&&macroObservationCurrent(old,p)).map(old=>({old,p}))).sort((a,b)=>b.old.date.localeCompare(a.old.date)||Date.parse(b.old.verifiedAt||b.old.fetchedAt||b.p.checkedAt)-Date.parse(a.old.verifiedAt||a.old.fetchedAt||a.p.checkedAt));
+     const best=candidates[0];
+diff --git a/worker/observations.js b/worker/observations.js
+index 5f01c95..edb2c46 100644
+--- a/worker/observations.js
++++ b/worker/observations.js
+@@ -596,7 +596,7 @@ async function expandedMacroResponse(env={},ctx={}){
+  if(cached?.fresh)return Response.json(cached.payload,{headers:{'Cache-Control':'private, no-store'}});
+  if(!expandedPending)expandedPending=buildExpandedMacroSnapshot(env).then(async payload=>{expandedCache={at:Date.now(),payload};await writeRuntimeCache(env,key,payload,ttl);return payload}).finally(()=>{expandedPending=null});
+  try{ctx.waitUntil?.(expandedPending.catch(()=>{}))}catch{}
+- return Response.json(cached?.payload?{...markSnapshotStale(cached.payload),refreshing:true,cacheState:'stale_refreshing'}:{checkedAt:new Date().toISOString(),pending:true,rows:[],derived:[]},{headers:{'Cache-Control':'private, no-store'}});
++ return Response.json(cached?.payload?refreshingMacroSnapshot(cached.payload,true):{checkedAt:new Date().toISOString(),pending:true,rows:[],derived:[]},{headers:{'Cache-Control':'private, no-store'}});
+ }
+ // Core CPI source captures are stored in the same durable D1 runtime cache as
+ // macro refreshes. The latest released observations remain dated and auditable
+@@ -2207,5 +2207,5 @@ async function usIndicesResponse(env={},ctx={}) {
+     usIndicesCache={at:Date.now(),payload};await writeRuntimeCache(env,key,payload,ttl);return payload;
+   }).finally(()=>{usIndicesPending=null});
+   try{ctx.waitUntil?.(usIndicesPending.catch(()=>{}))}catch{}
+-  return Response.json(cached?.payload?{...markSnapshotStale(cached.payload),refreshing:true,cacheState:'stale_refreshing'}:{checkedAt:new Date().toISOString(),pending:true,rows:US_INDEXES.map(([id,symbol])=>({id,value:null,date:null,status:'pending',reason:'指數資料正在背景查詢；完成前不納入判讀。',provider:'Yahoo Finance｜延遲日資料',source:`https://finance.yahoo.com/quote/${encodeURIComponent(symbol)}/`}))},{headers:{'Cache-Control':'private, no-store'}});
++  return Response.json(cached?.payload?refreshingMacroSnapshot(cached.payload,true):{checkedAt:new Date().toISOString(),pending:true,rows:US_INDEXES.map(([id,symbol])=>({id,value:null,date:null,status:'pending',reason:'指數資料正在背景查詢；完成前不納入判讀。',provider:'Yahoo Finance｜延遲日資料',source:`https://finance.yahoo.com/quote/${encodeURIComponent(symbol)}/`}))},{headers:{'Cache-Control':'private, no-store'}});
+ }
+diff --git a/tests/official-session-regression.test.mjs b/tests/official-session-regression.test.mjs
+new file mode 100644
+index 0000000..1938fbf
+--- /dev/null
++++ b/tests/official-session-regression.test.mjs
+@@ -0,0 +1,69 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import fs from 'node:fs';
++const source=fs.readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');
++const api=await import('data:text/javascript;base64,'+Buffer.from(source+'\nexport {validateTaiwanStatistics,expectedTaiwanSession,mergeVerifiedMacroRows,refreshingMacroSnapshot,summarizeSiteModule,retainedTaiwanCreditRows};').toString('base64'));
++const capture='2026-10-24T14:32:43Z',now=Date.parse('2026-10-25T00:00:00Z');
++const calendar={stat:'ok',queryYear:2026,fields:['日期','名稱','說明'],data:[...Array.from({length:10},(_,i)=>[`2026-01-${String(i+1).padStart(2,'0')}`,'表項','']),['2026-10-26','光復節','補假']]};
++function fixture(){
++ const base='https://www.twse.com.tw/rwd/zh/marginTrading/';
++ return {date:'2026-10-22',capturedAt:capture,calendar,tradingDates:[{Date:'1151021',TradeValue:'874614166736'},{Date:'1151022',TradeValue:'933437473560'}],sourceUrls:{calendar:'https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json',tradingDates:'https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK',margin:base+'MI_MARGN?response=json&date=20261022&selectType=MS',marginTrend:base+'MI_MARGN_TREND?response=json&date=20261022&days=30',creditSummary:base+'BFIJ3U?response=json&date=20261022'},margin:{stat:'OK',date:'20261022',tables:[{fields:['項目','買進','賣出','現金(券)償還','前日餘額','今日餘額'],data:[['融資(交易單位)',0,0,0,9632327,9604402],['融券(交易單位)',0,0,0,192598,216539],['融資金額(仟元)',0,0,0,644373624,633880174]]}]},marginTrend:{stat:'OK',date:'20261022',data:[{date:'20261022',marginAmt:633880174,marginShr:9604402,shortShr:216539,marketValue:1507153.73}]},creditSummary:{stat:'OK',date:'20261022',crdAmt:111074731110}};
++}
++test('actual official session survives an unplanned closure with auditable calendar discrepancy',()=>{
++ const rows=api.validateTaiwanStatistics(fixture(),now),row=rows.find(r=>r.id==='TWSE_MARGIN_BALANCE_NTD');
++ assert.equal(row.date,'2026-10-22');assert.equal(row.value,6338.80174);
++ assert.equal(row.sessionVerification.latestSession,'2026-10-22');
++ assert.equal(row.sessionVerification.expectedSession,'2026-10-23');
++ assert.equal(row.sessionVerification.calendarDiscrepancy,true);
++ assert.equal(row.sessionVerification.basis,'official_actual_sessions');
++ assert.equal(row.verifiedAt,capture);
++});
++test('official monthly FMTQIK also determines the actual latest day',()=>{
++ const item=fixture();item.sourceUrls.tradingDates='https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261001&response=json';
++ item.tradingDates={stat:'OK',date:'20261001',fields:['日期','成交股數','成交金額'],data:[['115/10/22','1','933,437,473,560']]};
++ assert.equal(api.validateTaiwanStatistics(item,now)[0].date,'2026-10-22');
++});
++test('planned 10/26 closure is retained while 10/27 becomes the next expected session',()=>{
++ assert.equal(api.expectedTaiwanSession(calendar,Date.parse('2026-10-26T15:00:00Z')),'2026-10-23');
++ assert.equal(api.expectedTaiwanSession(calendar,Date.parse('2026-10-27T15:00:00Z')),'2026-10-27');
++ const item=fixture();item.capturedAt='2026-10-26T15:00:00Z';
++ assert.equal(api.validateTaiwanStatistics(item,Date.parse(item.capturedAt))[0].date,'2026-10-22');
++});
++test('older-than-official, future, invalid-source and expired captures remain rejected',()=>{
++ const newer=fixture();newer.tradingDates.push({Date:'1151023',TradeValue:1});
++ assert.throws(()=>api.validateTaiwanStatistics(newer,now),/not_latest/);
++ const future=fixture();future.tradingDates.push({Date:'1151027',TradeValue:1});
++ assert.throws(()=>api.validateTaiwanStatistics(future,now),/not_latest/);
++ const old=fixture();old.capturedAt='2026-10-20T00:00:00Z';assert.throws(()=>api.validateTaiwanStatistics(old,now),/capture/);
++ const bad=fixture();bad.sourceUrls.tradingDates='https://example.com/FMTQIK';assert.throws(()=>api.validateTaiwanStatistics(bad,now),/sources/);
++});
++test('deferred rows never manufacture verifiedAt and use separate checkedAt',()=>{
++ const row={id:'TWSE_MARGIN_BALANCE_NTD',value:6338.80174,date:'2026-10-22',status:'snapshot',captureDeferred:true,verifiedAt:capture,fetchedAt:capture};
++ const result=api.mergeVerifiedMacroRows([row],[])[0];
++ assert.equal(result.verifiedAt,capture);assert.equal(result.fetchedAt,capture);assert.ok(result.checkedAt);
++ assert.equal(api.mergeVerifiedMacroRows([{...row,verifiedAt:null,fetchedAt:null}],[])[0].verifiedAt,null);
++});
++test('a cache timestamp alone cannot qualify retained credit as source verification',async()=>{
++ const payload={checkedAt:capture,rows:[{id:'TWSE_MARGIN_BALANCE_NTD',value:6338,date:'2026-10-22',status:'ok',source:'https://www.twse.com.tw/credit'}]};
++ const db={prepare(){return {run:async()=>({success:true}),bind(key){return {all:async()=>({results:key==='macro-market:v7'?[{payload:JSON.stringify(payload),updated_at:capture,expires_at:'2026-11-01T00:00:00Z'}]:[]})}}}}};
++ const result=await api.retainedTaiwanCreditRows({DB:db},now);
++ assert.equal(result.find(r=>r.id==='TWSE_MARGIN_BALANCE_NTD').status,'missing');
++});
++test('module usability excludes stale flags and null values even with status ok',()=>{
++ const r=api.summarizeSiteModule('expandedMacro',{rows:[{id:'A',value:1,status:'ok'},{id:'B',value:2,status:'ok',is_stale:true},{id:'C',value:null,status:'ok'}]});
++ assert.equal(r.usable,1);assert.equal(r.total,3);assert.equal(r.status,'partial');
++});
++test('expired response cache keeps valid monthly observations and retains real source failures',async()=>{
++ const realNow=Date.now;Date.now=()=>now;
++ try{
++  const mod=await import('data:text/javascript;base64,'+Buffer.from(source+'\nbuildExpandedMacroSnapshot=async()=>new Promise(()=>{});').toString('base64'));
++  const payload={checkedAt:capture,rows:[{id:'PAYEMS',date:'2026-09-01',value:159044,status:'ok'},
++   {id:'TW_EXPORT_ORDERS',date:'2026-09-01',value:1,status:'stale',is_stale:true,reason:'HTTP 403'}]};
++  const db={prepare(){return {run:async()=>({success:true}),bind(){return {all:async()=>({results:[{payload:JSON.stringify(payload),updated_at:capture,expires_at:capture}]})}}}}};
++  const result=await(await mod.default.fetch(new Request('https://site.test/api/macro-expanded'),{DB:db},{})).json();
++  assert.equal(result.refreshing,true);assert.equal(result.rows[0].status,'ok');
++  assert.equal(result.rows[1].status,'stale');assert.equal(result.rows[1].reason,'HTTP 403');
++  assert.equal(result.checkedAt,capture);
++ }finally{Date.now=realNow;}
++});
++export {fixture};
+diff --git a/tests/replay-local-fix-20261025.mjs b/tests/replay-local-fix-20261025.mjs
+new file mode 100644
+index 0000000..ba73021
+--- /dev/null
++++ b/tests/replay-local-fix-20261025.mjs
+@@ -0,0 +1,28 @@
++import fs from 'node:fs';
++import {execFileSync} from 'node:child_process';
++import path from 'node:path';
++const baseline='488b8bc9ab0402472496a80abb1cee17aea35fae';
++const baselineSource=execFileSync('git',['show',baseline+':dist/server/index.js'],{encoding:'utf8',maxBuffer:20*1024*1024});
++const currentSource=fs.readFileSync('dist/server/index.js','utf8');
++const fixtureText=fs.readFileSync('tests/official-session-regression.test.mjs','utf8');
++const {fixture,calendar,capture,now}=new Function(fixtureText.slice(fixtureText.indexOf("const capture="),fixtureText.indexOf("test('actual"))+'\nreturn {fixture,calendar,capture,now};')();
++const exports='\nexport {validateTaiwanStatistics,mergeVerifiedMacroRows,markSnapshotStale,refreshingMacroSnapshot,summarizeSiteModule};';
++const before=await import('data:text/javascript;base64,'+Buffer.from(baselineSource+exports).toString('base64'));
++const after=await import('data:text/javascript;base64,'+Buffer.from(currentSource+exports).toString('base64'));
++const RealDate=Date;globalThis.Date=class extends RealDate{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}};
++function statistics(api,item){try{return {accepted:true,rows:api.validateTaiwanStatistics(item,now).map(r=>({id:r.id,date:r.date,value:r.value,verifiedAt:r.verifiedAt,sessionVerification:r.sessionVerification}))};}catch(e){return {accepted:false,error:e.message};}}
++const deferred={id:'TWSE_MARGIN_BALANCE_NTD',value:6338.80174,date:'2026-10-22',status:'snapshot',captureDeferred:true};
++const stamp=api=>api.mergeVerifiedMacroRows([deferred],[])[0];
++const monthly={checkedAt:capture,rows:[{id:'PAYEMS',date:'2026-09-01',value:159044,status:'ok'}, {id:'TW_EXPORT_ORDERS',date:'2026-09-01',value:1,status:'stale',is_stale:true,reason:'HTTP 403'}]};
++const oldCache=before.markSnapshotStale(monthly),newCache=after.refreshingMacroSnapshot(monthly,true);
++const pick=p=>p.rows.map(r=>({id:r.id,date:r.date,status:r.status,is_stale:r.is_stale??false,reason:r.reason??null}));
++const result={baseline,fixture:'Controlled replay of official report values; not a production API readback',
++ statistics:{before:statistics(before,fixture()),after:statistics(after,fixture())},
++ deferredMissingSourceTime:{before:stamp(before),after:stamp(after)},
++ retainedMonthly:{before:pick(oldCache),after:pick(newCache)},
++ finalModule:{initial:before.summarizeSiteModule('macro',{pending:true,rows:[]}),final:after.summarizeSiteModule('macro',{rows:[{id:'A',value:1,status:'ok'}]})},
++ calendar26:calendar.data.find(r=>r[0]==='2026-10-26')};
++globalThis.Date=RealDate;
++const dir=path.resolve(process.argv[2]||'../local-fix-20261025');fs.mkdirSync(dir,{recursive:true});
++fs.writeFileSync(path.join(dir,'before-after.json'),JSON.stringify(result,null,2)+'\n');
++console.log(JSON.stringify({statisticsBefore:result.statistics.before.accepted,statisticsAfter:result.statistics.after.accepted,verifiedAtBefore:result.deferredMissingSourceTime.before.verifiedAt,verifiedAtAfter:result.deferredMissingSourceTime.after.verifiedAt,monthly:result.retainedMonthly},null,2));
