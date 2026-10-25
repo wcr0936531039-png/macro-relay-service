@@ -1,0 +1,795 @@
+{
+  "baseline": "488b8bc9ab0402472496a80abb1cee17aea35fae",
+  "fixture": "Controlled replay of official report values; not a production API readback",
+  "statistics": {
+    "before": {
+      "accepted": false,
+      "error": "statistics_not_latest_session"
+    },
+    "after": {
+      "accepted": true,
+      "rows": [
+        {
+          "id": "TWSE_TOTAL_TRADE_VALUE",
+          "date": "2026-10-22",
+          "value": 9334.3747356,
+          "verifiedAt": "2026-10-24T14:32:43Z",
+          "sessionVerification": {
+            "source": "https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK",
+            "calendarSource": "https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json",
+            "year": 2026,
+            "calendar": {
+              "stat": "ok",
+              "queryYear": 2026,
+              "fields": [
+                "日期",
+                "名稱",
+                "說明"
+              ],
+              "data": [
+                [
+                  "2026-01-01",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-02",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-03",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-04",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-05",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-06",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-07",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-08",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-09",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-10",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-10-26",
+                  "光復節",
+                  "補假"
+                ]
+              ]
+            },
+            "fetchedAt": "2026-10-24T14:32:43Z",
+            "latestSession": "2026-10-22",
+            "expectedSession": "2026-10-23",
+            "basis": "official_actual_sessions",
+            "calendarDiscrepancy": true,
+            "tradingDates": [
+              "2026-10-21",
+              "2026-10-22"
+            ]
+          }
+        },
+        {
+          "id": "TWSE_MARGIN_BALANCE_NTD",
+          "date": "2026-10-22",
+          "value": 6338.80174,
+          "verifiedAt": "2026-10-24T14:32:43Z",
+          "sessionVerification": {
+            "source": "https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK",
+            "calendarSource": "https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json",
+            "year": 2026,
+            "calendar": {
+              "stat": "ok",
+              "queryYear": 2026,
+              "fields": [
+                "日期",
+                "名稱",
+                "說明"
+              ],
+              "data": [
+                [
+                  "2026-01-01",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-02",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-03",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-04",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-05",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-06",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-07",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-08",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-09",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-10",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-10-26",
+                  "光復節",
+                  "補假"
+                ]
+              ]
+            },
+            "fetchedAt": "2026-10-24T14:32:43Z",
+            "latestSession": "2026-10-22",
+            "expectedSession": "2026-10-23",
+            "basis": "official_actual_sessions",
+            "calendarDiscrepancy": true,
+            "tradingDates": [
+              "2026-10-21",
+              "2026-10-22"
+            ]
+          }
+        },
+        {
+          "id": "TWSE_MARGIN_CHANGE_NTD",
+          "date": "2026-10-22",
+          "value": -104.9345,
+          "verifiedAt": "2026-10-24T14:32:43Z",
+          "sessionVerification": {
+            "source": "https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK",
+            "calendarSource": "https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json",
+            "year": 2026,
+            "calendar": {
+              "stat": "ok",
+              "queryYear": 2026,
+              "fields": [
+                "日期",
+                "名稱",
+                "說明"
+              ],
+              "data": [
+                [
+                  "2026-01-01",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-02",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-03",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-04",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-05",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-06",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-07",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-08",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-09",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-10",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-10-26",
+                  "光復節",
+                  "補假"
+                ]
+              ]
+            },
+            "fetchedAt": "2026-10-24T14:32:43Z",
+            "latestSession": "2026-10-22",
+            "expectedSession": "2026-10-23",
+            "basis": "official_actual_sessions",
+            "calendarDiscrepancy": true,
+            "tradingDates": [
+              "2026-10-21",
+              "2026-10-22"
+            ]
+          }
+        },
+        {
+          "id": "TWSE_MARGIN_BALANCE_UNITS",
+          "date": "2026-10-22",
+          "value": 9604402,
+          "verifiedAt": "2026-10-24T14:32:43Z",
+          "sessionVerification": {
+            "source": "https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK",
+            "calendarSource": "https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json",
+            "year": 2026,
+            "calendar": {
+              "stat": "ok",
+              "queryYear": 2026,
+              "fields": [
+                "日期",
+                "名稱",
+                "說明"
+              ],
+              "data": [
+                [
+                  "2026-01-01",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-02",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-03",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-04",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-05",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-06",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-07",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-08",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-09",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-10",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-10-26",
+                  "光復節",
+                  "補假"
+                ]
+              ]
+            },
+            "fetchedAt": "2026-10-24T14:32:43Z",
+            "latestSession": "2026-10-22",
+            "expectedSession": "2026-10-23",
+            "basis": "official_actual_sessions",
+            "calendarDiscrepancy": true,
+            "tradingDates": [
+              "2026-10-21",
+              "2026-10-22"
+            ]
+          }
+        },
+        {
+          "id": "TWSE_SHORT_BALANCE",
+          "date": "2026-10-22",
+          "value": 216539,
+          "verifiedAt": "2026-10-24T14:32:43Z",
+          "sessionVerification": {
+            "source": "https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK",
+            "calendarSource": "https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json",
+            "year": 2026,
+            "calendar": {
+              "stat": "ok",
+              "queryYear": 2026,
+              "fields": [
+                "日期",
+                "名稱",
+                "說明"
+              ],
+              "data": [
+                [
+                  "2026-01-01",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-02",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-03",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-04",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-05",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-06",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-07",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-08",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-09",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-10",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-10-26",
+                  "光復節",
+                  "補假"
+                ]
+              ]
+            },
+            "fetchedAt": "2026-10-24T14:32:43Z",
+            "latestSession": "2026-10-22",
+            "expectedSession": "2026-10-23",
+            "basis": "official_actual_sessions",
+            "calendarDiscrepancy": true,
+            "tradingDates": [
+              "2026-10-21",
+              "2026-10-22"
+            ]
+          }
+        },
+        {
+          "id": "TWSE_SHORT_CHANGE",
+          "date": "2026-10-22",
+          "value": 23941,
+          "verifiedAt": "2026-10-24T14:32:43Z",
+          "sessionVerification": {
+            "source": "https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK",
+            "calendarSource": "https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json",
+            "year": 2026,
+            "calendar": {
+              "stat": "ok",
+              "queryYear": 2026,
+              "fields": [
+                "日期",
+                "名稱",
+                "說明"
+              ],
+              "data": [
+                [
+                  "2026-01-01",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-02",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-03",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-04",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-05",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-06",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-07",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-08",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-09",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-10",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-10-26",
+                  "光復節",
+                  "補假"
+                ]
+              ]
+            },
+            "fetchedAt": "2026-10-24T14:32:43Z",
+            "latestSession": "2026-10-22",
+            "expectedSession": "2026-10-23",
+            "basis": "official_actual_sessions",
+            "calendarDiscrepancy": true,
+            "tradingDates": [
+              "2026-10-21",
+              "2026-10-22"
+            ]
+          }
+        },
+        {
+          "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+          "date": "2026-10-22",
+          "value": 0.4205809675433707,
+          "verifiedAt": "2026-10-24T14:32:43Z",
+          "sessionVerification": {
+            "source": "https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK",
+            "calendarSource": "https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json",
+            "year": 2026,
+            "calendar": {
+              "stat": "ok",
+              "queryYear": 2026,
+              "fields": [
+                "日期",
+                "名稱",
+                "說明"
+              ],
+              "data": [
+                [
+                  "2026-01-01",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-02",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-03",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-04",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-05",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-06",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-07",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-08",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-09",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-10",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-10-26",
+                  "光復節",
+                  "補假"
+                ]
+              ]
+            },
+            "fetchedAt": "2026-10-24T14:32:43Z",
+            "latestSession": "2026-10-22",
+            "expectedSession": "2026-10-23",
+            "basis": "official_actual_sessions",
+            "calendarDiscrepancy": true,
+            "tradingDates": [
+              "2026-10-21",
+              "2026-10-22"
+            ]
+          }
+        },
+        {
+          "id": "TWSE_CREDIT_TRADE_VALUE",
+          "date": "2026-10-22",
+          "value": 1110.7473111,
+          "verifiedAt": "2026-10-24T14:32:43Z",
+          "sessionVerification": {
+            "source": "https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK",
+            "calendarSource": "https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json",
+            "year": 2026,
+            "calendar": {
+              "stat": "ok",
+              "queryYear": 2026,
+              "fields": [
+                "日期",
+                "名稱",
+                "說明"
+              ],
+              "data": [
+                [
+                  "2026-01-01",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-02",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-03",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-04",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-05",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-06",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-07",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-08",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-09",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-01-10",
+                  "表項",
+                  ""
+                ],
+                [
+                  "2026-10-26",
+                  "光復節",
+                  "補假"
+                ]
+              ]
+            },
+            "fetchedAt": "2026-10-24T14:32:43Z",
+            "latestSession": "2026-10-22",
+            "expectedSession": "2026-10-23",
+            "basis": "official_actual_sessions",
+            "calendarDiscrepancy": true,
+            "tradingDates": [
+              "2026-10-21",
+              "2026-10-22"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "deferredMissingSourceTime": {
+    "before": {
+      "id": "TWSE_MARGIN_BALANCE_NTD",
+      "value": 6338.80174,
+      "date": "2026-10-22",
+      "status": "snapshot",
+      "captureDeferred": true,
+      "verifiedAt": "2026-10-25T00:00:00.000Z"
+    },
+    "after": {
+      "id": "TWSE_MARGIN_BALANCE_NTD",
+      "value": 6338.80174,
+      "date": "2026-10-22",
+      "status": "snapshot",
+      "captureDeferred": true,
+      "verifiedAt": null,
+      "checkedAt": "2026-10-25T00:00:00.000Z"
+    }
+  },
+  "retainedMonthly": {
+    "before": [
+      {
+        "id": "PAYEMS",
+        "date": "2026-09-01",
+        "status": "stale",
+        "is_stale": true,
+        "reason": "快取超過有效期；僅供顯示，不能作最新驗證"
+      },
+      {
+        "id": "TW_EXPORT_ORDERS",
+        "date": "2026-09-01",
+        "status": "stale",
+        "is_stale": true,
+        "reason": "HTTP 403"
+      }
+    ],
+    "after": [
+      {
+        "id": "PAYEMS",
+        "date": "2026-09-01",
+        "status": "ok",
+        "is_stale": false,
+        "reason": null
+      },
+      {
+        "id": "TW_EXPORT_ORDERS",
+        "date": "2026-09-01",
+        "status": "stale",
+        "is_stale": true,
+        "reason": "HTTP 403"
+      }
+    ]
+  },
+  "finalModule": {
+    "initial": {
+      "status": "pending",
+      "checkedAt": "2026-10-25T00:00:00.000Z",
+      "usable": 0,
+      "total": 0,
+      "latestObservation": null,
+      "observations": [],
+      "note": "來源仍在背景更新；排程會保留等待狀態。"
+    },
+    "final": {
+      "status": "ok",
+      "checkedAt": "2026-10-25T00:00:00.000Z",
+      "usable": 1,
+      "total": 1,
+      "latestObservation": null,
+      "observations": [
+        {
+          "id": "A",
+          "name": "A",
+          "value": 1,
+          "unit": null,
+          "date": null,
+          "observedAt": null,
+          "status": "ok",
+          "provider": null,
+          "source": null,
+          "reason": null,
+          "sourceVerification": null,
+          "sourceAudit": null
+        }
+      ]
+    }
+  },
+  "calendar26": [
+    "2026-10-26",
+    "光復節",
+    "補假"
+  ]
+}
