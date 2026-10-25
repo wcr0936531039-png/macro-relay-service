@@ -1,6 +1,6 @@
 # 2026-10-26 部署紀錄
 狀態：BLOCKED；重新嘗試後仍未部署。
-交接：gate-probe/handoff/GPT_NEXT.md，blob 7ecf334c68164fd67a31e93eb8efa55ab6a8ebbd。
+交接：gate-probe/handoff/GPT_NEXT.md，blob 1e9527146025503d89318d2e760d51b945a67246。
 授權：乾淨 v234 → owner-bundle → owner-bundle2 → build → UTC 全套測試 → 單次部署。
 最新 Sites 讀回：active，latest_version_number=234。
 阻塞：本輪 exec_command 仍回覆 No usable execution environment is available。
@@ -33,3 +33,6 @@ GitHub 兩倉庫關鍵字搜尋無命中；索引搜尋不等於完整程式／S
 資料匯入驗證：BLOCKED；無本機執行環境或認證 HTTP 替代工具，未呼叫匯入 API。
 待續：環境恢復後，以新 get_site 結果經隱藏 stdin 執行匯入器、讀回保存結果並檢查全部本機呼叫端。
 本輪無法宣稱每天資料匯入正常；舊權杖立即失效仍未驗證。
+最新續作：依 01:05 交接重試，執行環境仍不可用；Sites 再讀仍為 v234、巡檢停用。
+恢復條件：先部署並完成①～⑥，再手動完整巡檢；官方行情與含 DTWEXAFEGS 的序列匯入須 ok:true 且讀回日期通過。
+尚未滿足恢復條件，故本輪保持巡檢停用；不是缺少擁有者授權。
