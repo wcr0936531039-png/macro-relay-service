@@ -713,10 +713,12 @@
       "id": "TWSE_MARGIN_BALANCE_NTD",
       "value": 6338.80174,
       "date": "2026-10-22",
-      "status": "snapshot",
+      "status": "missing",
       "captureDeferred": true,
       "verifiedAt": null,
-      "checkedAt": "2026-10-25T00:00:00.000Z"
+      "checkedAt": "2026-10-25T00:00:00.000Z",
+      "is_stale": false,
+      "reason": "既有信用觀測缺少原始核對或擷取時間；不能以本次檢查時間代替。"
     }
   },
   "retainedMonthly": {
