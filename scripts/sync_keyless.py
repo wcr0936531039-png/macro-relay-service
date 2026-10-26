@@ -17,8 +17,11 @@ MORE_SPECS = [
  ('CPILFESL',95),('PCEPILFE',95),('BAMLH0A0HYM2',7),('BAMLC0A0CM',7),('IORB',7),
  ('STLFSI4',14),('ICSA',14),('CCSA',21),('IC4WSA',14),('INDPRO',95),('RRSFS',95),
  ('DTB3',7),('DGS10',7),('DGS30',7),('T10Y3M',7),('VIXCLS',7),('DEXJPUS',7),
- ('WALCL',14),('WCESTUS1',14),('NOCDFSA066MSFRBPHI',45),('DRTSCILM',120),('DTWEXBGS',10)
+ ('WALCL',14),('WCESTUS1',14),('NOCDFSA066MSFRBPHI',45),('DRTSCILM',120),('DTWEXBGS',10),
+ # 網站「美元指數零軸」用的先進經濟體美元指數（聯準會 H.10 每週一更新，最新觀測最多約 10 天前）；零軸要 26 筆以上，多留歷史
+ ('DTWEXAFEGS',12)
 ]
+HISTORY_KEEP={'DTWEXAFEGS':40}
 OUT=Path('data/keyless_snapshot.json')
 NDC_OPEN_DATA_ZIP=('https://ws.ndc.gov.tw/Download.ashx?icon=.zip&n=5pmv5rCj5oyH5qiZ5Y%2BK54eI6JmfLnppcA%3D%3D'
  '&u=LzAwMS9hZG1pbmlzdHJhdG9yLzEwL3JlbGZpbGUvNTc4MS82MzkyL2VhMjM1YmQ5LWQwNTItNGE2OS1hYmZjLWQ1Yzc4NWQzZDBlMi56aXA%3D')
@@ -46,7 +49,7 @@ def fred_csv(sid):
         a,b=history[-2:]
         if legacy.month_number(b['date'])-legacy.month_number(a['date'])!=1:raise ValueError('Nonadjacent monthly observations')
         if sid=='RSAFS' and a['value']<=0:raise ValueError('Invalid retail denominator')
-    return {'history':history[-20:],'source':url,'provider':f'FRED 官方公開 CSV｜{sid}'}
+    return {'history':history[-HISTORY_KEEP.get(sid,20):],'source':url,'provider':f'FRED 官方公開 CSV｜{sid}'}
 
 # 聯準會每天 16:30（美東）就公布「下一個營業日」的 IORB，FRED 會先列出未來日期（週五可到下週一）；這不是錯誤資料。
 FUTURE_DATED_DAYS={'IORB':4}
