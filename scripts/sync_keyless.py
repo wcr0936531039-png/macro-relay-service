@@ -48,10 +48,13 @@ def fred_csv(sid):
         if sid=='RSAFS' and a['value']<=0:raise ValueError('Invalid retail denominator')
     return {'history':history[-20:],'source':url,'provider':f'FRED 官方公開 CSV｜{sid}'}
 
-def validate(entry,days):
+# 聯準會每天 16:30（美東）就公布「下一個營業日」的 IORB，FRED 會先列出未來日期（週五可到下週一）；這不是錯誤資料。
+FUTURE_DATED_DAYS={'IORB':4}
+
+def validate(entry,days,sid=None):
     history=entry['history'];date=history[-1]['date']
     lag=(datetime.now(timezone.utc).date()-datetime.strptime(date,'%Y-%m-%d').date()).days
-    if lag<0 or lag>days:raise ValueError(f'Observation outside freshness window: {date}')
+    if lag<-FUTURE_DATED_DAYS.get(sid,0) or lag>days:raise ValueError(f'Observation outside freshness window: {date}')
     if any(type(p['value']) not in (int,float) or not math.isfinite(p['value']) for p in history):raise ValueError('Invalid numeric history')
     return entry
 
@@ -645,7 +648,7 @@ def process_tasks(tasks,current,now):
         try:
             item=fetcher()
             if 'history' not in item:item['history']=[{'date':item['date'],'value':item['value']}]
-            validate(item,days)
+            validate(item,days,sid)
             prior=current.get(sid)
             if prior and prior.get('history') and prior['history'][-1]['date']>item['history'][-1]['date']:
                 raise ValueError('Refuse backward observation')

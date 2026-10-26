@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from sync_keyless import process_tasks
+from sync_keyless import process_tasks, validate
 
 
 class ContinueAfterIndicatorFailureTests(unittest.TestCase):
@@ -48,6 +48,19 @@ class ContinueAfterIndicatorFailureTests(unittest.TestCase):
         self.assertEqual(current["STALE_METRIC"]["status"], "stale")
         self.assertEqual(current["STALE_METRIC"]["history"], [prior_point])
         self.assertIn("upstream timeout", current["STALE_METRIC"]["error"])
+
+
+class FutureDatedPolicyRateTests(unittest.TestCase):
+    def test_iorb_next_business_day_rate_is_accepted_but_other_series_are_not(self):
+        from datetime import timedelta
+        ahead = (datetime.now(timezone.utc).date() + timedelta(days=3)).isoformat()
+        entry = {"history": [{"date": ahead, "value": 3.9}]}
+        self.assertIs(validate(entry, 7, "IORB"), entry)
+        with self.assertRaises(ValueError):
+            validate(entry, 7, "SOFR")
+        far = (datetime.now(timezone.utc).date() + timedelta(days=6)).isoformat()
+        with self.assertRaises(ValueError):
+            validate({"history": [{"date": far, "value": 3.9}]}, 7, "IORB")
 
 
 if __name__ == "__main__":
