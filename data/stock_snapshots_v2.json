@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-23T17:29:05.098Z",
+  "generated_at": "2026-10-26T18:52:42.234Z",
   "stocks": {
     "2404": {
       "schema_version": 2,
       "ticker": "2404",
-      "updated_at": "2026-10-23T17:29:05.098Z",
+      "updated_at": "2026-10-26T18:52:42.234Z",
       "observations": [
         {
           "ticker": "2404",
@@ -462,7 +462,7 @@
     "5009": {
       "schema_version": 2,
       "ticker": "5009",
-      "updated_at": "2026-10-23T17:29:05.098Z",
+      "updated_at": "2026-10-26T18:52:42.234Z",
       "observations": [
         {
           "ticker": "5009",
@@ -499,7 +499,7 @@
     "5289": {
       "schema_version": 2,
       "ticker": "5289",
-      "updated_at": "2026-10-23T17:29:05.098Z",
+      "updated_at": "2026-10-26T18:52:42.234Z",
       "observations": [
         {
           "ticker": "5289",
@@ -536,7 +536,7 @@
     "8299": {
       "schema_version": 2,
       "ticker": "8299",
-      "updated_at": "2026-10-23T17:29:05.098Z",
+      "updated_at": "2026-10-26T18:52:42.234Z",
       "observations": [
         {
           "ticker": "8299",
