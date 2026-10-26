@@ -432,7 +432,22 @@ def nyfed_srp_metric():
 def eia_commercial_crude_stocks():
     """Parse the public EIA history table; keep the dashboard's million-barrel unit."""
     url='https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=W&n=PET&s=WCESTUS1'
-    parser=legacy.TableParser();parser.feed(legacy.http_text(url))
+    return eia_crude_from_page(legacy.http_text(url),url)
+
+def eia_release_dates(page):
+    """EIA 頁面底部寫「Release Date: 10/21/2026」「Next Release Date: 10/28/2026」；網站用它判斷有效期（到下一期發布日）。"""
+    import re
+    def find(pattern):
+        m=re.search(pattern,page)
+        if not m:return None
+        month,day,year=map(int,m.groups())
+        try:return datetime(year,month,day).strftime('%Y-%m-%d')
+        except ValueError:return None
+    return find(r'(?<!Next )Release Date:\s*(\d{1,2})/(\d{1,2})/(\d{4})'),find(r'Next Release Date:\s*(\d{1,2})/(\d{1,2})/(\d{4})')
+
+def eia_crude_from_page(page,url):
+    import hashlib
+    parser=legacy.TableParser();parser.feed(page)
     months={'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
     points=[]
     for cells in parser.rows:
@@ -447,12 +462,21 @@ def eia_commercial_crude_stocks():
             month,dom=map(int,day.groups())
             try:date=f'{year:04d}-{month:02d}-{dom:02d}';datetime.strptime(date,'%Y-%m-%d')
             except ValueError:continue
-            points.append({'date':date,'value':float(value)/1000})
+            points.append({'date':date,'value':float(value)/1000,'raw':int(float(value))})
     points=sorted({p['date']:p for p in points}.values(),key=lambda p:p['date'])
     if not points:raise ValueError('EIA WCESTUS1 history table contains no weekly observations')
-    return {'history':points[-20:],'date':points[-1]['date'],'value':points[-1]['value'],'unit':'百萬桶',
+    latest=points[-1];release,next_release=eia_release_dates(page)
+    entry={'history':[{'date':p['date'],'value':p['value']} for p in points[-20:]],'date':latest['date'],'value':latest['value'],'unit':'百萬桶',
         'provider':'U.S. Energy Information Administration｜WCESTUS1',
-        'source':url,'method':'EIA 官方週資料表；原始千桶除以 1,000 轉為百萬桶，不含 SPR。'}
+        'source':url,'method':'EIA 官方週資料表；原始千桶除以 1,000 轉為百萬桶，不含 SPR。',
+        'raw_thousand_barrels':latest['raw'],'page_sha256':hashlib.sha256(page.encode('utf-8')).hexdigest()}
+    # 發布日必須在觀測日後 0～10 天、下一期在發布日後 1～14 天，否則不寫（網站改用 EIA 排程推算並標明）。
+    if release:
+        gap=(datetime.strptime(release,'%Y-%m-%d')-datetime.strptime(latest['date'],'%Y-%m-%d')).days
+        if 0<=gap<=10:
+            entry['release_date']=release
+            if next_release and 1<=(datetime.strptime(next_release,'%Y-%m-%d')-datetime.strptime(release,'%Y-%m-%d')).days<=14:entry['next_release_date']=next_release
+    return entry
 
 def twse_open_data_metric(metric):
     """Read one validated field from the exchange's no-key daily market CSV."""
