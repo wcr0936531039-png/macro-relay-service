@@ -113,6 +113,77 @@ def ndc_open_data_metric():
         'provider':'國家發展委員會｜政府資料開放平台「景氣指標及燈號」',
         'source':'https://data.gov.tw/dataset/6099','method':f'國發會原始月資料 ZIP，欄位「景氣對策信號綜合分數」及燈號；檔案 {name}'}
 
+CBC_MONEY_URL='https://www.cbc.gov.tw/app.asp?xdUrl=AppT1.asp'
+
+def cbc_money_page(page):
+    """中央銀行「貨幣總計數」頁：最新月份、M1B 與 M2 日平均年增率、ms.ods 附檔連結。"""
+    import html as html_lib, re
+    text=re.sub(r'<script.*?</script>|<style.*?</style>','',page,flags=re.S|re.I)
+    text=re.sub(r'\s+',' ',html_lib.unescape(re.sub(r'<[^>]+>',' ',text)))
+    month=re.search(r'貨幣總計數\s*(\d{2,3})\s*年\s*(\d{1,2})\s*月',text)
+    if not month:raise ValueError('CBC money-supply page has no month')
+    def yoy(series):
+        found=re.search(series+r'\s*\(\s*日平均\s*\)\s*金\s*額\s*[\d,]+\s*年增率\s*([-+]?\d+(?:\.\d+)?)',text)
+        if not found:raise ValueError(f'CBC {series} daily-average YoY missing')
+        return float(found.group(1))
+    ods=re.search(r'href="(https://www\.cbc\.gov\.tw/tw/dl-\d+-[0-9a-f]+\.html)"[^>]*>\s*ms\.ods\s*<',page)
+    date=f"{int(month.group(1))+1911}-{int(month.group(2)):02d}-01"
+    return {'date':date,'m1b_yoy':yoy('M1B'),'m2_yoy':yoy('M2'),'ods_url':ods.group(1) if ods else None}
+
+def cbc_money_history(raw):
+    """ms.ods（OpenDocument）：每月 M1B、M2 日平均年增率。只用標準函式庫解析，不補值。"""
+    import re
+    import xml.etree.ElementTree as ET
+    if not raw.startswith(b'PK'):raise ValueError('CBC ms.ods is not a ZIP')
+    ns={'table':'urn:oasis:names:tc:opendocument:xmlns:table:1.0','office':'urn:oasis:names:tc:opendocument:xmlns:office:1.0','text':'urn:oasis:names:tc:opendocument:xmlns:text:1.0'}
+    root=ET.fromstring(zipfile.ZipFile(io.BytesIO(raw)).read('content.xml'))
+    rows,header=[],None
+    for tr in root.iter(f"{{{ns['table']}}}table-row"):
+        cells=[]
+        for tc in tr.findall('table:table-cell',ns):
+            repeat=min(int(tc.get(f"{{{ns['table']}}}number-columns-repeated",'1')),64)
+            value=tc.get(f"{{{ns['office']}}}value")
+            if value is None:value=''.join(tc.itertext()).strip()
+            cells.extend([value]*repeat)
+        if cells and str(cells[0]).strip()=='民國':header=cells
+        rows.append(cells)
+    if not header or 'M1B(日平均)' not in [str(x).replace(' ','') for x in header]:raise ValueError('CBC ms.ods header changed')
+    names=[str(x).replace(' ','') for x in header]
+    m1b_col=names.index('M1B(日平均)')+1
+    m2_col=next(i for i,x in enumerate(names) if x.startswith('M2(日平均)'))+1
+    out={}
+    for cells in rows:
+        found=re.fullmatch(r'(\d{2,3})年(\d{1,2})月',str(cells[0]).strip()) if cells else None
+        if not found or len(cells)<=m2_col:continue
+        try:m1b,m2=float(cells[m1b_col]),float(cells[m2_col])
+        except (TypeError,ValueError):continue
+        date=f"{int(found.group(1))+1911}-{int(found.group(2)):02d}-01"
+        out[date]={'date':date,'value':round(m1b-m2,4),'m1b_yoy':m1b,'m2_yoy':m2}
+    if not out:raise ValueError('CBC ms.ods has no monthly M1B/M2 YoY')
+    return [out[k] for k in sorted(out)]
+
+def cbc_money_supply_metric():
+    """M1B−M2 年增率差（日平均），中央銀行官方頁＋同頁 ms.ods 歷史互相核對；網站 Worker 直連央行常被擋，改由排程代抓。"""
+    page_request=Request(CBC_MONEY_URL,headers={'User-Agent':legacy.USER_AGENT,'Accept':'text/html'})
+    with urlopen(page_request,timeout=25) as response:page=response.read(2_000_001).decode('utf-8','replace')
+    latest=cbc_money_page(page)
+    point={'date':latest['date'],'value':round(latest['m1b_yoy']-latest['m2_yoy'],4)}
+    history,check=[point],'只有官方頁最新月份（ms.ods 無法讀取）'
+    if latest['ods_url']:
+        try:
+            with urlopen(Request(latest['ods_url'],headers={'User-Agent':legacy.USER_AGENT}),timeout=30) as response:raw=response.read(10_000_001)
+            rows=cbc_money_history(raw)
+            last=rows[-1]
+            if last['date']!=latest['date'] or abs(last['m1b_yoy']-latest['m1b_yoy'])>1e-9 or abs(last['m2_yoy']-latest['m2_yoy'])>1e-9:
+                raise ValueError(f"ms.ods latest {last['date']} does not match page {latest['date']}")
+            history=[{'date':r['date'],'value':r['value']} for r in rows[-24:]]
+            check='官方頁與 ms.ods 最新月份一致'
+        except Exception as exc:
+            check=f'ms.ods 核對未完成：{exc}'
+    return {'history':history,'source':CBC_MONEY_URL,'provider':'中央銀行｜貨幣總計數（日平均）',
+            'method':f"M1B 日平均年增率 {latest['m1b_yoy']:.2f}% − M2 日平均年增率 {latest['m2_yoy']:.2f}%；{check}",
+            'm1b_yoy':latest['m1b_yoy'],'m2_yoy':latest['m2_yoy']}
+
 def ecb_reference_rate(currency):
     url=f'https://data-api.ecb.europa.eu/service/data/EXR/D.{currency}.EUR.SP00.A?lastNObservations=25&format=csvdata'
     with urlopen(Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'text/csv'}),timeout=25) as response:
@@ -605,9 +676,12 @@ def main():
             try:return ndc_open_data_metric()
             except Exception as dataset_error:
                 raise ValueError(f'NDC JSON/chart unavailable ({live_error}); official open-data ZIP unavailable ({dataset_error})') from dataset_error
-    tasks += [('TW_EXPORT_ORDERS',85,lambda:legacy.taiwan_export_metric(legacy.http_text(legacy.MOEA_URL))),
-              ('TPEX_BREADTH',5,lambda:legacy.tpex_metric(legacy.http_json(legacy.TPEX_URL))),
-              ('TW_NDC_SIGNAL',120,get_ndc)]
+    # 外銷訂單：網站 2026-10-25 起改用國發會擴散指數、不讀本快照；經濟部頁面每輪 403，不再抓，也不保留舊值。
+    current.pop('TW_EXPORT_ORDERS',None)
+    tasks += [('TPEX_BREADTH',5,lambda:legacy.tpex_metric(legacy.http_json(legacy.TPEX_URL))),
+              ('TW_NDC_SIGNAL',120,get_ndc),
+              # 央行約每月 25 日公布前一月；觀測月起最長約 85 天才有下一筆，給 95 天。
+              ('TW_M1B_M2',95,cbc_money_supply_metric)]
     def additional_source(sid):
         if sid=='DEXJPUS':return ecb_usd_jpy_cross()
         if sid=='WCESTUS1':return eia_commercial_crude_stocks()
