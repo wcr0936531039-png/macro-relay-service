@@ -1,3 +1,4 @@
 - 2026-10-27 21:15:01（台北）已更新每日巡檢儲存指令，早於今晚22:30；只修改prompt欄位並重新讀回核對，06:30／22:30、is_enabled=true與既有服務存取身分不變。
 - 改後三步：POST /api/automation/refresh-all → 每10秒GET /api/automation/status，至同一runId出現completedAt → GET /api/automation/history核對完成時間與各檔Gate快照；即使未建立run，也須回報HTTP狀態與reason，不可靜默省略或回報no_update。
-- 今晚10/27 22:30待實際執行後補：平台runId、網站runId、completedAt、狀態、Gate N/N、watchlistSource與檔數；未建run則記HTTP／reason，不以手動讀回或舊run充數。
+- 10/27 22:30排程實跑：平台runId=079f2599-27f4-8320-bda7-a3687ea4201e，開始22:32:28、完成22:32:31（台北），recorded_status=no_update；無對應網站runId／completedAt／Gate N/N／watchlistSource／檔數。平台未提供逐步呼叫明細，該輪HTTP與reason均UNKNOWN，未猜測405／409／503。
+- 10/28 02:20手動GET history為HTTP200，最新仍10/27 01:07手動partial（e876b6d5-5835-4785-a950-f949952ba23e、5/5、latest_synced、5檔），不冒充22:30排程；舊latest_result是10/22另一run，不當作本輪原因。指令補強未解決本次未建run，is_enabled=true與原時段依授權維持，執行明細待核。
