@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-26T13:31:39.601965+00:00",
+  "generated_at": "2026-10-27T01:36:53.399737+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -409,20 +409,10 @@
       "unit": "index_points",
       "warnings": [],
       "status": "ok",
-      "fetched_at": "2026-10-26T13:31:39.601965+00:00"
+      "fetched_at": "2026-10-27T01:36:53.399737+00:00"
     },
     "SP500": {
       "history": [
-        {
-          "date": "2026-06-01",
-          "value": 7599.96,
-          "available_at": "2026-06-01T20:15:00+00:00"
-        },
-        {
-          "date": "2026-06-02",
-          "value": 7609.78,
-          "available_at": "2026-06-02T20:15:00+00:00"
-        },
         {
           "date": "2026-06-03",
           "value": 7553.68,
@@ -912,14 +902,24 @@
           "date": "2026-10-21",
           "value": 7757.17,
           "available_at": "2026-10-21T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-22",
+          "value": 7663.43,
+          "available_at": "2026-10-22T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-23",
+          "value": 7623.68,
+          "available_at": "2026-10-23T20:15:00+00:00"
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-04-19",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-04-20",
       "provider": "FRED official published price-index history | SP500",
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-10-26T13:31:39.601965+00:00"
+      "fetched_at": "2026-10-27T01:36:53.399737+00:00"
     },
     "NASDAQCOM": {
       "history": [
@@ -1424,20 +1424,15 @@
           "available_at": "2026-10-23T20:15:00+00:00"
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-19",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-20",
       "provider": "FRED official published price-index history | NASDAQCOM",
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-10-26T13:31:39.601965+00:00"
+      "fetched_at": "2026-10-27T01:36:53.399737+00:00"
     },
     "SOX": {
       "history": [
-        {
-          "date": "2026-06-03",
-          "value": 13916.9599609375,
-          "available_at": "2026-06-03T20:15:00+00:00"
-        },
         {
           "date": "2026-06-04",
           "value": 13617.5,
@@ -1932,6 +1927,11 @@
           "date": "2026-10-23",
           "value": 10779.4599609375,
           "available_at": "2026-10-23T20:15:00+00:00"
+        },
+        {
+          "date": "2026-10-26",
+          "value": 11083.4697265625,
+          "available_at": "2026-10-26T20:15:00+00:00"
         }
       ],
       "source": "https://query1.finance.yahoo.com/v8/finance/chart/%5ESOX?range=6mo&interval=1d",
@@ -1942,7 +1942,7 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-10-26T13:31:39.601965+00:00"
+      "fetched_at": "2026-10-27T01:36:53.399737+00:00"
     }
   },
   "errors": [],
