@@ -1,13 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-27T05:16:16.900972+00:00",
+  "generated_at": "2026-10-27T12:25:42.647191+00:00",
   "series": {
     "SOFR": {
       "history": [
-        {
-          "date": "2026-09-25",
-          "value": 3.9
-        },
         {
           "date": "2026-09-28",
           "value": 3.9
@@ -83,12 +79,16 @@
         {
           "date": "2026-10-23",
           "value": 3.92
+        },
+        {
+          "date": "2026-10-26",
+          "value": 3.93
         }
       ],
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SOFR&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜SOFR",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "RRPONTSYD": {
@@ -177,7 +177,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RRPONTSYD&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜RRPONTSYD",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 8
     },
     "RPONTSYD": {
@@ -266,7 +266,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RPONTSYD&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜RPONTSYD",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 8
     },
     "UNRATE": {
@@ -355,7 +355,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜UNRATE",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 85
     },
     "SAHMREALTIME": {
@@ -444,7 +444,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SAHMREALTIME&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜SAHMREALTIME",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 85
     },
     "T10Y2Y": {
@@ -533,7 +533,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y2Y&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜T10Y2Y",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "DFII10": {
@@ -622,7 +622,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DFII10",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "T5YIE": {
@@ -711,7 +711,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T5YIE&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜T5YIE",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "RSAFS": {
@@ -800,7 +800,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RSAFS&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜RSAFS",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 85
     },
     "PAYEMS": {
@@ -889,26 +889,26 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜PAYEMS",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 85
     },
     "TPEX_BREADTH": {
-      "value": 18.13664596273292,
-      "date": "2026-10-22",
+      "value": 38.471177944862156,
+      "date": "2026-10-27",
       "unit": "%",
       "status": "ok",
       "provider": "櫃買中心 TPEx OpenAPI",
       "source": "https://www.tpex.org.tw/openapi/v1/tpex_mainborad_highlight",
       "method": "上漲家數 ÷（上漲＋下跌）× 100；只計上櫃股票",
-      "advancers": 146,
-      "decliners": 659,
+      "advancers": 307,
+      "decliners": 491,
       "history": [
         {
-          "date": "2026-10-22",
-          "value": 18.13664596273292
+          "date": "2026-10-27",
+          "value": 38.471177944862156
         }
       ],
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 5
     },
     "TW_NDC_SIGNAL": {
@@ -926,7 +926,7 @@
       "source": "https://data.gov.tw/dataset/6099",
       "method": "國發會原始月資料 ZIP，欄位「景氣對策信號綜合分數」及燈號；檔案 景氣指標與燈號.csv",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 120
     },
     "SP500": {
@@ -1015,7 +1015,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜SP500",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "DJIA": {
@@ -1104,7 +1104,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DJIA&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DJIA",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "NASDAQCOM": {
@@ -1193,7 +1193,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜NASDAQCOM",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "DCOILWTICO": {
@@ -1282,7 +1282,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILWTICO&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DCOILWTICO",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "DCOILBRENTEU": {
@@ -1371,7 +1371,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILBRENTEU&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DCOILBRENTEU",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "DHHNGSP": {
@@ -1460,7 +1460,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DHHNGSP&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DHHNGSP",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "T10YIE": {
@@ -1549,7 +1549,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜T10YIE",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "CPILFESL": {
@@ -1638,7 +1638,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPILFESL&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜CPILFESL",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 95
     },
     "PCEPILFE": {
@@ -1727,7 +1727,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCEPILFE&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜PCEPILFE",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 95
     },
     "BAMLH0A0HYM2": {
@@ -1816,7 +1816,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜BAMLH0A0HYM2",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "BAMLC0A0CM": {
@@ -1905,7 +1905,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜BAMLC0A0CM",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "IORB": {
@@ -1994,7 +1994,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=IORB&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜IORB",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "STLFSI4": {
@@ -2083,7 +2083,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=STLFSI4&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜STLFSI4",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 14
     },
     "ICSA": {
@@ -2172,7 +2172,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=ICSA&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜ICSA",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 14
     },
     "CCSA": {
@@ -2261,7 +2261,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CCSA&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜CCSA",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 21
     },
     "IC4WSA": {
@@ -2350,7 +2350,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=IC4WSA&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜IC4WSA",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 14
     },
     "INDPRO": {
@@ -2439,7 +2439,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=INDPRO&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜INDPRO",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 95
     },
     "RRSFS": {
@@ -2528,7 +2528,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RRSFS&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜RRSFS",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 95
     },
     "DTB3": {
@@ -2617,7 +2617,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DTB3",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "DGS10": {
@@ -2706,7 +2706,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DGS10",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "DGS30": {
@@ -2795,7 +2795,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS30&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DGS30",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "T10Y3M": {
@@ -2884,7 +2884,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y3M&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜T10Y3M",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "VIXCLS": {
@@ -2973,7 +2973,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜VIXCLS",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "DEXJPUS": {
@@ -3066,7 +3066,7 @@
       "source": "https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A?lastNObservations=25&format=csvdata | https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A?lastNObservations=25&format=csvdata",
       "method": "ECB 同日 JPY/EUR ÷ USD/EUR；這是官方參考匯率交叉換算，不是即時外匯成交價。",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 7
     },
     "WALCL": {
@@ -3155,7 +3155,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=WALCL&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜WALCL",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 14
     },
     "WCESTUS1": {
@@ -3252,7 +3252,7 @@
       "release_date": "2026-10-21",
       "next_release_date": "2026-10-28",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 14
     },
     "NOCDFSA066MSFRBPHI": {
@@ -3341,7 +3341,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NOCDFSA066MSFRBPHI&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜NOCDFSA066MSFRBPHI",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 45
     },
     "TWSE_TAIEX": {
@@ -3405,16 +3405,20 @@
         {
           "date": "2026-10-22",
           "value": 46041.43
+        },
+        {
+          "date": "2026-10-27",
+          "value": 46096.23
         }
       ],
-      "date": "2026-10-22",
-      "value": 46041.43,
+      "date": "2026-10-27",
+      "value": 46096.23,
       "unit": "點",
       "provider": "臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV",
       "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?response=open_data",
       "method": "TWSE 官方每日市場統計原始 CSV；直接讀取「發行量加權股價指數」欄位，成交金額以新臺幣元換算億元。",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 5
     },
     "TWSE_TOTAL_TRADE_VALUE": {
@@ -3478,16 +3482,20 @@
         {
           "date": "2026-10-22",
           "value": 9334.3747356
+        },
+        {
+          "date": "2026-10-27",
+          "value": 10316.83538938
         }
       ],
-      "date": "2026-10-22",
-      "value": 9334.3747356,
+      "date": "2026-10-27",
+      "value": 10316.83538938,
       "unit": "億元",
       "provider": "臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV",
       "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?response=open_data",
       "method": "TWSE 官方每日市場統計原始 CSV；直接讀取「成交金額」欄位，成交金額以新臺幣元換算億元。",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 5
     },
     "TWSE_MARGIN_BALANCE_NTD": {
@@ -3503,9 +3511,10 @@
       "provider": "臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面",
       "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?date=20261022&response=html",
       "method": "融資金額(仟元) 欄位；億元；日增減以今日餘額減前日餘額計算。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-10-27T05:16:16.900972+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE credit observation date mismatch: requested 2026-10-27, returned missing"
     },
     "DRTSCILM": {
       "history": [
@@ -3541,7 +3550,7 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DRTSCILM&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DRTSCILM",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 120
     },
     "TWSE_MARGIN_CHANGE_NTD": {
@@ -3557,9 +3566,10 @@
       "provider": "臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面",
       "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?date=20261022&response=html",
       "method": "融資金額(仟元) 欄位；億元；日增減以今日餘額減前日餘額計算。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-10-27T05:16:16.900972+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE credit observation date mismatch: requested 2026-10-27, returned missing"
     },
     "TWSE_MARGIN_BALANCE_UNITS": {
       "history": [
@@ -3574,9 +3584,10 @@
       "provider": "臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面",
       "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?date=20261022&response=html",
       "method": "融資(交易單位) 欄位；張；日增減以今日餘額減前日餘額計算。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-10-27T05:16:16.900972+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE credit observation date mismatch: requested 2026-10-27, returned missing"
     },
     "TWSE_SHORT_BALANCE": {
       "history": [
@@ -3591,9 +3602,10 @@
       "provider": "臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面",
       "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?date=20261022&response=html",
       "method": "融券(交易單位) 欄位；張；日增減以今日餘額減前日餘額計算。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-10-27T05:16:16.900972+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE credit observation date mismatch: requested 2026-10-27, returned missing"
     },
     "TWSE_SHORT_CHANGE": {
       "history": [
@@ -3608,29 +3620,30 @@
       "provider": "臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面",
       "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?date=20261022&response=html",
       "method": "融券(交易單位) 欄位；張；日增減以今日餘額減前日餘額計算。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-10-27T05:16:16.900972+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE credit observation date mismatch: requested 2026-10-27, returned missing"
     },
     "TWSE_BREADTH": {
       "history": [
         {
-          "date": "2026-10-22",
-          "value": 24.009508716323296
+          "date": "2026-10-27",
+          "value": 45.54931836407378
         }
       ],
-      "date": "2026-10-22",
-      "value": 24.009508716323296,
+      "date": "2026-10-27",
+      "value": 45.54931836407378,
       "unit": "%",
-      "advancers": 303,
-      "decliners": 959,
-      "unchanged": 121,
-      "included": 1383,
+      "advancers": 568,
+      "decliners": 679,
+      "unchanged": 139,
+      "included": 1386,
       "provider": "臺灣證券交易所｜政府資料開放平台 STOCK_DAY_ALL CSV",
       "source": "https://www.twse.com.tw/exchangeReport/STOCK_DAY_ALL?response=open_data",
-      "method": "上市證券上漲占比 = 上漲 303 ÷（上漲 303 + 下跌 959）× 100%；平盤 121 家不放入分母。交易日與同日官方 FMTQIK 核對。",
+      "method": "上市證券上漲占比 = 上漲 568 ÷（上漲 568 + 下跌 679）× 100%；平盤 139 家不放入分母。交易日與同日官方 FMTQIK 核對。",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 5
     },
     "DTWEXBGS": {
@@ -3719,24 +3732,24 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTWEXBGS&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DTWEXBGS",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 10
     },
     "XAU": {
       "history": [
         {
           "date": "2026-10-27",
-          "value": 4008.800049
+          "value": 4019.0
         }
       ],
       "date": "2026-10-27",
-      "value": 4008.800049,
+      "value": 4019.0,
       "unit": "美元/金衡盎司",
       "provider": "Gold API｜XAU/USD 現貨參考價（第三方；非官方定盤價）",
       "source": "https://api.gold-api.com/price/XAU",
-      "method": "來源回傳 XAU/USD 報價 4008.800049，更新時間 2026-10-27T05:16:29+00:00；不是 LBMA 定盤價或即時交易所成交價。",
+      "method": "來源回傳 XAU/USD 報價 4019.0，更新時間 2026-10-27T12:25:54+00:00；不是 LBMA 定盤價或即時交易所成交價。",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 3
     },
     "TWSE_ELECTRONIC": {
@@ -3752,9 +3765,10 @@
       "provider": "臺灣證券交易所｜電子工業類指數 官方日指數",
       "source": "https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX",
       "method": "TWSE MI_INDEX 官方日指數收盤值；觀測日 2026-10-22，與加權指數同日。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-10-27T05:16:16.900972+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE 電子工業類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
     },
     "TWSE_SEMICONDUCTOR": {
       "history": [
@@ -3769,9 +3783,10 @@
       "provider": "臺灣證券交易所｜半導體類指數 官方日指數",
       "source": "https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX",
       "method": "TWSE MI_INDEX 官方日指數收盤值；觀測日 2026-10-22，與加權指數同日。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-10-27T05:16:16.900972+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE 半導體類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
     },
     "TWSE_FINANCIAL": {
       "history": [
@@ -3786,9 +3801,10 @@
       "provider": "臺灣證券交易所｜金融保險類指數 官方日指數",
       "source": "https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX",
       "method": "TWSE MI_INDEX 官方日指數收盤值；觀測日 2026-10-22，與加權指數同日。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-10-27T05:16:16.900972+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE 金融保險類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
     },
     "TWSE_SHIPPING": {
       "history": [
@@ -3803,9 +3819,10 @@
       "provider": "臺灣證券交易所｜航運類指數 官方日指數",
       "source": "https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX",
       "method": "TWSE MI_INDEX 官方日指數收盤值；觀測日 2026-10-22，與加權指數同日。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-10-27T05:16:16.900972+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE 航運類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
     },
     "TWSE_STEEL": {
       "history": [
@@ -3820,26 +3837,27 @@
       "provider": "臺灣證券交易所｜鋼鐵類指數 官方日指數",
       "source": "https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX",
       "method": "TWSE MI_INDEX 官方日指數收盤值；觀測日 2026-10-22，與加權指數同日。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-10-27T05:16:16.900972+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE 鋼鐵類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
     },
     "TWSE_DAYTRADE": {
       "history": [
         {
-          "date": "2026-10-22",
-          "value": 21.69
+          "date": "2026-10-27",
+          "value": 21.88
         }
       ],
-      "date": "2026-10-22",
-      "value": 21.69,
+      "date": "2026-10-27",
+      "value": 21.88,
       "unit": "%",
-      "dayTradeShares": 2603256000.0,
+      "dayTradeShares": 2579342000.0,
       "provider": "臺灣證券交易所｜TWTB4U 官方當沖統計",
-      "source": "https://www.twse.com.tw/exchangeReport/TWTB4U?response=json&date=20261022&selectType=All",
-      "method": "TWTB4U 官方當沖成交量占市場比重 21.69%；當沖成交股數 2603256000；觀測日 2026-10-22。",
+      "source": "https://www.twse.com.tw/exchangeReport/TWTB4U?response=json&date=20261027&selectType=All",
+      "method": "TWTB4U 官方當沖成交量占市場比重 21.88%；當沖成交股數 2579342000；觀測日 2026-10-27。",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 5
     },
     "NYFED_REPO": {
@@ -3860,7 +3878,7 @@
       "source": "https://markets.newyorkfed.org/api/rp/repo/all/results/last/8.json",
       "method": "同一操作日已公布 Repo 操作 accepted amount 合計 ÷ 1,000,000,000；觀測日 2026-10-26；與單一 RPONTSYD 序列口徑分開。",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 5
     },
     "NYFED_SRP": {
@@ -3889,132 +3907,40 @@
       "source": "https://markets.newyorkfed.org/api/rp/repo/all/results/last/8.json",
       "method": "僅合計 operationMethod=Full Allotment、term=Overnight 且已公布 Results 的操作；原始 accepted 美元 ÷ 1,000,000,000；觀測日 2026-10-26。零承作仍保留為有效 0；不含一般 Repo／Reverse Repo。",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 5
     },
     "ICE_DXY": {
       "history": [
         {
           "date": "2026-10-27",
-          "value": 102.06
+          "value": 102.16
         }
       ],
       "date": "2026-10-27",
-      "value": 102.06,
+      "value": 102.16,
       "unit": "指數點",
       "provider": "Google Finance｜NYICDX:INDEXNYSEGIS（ICE U.S. Dollar Index 市場報價）",
       "source": "https://www.google.com/finance/quote/NYICDX:INDEXNYSEGIS?hl=en",
-      "method": "核對 Google Finance canonical NYICDX:INDEXNYSEGIS、頁面名稱 ICE U.S. Dollar Index；頁面報價時間 Oct 27, 1:01:39 AM GMT-4。這是該指數市場報價，不標作 ICE 官方結算值。",
+      "method": "核對 Google Finance canonical NYICDX:INDEXNYSEGIS、頁面名稱 ICE U.S. Dollar Index；頁面報價時間 Oct 27, 8:11:03 AM GMT-4。這是該指數市場報價，不標作 ICE 官方結算值。",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 3
     },
     "TW_M1B_M2": {
       "history": [
         {
-          "date": "2024-09-01",
-          "value": -1.53
-        },
-        {
-          "date": "2024-10-01",
-          "value": -0.92
-        },
-        {
-          "date": "2024-11-01",
-          "value": -0.91
-        },
-        {
-          "date": "2024-12-01",
-          "value": -1.51
-        },
-        {
-          "date": "2025-01-01",
-          "value": -1.15
-        },
-        {
-          "date": "2025-02-01",
-          "value": -2.09
-        },
-        {
-          "date": "2025-03-01",
-          "value": -2.56
-        },
-        {
-          "date": "2025-04-01",
-          "value": -2.03
-        },
-        {
-          "date": "2025-05-01",
-          "value": -1.36
-        },
-        {
-          "date": "2025-06-01",
-          "value": -1.01
-        },
-        {
-          "date": "2025-07-01",
-          "value": -0.56
-        },
-        {
-          "date": "2025-08-01",
-          "value": -0.31
-        },
-        {
-          "date": "2025-09-01",
-          "value": -0.2
-        },
-        {
-          "date": "2025-10-01",
-          "value": -0.2
-        },
-        {
-          "date": "2025-11-01",
-          "value": -0.17
-        },
-        {
-          "date": "2025-12-01",
-          "value": -0.15
-        },
-        {
-          "date": "2026-01-01",
-          "value": 0.43
-        },
-        {
-          "date": "2026-02-01",
-          "value": 1.74
-        },
-        {
-          "date": "2026-03-01",
-          "value": 2.04
-        },
-        {
-          "date": "2026-04-01",
-          "value": 1.8
-        },
-        {
-          "date": "2026-05-01",
-          "value": 1.73
-        },
-        {
-          "date": "2026-06-01",
-          "value": 1.27
-        },
-        {
-          "date": "2026-07-01",
-          "value": -0.08
-        },
-        {
-          "date": "2026-08-01",
-          "value": -0.14
+          "date": "2026-09-01",
+          "value": -0.59
         }
       ],
       "source": "https://www.cbc.gov.tw/app.asp?xdUrl=AppT1.asp",
       "provider": "中央銀行｜貨幣總計數（日平均）",
-      "method": "M1B 日平均年增率 6.65% − M2 日平均年增率 6.79%；官方頁與 ms.ods 最新月份一致",
+      "method": "M1B 日平均年增率 6.65% − M2 日平均年增率 7.24%；ms.ods 核對未完成：ms.ods latest 2026-09-01 does not match page 2026-09-01",
       "m1b_yoy": 6.65,
-      "m2_yoy": 6.79,
+      "m2_yoy": 7.24,
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 95
     },
     "DTWEXAFEGS": {
@@ -4183,14 +4109,58 @@
       "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTWEXAFEGS&cosd=2025-01-15",
       "provider": "FRED 官方公開 CSV｜DTWEXAFEGS",
       "status": "ok",
-      "fetched_at": "2026-10-27T05:16:16.900972+00:00",
+      "fetched_at": "2026-10-27T12:25:42.647191+00:00",
       "max_age_days": 12
     }
   },
-  "blocked_at": null,
-  "failures": [],
+  "blocked_at": {
+    "id": "TWSE_ELECTRONIC",
+    "reason": "TWSE 電子工業類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
+  },
+  "failures": [
+    {
+      "id": "TWSE_ELECTRONIC",
+      "reason": "TWSE 電子工業類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
+    },
+    {
+      "id": "TWSE_SEMICONDUCTOR",
+      "reason": "TWSE 半導體類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
+    },
+    {
+      "id": "TWSE_FINANCIAL",
+      "reason": "TWSE 金融保險類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
+    },
+    {
+      "id": "TWSE_SHIPPING",
+      "reason": "TWSE 航運類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
+    },
+    {
+      "id": "TWSE_STEEL",
+      "reason": "TWSE 鋼鐵類指數 date 2026-10-22 does not match TAIEX 2026-10-27"
+    },
+    {
+      "id": "TWSE_MARGIN_BALANCE_NTD",
+      "reason": "TWSE credit observation date mismatch: requested 2026-10-27, returned missing"
+    },
+    {
+      "id": "TWSE_MARGIN_CHANGE_NTD",
+      "reason": "TWSE credit observation date mismatch: requested 2026-10-27, returned missing"
+    },
+    {
+      "id": "TWSE_MARGIN_BALANCE_UNITS",
+      "reason": "TWSE credit observation date mismatch: requested 2026-10-27, returned missing"
+    },
+    {
+      "id": "TWSE_SHORT_BALANCE",
+      "reason": "TWSE credit observation date mismatch: requested 2026-10-27, returned missing"
+    },
+    {
+      "id": "TWSE_SHORT_CHANGE",
+      "reason": "TWSE credit observation date mismatch: requested 2026-10-27, returned missing"
+    }
+  ],
   "coverage": {
-    "usable": 61,
+    "usable": 51,
     "expected": 61
   }
 }
