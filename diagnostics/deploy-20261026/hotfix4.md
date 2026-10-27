@@ -13,3 +13,9 @@
 - 五檔最終評級與riskBudget均同部署前（5009仍C、其餘仍未評）；但Gate9：8299 conditional→not_applicable、5289 partial→blocked、5009 conditional→not_applicable，其餘Gate狀態相同，故「所有Gate不變」驗收未通過。
 - 原因：三檔上櫃官方發行股數本輪TPEx逾時而缺值，替代估值同日驗證不足；5289明列缺股數。5009估值子級B→B+、最終仍C；行情10/22→10/27。既有發行人快取在上市資料成功時保留24h，可能延長上櫃缺值；本輪未另改程式／規則。
 - 每日巡檢is_enabled=true、06:30／22:30；最新實際排程recorded_status=no_update，無新網站run可對照，尚未通過恢復後實跑驗收；已另存patrol-enabled.md，不用01:07手動partial冒充。
+- ⑦ v241：patch SHA-256=d66ab28b0b1dee76937cb0b89bdc45678f1bcb202f57db233615e75ebb1dd4c4；乾淨v240套用→build→完整TZ=UTC npm test exit0（確認走完最後套件40/40）；HTML SHA-256=10ebd5bcbb23cc52f53aceaf615f176e1109969179ac0f0b0acee8fb1268a5e3；來源cff282b10dd7b2619288a80ec9eb2773f2cfe58e，10/27 16:52部署一次成功，v240留回滾。
+- ①美元大卡已在總經VIX下方、原始資料計算上方：−40.62／前20日高低點之間、藍實線＋灰虛線＋兩參考線＋來源；桌面截圖及ArrowRight日期提示通過，個股補充美元卡0張。手機本輪未實測（瀏覽器未提供viewport調整介面），不冒充手機驗收。
+- ②GET /api/dollar-index HTTP200：asOf=2026-10-27、cutoff=2026-10-19、axis.value=−40.617796219455734、history=60、capturePath=official_import，scoreContribution=0。
+- ③一般讀回先保留舊6h快照；核對刷新後21:09新快照：8299=221165247、5289=98289931、5009=602471197股，officialIssuedShares均ok；三檔來源均明示「本次來源逾時，沿用2026-10-27抓取的同一份官方名冊」，沒有偽裝本輪直連成功。
+- ④⑤Gate9回到8299 conditional／5289 partial／5009 conditional；群聯／榮剛為已驗證跨週期EPS×P/E替代情境，宜鼎仍留Rf／Beta／Kd未實測限制。五檔最終評級status／grade與riskBudget逐項對照部署前相同；未解除既有警訊。
+- ⑦-1已查並寫patrol-enabled.md：指令仍要求更新及完整輪詢，平台今早no_update但無該次呼叫明細／HTTP證據，原因未定位；未改任何排程設定。今晚22:30的runId／完成／Gate審計仍待真正排程執行，未用手動讀回充數。
