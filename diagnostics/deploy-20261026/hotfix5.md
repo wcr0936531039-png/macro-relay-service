@@ -4,3 +4,13 @@
 - 三檔Gate9=conditional／partial／conditional，符合預期；宜鼎仍保留Rf／Beta／Kd未實測限制，群聯／榮剛僅替代估值條件式完成。
 - 美元大卡位於總經VIX下方；GET /api/dollar-index HTTP200，asOf=2026-10-27、cutoff=2026-10-19、axis.value=−40.617796219455734、history60、official_import；個股補充美元卡0張。
 - 五檔最終評級status／grade與riskBudget對照部署前相同；桌面圖線／虛線／鍵盤提示已驗，手機本輪尚未實測。⑦-0已於21:15更新排程指令並核對，詳patrol-enabled.md。
+- ⑦-3：v241乾淨基線套用patch，SHA-256=f1c8f4a890e886d051365f806e0f08d3291dc6045b933285eb2d86bf6ecb0071；來源c9e2577fc3428038892dd814994ba551c4050d79；10/27 21:20部署一次為v242、成功，v241保留回滾。
+- build＋完整TZ=UTC npm test exit0（確認最後套件45/45）；HTML SHA-256=4211da6b7c69508fa2660f79aa4f49ecf44030102c1d1c8d2fbd3c4309ba226b。實際SITE_BUILD_ID=dbd0507e455ac36e；僅將OPERATIONS一行換為交付Claude的去識別版重算即精準得到交接a08dcbb68a738079，已定位差異，未硬改識別碼。
+- 美元桌面實測有白色0軸、−100線、紅綠區、目前值、藍實線／灰虛線、含零軸欄數字表；10/27為−40.617796，跨日至10/28 asOf／cutoff=10/28／10/20後為−52.79866656329958，最後已採用history.axis嚴格等於axis.value。手機本輪未實測，不把桌面截圖當手機驗收。
+- 總經重用：10/28 API兩次間隔逾1分鐘，computedAt均2026-10-27T18:19:38.037Z、reused=true；US62／TW60與畫面相同，畫面「後台計算2026/10/28 02:19:38」亦一致。
+- 登入瀏覽器8299兩次觀測02:21:17.928→02:22:58.118，間隔100.19秒；第二次reusedSavedResult=true、computedAt同為2026-10-27T18:21:11.132Z、macroScoresComputedAt=18:19:38.037Z與上一列相同；大盤持股65%不變。服務身分另測亦重用，未借用擁有者身分。
+- 部署當晚五檔逐項比對v241：評級status／grade、進場、出場、riskBudget、持股比例全相同；進場8299／5289／2404／5009／2330=wait／avoid／wait／wait／wait，出場=exit／exit／exit／hold／exit，持股均65%；5009仍C、其餘未評。
+- 10/28再讀2404／2330因舊stockCheckedAt=10/27 07:43Z、超過有效期轉blocked；已透過既有taiwan-stock讀取流程正常刷新，02:23:19新快照後均恢復valuation_divergence、進場wait／出場exit，riskBudget仍retain_existing_limits，未放寬期限或改觀測日。
+- 初次間隔測試曾重算：21:22擴展總經15分鐘快取到期，expandedCheckedAt由13:07:07Z變null，隨後macroCheckedAt更新；照實保留輸入變動，不誤報同輸入重用失敗。外部未登入不得借用owner證據、身分只留後台的測試已通過；已開站載入同步清單。
+- ⑦-0已於10/27 21:15更新prompt並再讀核對；06:30／22:30、is_enabled=true與服務存取設定不變。只改明確三步與失敗回報，不公開私人入口／識別／憑證。
+- ⑥晚間排程驗收未通過：平台079f2599-27f4-8320-bda7-a3687ea4201e於22:32:28～22:32:31回no_update，網站無新run，HTTP／reason無明細；無法核對巡檢與畫面computedAt。已更新patrol-enabled.md；整體partial，保留手機與排程缺口，未重複部署或自動通過Gate。
