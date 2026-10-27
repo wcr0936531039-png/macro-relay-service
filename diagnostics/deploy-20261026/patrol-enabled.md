@@ -1,1 +1,1 @@
-2026-10-27 00:49:47 台北：啟用回應 updated_at=2026-10-26T16:49:47.946409Z，is_enabled=true；維持06:30／22:30。恢復後首輪排程尚待實際執行，runId／完成時間／狀態／Gate N/N／watchlistSource／檔數不以手動巡檢代替；排程已獲交代完成後更新本行。
+2026-10-27 06:33:36 台北：平台排程runId=34405943-e5b0-8324-b7ed-92cfb1eee9e1，recorded_status=no_update；網站巡檢runId／完成時間／Gate N/N／watchlistSource／檔數均未產生可核對的新紀錄（網站最近仍01:07手動partial、5/5）；排程is_enabled=true，維持06:30／22:30，尚未通過恢復後實跑驗收，原因未明，不借舊run冒充。
