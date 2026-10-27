@@ -6,6 +6,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '23 */6 * * *'
+    # 證交所信用交易統計（融資融券）當日晚間才公布；台北 22:50（週一至週五）再跑一次，當晚就收到，不靠網站巡檢。
+    - cron: '50 14 * * 1-5'
 permissions:
   contents: write
 concurrency:

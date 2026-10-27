@@ -602,11 +602,38 @@ def twse_market_breadth(reference_date):
         'provider':'臺灣證券交易所｜政府資料開放平台 STOCK_DAY_ALL CSV',
         'source':url,'method':f'上市證券上漲占比 = 上漲 {advances} ÷（上漲 {advances} + 下跌 {declines}）× 100%；平盤 {unchanged} 家不放入分母。交易日與同日官方 FMTQIK 核對。'}
 
-def twse_sector_metric(metric,reference_date):
-    """Read a TWSE official sector-index close and require the TAIEX date."""
-    labels={'TWSE_ELECTRONIC':'電子工業類指數','TWSE_SEMICONDUCTOR':'半導體類指數',
-            'TWSE_FINANCIAL':'金融保險類指數','TWSE_SHIPPING':'航運類指數','TWSE_STEEL':'鋼鐵類指數'}
-    if metric not in labels:raise ValueError(f'unsupported TWSE sector metric: {metric}')
+TWSE_SECTOR_LABELS={'TWSE_ELECTRONIC':'電子工業類指數','TWSE_SEMICONDUCTOR':'半導體類指數',
+                    'TWSE_FINANCIAL':'金融保險類指數','TWSE_SHIPPING':'航運類指數','TWSE_STEEL':'鋼鐵類指數'}
+
+def twse_sector_from_daily_report(target,reference_date):
+    """證交所「每日收盤行情－指數」日報（rwd MI_INDEX type=IND，指定日期）。
+    2026-10-27 起 OpenAPI 的 MI_INDEX 停在 10-22（實測 10-28 03:20 仍是 10-22），日報頁同時已有 10-27；改以日報為主。"""
+    compact=reference_date.replace('-','')
+    url=f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={compact}&type=IND&response=json'
+    request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'application/json'})
+    with urlopen(request,timeout=25) as response:
+        body=response.read(2_000_001)
+    if len(body)>2_000_000:raise ValueError('TWSE sector daily report too large')
+    payload=json.loads(body.decode('utf-8-sig'))
+    if str(payload.get('stat','')).upper()!='OK':raise ValueError(f'TWSE sector daily report stat {payload.get("stat")!r}')
+    if str(payload.get('date',''))!=compact:raise ValueError(f'TWSE sector daily report date {payload.get("date")!r} does not match TAIEX {reference_date}')
+    for table in payload.get('tables') or []:
+        fields=table.get('fields') or []
+        if not fields or fields[0] not in ('指數',) or '收盤指數' not in fields:continue
+        close_at=fields.index('收盤指數')
+        for row in table.get('data') or []:
+            if not isinstance(row,list) or not row or str(row[0]).strip()!=target:continue
+            raw=str(row[close_at]).replace(',','').strip()
+            if not legacy.valid_number(raw):raise ValueError(f'TWSE {target} has no numeric close')
+            value=float(raw)
+            if value<=0:raise ValueError(f'TWSE {target} close is not positive')
+            return {'history':[{'date':reference_date,'value':value}],'date':reference_date,'value':value,'unit':'點',
+                'provider':f'臺灣證券交易所｜{target} 每日收盤行情（指數）','source':url,
+                'method':f'TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 {reference_date}，與加權指數同日。'}
+    raise ValueError(f'TWSE sector daily report has no {target} row')
+
+def twse_sector_from_openapi(target,reference_date):
+    """OpenAPI MI_INDEX（只留作備援；常落後日報數天）。"""
     url='https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX'
     request=Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'application/json'})
     with urlopen(request,timeout=25) as response:
@@ -615,7 +642,6 @@ def twse_sector_metric(metric,reference_date):
     if 'json' not in content_type:raise ValueError(f'TWSE sector expected JSON; got {content_type or "unknown content type"}')
     payload=json.loads(body.decode('utf-8-sig'))
     if not isinstance(payload,list):raise ValueError('TWSE sector response is not a JSON list')
-    target=labels[metric]
     for item in payload:
         if not isinstance(item,dict) or item.get('指數')!=target:continue
         date=legacy.parse_roc_date(item.get('日期'))
@@ -628,6 +654,18 @@ def twse_sector_metric(metric,reference_date):
             'provider':f'臺灣證券交易所｜{target} 官方日指數','source':url,
             'method':f'TWSE MI_INDEX 官方日指數收盤值；觀測日 {date}，與加權指數同日。'}
     raise ValueError(f'TWSE MI_INDEX has no {target} row')
+
+def twse_sector_metric(metric,reference_date):
+    """Read a TWSE official sector-index close and require the TAIEX date（日報為主，OpenAPI 備援；兩者都要同日）。"""
+    if metric not in TWSE_SECTOR_LABELS:raise ValueError(f'unsupported TWSE sector metric: {metric}')
+    target=TWSE_SECTOR_LABELS[metric]
+    try:
+        return twse_sector_from_daily_report(target,reference_date)
+    except Exception as daily_error:  # noqa: BLE001
+        try:
+            return twse_sector_from_openapi(target,reference_date)
+        except Exception as api_error:  # noqa: BLE001
+            raise ValueError(f'daily report: {str(daily_error)[:160]}; OpenAPI: {str(api_error)[:160]}') from api_error
 
 def twse_daytrade_metric(reference_date):
     """Read the TWSE TWTB4U market turnover share for an already verified session."""
