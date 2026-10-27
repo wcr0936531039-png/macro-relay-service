@@ -1,0 +1,6 @@
+- ⑦-2：已核對正式站v241（10/27 16:52部署），本輪未重部署；HTML SHA-256=10ebd5bcbb23cc52f53aceaf615f176e1109969179ac0f0b0acee8fb1268a5e3。
+- v241 patch SHA-256=d66ab28b0b1dee76937cb0b89bdc45678f1bcb202f57db233615e75ebb1dd4c4；來源cff282b10dd7b2619288a80ec9eb2773f2cfe58e；先前完整TZ=UTC npm test exit0，最後套件40/40。
+- 21:09讀回8299／5289／5009股數=221165247／98289931／602471197，來源均明示「本次來源逾時，沿用2026-10-27抓取的同一份官方名冊」，officialIssuedShares均ok。
+- 三檔Gate9=conditional／partial／conditional，符合預期；宜鼎仍保留Rf／Beta／Kd未實測限制，群聯／榮剛僅替代估值條件式完成。
+- 美元大卡位於總經VIX下方；GET /api/dollar-index HTTP200，asOf=2026-10-27、cutoff=2026-10-19、axis.value=−40.617796219455734、history60、official_import；個股補充美元卡0張。
+- 五檔最終評級status／grade與riskBudget對照部署前相同；桌面圖線／虛線／鍵盤提示已驗，手機本輪尚未實測。⑦-0已於21:15更新排程指令並核對，詳patrol-enabled.md。
