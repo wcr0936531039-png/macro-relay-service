@@ -1,1 +1,5 @@
-2026-10-27 06:33:36 台北：平台排程runId=34405943-e5b0-8324-b7ed-92cfb1eee9e1，recorded_status=no_update；網站巡檢runId／完成時間／Gate N/N／watchlistSource／檔數均未產生可核對的新紀錄（網站最近仍01:07手動partial、5/5）；排程is_enabled=true，維持06:30／22:30，尚未通過恢復後實跑驗收，原因未明，不借舊run冒充。
+- 儲存指令相關原文（僅摘巡檢啟動段，省略私人入口與其餘內部操作）：「確認寫入成功並讀回後，再依保存說明啟動整站更新、等待匹配runId完成，確認巡檢歷史已保存。」「POST只保存起點；每10秒GET status會執行一個持久checkpoint，必須維持相同服務存取身分，直到同一runId出現completedAt，最後GET history核對完成時間與各檔Gate快照保存。」
+- 判定：儲存指令仍要求實際更新，並非停用期間的只檢查模式；三步語意均有，但完整端點依賴站內保存說明。本輪未改排程／指令／設定。
+- 06:33:33～06:33:36台北：平台runId=34405943-e5b0-8324-b7ed-92cfb1eee9e1、recorded_status=no_update（輸出被抑制，不等於更新成功）、chat_ref=null；工具不提供該次逐步呼叫紀錄，HTTP/status/reason均無法核實；舊latest_result屬10/22另一run，不歸因本次。近期Worker日誌樣本未涵蓋06:33，不能據此宣稱未呼叫或遭405/409/503。
+- 本輪GET history HTTP200，最近仍01:07手動run=e876b6d5-5835-4785-a950-f949952ba23e、partial、Gate5/5、latest_synced、5檔；今早無新run。原因仍未定位。可選補強指令（待擁有者核准）：「每輪明確POST /api/automation/refresh-all→每10秒GET /api/automation/status至同runId completedAt→GET /api/automation/history；即使未建立run也回報HTTP及reason，不靜默省略。」
+- 今晚10/27 22:30待實際執行後補runId／completedAt／status／Gate N/N／watchlistSource／stockBatch檔數；目前is_enabled=true、06:30／22:30，next_run_time未提供，不當作已排入佇列或已跑證據；不以手動測試冒充排程。
