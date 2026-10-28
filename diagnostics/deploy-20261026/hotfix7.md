@@ -1,0 +1,11 @@
+# 2026-10-29 v245／第 2 項讀回
+- 正式站 v245 已部署；v244 保留回滾。dist/index.html SHA-256：7a5fabb193d7c85b95079a98bc3f0b99f1fde252233937bd0bdb9d65a60cbd60。
+- v245 patch SHA-256：4098543868c90113ca38feb75b3b18cb82e09272737e298735722faa30a7131d；build 成功；TZ=UTC npm test：53/53 pass。
+- 8299 桌面個股區順序符合規格；未見「畫面呈現未完成」。
+- 去重讀回未通過：收盤、均線、估值情境及 ROIC／CFO／FCF 仍重複出現在摘要／Gate；五檔對 v242 比較未完成（目前僅 8299 有行情，另四檔卡片尚未取得）。
+- 手機版未驗證：目前瀏覽器介面不能設定 viewport，未以桌面畫面代替。
+- v234 ① PASS：/api/macro-market 七個信用欄位均為最新交易日 2026-10-28。
+- ② PARTIAL/FAIL：TWSE 10/28 報表「前日融資金額」為 623,386,833 仟元，與交接預期 623,386,860 相差 27 仟元；網站 10/28 值減日增量與官方數字相符，但 API 無獨立 10/27 final 歷史列。來源：https://www.twse.com.tw/exchangeReport/MI_MARGN?date=&response=html
+- ③ PASS：七欄 verifiedAt 保留 2026-10-28T14:43:41.618Z；晨間 checkedAt 更新，captureDeferred=true。
+- ④ PARTIAL：history 有 5/5 Gate audit、marketAndPreciousMetals=ok；直接讀回七欄為 snapshot/deferred，摘要無逐欄驗證，不能宣稱完全一致。
+- 第 3 項待 v245 部署後首個 2026-10-29 22:30 巡檢完成，再補五檔摘要、模組讀回及貴金屬原文。
