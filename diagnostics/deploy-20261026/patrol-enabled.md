@@ -3,3 +3,4 @@
 - 10/27 22:30排程實跑：平台runId=079f2599-27f4-8320-bda7-a3687ea4201e，開始22:32:28、完成22:32:31（台北），recorded_status=no_update；無對應網站runId／completedAt／Gate N/N／watchlistSource／檔數。平台未提供逐步呼叫明細，該輪HTTP與reason均UNKNOWN，未猜測405／409／503。
 - 10/28 02:20手動GET history為HTTP200，最新仍10/27 01:07手動partial（e876b6d5-5835-4785-a950-f949952ba23e、5/5、latest_synced、5檔），不冒充22:30排程；舊latest_result是10/22另一run，不當作本輪原因。指令補強未解決本次未建run，is_enabled=true與原時段依授權維持，執行明細待核。
 - 2026-10-28 22:30 首輪實際排程完成：網站 runId=1266920c-a004-4f7f-aa62-4281531514c4，completedAt=2026-10-28 22:53:02（台北），status=partial，Gate audit=5/5，watchlistSource=latest_synced，stockBatch=5 檔。
+- 2026-10-29 06:50:29（台北）晨間排程實跑：網站 runId=c8d3426d-32db-4095-bc3f-cfba658798e9，completedAt=06:50:29，status=partial，Gate audit=5/5，watchlistSource=latest_synced，stockBatch=5 檔；history 已匹配讀回，晨間信用隔夜擷取時間因欄位缺失標未驗證。
