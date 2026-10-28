@@ -1,3 +1,13 @@
+# 最新：2026-10-29 06:50 台北晨間巡檢完成，partial
+
+[本輪記錄](automation-runs/20261029-morning.md)。
+
+run c8d3426d-32db-4095-bc3f-cfba658798e9：POST HTTP 202，連續 status HTTP 200 至 completedAt 06:50:29（台北），history HTTP 200 匹配成功；Gate 快照 5/5。watchlistSource=latest_synced，stockBatch=5。總經 55/55、擴展 12/12、市場／貴金屬 36/36、美股指數 3/3、跨市場 4/4、板塊 11/11、公告 3/3；全市場 1,959/1,988（98.54%）。
+
+晨間信用收集按時段略過；讀回仍為 10/28 snapshot，但缺 capturedAt／verifiedAt／captureDeferred，隔夜時間連續性標未驗證。核心 CPI 雙來源通過；八組研究來源 312 筆。partial 與其他缺項、前次行情 IncompleteRead 重試成功詳見本輪記錄。未修改程式、排程、權重或 Gate 門檻。
+
+---
+
 # 最新：2026-10-29 04:43（台北）巡檢完成，狀態 partial
 
 [本輪紀錄](deploy-20261026/hotfix6.md)。
