@@ -9,3 +9,4 @@
 - ③ PASS：七欄 verifiedAt 保留 2026-10-28T14:43:41.618Z；晨間 checkedAt 更新，captureDeferred=true。
 - ④ PARTIAL：history 有 5/5 Gate audit、marketAndPreciousMetals=ok；直接讀回七欄為 snapshot/deferred，摘要無逐欄驗證，不能宣稱完全一致。
 - 第 3 項待 v245 部署後首個 2026-10-29 22:30 巡檢完成，再補五檔摘要、模組讀回及貴金屬原文。
+- 第 3 項已加入既有每日巡檢的一次性指示：首個 v245 部署後晚間巡檢完成後追加；排程時刻與啟用狀態未更動。
