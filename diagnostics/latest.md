@@ -1,3 +1,11 @@
+# 最新：2026-10-28 22:30 晚間巡檢完成（partial）
+
+[本輪完整紀錄](source-reliability-20261023/2026-10-28-night-run.md)。
+
+網站 run `1266920c-a004-4f7f-aa62-4281531514c4` 已按 POST → 10 秒 status → history 流程完成；history 匹配 completedAt，Gate 5/5、latest_synced 5 檔均保存。全市場 1,959/1,988、74 日；總經 55/55、板塊 11/11、來源 8/8。partial 主因與新發現：國發會燈號過期、三個模組仍標 pending、外部信用收集器 HTTP 307、4 檔 run 摘要與直接讀回不一致、公告原始代號缺口。網站內部晚間信用讀回則為大盤 7/7 與個股 5/5 皆 10/28、ok；未放寬 Gate 或權重。
+
+---
+
 # 最新：第一、二項來源／穩定性修補進行中（正式仍v232）
 
 [開始與範圍](source-reliability-20261023/01-start.md)｜[已重測根因](source-reliability-20261023/02-findings.md)｜[本機與真來源進展](source-reliability-20261023/03-local-progress.md)｜[目前完整patch](source-reliability-20261023/source-recovery.patch)｜[SHA／狀態](source-reliability-20261023/manifest.json)｜[八來源實測](source-reliability-20261023/source-collection-status.json)。
