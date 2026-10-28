@@ -1,0 +1,16 @@
+# 2026-10-29 04:43（台北）巡檢／v244 讀回
+- Site 存取仍為擁有者私人；v244 已上線、v242 可回滾。本輪沒有改部署或排程設定。
+- POST HTTP 202；同一 run `afe9525a…b9156182`；33 次 status 均 HTTP 200；history HTTP 200，completedAt=04:43:39、狀態 partial。
+- 官方 MI_INDEX 最新交易日 10/28；增量收 1 日，74 日歷史；全市場 1,959/1,988（98.54%），29 檔無收盤價留缺。
+- 核心總經 55/55；9 條序列匯入，核心 CPI BLS/FRED 同為 2026-09、338.896，通過。
+- 來源 8/8 組、289 筆、0 錯；consumer 主 RSS 空、官方備援 5 筆。公告 3/3、7 項；BLS RSS 無可核近期公告，採官方頁面備援。
+- 區塊讀回：市場／貴金屬 36/36、跨市場 4/4；美股指數 3/3（10/27）、板塊 11/11（10/27）。
+- 擴展總經 run 摘要 11/12（巡檢前快照、background_refreshing）；巡檢後直接讀回 12/12 列與 4/4 衍生列皆 ok，摘要與讀回不一致，保留 partial。
+- 上午信用按規範略過；7/7 欄仍是 10/28 快照，verifiedAt 未變且 captureDeferred=true；本輪 payload 無 statistics.json。
+- watchlist latest_synced（同步 10/12 20:29），5 檔：8299、5289、2404、5009、2330；Gate audit 5/5 recorded，每檔10 Gate。
+- 5289 Gate 摘要為 valuation_divergence，直接 model 為 blocked/data_unavailable；狀態語義不一致，待查。其餘不得把 recorded 當通過。
+- 五檔研究池共16筆、0錯；14筆有發布日期、公告代號0筆；EPS共識、三家同業及八期事前配對仍缺，未升 Gate。
+- 黃金／白銀各2/3來源，第三來源 GoldPriceZone HTTP 404；金銀比歷史20點、近3間隔上升，只作交叉確認，不計分。
+- 日圓 HV20/HV60 最新觀測仍10/23；MOEA HTTP 403 為既有未解項，本輪未重試；全市場缺值不補造。
+- 權重、總分、風險預算與 Gate 門檻未改；未自動通過 Gate 5A、5B、8。
+- 22:30 後補記 v244 個股摘要／直接讀回一致性、三區塊狀態與可用數、貴金屬三行原判讀；目前待晚間實跑。
