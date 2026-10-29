@@ -10,3 +10,14 @@
 - ④ PARTIAL：history 有 5/5 Gate audit、marketAndPreciousMetals=ok；直接讀回七欄為 snapshot/deferred，摘要無逐欄驗證，不能宣稱完全一致。
 - 第 3 項待 v245 部署後首個 2026-10-29 22:30 巡檢完成，再補五檔摘要、模組讀回及貴金屬原文。
 - 第 3 項已加入既有每日巡檢的一次性指示：首個 v245 部署後晚間巡檢完成後追加；排程時刻與啟用狀態未更動。
+
+
+## 第 3 項：2026-10-29 22:30 晚間巡檢（一次性，已完成）
+- run `f2bf6761-31cb-4640-b125-de52b46c9172`：POST 202；同 run status 200 推進至 23:01:18 completedAt；history 200 匹配，狀態 partial，Gate audit 5/5。
+- 五檔 8299／5289／2404／5009／2330 均 `status=ok`、`refreshedThisRun=true`、`summaryScope=final_readback`；run 內最終直接讀回完成。8299/5289/2404/2330 audit=valuation_divergence，5009=degraded。
+- 差異：五檔 `stepStatus` 在完成快照仍為 `pending`，與 `status=ok` 不一致；照實保留，不宣稱完全一致。
+- expandedMacro=ok 12/12、marketAndPreciousMetals=ok 36/36、usIndices=ok 3/3；三者 `refreshState`、`finalizeWaits` 在 final_readback 均未提供（null），沒有造值。
+- 黃金現貨參考價（XAU/USD）：4032 美元/金衡盎司；2026-10-29；ok；2/3 來源可用，核對通過（價差 0.1119%、時間差 0.44 分鐘）
+- 白銀現貨參考價（XAG/USD）：52.740002 美元/金衡盎司；2026-10-29；ok；2/3 來源可用，核對通過（價差 0.263%、時間差 0.46 分鐘）
+- 黃金／白銀比（XAU/XAG）：76.4505090462454 倍；2026-10-29；ok；金價 2/3 來源可用、銀價 2/3 來源可用，核對通過；歷史 23 點
+- 本一次性追加已完成；後續巡檢不再重複執行本段。
