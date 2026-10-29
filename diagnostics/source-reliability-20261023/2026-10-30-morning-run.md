@@ -1,0 +1,23 @@
+# 2026-10-30 06:30 台北晨間巡檢
+
+- 站點：owner／custom 私人存取，正式版 v246；未修改程式、排程、權重或 Gate 門檻。
+- 官方收集：market-only sessions=1；官方交易日 2026-10-29，TWSE 1,084、TPEx 868，共 1,952/1,988（98.1891%），累積 75 個交易日。
+- 缺口 36 檔：零成交 27、只有零股量 4、名冊有但行情未列 5；均未補價。
+- 上午總經用 macro_morning：9 條 FRED 與核心 CPI；信用統計依時段略過，payload 無 statistics.json。
+- CPI：BLS/FRED 均為 2026-09、338.896，核對 passed。
+- 八組來源 8/8、344 筆：TWSE182、TPEx70、半導體10、面板10、能源10、消費5、鋼鐵7、航空50；錯誤0。
+- 官方公告：Fed 3；EIA 3（官方 HTML 備援，主路徑逾時）；BLS 1（官方備援，就業 RSS 無近期可核對公告）。
+- 匯入與讀回 HTTP 200；市場/CPI/來源/公告均保存成功。
+- POST refresh-all HTTP 202，run `fb037169-5f8b-425f-894c-27f199d56a0d`，06:36:22 啟動。
+- 輪詢曾遇本地 HTTP tunnel 403，程序中斷；網站 checkpoint 已保存，重啟後接續同一 run，未重複 POST。
+- 其餘 status 均 HTTP 200；06:46:51 completedAt；history HTTP 200、相同 completedAt，狀態 partial。
+- watchlistSource=latest_synced（同步於 10/12 20:29:57），本批 5 檔：8299、5289、2404、5009、2330；deferred 0。
+- 模組最終直接讀回：macro 55/55、expanded 12/12、market/precious 36/36、US indices 3/3、cross-market 4/4、US sectors 11/11、news 3/3，均 ok。
+- 5 檔 stock summary 皆 status=ok、refreshedThisRun=true、summaryScope=final_readback，但 stepStatus 仍為 pending；此欄不一致保留為缺陷。
+- Gate audit 5/5 recorded：8299/5289/2404/2330 valuation_divergence，5009 degraded；直接 Master 讀回相同。
+- 直接 Master：8299、5289、2404、2330因估值分歧不評級；5009為 C／保守觀察。Gate 4/5/8缺口、Gate 6警訊與未知 VETO 均未放寬。
+- 研究來源逐檔 HTTP 200、symbol/產業別可讀；8299 原始公告仍只有衍生 id，未提供官方公告序號；共識、同業與 8 期事前樣本缺口保留。
+- 上午信用直接讀回仍為 10/29 snapshot，verifiedAt=10/29 22:57:55 台北、captureDeferred=true；capturedAt 仍未暴露，未重標成晨間新資料。
+- 已知 MOEA 403 仍保留；本輪 TW_EXPORT_ORDERS 使用既存國發會 2026-09 官方快照，未冒充本輪新抓取。
+- JPY_HV20/60 觀測日仍為 10/23；雖回傳 ok，日期照實保留。
+- 貴金屬：黃金 4022.199951、白銀 52.108002、金銀比 77.18967906311204；各 2/3 來源通過，歷史 23 點。
