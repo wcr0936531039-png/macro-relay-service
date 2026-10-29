@@ -1,3 +1,13 @@
+# 最新：2026-10-30 06:46 台北晨間巡檢完成，partial
+
+[本輪完整紀錄](source-reliability-20261023/2026-10-30-morning-run.md)｜[v245 一次性晚間讀回](deploy-20261026/hotfix7.md)。
+
+run `fb037169-5f8b-425f-894c-27f199d56a0d`：POST HTTP 202；輪詢端曾遇一次 HTTP tunnel 403，中斷後由保存 checkpoint 接續同一 run，未重複 POST；其餘 status HTTP 200，06:46:51 completedAt，history HTTP 200 匹配，Gate audit 5/5。latest_synced 5 檔均保存。
+
+市場 10/29、75 sessions，1,952/1,988（98.19%）；八組來源 8/8、344 筆；核心 CPI 雙源同月同值。模組 55/55、12/12、36/36、3/3、4/4、11/11、3/3 均 ok。上午信用依規則略過，10/29 snapshot 的 verifiedAt 保留、captureDeferred=true；capturedAt 尚未暴露。partial 與已知缺口：五檔 summary 雖 ok 且 final_readback，但 stepStatus 仍 pending；Gate 4/5/8、Gate 6警訊、8299公告原始代號、MOEA 403、JPY波動率日期10/23均保留。未改程式、排程、權重或 Gate 門檻。
+
+---
+
 # 最新：2026-10-29 07:19 台北晨間巡檢完成，partial
 
 [本輪完整紀錄](automation-runs/20261029-0732-morning.md)。
