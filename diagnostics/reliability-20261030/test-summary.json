@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-30",
+  "sourceCommit": "a1106861533ebc5c76db9c67b28fb768e1ff6604",
+  "commands": [
+    {
+      "command": "node --test tests/reliability-20261030.test.mjs tests/v244-patrol-summary.test.mjs tests/v248-sources.test.mjs",
+      "exitCode": 0,
+      "tests": 15,
+      "passed": 15,
+      "failed": 0
+    },
+    {
+      "command": "NODE_OPTIONS=--stack-trace-limit=0 TZ=UTC npm test",
+      "exitCode": 0,
+      "finalGroupTests": 68,
+      "finalGroupPassed": 68,
+      "finalGroupFailed": 0,
+      "logSha256": "3805c53f1576cd0b2a87d48de06e39c0707982b92015646581ae2010880406f6"
+    }
+  ],
+  "cleanReplayWorkerMatches": true,
+  "htmlSha256": "878292cd516b7c424757bc8af8db69f122a0a3f70a66e2bdd301ecb5063bc5ce",
+  "workerSha256": "b5c5dd340f8801845d1c84a3292120dac46e26b83795dade7db4af93356474aa"
+}
