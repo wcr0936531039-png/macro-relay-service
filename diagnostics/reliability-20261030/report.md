@@ -14,3 +14,10 @@
 - 相同55列／相同時間前後比較：只SLOOS狀態與理由改變，日期、數值、擷取時間不變。stock由ok/pending改ok/ok，previousStepStatus=pending；信用備援依據維持verifiedAt，不再變capturedAt。
 - [完整來源diff](source.patch)，SHA-256 1a644cfcf757435fd507f34ac677adf24b69e8b7b2a34642569ff8b9251067a5；[55列前後比較](before-after.json)。
 - 尚未部署；完整測試執行期間新增兩項長期回歸測試，將對最終固定來源再跑完整npm test後才發布。
+
+## 發布檢查點
+- 最終固定來源完整 NODE_OPTIONS=--stack-trace-limit=0 TZ=UTC npm test exit0；最後組68/68（含新增8項），針對性15/15；完整測試log SHA-256 3805c53f1576cd0b2a87d48de06e39c0707982b92015646581ae2010880406f6。
+- source.patch於乾淨正式基線3ba4af7重放並build，Worker與實際受測版本逐字相同。
+- 2026-10-30 16:12:08台北部署succeeded，正式Sites v248；來源a1106861533ebc5c76db9c67b28fb768e1ff6604；前版v247保留回滾，受眾不變。
+- HTML維持878292cd516b7c424757bc8af8db69f122a0a3f70a66e2bdd301ecb5063bc5ce；Worker b5c5dd340f8801845d1c84a3292120dac46e26b83795dade7db4af93356474aa。
+- 手動發布後巡檢驗收已POST202：run 8a0318a2-5f34-46cd-8fb7-fa8206ae6110，16:12:33台北啟動；目前持續同run每10秒status推進，尚未宣稱完成；此輪不冒充今晚排程。
