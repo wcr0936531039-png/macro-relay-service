@@ -1,7 +1,14 @@
-# v246＋v247＋v248 部署紀錄
-- 2026-10-30：正式目前 v246；v245 保存為回滾版，本輪只部署一次。
-- 三份 patch SHA-256 相符：v246 84372778…、v247 e37febe4…、v248 9c5d2947…。
-- 已從 v245 依序重放三包，與目前 v246 接續兩包的 HTML／Worker 完全一致；build、diff --check 通過。
-- HTML SHA-256：878292cd516b7c424757bc8af8db69f122a0a3f70a66e2bdd301ecb5063bc5ce；完整 TZ=UTC npm test 執行中，未部署。
-- 瀏覽器啟動失敗：唯讀檔案系統（/home/agent/.codex/sessions）；桌面目視未驗，改由互動測試與 HTML 結構核對，不宣稱已看畫面。
-- 待驗：Swissquote／信用 capturedAt、新股五日補抓；第2項待部署後下一次實際22:30巡檢補，不預填結果。
+# v246＋v247＋v248 整合部署（2026-10-30）
+- 三包SHA核對通過：84372778…／e37febe4…／9c5d2947…；從v245依序重放與v246接續結果相同；build、diff --check、完整 TZ=UTC npm test exit 0（最後組60/60）。
+- 11:49:11台北部署一次成功；Sites正式版本v247（內容含交接v248），來源3ba4af7c6ff27426364f325d74bf7e93b95cb8dc；v245保留回滾。
+- 正式首頁HTML SHA-256＝878292cd516b7c424757bc8af8db69f122a0a3f70a66e2bdd301ecb5063bc5ce，與指定值相同。
+- 美元卡：雙圖／通道／▲▼／兩行說明／8欄表互動測試通過；真API 10/21零軸−57.819695（−57.82）、scoreContribution=0。
+- Gate卡：五檔各10個headline已讀到；摺疊與Gate6數字保留測試通過。瀏覽器因唯讀sessions目錄啟動失敗，未宣稱桌面目視通過；不再試手機。
+- 五檔評級、分數、VETO、進場status、出場exitSignal、風險許可及持股建議前後相同；補抓前五檔Gate1 evaluated→partial，因跨日後7/1 SLOOS過期（54/55），不是改門檻，其他Gate狀態相同。
+- 金／銀真讀回各3/3、核對通過；Swissquote XAU中間價3991.925（03:49:38.154Z）、XAG51.2837（03:49:38.258Z），errors=[]。
+- 信用七欄均2026-10-29 snapshot；capturedAt=verifiedAt=2026-10-29T14:57:55.909Z，capturedAtBasis=verifiedAt、captureDeferred=true；明示是核對時間備援，非獨立擷取存證。
+- 新版收集器已以 --market-only --sessions 5 成功抓取並匯入10/21、22、27、28、29；readback成功，最新1952/1988、75交易日。
+- 6898／6938各3/21，sessionsSinceListing=3、missingDates=[]、missingObservations=0；正確新股暖機，仍需18個交易日，不造RVOL。
+- Gate3產業RVOL讀回33/33 verified；選用FinMind名稱資料402，回退官方產業代碼後分33組，與舊39組不同口徑，不冒稱39/39；補抓本身errors=0。
+- 既有每日巡檢已改 --market-only --sessions 5，時段及啟用狀態不變；今晚第2項讀回已加入同一任務，無新增排程。
+- 第2項待2026-10-30實際22:30巡檢完成後追加：五檔摘要對照、三模組欄位、貴金屬三行原文；目前未預填完成。
