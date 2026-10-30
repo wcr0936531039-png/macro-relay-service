@@ -1,0 +1,1195 @@
+{
+  "runId": "c6040c06-defd-4b5f-a981-4f064bf1a8f9",
+  "startedAt": "2026-10-30T22:36:18.589Z",
+  "completedAt": "2026-10-30T22:46:02.581Z",
+  "status": "partial",
+  "postHttp": 202,
+  "historyMatched": true,
+  "watchlistSource": "latest_synced",
+  "watchlistSyncedAt": "2026-10-12T12:29:57.099Z",
+  "watchlist": [
+    {
+      "id": "8299",
+      "name": "群聯"
+    },
+    {
+      "id": "5289",
+      "name": "宜鼎"
+    },
+    {
+      "id": "2404",
+      "name": "漢唐"
+    },
+    {
+      "id": "5009",
+      "name": "榮剛"
+    },
+    {
+      "id": "2330",
+      "name": "台積電"
+    }
+  ],
+  "stockBatch": [
+    {
+      "id": "8299",
+      "name": "群聯",
+      "industry": "記憶體控制晶片"
+    },
+    {
+      "id": "5289",
+      "name": "宜鼎",
+      "industry": "工控記憶體／Edge AI"
+    },
+    {
+      "id": "2404",
+      "name": "漢唐",
+      "industry": "半導體廠務工程"
+    },
+    {
+      "id": "5009",
+      "name": "榮剛",
+      "industry": "航太／特殊鋼"
+    },
+    {
+      "id": "2330",
+      "name": "台積電",
+      "industry": "半導體業"
+    }
+  ],
+  "modules": {
+    "expandedMacro": {
+      "summary": {
+        "status": "ok",
+        "usable": 12,
+        "total": 12,
+        "checkedAt": "2026-10-30T22:37:24.954Z"
+      },
+      "direct": {
+        "usable": 12,
+        "total": 12,
+        "checkedAt": "2026-10-30T22:37:24.954Z",
+        "rowStatuses": [
+          "ok"
+        ]
+      },
+      "differences": [],
+      "missingSummaryFields": [
+        "refreshState",
+        "finalizeWaits"
+      ]
+    },
+    "marketAndPreciousMetals": {
+      "summary": {
+        "status": "ok",
+        "usable": 36,
+        "total": 36,
+        "checkedAt": "2026-10-30T22:42:18.425Z"
+      },
+      "direct": {
+        "usable": 36,
+        "total": 36,
+        "checkedAt": "2026-10-30T22:42:18.425Z",
+        "rowStatuses": [
+          "ok",
+          "snapshot"
+        ]
+      },
+      "differences": [],
+      "missingSummaryFields": [
+        "refreshState",
+        "finalizeWaits"
+      ]
+    },
+    "usIndices": {
+      "summary": {
+        "status": "ok",
+        "usable": 3,
+        "total": 3,
+        "checkedAt": "2026-10-30T22:37:58.099Z"
+      },
+      "direct": {
+        "usable": 3,
+        "total": 3,
+        "checkedAt": "2026-10-30T22:37:58.099Z",
+        "rowStatuses": [
+          "ok"
+        ]
+      },
+      "differences": [],
+      "missingSummaryFields": [
+        "refreshState",
+        "finalizeWaits"
+      ]
+    }
+  },
+  "stocks": [
+    {
+      "id": "8299",
+      "summary": {
+        "id": "8299",
+        "name": "群聯",
+        "status": "fresh",
+        "checkedAt": "2026-10-30T22:35:35.477Z",
+        "dataAsOf": "2026-10-30"
+      },
+      "directCheckedAt": "2026-10-30T22:35:35.477Z",
+      "directPriceDate": "2026-10-30",
+      "checkedAtMatches": true,
+      "dateMatches": true,
+      "refreshedThisRun": "NOT_PROVIDED",
+      "stepStatus": "NOT_PROVIDED",
+      "gateAudit": {
+        "status": "error",
+        "auditStatus": null,
+        "recorded": false,
+        "error": "step_timeout: 本步驟逾時；保存缺項並繼續其他項目"
+      },
+      "directMaster": {
+        "status": "valuation_divergence",
+        "auditStatus": "blocked"
+      },
+      "gateStatusMatches": false,
+      "auditStatusMatches": false,
+      "gateStatesMatch": null,
+      "credit": {
+        "marginDate": "2026-10-30",
+        "marginCapturedAt": "2026-10-30T14:44:10.832Z",
+        "marginStatus": "snapshot",
+        "marginIsStale": false,
+        "marginCaptureDeferred": true,
+        "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+      },
+      "comparisonLimitation": "Run audit timed out and was not recorded; later successful direct readback does not fill the missing run audit."
+    },
+    {
+      "id": "5289",
+      "summary": {
+        "id": "5289",
+        "name": "宜鼎",
+        "status": "fresh",
+        "checkedAt": "2026-10-30T22:35:35.614Z",
+        "dataAsOf": "2026-10-30"
+      },
+      "directCheckedAt": "2026-10-30T22:35:35.614Z",
+      "directPriceDate": "2026-10-30",
+      "checkedAtMatches": true,
+      "dateMatches": true,
+      "refreshedThisRun": "NOT_PROVIDED",
+      "stepStatus": "NOT_PROVIDED",
+      "gateAudit": {
+        "status": "valuation_divergence",
+        "auditStatus": "blocked",
+        "recorded": true
+      },
+      "directMaster": {
+        "status": "valuation_divergence",
+        "auditStatus": "blocked"
+      },
+      "gateStatusMatches": true,
+      "auditStatusMatches": true,
+      "gateStatesMatch": true,
+      "credit": {
+        "marginDate": "2026-10-30",
+        "marginCapturedAt": "2026-10-30T14:44:27.001Z",
+        "marginStatus": "snapshot",
+        "marginIsStale": false,
+        "marginCaptureDeferred": true,
+        "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+      }
+    },
+    {
+      "id": "2404",
+      "summary": {
+        "id": "2404",
+        "name": "漢唐",
+        "status": "fresh",
+        "checkedAt": "2026-10-30T22:35:35.573Z",
+        "dataAsOf": "2026-10-30"
+      },
+      "directCheckedAt": "2026-10-30T22:35:35.573Z",
+      "directPriceDate": "2026-10-30",
+      "checkedAtMatches": true,
+      "dateMatches": true,
+      "refreshedThisRun": "NOT_PROVIDED",
+      "stepStatus": "NOT_PROVIDED",
+      "gateAudit": {
+        "status": "valuation_divergence",
+        "auditStatus": "blocked",
+        "recorded": true
+      },
+      "directMaster": {
+        "status": "valuation_divergence",
+        "auditStatus": "blocked"
+      },
+      "gateStatusMatches": true,
+      "auditStatusMatches": true,
+      "gateStatesMatch": true,
+      "credit": {
+        "marginDate": "2026-10-30",
+        "marginCapturedAt": "2026-10-30T14:44:44.889Z",
+        "marginStatus": "snapshot",
+        "marginIsStale": false,
+        "marginCaptureDeferred": true,
+        "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+      }
+    },
+    {
+      "id": "5009",
+      "summary": {
+        "id": "5009",
+        "name": "榮剛",
+        "status": "fresh",
+        "checkedAt": "2026-10-30T22:35:35.531Z",
+        "dataAsOf": "2026-10-30"
+      },
+      "directCheckedAt": "2026-10-30T22:35:35.531Z",
+      "directPriceDate": "2026-10-30",
+      "checkedAtMatches": true,
+      "dateMatches": true,
+      "refreshedThisRun": "NOT_PROVIDED",
+      "stepStatus": "NOT_PROVIDED",
+      "gateAudit": {
+        "status": "degraded",
+        "auditStatus": "blocked",
+        "recorded": true
+      },
+      "directMaster": {
+        "status": "degraded",
+        "auditStatus": "blocked"
+      },
+      "gateStatusMatches": true,
+      "auditStatusMatches": true,
+      "gateStatesMatch": true,
+      "credit": {
+        "marginDate": "2026-10-30",
+        "marginCapturedAt": "2026-10-30T14:45:01.730Z",
+        "marginStatus": "snapshot",
+        "marginIsStale": false,
+        "marginCaptureDeferred": true,
+        "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+      }
+    },
+    {
+      "id": "2330",
+      "summary": {
+        "id": "2330",
+        "name": "台積電",
+        "status": "fresh",
+        "checkedAt": "2026-10-30T22:35:35.586Z",
+        "dataAsOf": "2026-10-30"
+      },
+      "directCheckedAt": "2026-10-30T22:35:35.586Z",
+      "directPriceDate": "2026-10-30",
+      "checkedAtMatches": true,
+      "dateMatches": true,
+      "refreshedThisRun": "NOT_PROVIDED",
+      "stepStatus": "NOT_PROVIDED",
+      "gateAudit": {
+        "status": "valuation_divergence",
+        "auditStatus": "blocked",
+        "recorded": true
+      },
+      "directMaster": {
+        "status": "valuation_divergence",
+        "auditStatus": "blocked"
+      },
+      "gateStatusMatches": true,
+      "auditStatusMatches": true,
+      "gateStatesMatch": true,
+      "credit": {
+        "marginDate": "2026-10-30",
+        "marginCapturedAt": "2026-10-30T14:45:19.174Z",
+        "marginStatus": "snapshot",
+        "marginIsStale": false,
+        "marginCaptureDeferred": true,
+        "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+      }
+    }
+  ],
+  "sourceResearch": [
+    {
+      "symbol": "8299",
+      "industry": "半導體業",
+      "status": "sources_ready",
+      "records": 4,
+      "errors": [],
+      "gaps": [
+        "每日重大訊息來源本次無此公司公告；不代表沒有歷史法說或風險",
+        "2026／2027 可追溯 EPS 共識及至少三家直接同業估值仍待核對",
+        "八期事前公司指引與財報前 EPS 共識尚未由此來源建立"
+      ],
+      "gatesPromoted": false,
+      "feedCaptures": [
+        {
+          "key": "tpex",
+          "fetchedAt": "2026-10-30T22:35:07.955Z",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "key": "semiconductors",
+          "fetchedAt": "2026-10-30T22:35:09.673Z",
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "recordEvidence": [
+        {
+          "symbol": "8299",
+          "kind": "company_announcement",
+          "source_date": "2026-10-16",
+          "published_at": null,
+          "official_key": null,
+          "source_stale": null
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-09-30",
+          "published_at": "2026-09-30T07:52:15.000Z",
+          "official_key": null,
+          "source_stale": false
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-09-29",
+          "published_at": "2026-09-29T08:03:54.000Z",
+          "official_key": null,
+          "source_stale": false
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-09-22",
+          "published_at": "2026-09-22T05:38:23.000Z",
+          "official_key": null,
+          "source_stale": false
+        }
+      ]
+    },
+    {
+      "symbol": "5289",
+      "industry": "電腦及週邊設備業",
+      "status": "sources_ready",
+      "records": 5,
+      "errors": [],
+      "gaps": [
+        "2026／2027 可追溯 EPS 共識及至少三家直接同業估值仍待核對",
+        "八期事前公司指引與財報前 EPS 共識尚未由此來源建立"
+      ],
+      "gatesPromoted": false,
+      "feedCaptures": [
+        {
+          "key": "tpex",
+          "fetchedAt": "2026-10-30T22:35:07.955Z",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "key": "semiconductors",
+          "fetchedAt": "2026-10-30T22:35:09.673Z",
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "recordEvidence": [
+        {
+          "symbol": "5289",
+          "kind": "company_announcement",
+          "source_date": "2026-10-29",
+          "published_at": null,
+          "official_key": {
+            "symbol": "5289",
+            "spoke_date": "2026-10-29",
+            "spoke_time": "180155",
+            "serial": null
+          },
+          "source_stale": null
+        },
+        {
+          "symbol": "5289",
+          "kind": "company_announcement",
+          "source_date": "2026-10-29",
+          "published_at": null,
+          "official_key": {
+            "symbol": "5289",
+            "spoke_date": "2026-10-29",
+            "spoke_time": "180320",
+            "serial": null
+          },
+          "source_stale": null
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-09-30",
+          "published_at": "2026-09-30T07:52:15.000Z",
+          "official_key": null,
+          "source_stale": false
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-09-29",
+          "published_at": "2026-09-29T08:03:54.000Z",
+          "official_key": null,
+          "source_stale": false
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-09-22",
+          "published_at": "2026-09-22T05:38:23.000Z",
+          "official_key": null,
+          "source_stale": false
+        }
+      ]
+    },
+    {
+      "symbol": "2404",
+      "industry": "電子工業",
+      "status": "sources_ready",
+      "records": 1,
+      "errors": [],
+      "gaps": [
+        "每日重大訊息來源本次無此公司公告；不代表沒有歷史法說或風險",
+        "2026／2027 可追溯 EPS 共識及至少三家直接同業估值仍待核對",
+        "八期事前公司指引與財報前 EPS 共識尚未由此來源建立"
+      ],
+      "gatesPromoted": false,
+      "feedCaptures": [
+        {
+          "key": "twse",
+          "fetchedAt": "2026-10-30T22:35:08.074Z",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "key": "semiconductors",
+          "fetchedAt": "2026-10-30T22:35:09.673Z",
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "recordEvidence": [
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-09-22",
+          "published_at": "2026-09-22T05:38:23.000Z",
+          "official_key": null,
+          "source_stale": false
+        }
+      ]
+    },
+    {
+      "symbol": "5009",
+      "industry": "鋼鐵工業",
+      "status": "sources_ready",
+      "records": 8,
+      "errors": [],
+      "gaps": [
+        "2026／2027 可追溯 EPS 共識及至少三家直接同業估值仍待核對",
+        "八期事前公司指引與財報前 EPS 共識尚未由此來源建立"
+      ],
+      "gatesPromoted": false,
+      "feedCaptures": [
+        {
+          "key": "tpex",
+          "fetchedAt": "2026-10-30T22:35:07.955Z",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "key": "steel",
+          "fetchedAt": "2026-10-30T22:35:08.657Z",
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "recordEvidence": [
+        {
+          "symbol": "5009",
+          "kind": "company_announcement",
+          "source_date": "2026-10-29",
+          "published_at": null,
+          "official_key": {
+            "symbol": "5009",
+            "spoke_date": "2026-10-29",
+            "spoke_time": "170845",
+            "serial": null
+          },
+          "source_stale": null
+        },
+        {
+          "symbol": "5009",
+          "kind": "company_announcement",
+          "source_date": "2026-10-29",
+          "published_at": null,
+          "official_key": {
+            "symbol": "5009",
+            "spoke_date": "2026-10-29",
+            "spoke_time": "170917",
+            "serial": null
+          },
+          "source_stale": null
+        },
+        {
+          "symbol": "5009",
+          "kind": "company_announcement",
+          "source_date": "2026-10-29",
+          "published_at": null,
+          "official_key": {
+            "symbol": "5009",
+            "spoke_date": "2026-10-29",
+            "spoke_time": "171023",
+            "serial": null
+          },
+          "source_stale": null
+        },
+        {
+          "symbol": "5009",
+          "kind": "company_announcement",
+          "source_date": "2026-10-29",
+          "published_at": null,
+          "official_key": {
+            "symbol": "5009",
+            "spoke_date": "2026-10-29",
+            "spoke_time": "171058",
+            "serial": null
+          },
+          "source_stale": null
+        },
+        {
+          "symbol": "5009",
+          "kind": "company_announcement",
+          "source_date": "2026-10-29",
+          "published_at": null,
+          "official_key": {
+            "symbol": "5009",
+            "spoke_date": "2026-10-29",
+            "spoke_time": "171209",
+            "serial": null
+          },
+          "source_stale": null
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-10-23",
+          "published_at": "2026-10-23T06:02:59.000Z",
+          "official_key": null,
+          "source_stale": false
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-10-12",
+          "published_at": "2026-10-12T05:27:17.000Z",
+          "official_key": null,
+          "source_stale": false
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-09-24",
+          "published_at": "2026-09-24T08:40:42.000Z",
+          "official_key": null,
+          "source_stale": false
+        }
+      ]
+    },
+    {
+      "symbol": "2330",
+      "industry": "電子工業",
+      "status": "sources_ready",
+      "records": 4,
+      "errors": [],
+      "gaps": [
+        "每日重大訊息來源本次無此公司公告；不代表沒有歷史法說或風險",
+        "2026／2027 可追溯 EPS 共識及至少三家直接同業估值仍待核對",
+        "八期事前公司指引與財報前 EPS 共識尚未由此來源建立"
+      ],
+      "gatesPromoted": false,
+      "feedCaptures": [
+        {
+          "key": "twse",
+          "fetchedAt": "2026-10-30T22:35:08.074Z",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "key": "semiconductors",
+          "fetchedAt": "2026-10-30T22:35:09.673Z",
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "recordEvidence": [
+        {
+          "symbol": "2330",
+          "kind": "company_announcement",
+          "source_date": "2026-10-29",
+          "published_at": null,
+          "official_key": {
+            "symbol": "2330",
+            "spoke_date": "2026-10-29",
+            "spoke_time": "140538",
+            "serial": null
+          },
+          "source_stale": null
+        },
+        {
+          "symbol": "2330",
+          "kind": "company_announcement",
+          "source_date": "2026-10-08",
+          "published_at": null,
+          "official_key": null,
+          "source_stale": null
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-09-29",
+          "published_at": "2026-09-29T08:03:54.000Z",
+          "official_key": null,
+          "source_stale": false
+        },
+        {
+          "symbol": null,
+          "kind": "industry_report",
+          "source_date": "2026-09-22",
+          "published_at": "2026-09-22T05:38:23.000Z",
+          "official_key": null,
+          "source_stale": false
+        }
+      ]
+    }
+  ],
+  "marketCredit": [
+    {
+      "id": "TWSE_MARGIN_BALANCE_NTD",
+      "value": 6234.67886,
+      "date": "2026-10-30",
+      "status": "snapshot",
+      "capturedAt": "2026-10-30T14:58:21.343Z",
+      "capturedAtBasis": "capturedAt",
+      "verifiedAt": "2026-10-30T14:58:24.143Z",
+      "captureDeferred": true,
+      "previousDate": "2026-10-30"
+    },
+    {
+      "id": "TWSE_MARGIN_CHANGE_NTD",
+      "value": -104.42962,
+      "date": "2026-10-30",
+      "status": "snapshot",
+      "capturedAt": "2026-10-30T14:58:21.343Z",
+      "capturedAtBasis": "capturedAt",
+      "verifiedAt": "2026-10-30T14:58:24.143Z",
+      "captureDeferred": true,
+      "previousDate": "2026-10-30"
+    },
+    {
+      "id": "TWSE_MARGIN_BALANCE_UNITS",
+      "value": 9555729,
+      "date": "2026-10-30",
+      "status": "snapshot",
+      "capturedAt": "2026-10-30T14:58:21.343Z",
+      "capturedAtBasis": "capturedAt",
+      "verifiedAt": "2026-10-30T14:58:24.143Z",
+      "captureDeferred": true,
+      "previousDate": "2026-10-30"
+    },
+    {
+      "id": "TWSE_SHORT_BALANCE",
+      "value": 197359,
+      "date": "2026-10-30",
+      "status": "snapshot",
+      "capturedAt": "2026-10-30T14:58:21.343Z",
+      "capturedAtBasis": "capturedAt",
+      "verifiedAt": "2026-10-30T14:58:24.143Z",
+      "captureDeferred": true,
+      "previousDate": "2026-10-30"
+    },
+    {
+      "id": "TWSE_SHORT_CHANGE",
+      "value": 8357,
+      "date": "2026-10-30",
+      "status": "snapshot",
+      "capturedAt": "2026-10-30T14:58:21.343Z",
+      "capturedAtBasis": "capturedAt",
+      "verifiedAt": "2026-10-30T14:58:24.143Z",
+      "captureDeferred": true,
+      "previousDate": "2026-10-30"
+    },
+    {
+      "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+      "value": 0.42118878690273326,
+      "date": "2026-10-30",
+      "status": "snapshot",
+      "capturedAt": "2026-10-30T14:58:21.343Z",
+      "capturedAtBasis": "capturedAt",
+      "verifiedAt": "2026-10-30T14:58:24.143Z",
+      "captureDeferred": true,
+      "previousDate": "2026-10-30"
+    },
+    {
+      "id": "TWSE_CREDIT_TRADE_VALUE",
+      "value": 939.8191576,
+      "date": "2026-10-30",
+      "status": "snapshot",
+      "capturedAt": "2026-10-30T14:58:21.343Z",
+      "capturedAtBasis": "capturedAt",
+      "verifiedAt": "2026-10-30T14:58:24.143Z",
+      "captureDeferred": true,
+      "previousDate": "2026-10-30"
+    }
+  ],
+  "scanner": {
+    "status": "scan_ready",
+    "date": "2026-10-30",
+    "universe": {
+      "twse": 1093,
+      "tpex": 897,
+      "total": 1990
+    },
+    "captured": {
+      "twse": 1087,
+      "tpex": 874,
+      "total": 1961
+    },
+    "coveragePercent": 98.54271356783919,
+    "sessions": 76,
+    "missingBreakdown": {
+      "noTrade": 21,
+      "volumeOnly": 3,
+      "notQuoted": 5,
+      "total": 29,
+      "note": "零成交＝當日成交股數 0；只有量＝只有零股成交、整股無收盤價；未列入＝名冊有、當日行情表沒有（多為停止買賣或暫停交易）。都不補價。"
+    },
+    "historyCoverage": {
+      "warmup": 8,
+      "needsReview": 15
+    }
+  },
+  "sectors": {
+    "status": "OK",
+    "observedAt": "2026-10-29",
+    "coverage": {
+      "valid": 11,
+      "total": 11
+    },
+    "sourceCoverage": {
+      "valid": 12,
+      "total": 12
+    },
+    "sourceRole": "主要來源",
+    "priceField": "adjClose",
+    "pending": false,
+    "refreshing": false,
+    "quota": "NOT_EXPOSED",
+    "expectedLatestSession": "2026-10-29",
+    "publishGraceHours": 8,
+    "nextSessionEligibleAt": "2026-10-31T04:15:00.000Z",
+    "calendarPolicyCheckedAt": "2026-10-30T22:47:57.213Z"
+  },
+  "preciousJudgment": [
+    "黃金現貨參考價（XAU/USD）：3876.399902 美元/金衡盎司；2026-10-30；ok；3/3 來源可用，核對通過（價差 0.3217%、時間差 0.38 分鐘）",
+    "白銀現貨參考價（XAG/USD）：49.254002 美元/金衡盎司；2026-10-30；ok；3/3 來源可用，核對通過（價差 0.0873%、時間差 0.38 分鐘）",
+    "黃金／白銀比（XAU/XAG）：78.7022321962792 倍；2026-10-30；ok；金價 3/3 來源可用、銀價 3/3 來源可用，核對通過；歷史 24 點"
+  ],
+  "allModules": {
+    "macro": {
+      "status": "ok",
+      "usable": 55,
+      "total": 55
+    },
+    "expandedMacro": {
+      "status": "ok",
+      "usable": 12,
+      "total": 12
+    },
+    "marketAndPreciousMetals": {
+      "status": "ok",
+      "usable": 36,
+      "total": 36
+    },
+    "usIndices": {
+      "status": "ok",
+      "usable": 3,
+      "total": 3
+    },
+    "crossMarket": {
+      "status": "ok",
+      "usable": 4,
+      "total": 4
+    },
+    "usSectors": {
+      "status": "ok",
+      "usable": 11,
+      "total": 11
+    },
+    "officialNews": {
+      "status": "ok",
+      "usable": 3,
+      "total": 3
+    }
+  },
+  "gateAuditSaved": 4,
+  "gateAuditRequired": 5,
+  "creditOvernightPairing": {
+    "baselineRunId": "133d0e04-b3b1-4bce-bb49-1466888af86f",
+    "baselineCompletedAt": "2026-10-30T15:01:37.703Z",
+    "checkedAfterRunId": "c6040c06-defd-4b5f-a981-4f064bf1a8f9",
+    "checkedAfterCompletedAt": "2026-10-30T22:46:02.581Z",
+    "market": [
+      {
+        "id": "TWSE_MARGIN_BALANCE_NTD",
+        "night": {
+          "id": "TWSE_MARGIN_BALANCE_NTD",
+          "value": 6234.67886,
+          "date": "2026-10-30",
+          "status": "ok",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": null,
+          "previousDate": "2026-10-30"
+        },
+        "morning": {
+          "id": "TWSE_MARGIN_BALANCE_NTD",
+          "value": 6234.67886,
+          "date": "2026-10-30",
+          "status": "snapshot",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": true,
+          "previousDate": "2026-10-30"
+        },
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "capturedAtBasis": true
+        }
+      },
+      {
+        "id": "TWSE_MARGIN_CHANGE_NTD",
+        "night": {
+          "id": "TWSE_MARGIN_CHANGE_NTD",
+          "value": -104.42962,
+          "date": "2026-10-30",
+          "status": "ok",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": null,
+          "previousDate": "2026-10-30"
+        },
+        "morning": {
+          "id": "TWSE_MARGIN_CHANGE_NTD",
+          "value": -104.42962,
+          "date": "2026-10-30",
+          "status": "snapshot",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": true,
+          "previousDate": "2026-10-30"
+        },
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "capturedAtBasis": true
+        }
+      },
+      {
+        "id": "TWSE_MARGIN_BALANCE_UNITS",
+        "night": {
+          "id": "TWSE_MARGIN_BALANCE_UNITS",
+          "value": 9555729,
+          "date": "2026-10-30",
+          "status": "ok",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": null,
+          "previousDate": "2026-10-30"
+        },
+        "morning": {
+          "id": "TWSE_MARGIN_BALANCE_UNITS",
+          "value": 9555729,
+          "date": "2026-10-30",
+          "status": "snapshot",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": true,
+          "previousDate": "2026-10-30"
+        },
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "capturedAtBasis": true
+        }
+      },
+      {
+        "id": "TWSE_SHORT_BALANCE",
+        "night": {
+          "id": "TWSE_SHORT_BALANCE",
+          "value": 197359,
+          "date": "2026-10-30",
+          "status": "ok",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": null,
+          "previousDate": "2026-10-30"
+        },
+        "morning": {
+          "id": "TWSE_SHORT_BALANCE",
+          "value": 197359,
+          "date": "2026-10-30",
+          "status": "snapshot",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": true,
+          "previousDate": "2026-10-30"
+        },
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "capturedAtBasis": true
+        }
+      },
+      {
+        "id": "TWSE_SHORT_CHANGE",
+        "night": {
+          "id": "TWSE_SHORT_CHANGE",
+          "value": 8357,
+          "date": "2026-10-30",
+          "status": "ok",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": null,
+          "previousDate": "2026-10-30"
+        },
+        "morning": {
+          "id": "TWSE_SHORT_CHANGE",
+          "value": 8357,
+          "date": "2026-10-30",
+          "status": "snapshot",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": true,
+          "previousDate": "2026-10-30"
+        },
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "capturedAtBasis": true
+        }
+      },
+      {
+        "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+        "night": {
+          "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+          "value": 0.42118878690273326,
+          "date": "2026-10-30",
+          "status": "ok",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": null,
+          "previousDate": "2026-10-30"
+        },
+        "morning": {
+          "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+          "value": 0.42118878690273326,
+          "date": "2026-10-30",
+          "status": "snapshot",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": true,
+          "previousDate": "2026-10-30"
+        },
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "capturedAtBasis": true
+        }
+      },
+      {
+        "id": "TWSE_CREDIT_TRADE_VALUE",
+        "night": {
+          "id": "TWSE_CREDIT_TRADE_VALUE",
+          "value": 939.8191576,
+          "date": "2026-10-30",
+          "status": "ok",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": null,
+          "previousDate": "2026-10-30"
+        },
+        "morning": {
+          "id": "TWSE_CREDIT_TRADE_VALUE",
+          "value": 939.8191576,
+          "date": "2026-10-30",
+          "status": "snapshot",
+          "capturedAt": "2026-10-30T14:58:21.343Z",
+          "capturedAtBasis": "capturedAt",
+          "verifiedAt": "2026-10-30T14:58:24.143Z",
+          "captureDeferred": true,
+          "previousDate": "2026-10-30"
+        },
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "capturedAtBasis": true
+        }
+      }
+    ],
+    "stocks": [
+      {
+        "id": "8299",
+        "night": {
+          "marginDate": "2026-10-30",
+          "marginCapturedAt": "2026-10-30T14:44:10.832Z",
+          "marginStatus": "ok",
+          "marginIsStale": false,
+          "marginCaptureDeferred": false,
+          "marginReason": null
+        },
+        "morning": {
+          "marginDate": "2026-10-30",
+          "marginCapturedAt": "2026-10-30T14:44:10.832Z",
+          "marginStatus": "snapshot",
+          "marginIsStale": false,
+          "marginCaptureDeferred": true,
+          "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+        },
+        "matches": {
+          "marginDate": true,
+          "marginCapturedAt": true
+        },
+        "verifiedAt": "NOT_EXPOSED_BY_STOCK_API"
+      },
+      {
+        "id": "5289",
+        "night": {
+          "marginDate": "2026-10-30",
+          "marginCapturedAt": "2026-10-30T14:44:27.001Z",
+          "marginStatus": "ok",
+          "marginIsStale": false,
+          "marginCaptureDeferred": false,
+          "marginReason": null
+        },
+        "morning": {
+          "marginDate": "2026-10-30",
+          "marginCapturedAt": "2026-10-30T14:44:27.001Z",
+          "marginStatus": "snapshot",
+          "marginIsStale": false,
+          "marginCaptureDeferred": true,
+          "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+        },
+        "matches": {
+          "marginDate": true,
+          "marginCapturedAt": true
+        },
+        "verifiedAt": "NOT_EXPOSED_BY_STOCK_API"
+      },
+      {
+        "id": "2404",
+        "night": {
+          "marginDate": "2026-10-30",
+          "marginCapturedAt": "2026-10-30T14:44:44.889Z",
+          "marginStatus": "ok",
+          "marginIsStale": false,
+          "marginCaptureDeferred": false,
+          "marginReason": null
+        },
+        "morning": {
+          "marginDate": "2026-10-30",
+          "marginCapturedAt": "2026-10-30T14:44:44.889Z",
+          "marginStatus": "snapshot",
+          "marginIsStale": false,
+          "marginCaptureDeferred": true,
+          "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+        },
+        "matches": {
+          "marginDate": true,
+          "marginCapturedAt": true
+        },
+        "verifiedAt": "NOT_EXPOSED_BY_STOCK_API"
+      },
+      {
+        "id": "5009",
+        "night": {
+          "marginDate": "2026-10-30",
+          "marginCapturedAt": "2026-10-30T14:45:01.730Z",
+          "marginStatus": "ok",
+          "marginIsStale": false,
+          "marginCaptureDeferred": false,
+          "marginReason": null
+        },
+        "morning": {
+          "marginDate": "2026-10-30",
+          "marginCapturedAt": "2026-10-30T14:45:01.730Z",
+          "marginStatus": "snapshot",
+          "marginIsStale": false,
+          "marginCaptureDeferred": true,
+          "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+        },
+        "matches": {
+          "marginDate": true,
+          "marginCapturedAt": true
+        },
+        "verifiedAt": "NOT_EXPOSED_BY_STOCK_API"
+      },
+      {
+        "id": "2330",
+        "night": {
+          "marginDate": "2026-10-30",
+          "marginCapturedAt": "2026-10-30T14:45:19.174Z",
+          "marginStatus": "ok",
+          "marginIsStale": false,
+          "marginCaptureDeferred": false,
+          "marginReason": null
+        },
+        "morning": {
+          "marginDate": "2026-10-30",
+          "marginCapturedAt": "2026-10-30T14:45:19.174Z",
+          "marginStatus": "snapshot",
+          "marginIsStale": false,
+          "marginCaptureDeferred": true,
+          "marginReason": "22:30前不抓取個股融資融券；保留已保存的原觀測日與擷取時間。"
+        },
+        "matches": {
+          "marginDate": true,
+          "marginCapturedAt": true
+        },
+        "verifiedAt": "NOT_EXPOSED_BY_STOCK_API"
+      }
+    ]
+  }
+}
