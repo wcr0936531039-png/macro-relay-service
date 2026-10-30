@@ -1,3 +1,15 @@
+# 最新：2026-10-30 23:01台北晚間巡檢完成，partial
+
+[本輪完整紀錄](source-reliability-20261023/2026-10-30-night-run.md)｜[逐欄讀回](source-reliability-20261023/2026-10-30-night-readback.json)｜[hotfix8一次性追加已完成](deploy-20261026/hotfix8.md)。
+
+run `133d0e04-b3b1-4bce-bb49-1466888af86f`：POST202、33次status200、23:01:37 completedAt、history200同run與時間匹配、Gate5/5 recorded。latest_synced 5檔8299／5289／2404／5009／2330；快照fresh使用22:44–22:45新存有效值，未偽裝晚間run重新抓取。三模組51列與直接GET一致、五檔status／auditStatus分開比及50 Gate狀態一致；缺省refreshedThisRun／stepStatus／refreshState／finalizeWaits照實記錄。
+
+官方5日行情10/30 1960/1989（98.54%）、76日，來源8/8共348筆，CPI雙源2026-09=338.896。總經55/55、擴展12/12、市場36/36、股指3/3、跨市場4/4、板塊11/11、公告3/3均ok。外部信用6次307保留；網站內部大盤7/7與個股5/5取得10/30新信用。新增previousDate同日標籤錯位已記錄，final修訂與翌晨保持待實測；Gate4/5/8及Gate6真實警訊、公告序號、MOEA403／目視限制不解除。排程及程式本輪未改。
+
+下午中斷的16:12手動run先接續至22:51:32完成、Gate5/5，與本夜間run分開。[下午修補與恢復紀錄](reliability-20261030/report.md)。
+
+---
+
 # 最新：2026-10-30 06:46 台北晨間巡檢完成，partial
 
 [本輪完整紀錄](source-reliability-20261023/2026-10-30-morning-run.md)｜[v245 一次性晚間讀回](deploy-20261026/hotfix7.md)。
