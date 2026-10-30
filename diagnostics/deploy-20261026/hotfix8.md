@@ -1,14 +1,15 @@
-# v246＋v247＋v248 整合部署（2026-10-30）
-- 三包SHA核對通過：84372778…／e37febe4…／9c5d2947…；從v245依序重放與v246接續結果相同；build、diff --check、完整 TZ=UTC npm test exit 0（最後組60/60）。
-- 11:49:11台北部署一次成功；Sites正式版本v247（內容含交接v248），來源3ba4af7c6ff27426364f325d74bf7e93b95cb8dc；v245保留回滾。
-- 正式首頁HTML SHA-256＝878292cd516b7c424757bc8af8db69f122a0a3f70a66e2bdd301ecb5063bc5ce，與指定值相同。
-- 美元卡：雙圖／通道／▲▼／兩行說明／8欄表互動測試通過；真API 10/21零軸−57.819695（−57.82）、scoreContribution=0。
-- Gate卡：五檔各10個headline已讀到；摺疊與Gate6數字保留測試通過。瀏覽器因唯讀sessions目錄啟動失敗，未宣稱桌面目視通過；不再試手機。
-- 五檔評級、分數、VETO、進場status、出場exitSignal、風險許可及持股建議前後相同；補抓前五檔Gate1 evaluated→partial，因跨日後7/1 SLOOS過期（54/55），不是改門檻，其他Gate狀態相同。
-- 金／銀真讀回各3/3、核對通過；Swissquote XAU中間價3991.925（03:49:38.154Z）、XAG51.2837（03:49:38.258Z），errors=[]。
-- 信用七欄均2026-10-29 snapshot；capturedAt=verifiedAt=2026-10-29T14:57:55.909Z，capturedAtBasis=verifiedAt、captureDeferred=true；明示是核對時間備援，非獨立擷取存證。
-- 新版收集器已以 --market-only --sessions 5 成功抓取並匯入10/21、22、27、28、29；readback成功，最新1952/1988、75交易日。
-- 6898／6938各3/21，sessionsSinceListing=3、missingDates=[]、missingObservations=0；正確新股暖機，仍需18個交易日，不造RVOL。
-- Gate3產業RVOL讀回33/33 verified；選用FinMind名稱資料402，回退官方產業代碼後分33組，與舊39組不同口徑，不冒稱39/39；補抓本身errors=0。
-- 既有每日巡檢已改 --market-only --sessions 5，時段及啟用狀態不變；今晚第2項讀回已加入同一任務，無新增排程。
-- 第2項待2026-10-30實際22:30巡檢完成後追加：五檔摘要對照、三模組欄位、貴金屬三行原文；目前未預填完成。
+# v246＋v247＋v248 整合部署／10-30晚間驗收
+- 三包SHA核對84372778…／e37febe4…／9c5d2947…；v245重放與接續相同，build、diff --check、完整TZ=UTC npm test exit0（末組60/60）；11:49:11台北部署一次成功，原生v247、來源3ba4af7c6ff27426364f325d74bf7e93b95cb8dc，v245保留回滾。
+- 正式HTML SHA-256 878292cd516b7c424757bc8af8db69f122a0a3f70a66e2bdd301ecb5063bc5ce；美元雙圖／通道／8欄互動及Gate卡測試通過、scoreContribution=0，五檔既有評分／VETO／風險前後不變。
+- 桌面瀏覽器因唯讀sessions無法啟動，未宣稱目視通過，不再試手機；下午另三項修補16:12部署原生v248及測試68/68見[獨立紀錄](../reliability-20261030/report.md)，非夜間修改。
+- 實際夜間run 133d0e04-b3b1-4bce-bb49-1466888af86f：22:51:40 POST202→33次status HTTP200→23:01:37 completedAt partial→history200同run／時間匹配；Gate5/5 recorded:true。下午中斷run已先獨立恢復，不冒充夜間。
+- watchlistSource=latest_synced、syncedAt=2026-10-12T12:29:57.099Z；watchlist與stockBatch均5檔8299／5289／2404／5009／2330。
+- 五檔摘要均fresh、10/30，checkedAt與直接股票讀回5/5相同；refreshedThisRun／stepStatus均未提供（快取有效，非本run重抓），不能補作true／ok；下午恢復run五檔則ok／stepStatus=ok、previousStepStatus=pending。
+- status與auditStatus分開比：四檔valuation_divergence、5009 degraded；auditStatus均blocked。直接Master逐欄5/5相同、50個Gate狀態相同，保存不代表通過。
+- expandedMacro ok12/12、marketAndPreciousMetals ok36/36、usIndices ok3/3；巡檢後直接GET對照51列value/date/status/reason差異0、checkedAt相同；三者refreshState／finalizeWaits均未提供，未造值。
+- 其餘總經55/55、跨市場4/4、板塊11/11、公告3/3均ok；Tiingo主要來源10/29、與Yahoo within_guard，額度未暴露。行情5日匯入10/30 1960/1989、76日；八來源348筆、errors=[]。
+- 黃金現貨參考價（XAU/USD）：3916.6000000000004 美元/金衡盎司；2026-10-30；ok；3/3 來源可用，核對通過（價差 0.002%、時間差 0.01 分鐘）
+- 白銀現貨參考價（XAG/USD）：49.6475 美元/金衡盎司；2026-10-30；ok；3/3 來源可用，核對通過（價差 0.0291%、時間差 0.01 分鐘）
+- 黃金／白銀比（XAU/XAG）：78.88816153884889 倍；2026-10-30；ok；金價 3/3 來源可用、銀價 3/3 來源可用，核對通過；歷史 24 點
+- 外部信用6次307仍失敗；內部大盤7/7與個股5/5取得10/30新信用，擷取／核驗分離。previousDate同日標籤異常、final修訂及翌晨連續性待驗；Gate4/5/8、Gate6警訊、公告原始序號、MOEA403及目視缺口保留。
+- hotfix8第2項一次性追加已完成，後續忽略；[完整夜間紀錄](../source-reliability-20261023/2026-10-30-night-run.md)與[逐欄比較](../source-reliability-20261023/2026-10-30-night-readback.json)。未改夜間程式、權重、排程或其他設定。
