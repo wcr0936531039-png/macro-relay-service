@@ -7,3 +7,5 @@
 - 06:36匯入exit0，universe／9序列／CPI／5日行情／sources／news均ok:true，CPI readback passed。scanner讀回10/30、1961/1990（98.5427%）、76日；名冊／行情較昨晚增加1檔，沒有增加假交易日。八來源336筆、errors=[]；本輪payload無statistics.json。
 
 - POST refresh-all HTTP202已建立晨間run c6040c06-defd-4b5f-a981-4f064bf1a8f9；同身分每10秒GET status持續HTTP200，目前stocks/index0，completedAt尚未出現，不另建run。
+
+- 06:46:02同run完成partial，33次status HTTP200、history HTTP200匹配；Gate audit僅4/5，8299 step_timeout、recorded:false，其他4檔recorded:true。已先保存失敗；稍後直接Master讀回即使成功也不倒改這輪缺失快照，不宣稱全保存。執行本身可完成，單步逾時視暫時性，未改排程。
