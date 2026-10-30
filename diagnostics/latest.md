@@ -1,3 +1,15 @@
+# 最新：2026-10-31 06:46台北晨間巡檢完成，partial；Gate審計4/5
+
+[完整紀錄](source-reliability-20261023/2026-10-31-morning-run.md)｜[讀回與跨日配對](source-reliability-20261023/2026-10-31-morning-readback.json)。
+
+run `c6040c06-defd-4b5f-a981-4f064bf1a8f9`：POST HTTP202、reason=null；33次status HTTP200至06:46:02 completedAt，history200同run／完成時間匹配。**8299 Gate審計step_timeout、recorded:false，本輪僅4/5保存**；後續單獨Master成功不倒填遺失快照，其餘四檔status／auditStatus及40 Gate與直接讀回一致。latest_synced 5檔8299／5289／2404／5009／2330，syncedAt保留10/12原值。
+
+跨日信用實驗完成本次配對：大盤7/7數值、觀測日、原capturedAt／verifiedAt完全保留；個股5/5原觀測日及marginCapturedAt未被晨間更新重置，皆snapshot、captureDeferred=true。個股verifiedAt未暴露、provisional／final修訂book仍未驗證，previousDate同日標籤問題保留。上午沒有statistics.json、沒有抓取新信用。
+
+官方5日行情10/30 1961/1990（98.5427%）、76日，八來源336筆、errors=[]；核心CPI BLS/FRED 2026-09=338.896。模組55/55、12/12、36/36、3/3、4/4、11/11、3/3均ok，指定三模組51列直接對照差異0。Tiingo觀測10/29符合既有8小時發布寬限，不冒稱已取得10/30。Gate4/5/8、Gate6警訊、原始公告序號、MOEA403與目視缺口繼續保留。未改程式、權重、Gate門檻、時段或啟用設定。
+
+---
+
 # 最新：2026-10-30 23:01台北晚間巡檢完成，partial
 
 [本輪完整紀錄](source-reliability-20261023/2026-10-30-night-run.md)｜[逐欄讀回](source-reliability-20261023/2026-10-30-night-readback.json)｜[hotfix8一次性追加已完成](deploy-20261026/hotfix8.md)。
