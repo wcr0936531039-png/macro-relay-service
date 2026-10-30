@@ -1,11 +1,23 @@
-# 2026-10-31 晨間巡檢（進行中）
-- 06:33台北確認正式Sites v248、owner-only；重新讀取官方工具、scanner及history HTTP200。固定market-only sessions5；總經使用保存的morning wrapper、略過信用，未修改收集器。
-- 啟動前status為昨晚run 133d0e04-b3b1-4bce-bb49-1466888af86f已完成partial，completedAt=2026-10-30T15:01:37.703Z。10/30 23:06額外嘗試僅留下空收集log，程序已不存在；無匯入／POST或完成證據，不宣稱該次完成，不誤匯其暫存檔。
-- 晨間首次讀回大盤信用仍10/30，capturedAt=14:58:21.343Z、verifiedAt=14:58:24.143Z，與昨晚保存相同；逐檔及本輪結束後仍待比較。hotfix8一次性追加已完成，不再重做。
-- 行情與晨間總經收集中；尚未POST本輪run，未宣稱completedAt或Gate保存。
-
-- 06:36匯入exit0，universe／9序列／CPI／5日行情／sources／news均ok:true，CPI readback passed。scanner讀回10/30、1961/1990（98.5427%）、76日；名冊／行情較昨晚增加1檔，沒有增加假交易日。八來源336筆、errors=[]；本輪payload無statistics.json。
-
-- POST refresh-all HTTP202已建立晨間run c6040c06-defd-4b5f-a981-4f064bf1a8f9；同身分每10秒GET status持續HTTP200，目前stocks/index0，completedAt尚未出現，不另建run。
-
-- 06:46:02同run完成partial，33次status HTTP200、history HTTP200匹配；Gate audit僅4/5，8299 step_timeout、recorded:false，其他4檔recorded:true。已先保存失敗；稍後直接Master讀回即使成功也不倒改這輪缺失快照，不宣稱全保存。執行本身可完成，單步逾時視暫時性，未改排程。
+# 2026-10-31 晨間巡檢完成：partial
+- 06:33台北開始；Sites get_site確認正式v248、擁有者私人存取；重新取得official-data-tools／scanner／history HTTP200。本輪只更新資料，沒有修改網站程式、指標目錄、最終值規則、權重、Gate門檻或排程。
+- 晚間最後已核實run 133d0e04-b3b1-4bce-bb49-1466888af86f於10/30 23:01:37完成；另一次23:06嘗試留下空收集log、空payload，程序已不存在，無可核實退出／匯入／POST證據，列中斷，不宣稱完成。本輪用全新暫存目錄、不匯入其舊資料。
+- 晨間明確POST /api/automation/refresh-all HTTP202、reason=null，run c6040c06-defd-4b5f-a981-4f064bf1a8f9；同身分每10秒GET status共33次均HTTP200，06:46:02 completedAt、status=partial；GET history HTTP200匹配同run與完成時間。
+- **Gate快照只保存4/5**：8299審計step_timeout、recorded:false；5289／2404／5009／2330 recorded:true。8299稍後直接Master HTTP200、valuation_divergence／auditStatus=blocked，但沒有倒改本輪遺失的審計快照。單步逾時屬本輪缺項，不宣稱5/5；排程保持原狀。
+- watchlistSource=latest_synced、watchlistSyncedAt=2026-10-12T12:29:57.099Z（台北20:29:57）；watchlist與stockBatch均5檔8299、5289、2404、5009、2330，沒有拿內建四檔冒充同步清單。
+- 官方行情固定 --market-only --sessions 5：重抓10/22、27、28、29、30，errors=[]、metadataErrors=[]；匯入及讀回成功。最新10/30，TWSE1087＋TPEx874＝1961/1990（98.5427%）、76日；較昨晚名冊與有效行情各增1，不增加假交易日。
+- 未取得29檔＝零成交21、只有量3、未列入5；historyCoverage warmup8、needsReview15另列。保留原歷史與同日兩市場口徑，不補價、不補掛牌前行情、不強行產生不足樣本指標。
+- 從中繼重新讀取diagnostics/automation-tools/macro_morning.py；與本輪collector dispatch相容，僅collect_macro、collect_statistics略過。九條序列與CPI成功、errors=[]；美債3M／10Y／30Y觀測進至10/29，能源／日圓／美元保留各自較早日期。確認payload沒有statistics.json。
+- 核心CPI BLS／FRED同月2026-09、338.896，來源機構雙票、差0，匯入後readback passed；不宣稱第三個通道也成功。universe、9序列、CPI、五日行情、sources、news全部匯入ok:true，importer exit0。
+- 八來源8/8、336筆：TWSE170、TPEx74、半導體10、顯示10、能源10、消費5、鋼鐵7、航空50，最終errors=[]；消費電子保留官方分類HTML備援及原RSS空白attempt。
+- 五檔來源池symbol／industry讀回正確，8299半導體業4筆、5289電腦及週邊設備業5筆、2404電子工業1筆、5009鋼鐵工業8筆、2330電子工業4筆；feed fetchedAt為本輪、error:null，失敗快取已更新；gatesPromoted均false。
+- source_date／published_at／official_key逐筆保留於讀回JSON；8299既有公告仍10/16、本輪沒有新公告，2404無新公司公告。原始serial缺項保留，不以合成id代替；產業標題、同名冊候選或來源筆數不構成完整同業共識／投研。
+- 最後模組總經55/55、擴展12/12、市場／貴金屬36/36、股指3/3、跨市場4/4、板塊11/11、公告3/3均ok；三指定模組51列value/date/status/reason與巡檢後直接GET差異0、checkedAt一致；refreshState／finalizeWaits未提供，未造值。
+- 五檔資料摘要均fresh，行情日10/30、checkedAt與直接股票API5/5相同；refreshedThisRun／stepStatus未提供，不擅自補true／ok。已保存的四檔status與auditStatus分開比及40個Gate狀態均與直接Master一致；8299本輪audit缺失，不能進入同欄位成功比較。
+- **昨晚→今晨信用配對通過**：大盤7/7的value、觀測日10/30、capturedAt=2026-10-30T14:58:21.343Z、verifiedAt=14:58:24.143Z、capturedAtBasis=capturedAt均與昨晚保存相同；今晨status=snapshot、captureDeferred=true，不抓新信用、不重置時間。
+- 五檔個股信用5/5的marginDate=10/30、marginCapturedAt原14:44–14:45Z均不變；今晨snapshot、isStale=false、captureDeferred=true，與時段規則一致。個股API未暴露獨立verifiedAt，該欄仍未驗證，不外推成全部時間欄通過。
+- 昨晚外部信用HTTP307屬歷史失敗，本晨按規則沒有再抓取；previousDate仍顯示當日10/30而history前筆10/29，標籤問題保留。provisional／final修訂book未由本次一般API暴露，仍未驗證，不因跨日時間保持通過而宣稱修訂鏈已完成。
+- Tiingo主要來源、adjClose、板塊11/11／來源12/12、觀測10/29，pending=false；與Yahoo within_guard。已讀既有交易日政策：收盤後15分鐘＋8小時發布寬限，本次應有交易日確為10/29，10/30須台北10/31 12:15才到界線，未誤標過期也未把舊觀測當10/30；額度計數未公開，仍未驗證。
+- 金銀三來源核對與金銀比維持既有交叉確認；原文見讀回JSON，不更動權重、總分或風險預算。JPY_HV20／60仍觀測10/23、依既有規則ok，不改成今天日期。
+- Gate4／5／8證據缺口、估值分歧及群聯Gate6 CFO／淨利−0.17倍、FCF−141.57億元真實警訊均保留。既有MOEA403與手機／桌面目視缺口未由本輪解決，不因其他資料成功而移除。
+- hotfix7及hotfix8一次性工作早已完成，本輪未重寫。巡檢可執行並保存history；8299單步逾時如實留缺，未因一次暫時性逾時改啟用狀態或另建重複run。
+- [逐欄讀回／昨晚今晨配對／8299缺失證據](2026-10-31-morning-readback.json)；本紀錄與latest索引均須上傳後讀回核對。
