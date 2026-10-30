@@ -23,3 +23,5 @@
 - 手動發布後巡檢驗收已POST202：run 8a0318a2-5f34-46cd-8fb7-fa8206ae6110，16:12:33台北啟動；目前持續同run每10秒status推進，尚未宣稱完成；此輪不冒充今晚排程。
 
 - 22:34台北實讀history：16:12手動驗收run未完成，completedAt=null，仍停市場模組；本機輪詢程序已不存在。沒有宣稱下午驗收完成。晚間先接續保存該run，再建立獨立晚間run，兩者分開審計。
+
+- 22:51:32台北已恢復並完成原16:12手動run（同runId），status partial、history HTTP200匹配completedAt、Gate audit 5/5。與真正夜間run分開；夜間另於22:51:40 POST202建立133d0e04-b3b1-4bce-bb49-1466888af86f。
