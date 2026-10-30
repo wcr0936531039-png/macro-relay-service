@@ -1,0 +1,241 @@
+diff --git a/package.json b/package.json
+index 2c79a05..28eb523 100644
+--- a/package.json
++++ b/package.json
+@@ -23,7 +23,7 @@
+     "test:c2": "node --test tests/valuation-divergence.test.mjs",
+     "test:owner-20261025": "node --test tests/three-questions.test.mjs tests/convertible-bonds.test.mjs tests/dollar-axis.test.mjs && node tests/ndc-export-orders.test.mjs",
+     "test:owner-bundle2": "node --test tests/owner-bundle2.test.mjs",
+-    "test:v235-hotfix": "node --test tests/v235-hotfix.test.mjs tests/v236-keepalive.test.mjs tests/v236-sources.test.mjs tests/v236-watchlist.test.mjs tests/v236-time-rules.test.mjs tests/v237-cb-relay.test.mjs tests/v237-fixes.test.mjs tests/v237-rules.test.mjs tests/v238-exit.test.mjs tests/v238-dollar.test.mjs tests/v239-fixes.test.mjs tests/v239-collector-utc.test.mjs tests/v240-shares.test.mjs tests/v240-dollar-macro.test.mjs tests/v241-compute-once.test.mjs tests/v243-stock-dedup.test.mjs tests/v244-patrol-summary.test.mjs tests/v245-finalize-wait.test.mjs tests/v246-dollar-channel.test.mjs tests/v247-gate-fold.test.mjs tests/v248-sources.test.mjs"
++    "test:v235-hotfix": "node --test tests/v235-hotfix.test.mjs tests/v236-keepalive.test.mjs tests/v236-sources.test.mjs tests/v236-watchlist.test.mjs tests/v236-time-rules.test.mjs tests/v237-cb-relay.test.mjs tests/v237-fixes.test.mjs tests/v237-rules.test.mjs tests/v238-exit.test.mjs tests/v238-dollar.test.mjs tests/v239-fixes.test.mjs tests/v239-collector-utc.test.mjs tests/v240-shares.test.mjs tests/v240-dollar-macro.test.mjs tests/v241-compute-once.test.mjs tests/v243-stock-dedup.test.mjs tests/v244-patrol-summary.test.mjs tests/v245-finalize-wait.test.mjs tests/v246-dollar-channel.test.mjs tests/v247-gate-fold.test.mjs tests/v248-sources.test.mjs tests/reliability-20261030.test.mjs"
+   },
+   "devDependencies": {
+     "drizzle-kit": "0.31.10",
+diff --git a/tests/reliability-20261030.test.mjs b/tests/reliability-20261030.test.mjs
+new file mode 100644
+index 0000000..045c063
+--- /dev/null
++++ b/tests/reliability-20261030.test.mjs
+@@ -0,0 +1,60 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {readFileSync} from 'node:fs';
++const source=readFileSync(new URL('../dist/server/index.js',import.meta.url),'utf8');
++const api=await import('data:text/javascript;base64,'+Buffer.from(source+'\nexport {sloosReleaseWindow,withSloosReleaseWindow,macroObservationCurrent,refreshingMacroSnapshot,retainedTaiwanCreditRows,readbackSiteStock};').toString('base64'));
++const stamp='2026-10-30T03:00:00Z',now=Date.parse(stamp),realNow=Date.now;
++const row={id:'SLOOS_CI_STANDARDS',date:'2026-07-01',value:0,status:'stale',is_stale:true,source:'https://fred.stlouisfed.org/graph/fredgraph.csv?id=DRTSCILM',fetchedAt:stamp,reason:'排程快照或觀測期已過有效期；不納入最新判讀'};
++test.afterEach(()=>{Date.now=realNow;});
++test('latest July SLOOS survives quarter-start age expiry; dates/value/capture remain unchanged',()=>{
++  Date.now=()=>now;
++  const out=api.refreshingMacroSnapshot({checkedAt:stamp,rows:[row]},false).rows[0];
++  assert.equal(out.status,'ok');assert.equal(out.is_stale,false);assert.equal(out.reason,null);
++  assert.equal(out.date,row.date);assert.equal(out.value,row.value);assert.equal(out.fetchedAt,stamp);
++  assert.equal(out.releaseDate,'2026-08-03');assert.equal(out.nextReleaseAt,'2026-11-02T19:00:00Z');
++});
++test('official next release is an exact exclusive boundary; fresh fetch cannot renew the old survey',()=>{
++  for(const [at,expected] of [['2026-11-02T18:59:59Z',true],['2026-11-02T19:00:00Z',false],['2026-11-03T00:00:00Z',false]]){
++    const time=Date.parse(at),candidate=api.withSloosReleaseWindow({...row,fetchedAt:at},time);
++    assert.equal(api.macroObservationCurrent(candidate,{checkedAt:at},time),expected,at);
++  }
++});
++test('wrong value/period/source cannot borrow the reviewed publication window',()=>{
++  for(const changed of [{value:1},{date:'2026-04-01'},{source:'https://example.com/DRTSCILM'},{source:'https://fred.stlouisfed.org/graph/fredgraph.csv?id=OTHER'}])assert.equal(api.sloosReleaseWindow({...row,...changed}),null);
++});
++test('publication evidence does not refresh an old retrieval timestamp',()=>{
++  Date.now=()=>now;
++  const old={...row,fetchedAt:'2026-10-27T03:00:00Z'};
++  assert.equal(api.macroObservationCurrent(api.withSloosReleaseWindow(old,now),{checkedAt:stamp},now),false);
++});
++test('later surveys can use a fresh official latest-index attestation without a hard-coded period',()=>{
++  const at='2027-02-01T03:00:00Z',time=Date.parse(at);
++  const next={...row,date:'2026-10-01',value:6,releaseDate:'2026-11-02',source:'https://www.federalreserve.gov/data/sloos/sloos-202610-chart-data.htm',fetchedAt:at};
++  next.latestReleaseVerification={indexSource:'https://www.federalreserve.gov/data/sloos.htm',reportSource:next.source,date:next.date,value:next.value,releaseDate:next.releaseDate,checkedAt:at};
++  assert.equal(api.macroObservationCurrent(api.withSloosReleaseWindow(next,time),{checkedAt:at},time),true);
++  for(const changed of [{checkedAt:'2027-01-29T03:00:00Z'},{value:5},{reportSource:'https://example.com'},{releaseDate:'2028-01-01'}]){
++    const bad={...next,latestReleaseVerification:{...next.latestReleaseVerification,...changed}};
++    assert.equal(api.macroObservationCurrent(api.withSloosReleaseWindow(bad,time),{checkedAt:at},time),false);
++  }
++});
++test('current dated fallback keeps its actual source failure visible',()=>{
++  const out=api.withSloosReleaseWindow({...row,snapshot:true,reason:'Official request failed: HTTP 403'},now);
++  assert.equal(out.status,'snapshot');assert.equal(out.reason,'Official request failed: HTTP 403');
++});
++function db(payload){return {prepare(){let key;const stmt={async run(){return {success:true}},bind(k){key=k;return stmt},async all(){return {results:payload[key]?[payload[key]]:[]}}};return stmt}};}
++test('credit capture basis survives repeated morning retention; no invented independent capture',async()=>{
++  const captured='2026-10-29T14:57:55.909Z';
++  const credit={id:'TWSE_MARGIN_BALANCE_NTD',date:'2026-10-29',value:6339.10848,status:'snapshot',snapshot:true,verifiedAt:captured,capturedAt:captured,capturedAtBasis:'verifiedAt',source:'https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261029&selectType=MS'};
++  let rows=[credit];
++  for(let i=0;i<2;i++){
++    rows=await api.retainedTaiwanCreditRows({DB:db({'macro-market:v7':{payload:JSON.stringify({checkedAt:stamp,rows})}})},now+i*60000);
++    const retained=rows.find(r=>r.id===credit.id);assert.equal(retained.capturedAtBasis,'verifiedAt');assert.equal(retained.capturedAt,captured);assert.equal(retained.verifiedAt,captured);assert.equal(retained.captureDeferred,true);
++  }
++});
++test('final stock status and previous step status are distinct; incomplete snapshots stay pending',async()=>{
++  const payload={id:'8299',checkedAt:stamp,price:{date:'2026-10-29',value:2050},datasetStatus:{price:{status:'ok'}}};
++  const env={DB:db({'stock:v5:8299':{payload:JSON.stringify(payload),updated_at:stamp}})};
++  const out=await api.readbackSiteStock({id:'8299',status:'pending'},env,'2026-10-30T02:00:00Z');
++  assert.equal(out.status,'ok');assert.equal(out.stepStatus,'ok');assert.equal(out.previousStepStatus,'pending');assert.equal(out.refreshedThisRun,true);
++  const pending=await api.readbackSiteStock({id:'8299',status:'pending'},env,'2026-10-30T04:00:00Z');assert.equal(pending.status,'pending');assert.notEqual(pending.refreshedThisRun,true);
++});
+diff --git a/tests/v244-patrol-summary.test.mjs b/tests/v244-patrol-summary.test.mjs
+index 3ca91dc..2ba5369 100644
+--- a/tests/v244-patrol-summary.test.mjs
++++ b/tests/v244-patrol-summary.test.mjs
+@@ -108,10 +108,10 @@ test('巡檢結束時讀回個股快照：本輪期間更新完成的記為已
+   assert.ok(result.completedAt,'巡檢完成');assert.equal(result.runId,started.runId);
+   const by=Object.fromEntries(result.stocks.map(row=>[row.id,row]));
+   for(const id of ['8299','5289']){
+-    assert.equal(by[id].status,'ok',id);assert.equal(by[id].refreshedThisRun,true);assert.equal(by[id].stepStatus,'pending');
++    assert.equal(by[id].status,'ok',id);assert.equal(by[id].refreshedThisRun,true);assert.equal(by[id].stepStatus,'ok');assert.equal(by[id].previousStepStatus,'pending');
+     assert.equal(by[id].summaryScope,'final_readback');assert.equal(by[id].dataAsOf,'2026-10-28');
+   }
+-  assert.equal(by['2404'].status,'partial');assert.equal(by['2404'].datasetErrors,1);
++  assert.equal(by['2404'].status,'partial');assert.equal(by['2404'].stepStatus,'partial');assert.equal(by['2404'].previousStepStatus,'pending');assert.equal(by['2404'].datasetErrors,1);
+   assert.equal(by['5009'].status,'pending','快照早於本輪 → 不冒充已更新');assert.match(by['5009'].note,/背景更新仍未完成/);
+   const history=JSON.parse(env.DB.rows.get('site-auto-refresh-history:v1').payload).runs.at(-1);
+   assert.equal(history.completedAt,result.completedAt);assert.equal(history.stockCount,4);
+diff --git a/worker/macro.js b/worker/macro.js
+index f1b7d92..6766771 100644
+--- a/worker/macro.js
++++ b/worker/macro.js
+@@ -1529,8 +1529,8 @@ async function readbackSiteStock(row, env, since) {
+     const datasetErrors = Object.values(payload.datasetStatus || {}).filter(item => item.status === 'error').length, status = datasetErrors ? 'partial' : 'ok';
+     return {
+       id: row.id, name: row.name, status, checkedAt: payload.checkedAt || saved.updatedAt, dataAsOf: payload.price?.date || payload.revenue?.month || null,
+-      datasetErrors, errors: payload.errors || {}, refreshedThisRun: true, readbackAt, summaryScope: 'final_readback',
+-      ...(row.status !== status ? { stepStatus: row.status, ...(row.error ? { stepError: row.error } : {}) } : {}),
++      datasetErrors, errors: payload.errors || {}, refreshedThisRun: true, readbackAt, summaryScope: 'final_readback', stepStatus: status,
++      ...(row.status !== status ? { previousStepStatus: row.status, ...(row.error ? { previousStepError: row.error } : {}) } : {}),
+       note: '個股快照於本次巡檢期間更新完成（巡檢結束時讀回確認）。',
+     };
+   } catch (error) {
+diff --git a/worker/observation-freshness.js b/worker/observation-freshness.js
+index 478cab9..2d63420 100644
+--- a/worker/observation-freshness.js
++++ b/worker/observation-freshness.js
+@@ -68,7 +68,7 @@ async function retainedTaiwanCreditRows(env,now=Date.now()) {
+     const candidate={...row,verifiedAt:stamp,status:row.snapshot?'snapshot':'ok',is_stale:false};
+     const current=row.status!=='stale'&&!row.is_stale&&macroObservationCurrent(candidate,{checkedAt,rows:[candidate]},now);
+     // v248：把原始抓取時間一起列出（GPT 10/29 讀回：只看得到 verifiedAt，不能核對跨日連續性）。沒有獨立抓取時間的列，以核對時間為準並標明。
+-    return {...row,verifiedAt:stamp,capturedAt:row.capturedAt||row.fetchedAt||stamp,capturedAtBasis:row.capturedAt?'capturedAt':row.fetchedAt?'fetchedAt':'verifiedAt',checkedAt:new Date(now).toISOString(),status:current?'snapshot':'stale',snapshot:true,is_stale:!current,
++    return {...row,verifiedAt:stamp,capturedAt:row.capturedAt||row.fetchedAt||stamp,capturedAtBasis:row.capturedAt?(row.capturedAtBasis||'capturedAt'):row.fetchedAt?'fetchedAt':'verifiedAt',checkedAt:new Date(now).toISOString(),status:current?'snapshot':'stale',snapshot:true,is_stale:!current,
+       reason:current?row.reason||null:'既有信用觀測已過有效期；22:30後再抓取核對。',...deferred};
+   });
+ }
+@@ -187,6 +187,37 @@ function coreCpiVerificationCurrent(row,now=Date.now()) {
+   });
+   return new Set(valid.map(reading=>reading.sourceFamily)).size===2;
+ }
++// Verified 2026-10-30 against the Fed's current-release index, July chart
++// (2026:3 large/medium C&I = 0.0), and November calendar (Nov 2, 2pm EST).
++// This is a value-bound publication window, not an observation-date extension.
++// Unreviewed periods/values cannot borrow it; it expires at the next release.
++const SLOOS_RELEASE_WINDOWS=[{date:'2026-07-01',value:0,releaseDate:'2026-08-03',releaseAt:'2026-08-03T18:00:00Z',nextReleaseAt:'2026-11-02T19:00:00Z',reportSource:'https://www.federalreserve.gov/data/sloos/sloos-202607-chart-data.htm',scheduleSource:'https://www.federalreserve.gov/newsevents/2026-november.htm',evidenceCheckedOn:'2026-10-30'}];
++function sloosReleaseWindow(row){
++  if(row?.id!=='SLOOS_CI_STANDARDS')return null;
++  const w=SLOOS_RELEASE_WINDOWS.find(w=>w.date===row.date&&Number.isFinite(row.value)&&Math.abs(row.value-w.value)<1e-8);
++  if(!w)return null;
++  try{const u=new URL(row.source);if(u.protocol!=='https:'||u.username||u.password||u.port)return null;
++    if(row.source===w.reportSource||(u.hostname==='fred.stlouisfed.org'&&u.pathname==='/graph/fredgraph.csv'&&u.searchParams.get('id')==='DRTSCILM'))return w;
++  }catch{}
++  return null;
++}
++function sloosLatestReleaseCurrent(row,now=Date.now()){
++  const v=row?.latestReleaseVerification;if(!v)return false;
++  const m=String(row.source||'').match(/^https:\/\/www\.federalreserve\.gov\/data\/sloos\/sloos-(\d{4})(\d{2})-chart-data\.htm$/);
++  const expected=m?`${m[1]}-${String((Math.ceil(Number(m[2])/3)-1)*3+1).padStart(2,'0')}-01`:null;
++  const published=Date.parse(v.releaseDate),period=Date.parse(row.date),gap=(published-period)/86400000;
++  return row.id==='SLOOS_CI_STANDARDS'&&expected===row.date&&v.indexSource==='https://www.federalreserve.gov/data/sloos.htm'&&
++    v.reportSource===row.source&&v.date===row.date&&v.value===row.value&&Number.isFinite(row.value)&&
++    officialImportDate(v.releaseDate)&&gap>=0&&gap<=62&&now>=published&&now-published<=120*86400000&&
++    recentOfficialCapture(v.checkedAt,now);
++}
++function withSloosReleaseWindow(row,now=Date.now()){
++  const w=sloosReleaseWindow(row),latest=sloosLatestReleaseCurrent(row,now);if(!w&&!row.latestReleaseVerification)return row;
++  const current=w?now>=Date.parse(w.releaseAt)&&now<Date.parse(w.nextReleaseAt):latest;
++  return {...row,...(w?{releaseDate:w.releaseDate,nextReleaseAt:w.nextReleaseAt,releaseDateBasis:'Fed current release and official calendar (value-bound)',releaseEvidence:w}:{releaseDateBasis:'Fed latest-release index (bounded recent verification)'}),
++    status:current?(row.snapshot?'snapshot':'ok'):'stale',is_stale:!current,
++    reason:current?(obsoleteObservationReason(row.reason)||row.reason==='排程快照或觀測期已過有效期；不納入最新判讀'?null:row.reason||null):'SLOOS已達官方下一期發布時間或最新期核對已過期；等待重新核對，不延用舊期。'};
++}
+ function macroObservationCurrent(row,payload,now=Date.now()) {
+   const parentId=macroDerivedParentId(row);
+   if(parentId){
+@@ -208,6 +239,11 @@ function macroObservationCurrent(row,payload,now=Date.now()) {
+   // A monthly BLS capture and a recent BLS/FRED comparison use distinct clocks.
+   if(row.id==='CPILFESL')return coreCpiVerificationCurrent(row,now);
+   if(!recentOfficialCapture(row.verifiedAt||row.fetchedAt||payload.checkedAt,now))return false;
++  if(row.id==='SLOOS_CI_STANDARDS'){
++    const w=sloosReleaseWindow(row);
++    if(w)return now>=Date.parse(w.releaseAt)&&now<Date.parse(w.nextReleaseAt);
++    if(row.latestReleaseVerification)return sloosLatestReleaseCurrent(row,now);
++  }
+   if(row.id==='WCESTUS1')return eiaWeeklyCurrent(row,now);
+   if(releaseObservationCurrent(row.id,row,now))return true;
+   if(cbcMonthlyReleaseCurrent(row,now))return true;
+@@ -254,7 +290,8 @@ function refreshingMacroSnapshot(payload,refreshing=true) {
+     // A release-verified observation may remain current beyond its ordinary
+     // SERIES age. Re-evaluate stale rows with that evidence and keep status,
+     // is_stale and expiry reason aligned to the same final decision.
+-    const candidate=row.status==='stale'&&row.releaseVerification?{...row,status:row.snapshot?'snapshot':'ok',is_stale:false}:row;
++    const evidenceRow=row.id==='SLOOS_CI_STANDARDS'?withSloosReleaseWindow(row):row;
++    const candidate=evidenceRow.status==='stale'&&evidenceRow.releaseVerification?{...evidenceRow,status:evidenceRow.snapshot?'snapshot':'ok',is_stale:false}:evidenceRow;
+     const current=macroObservationCurrent(candidate,payload);
+     if(current)return {...candidate,is_stale:false,reason:obsoleteObservationReason(candidate.reason)?null:candidate.reason};
+     if(['ok','snapshot'].includes(row.status))return {...row,status:'stale',is_stale:true,reason:'官方觀測或最近來源核對已過有效期；等待更新。'};
+diff --git a/worker/observations.js b/worker/observations.js
+index 87743f4..bef6dee 100644
+--- a/worker/observations.js
++++ b/worker/observations.js
+@@ -1214,7 +1214,7 @@ async function loadFedSloos(){
+   const latest=points.at(-1),previous=points.at(-2),expectedPeriod=`${year}Q${Math.ceil(month/3)}`;if(!latest||latest.period!==expectedPeriod)throw Error('最新調查月份與圖表季度不一致');
+   const releaseText=cleanHtmlCell(reportHtml.replace(/<\/(?:p|div|h\d|li)>/gi,' | ')).match(/Last Update:\s*([A-Z][a-z]+\s+\d{1,2},\s*\d{4})/i),releaseDate=releaseText?usMonthDate(releaseText[1]):null;
+   const result=summarize('SLOOS_CI_STANDARDS',cleanHistory(points.map(x=>({date:x.date,value:x.large}))));
+-  return {...result,delta:previous?latest.large-previous.large:null,previousDate:previous?.date??null,changeLabel:'較前季',smallValue:latest.small,smallDelta:previous?latest.small-previous.small:null,period:latest.period,releaseDate,provider:'Federal Reserve Board｜Senior Loan Officer Opinion Survey Chart Data',source:chartUrl,detail:`${latest.period}（${year} 年 ${month} 月調查；回顧此前三個月）C&I 貸款標準淨緊縮比例：大型／中型企業 ${latest.large.toFixed(1)}%，小型企業 ${latest.small.toFixed(1)}%${releaseDate?`；官方頁面更新日 ${releaseDate}`:''}。淨緊縮比例不是拒貸率。`};
++  return {...result,delta:previous?latest.large-previous.large:null,previousDate:previous?.date??null,changeLabel:'較前季',smallValue:latest.small,smallDelta:previous?latest.small-previous.small:null,period:latest.period,releaseDate,latestReleaseVerification:{indexSource:indexUrl,reportSource:chartUrl,date:latest.date,value:latest.large,releaseDate,checkedAt:new Date().toISOString()},provider:'Federal Reserve Board｜Senior Loan Officer Opinion Survey Chart Data',source:chartUrl,detail:`${latest.period}（${year} 年 ${month} 月調查；回顧此前三個月）C&I 貸款標準淨緊縮比例：大型／中型企業 ${latest.large.toFixed(1)}%，小型企業 ${latest.small.toFixed(1)}%${releaseDate?`；官方頁面更新日 ${releaseDate}`:''}。淨緊縮比例不是拒貸率。`};
+  }catch(error){return snapshot(error.message||'官方資料暫不可用');}
+ }
+ async function loadKeylessIorb() {
+@@ -1237,7 +1237,7 @@ async function loadKeylessDerivedSeries(id, env={}) {
+   try {
+     if(id==='WALCL')return await loadFedH41Assets();
+     if(id==='WCESTUS1')return await loadEiaCrudeInventory();
+-    if(id==='SLOOS_CI_STANDARDS')return await loadFedSloos();
++    if(id==='SLOOS_CI_STANDARDS')return withSloosReleaseWindow(await loadFedSloos());
+   if(id==='SOFR')return await loadKeylessSofr();
+     if(id==='IORB')return await loadKeylessIorb();
+     if(id==='CPILFESL')return await loadCoreCpi(env);
+@@ -1505,6 +1505,13 @@ async function loadMacroSeries(id, env={}) {
+     return official;
+   }
+   if(['DCOILWTICO','DCOILBRENTEU','DHHNGSP'].includes(id))return loadEnergySeries(id,env);
++  if(id==='SLOOS_CI_STANDARDS'){
++    const relay=await relaySeries(id);
++    if(relay&&['ok','snapshot'].includes(relay.status))return relay;
++    const official=await loadKeylessDerivedSeries(id,env);
++    if(official&&['ok','snapshot'].includes(official.status))return official;
++    return official||relay||missing(id,'SLOOS官方最新一期無法核對');
++  }
+   const relay=await relaySeries(id);if(relay)return relay;
+   if(id==='RPONTSYD'||id==='RRPONTSYD')return loadNyfedOperationSeries(id);
+   if(['SOFR','IORB','CPILFESL','PCEPILFE','ICSA','IC4WSA','CCSA','RRSFS','BAMLC0A0CM','STLFSI4','T10Y3M','INDPRO','WALCL','WCESTUS1','SLOOS_CI_STANDARDS'].includes(id)) {
+diff --git a/worker/relay.js b/worker/relay.js
+index 5de8fbb..61a5a13 100644
+--- a/worker/relay.js
++++ b/worker/relay.js
+@@ -37,12 +37,15 @@ async function relaySeries(id){
+  const verifiedMonthlyCarryForward=['CPILFESL','PCEPILFE'].includes(id)&&entry.status==='stale'&&entry.error==='本輪尚未驗證';
+  const energy=['DCOILWTICO','DCOILBRENTEU','DHHNGSP'].includes(id);
+  const observationMaxAgeDays=energy?Math.min(7,Math.max(1,Number(entry.max_age_days)||SERIES[id]?.[3]||3)):(entry.max_age_days||SERIES[id]?.[3]||7);
+- const stale=(entry.status!=='ok'&&!verifiedMonthlyCarryForward)||!Number.isFinite(fetched)||fetched>Date.now()+60000||Date.now()-fetched>fetchedMaxAge||age(latest.date)>observationMaxAgeDays;
++ const sloosWindow=sloosReleaseWindow({id,...latest,source:entry.source});
++ const observationExpired=sloosWindow?Date.now()<Date.parse(sloosWindow.releaseAt)||Date.now()>=Date.parse(sloosWindow.nextReleaseAt):age(latest.date)>observationMaxAgeDays;
++ const stale=(entry.status!=='ok'&&!verifiedMonthlyCarryForward)||!Number.isFinite(fetched)||fetched>Date.now()+60000||Date.now()-fetched>fetchedMaxAge||observationExpired;
+  const row=SERIES[id]?summarize(id,unique):id==='XAU'?{id,name:'黃金現貨參考價（XAU/USD；第三方延遲資料）',group:'黃金',unit:'美元/金衡盎司',...latest,history:unique}:id==='TPEX_BREADTH'?{id,name:'台股上櫃漲跌家數（TPEx）',group:'台股市場',unit:'%',...latest,history:unique}:id==='ICE_DXY'?{id,name:'ICE 美元指數 DXY（Google Finance 市場報價）',group:'美元／外匯',unit:entry.unit||'指數點',...latest,history:unique}:{id,name:id,group:'台股市場',unit:entry.unit||'',...latest,history:unique};
+  return {...row,status:stale?'stale':'ok',is_stale:stale,snapshot:true,
+   provider:`${entry.provider||'官方來源'}｜外部排程快照`,source:entry.source,
+   reason:stale?(entry.error||'排程快照或觀測期已過有效期；不納入最新判讀'):null,
+   fetchedAt:entry.fetched_at,observationMaxAgeDays,light:entry.light,
++  ...(sloosWindow?{releaseDate:sloosWindow.releaseDate,nextReleaseAt:sloosWindow.nextReleaseAt,releaseDateBasis:'Fed current release and official calendar (value-bound)',releaseEvidence:sloosWindow}:{}),
+   ...(/^\d{4}-\d{2}-\d{2}$/.test(String(entry.release_date||''))?{releaseDate:entry.release_date}:{}),
+   ...(/^\d{4}-\d{2}-\d{2}$/.test(String(entry.next_release_date||''))?{nextReleaseDate:entry.next_release_date}:{}),advancers:entry.advancers,decliners:entry.decliners,
+   detail:`免金鑰公開來源；觀測 ${latest.date}，抓取 ${entry.fetched_at}。${entry.method||''}${stale?' 舊資料，不代表最新訊號。':''}`};
