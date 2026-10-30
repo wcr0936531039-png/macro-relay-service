@@ -5,3 +5,5 @@
 - 行情與晨間總經收集中；尚未POST本輪run，未宣稱completedAt或Gate保存。
 
 - 06:36匯入exit0，universe／9序列／CPI／5日行情／sources／news均ok:true，CPI readback passed。scanner讀回10/30、1961/1990（98.5427%）、76日；名冊／行情較昨晚增加1檔，沒有增加假交易日。八來源336筆、errors=[]；本輪payload無statistics.json。
+
+- POST refresh-all HTTP202已建立晨間run c6040c06-defd-4b5f-a981-4f064bf1a8f9；同身分每10秒GET status持續HTTP200，目前stocks/index0，completedAt尚未出現，不另建run。
