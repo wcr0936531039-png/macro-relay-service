@@ -21,3 +21,5 @@
 - 2026-10-30 16:12:08台北部署succeeded，正式Sites v248；來源a1106861533ebc5c76db9c67b28fb768e1ff6604；前版v247保留回滾，受眾不變。
 - HTML維持878292cd516b7c424757bc8af8db69f122a0a3f70a66e2bdd301ecb5063bc5ce；Worker b5c5dd340f8801845d1c84a3292120dac46e26b83795dade7db4af93356474aa。
 - 手動發布後巡檢驗收已POST202：run 8a0318a2-5f34-46cd-8fb7-fa8206ae6110，16:12:33台北啟動；目前持續同run每10秒status推進，尚未宣稱完成；此輪不冒充今晚排程。
+
+- 22:34台北實讀history：16:12手動驗收run未完成，completedAt=null，仍停市場模組；本機輪詢程序已不存在。沒有宣稱下午驗收完成。晚間先接續保存該run，再建立獨立晚間run，兩者分開審計。
