@@ -1,580 +1,70 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-30T18:15:15.699Z",
+  "generated_at": "2026-11-03T19:50:31.851Z",
   "stocks": {
     "2404": {
       "schema_version": 2,
       "ticker": "2404",
-      "updated_at": "2026-10-30T18:15:15.699Z",
+      "updated_at": "2026-11-03T19:50:31.851Z",
       "observations": [
         {
           "ticker": "2404",
           "metric": "close",
-          "value": 1305,
-          "observed_at": "2026-10-01",
+          "value": 1060,
+          "observed_at": "2026-11-02",
           "period": "daily",
           "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
+          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&stockNo=2404&response=json",
           "status": "ok"
         },
         {
           "ticker": "2404",
           "metric": "volume_shares",
-          "value": 1828034,
-          "observed_at": "2026-10-01",
+          "value": 714438,
+          "observed_at": "2026-11-02",
           "period": "daily",
           "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
+          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&stockNo=2404&response=json",
           "status": "ok"
         },
         {
           "ticker": "2404",
           "metric": "turnover_twd",
-          "value": 2374827010,
-          "observed_at": "2026-10-01",
+          "value": 766735295,
+          "observed_at": "2026-11-02",
           "period": "daily",
           "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
+          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&stockNo=2404&response=json",
           "status": "ok"
         },
         {
           "ticker": "2404",
           "metric": "close",
-          "value": 1285,
-          "observed_at": "2026-10-02",
+          "value": 1000,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
+          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&stockNo=2404&response=json",
           "status": "ok"
         },
         {
           "ticker": "2404",
           "metric": "volume_shares",
-          "value": 2191273,
-          "observed_at": "2026-10-02",
+          "value": 824138,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
+          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&stockNo=2404&response=json",
           "status": "ok"
         },
         {
           "ticker": "2404",
           "metric": "turnover_twd",
-          "value": 2845497450,
-          "observed_at": "2026-10-02",
+          "value": 838274145,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1310,
-          "observed_at": "2026-10-05",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 1938856,
-          "observed_at": "2026-10-05",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 2530834525,
-          "observed_at": "2026-10-05",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1335,
-          "observed_at": "2026-10-06",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 1585682,
-          "observed_at": "2026-10-06",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 2110958125,
-          "observed_at": "2026-10-06",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1330,
-          "observed_at": "2026-10-07",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 749646,
-          "observed_at": "2026-10-07",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 991700425,
-          "observed_at": "2026-10-07",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1305,
-          "observed_at": "2026-10-08",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 1100607,
-          "observed_at": "2026-10-08",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 1429550255,
-          "observed_at": "2026-10-08",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1235,
-          "observed_at": "2026-10-12",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 1532636,
-          "observed_at": "2026-10-12",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 1900218485,
-          "observed_at": "2026-10-12",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1140,
-          "observed_at": "2026-10-13",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 2160300,
-          "observed_at": "2026-10-13",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 2481377175,
-          "observed_at": "2026-10-13",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1155,
-          "observed_at": "2026-10-14",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 1082962,
-          "observed_at": "2026-10-14",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 1240108115,
-          "observed_at": "2026-10-14",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1105,
-          "observed_at": "2026-10-15",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 1370604,
-          "observed_at": "2026-10-15",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 1507545445,
-          "observed_at": "2026-10-15",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1110,
-          "observed_at": "2026-10-16",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 1119081,
-          "observed_at": "2026-10-16",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 1235018190,
-          "observed_at": "2026-10-16",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1100,
-          "observed_at": "2026-10-19",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 921361,
-          "observed_at": "2026-10-19",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 1001644120,
-          "observed_at": "2026-10-19",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1090,
-          "observed_at": "2026-10-20",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 715392,
-          "observed_at": "2026-10-20",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 778295150,
-          "observed_at": "2026-10-20",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1105,
-          "observed_at": "2026-10-21",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 1011335,
-          "observed_at": "2026-10-21",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 1121308440,
-          "observed_at": "2026-10-21",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1090,
-          "observed_at": "2026-10-22",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 548223,
-          "observed_at": "2026-10-22",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 603016770,
-          "observed_at": "2026-10-22",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1085,
-          "observed_at": "2026-10-27",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 594907,
-          "observed_at": "2026-10-27",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 645951075,
-          "observed_at": "2026-10-27",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1100,
-          "observed_at": "2026-10-28",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 519767,
-          "observed_at": "2026-10-28",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 573167225,
-          "observed_at": "2026-10-28",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1105,
-          "observed_at": "2026-10-29",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 404132,
-          "observed_at": "2026-10-29",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 441370665,
-          "observed_at": "2026-10-29",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "close",
-          "value": 1075,
-          "observed_at": "2026-10-30",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "volume_shares",
-          "value": 600770,
-          "observed_at": "2026-10-30",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
-          "status": "ok"
-        },
-        {
-          "ticker": "2404",
-          "metric": "turnover_twd",
-          "value": 646365400,
-          "observed_at": "2026-10-30",
-          "period": "daily",
-          "source": "TWSE official",
-          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261001&stockNo=2404&response=json",
+          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&stockNo=2404&response=json",
           "status": "ok"
         }
       ]
@@ -582,13 +72,13 @@
     "5009": {
       "schema_version": 2,
       "ticker": "5009",
-      "updated_at": "2026-10-30T18:15:15.699Z",
+      "updated_at": "2026-11-03T19:50:31.851Z",
       "observations": [
         {
           "ticker": "5009",
           "metric": "close",
-          "value": 31.85,
-          "observed_at": "2026-10-30",
+          "value": 31,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -597,8 +87,8 @@
         {
           "ticker": "5009",
           "metric": "volume_shares",
-          "value": 2840132,
-          "observed_at": "2026-10-30",
+          "value": 2197969,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -607,8 +97,8 @@
         {
           "ticker": "5009",
           "metric": "turnover_twd",
-          "value": 91465505,
-          "observed_at": "2026-10-30",
+          "value": 69024862,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -619,13 +109,13 @@
     "5289": {
       "schema_version": 2,
       "ticker": "5289",
-      "updated_at": "2026-10-30T18:15:15.699Z",
+      "updated_at": "2026-11-03T19:50:31.851Z",
       "observations": [
         {
           "ticker": "5289",
           "metric": "close",
-          "value": 1120,
-          "observed_at": "2026-10-30",
+          "value": 1020,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -634,8 +124,8 @@
         {
           "ticker": "5289",
           "metric": "volume_shares",
-          "value": 1365864,
-          "observed_at": "2026-10-30",
+          "value": 1679922,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -644,8 +134,8 @@
         {
           "ticker": "5289",
           "metric": "turnover_twd",
-          "value": 1535674615,
-          "observed_at": "2026-10-30",
+          "value": 1758015945,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -656,13 +146,13 @@
     "8299": {
       "schema_version": 2,
       "ticker": "8299",
-      "updated_at": "2026-10-30T18:15:15.699Z",
+      "updated_at": "2026-11-03T19:50:31.851Z",
       "observations": [
         {
           "ticker": "8299",
           "metric": "close",
-          "value": 1930,
-          "observed_at": "2026-10-30",
+          "value": 1690,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -671,8 +161,8 @@
         {
           "ticker": "8299",
           "metric": "volume_shares",
-          "value": 3098085,
-          "observed_at": "2026-10-30",
+          "value": 4342686,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -681,8 +171,8 @@
         {
           "ticker": "8299",
           "metric": "turnover_twd",
-          "value": 6005089385,
-          "observed_at": "2026-10-30",
+          "value": 7609121455,
+          "observed_at": "2026-11-03",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
