@@ -4,7 +4,7 @@
 - 最近平台11/04 22:30：run394ad259-ec08-832a-8062-d44800f1ef9b、22:33:37→22:33:40 no_update，無新網站run；原排程仍enabled、時段未改。
 - 中繼patch SHA242b02a3033bc96996e854430209f9932742a5989f05ca5404f4232fdbe7de6b吻合，乾淨main git am後44/44 exit0；CLI無登入，連接器推main fe9b5a17bbec45975d156ab8d607b3f6b23f4e79（本機53953e4，9個檔內容相同）。
 - 第一次Official data collector：尚未觸發，故runId／parts／errors均未取得；Actions頁0次、瀏覽器未登入、連接器無dispatch；official-import/manifest.json讀回HTTP404（分支尚不存在），未冒充試跑或自行改workflow觸發。
-- 網站四包SHA均核對交接指定值；正式基線a110686依v249→v250→v251→v252套用無衝突，build／diff --check通過；僅本機authorized-v252分支，未推送／部署。
+- 網站四包SHA均核對交接指定值；正式基線a110686依v249→v250→v251→v252套用無衝突，build／diff --check通過；僅本機authorized-v252分支／commita09fea94cc327b8f66f6a8a286090aa10fdee288，未推送／部署。
 - HTML SHA de5a6d6bd6b55b777985fb05b50b455b0db7c6ec8b4c476a6e8905211da37deb完全吻合。
 - 後台實際SHA39c504578c9faa9e0c7d728400719830d7c70021a715460829c82fae2ad3143c，不符交接ff8dfc94f54fa4aa0673dbe6f7d0ee69fdfe0c019da3e2a3dd627258d704a0c3；patch修改檔唯一blob不符為OPERATIONS.md（基線aca4128≠交接fea689b），尚未證明整體差異僅此，不擅改。
 - 新增四包針對性19/19 exit0；完整TZ=UTC npm test exit1（最後組86/87）：v237-fixes.test.mjs:30 M1B−M2真實時鐘到96天、斷言true≠false；未套四包v248同測試亦失敗，未改程式／測試或凍結日期湊通過。完整log SHA d2587a1d09a6de7b82c24a8cc5050fdb127203bceceb533b2f43c193d1977671。
