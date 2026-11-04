@@ -1,9 +1,15 @@
-# v249→v252 授權整合（11/04執行中）
-- 補記：10/31晚run f2a63289-21c5-4ceb-849c-d406c5261207仍未completedAt，Gate0/5，停research；10/31工具曾明示使用量限制使自動核准無法完成，非網站HTTP失敗。
-- 11/01 06:30、22:30；11/02 06:30、22:30；11/03 06:30、22:30：網站history均無新run；六輪平台runId／HTTP／逐輪reason不可讀（UNKNOWN），不能斷言平台根本沒觸發或把同一原因外推六輪。
-- 平台只提供最近11/04 22:30：run394ad259-ec08-832a-8062-d44800f1ef9b，22:33:37至22:33:40、no_update，無對應新網站run；排程仍enabled，未改時段。
-- 目前正式v248、owner-only，留作回滾；只按交接四包授權，不自行加修補。
-- 中繼patch SHA242b02a3…de6b吻合；git am後44/44通過，連接器推main fe9b5a17bbec45975d156ab8d607b3f6b23f4e79（本機53953e4，樹內容同）；Actions無首次run，瀏覽器未登入且連接器無dispatch，尚無manifest可核對。
-- 四份網站patch SHA均與交接吻合，從正式a110686依v249→v250→v251→v252套用無衝突，build／diff --check通過；未部署。
-- HTML SHA de5a6d6bd6b55b777985fb05b50b455b0db7c6ec8b4c476a6e8905211da37deb吻合；後台實際39c504578c9faa9e0c7d728400719830d7c70021a715460829c82fae2ad3143c ≠ 交接ff8dfc94f54fa4aa0673dbe6f7d0ee69fdfe0c019da3e2a3dd627258d704a0c3；patch修改檔的blob僅OPERATIONS.md不吻合，未擅改。
-- 新增四包針對性19/19；完整TZ=UTC npm test exit1，末組86/87，tests/v237-fixes.test.mjs:30 M1B−M2時效true≠false（96天／95天）；未套四包的v248同測試也失敗。未改測試或程式湊通過。
+# v249→v252 授權工作（11/04：尚未部署）
+- 補記：10/31晚run f2a63289-21c5-4ceb-849c-d406c5261207當晚未完成；本次接續至11/04 23:28:22（台北）partial、Gate4/5（8299逾時），history HTTP200匹配；不能冒充10/31當晚完成。
+- 11/01 06:30／22:30、11/02 06:30／22:30、11/03 06:30／22:30：網站history皆無新run；六輪平台runId／HTTP／reason不可讀＝UNKNOWN。已知10/31工具核准被使用量限制阻斷，未外推六輪原因。
+- 最近平台11/04 22:30：run394ad259-ec08-832a-8062-d44800f1ef9b、22:33:37→22:33:40 no_update，無新網站run；原排程仍enabled、時段未改。
+- 中繼patch SHA242b02a3033bc96996e854430209f9932742a5989f05ca5404f4232fdbe7de6b吻合，乾淨main git am後44/44 exit0；CLI無登入，連接器推main fe9b5a17bbec45975d156ab8d607b3f6b23f4e79（本機53953e4，9個檔內容相同）。
+- 第一次Official data collector：尚未觸發，故runId／parts／errors均未取得；Actions頁0次、瀏覽器未登入、連接器無dispatch；official-import/manifest.json讀回HTTP404（分支尚不存在），未冒充試跑或自行改workflow觸發。
+- 網站四包SHA均核對交接指定值；正式基線a110686依v249→v250→v251→v252套用無衝突，build／diff --check通過；僅本機authorized-v252分支，未推送／部署。
+- HTML SHA de5a6d6bd6b55b777985fb05b50b455b0db7c6ec8b4c476a6e8905211da37deb完全吻合。
+- 後台實際SHA39c504578c9faa9e0c7d728400719830d7c70021a715460829c82fae2ad3143c，不符交接ff8dfc94f54fa4aa0673dbe6f7d0ee69fdfe0c019da3e2a3dd627258d704a0c3；patch修改檔唯一blob不符為OPERATIONS.md（基線aca4128≠交接fea689b），尚未證明整體差異僅此，不擅改。
+- 新增四包針對性19/19 exit0；完整TZ=UTC npm test exit1（最後組86/87）：v237-fixes.test.mjs:30 M1B−M2真實時鐘到96天、斷言true≠false；未套四包v248同測試亦失敗，未改程式／測試或凍結日期湊通過。完整log SHA d2587a1d09a6de7b82c24a8cc5050fdb127203bceceb533b2f43c193d1977671。
+- 正式仍v248、owner-only，保留回滾；RELAY_OFFICIAL_IMPORT_ENABLED尚未設定，等manifest、後台SHA及完整測試三項通過後才依授權部署一次；未部署其他修改。
+- 第3項部署後relayImport／officialImport、信用previousDate、Gate重試、五檔Gate5／8不採用及股災參考價原文：均待部署驗收，未預填。部署前8299／5289／2404／5009／2330皆blocked、grade=null（舊行情不足），不能當成有效評級比較；部署後N/A。
+- 第4項：尚未達晨／晚各一次officialImport automatic或not_in_bundle的切換門檻；未改原巡檢prompt，未假稱已改成只觸發巡檢；本次未手動執行官方收集／匯入。
+- 第5項SLOOS讀回：先前7/1=0 stale；接續後2026-10-01=1.7、status=ok、reason=null、來源Fed SLOOS Chart Data；已核對Fed十月調查11/02發布，未延長舊窗。
+- 待續：登入GitHub手動執行Official data collector（publish=true）取得manifest；由Claude釐清OPERATIONS／後台SHA及既有日期敏感測試。已授權四包不另加修補，未宣稱網站整合上線。
