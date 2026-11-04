@@ -1,3 +1,13 @@
+# 最新：2026-11-05 06:40台北晨間巡檢完成，partial；Gate審計5/5
+
+[本輪紀錄](automation-runs/20261105-morning.md)｜[HTTP與逐項讀回](automation-runs/20261105-morning-evidence.json)。
+
+POST202接續凌晨既有run d6cfe6c4-5704-456f-92a2-f5eedb18fba4；16次status200至completedAt，history200匹配，同run五檔recorded:true。latest_synced 5檔；未修改程式或排程。正式仍v248，relayImport／officialImport未接入，official-import分支404。
+
+異常：總經25/55、擴展6/12、市場27/36、美股指數0/3、跨市場2/4、公告2/3；FRED逾時／BLS403。全市場run逾時，直接讀回僅既有10/30 1961/1990；Tiingo11/03板塊11/11。晨間7項信用保留11/03及昨晚原capturedAt／verifiedAt；交易11/04與信用未同日。Gate風險與來源缺口繼續保留，未倒填審計。
+
+---
+
 # 最新：2026-10-31 06:46台北晨間巡檢完成，partial；Gate審計4/5
 
 [完整紀錄](source-reliability-20261023/2026-10-31-morning-run.md)｜[讀回與跨日配對](source-reliability-20261023/2026-10-31-morning-readback.json)。
