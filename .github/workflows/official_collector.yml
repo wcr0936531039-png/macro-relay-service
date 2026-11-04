@@ -1,0 +1,70 @@
+name: Official data collector (site import bundle)
+# 擁有者 2026-11-03「第二項照做」：網站的官方資料收集改在 GitHub 排程跑；網站巡檢開頭自己讀 official-import 分支匯入。
+# 只發布官方公開資料與清單（manifest.json：每個檔的類別、大小、SHA-256、收集失敗項目）；不含金鑰、不連網站、不部署。
+on:
+  workflow_dispatch:
+    inputs:
+      sessions:
+        description: 'Trading sessions to (re)collect'
+        default: '5'
+      statistics:
+        description: 'Credit statistics: auto (skip 12:00-20:59 Taipei), on, off'
+        default: 'auto'
+      publish:
+        description: 'Push the bundle to the official-import branch (false = dry run)'
+        default: 'true'
+  schedule:
+    # 台北 05:55（每天，前一交易日收盤＋信用統計；週末也跑，讓清單不超過 36 小時）
+    - cron: '55 21 * * *'
+    # 台北 16:20（週一至週五，當天收盤；信用統計略過）
+    - cron: '20 8 * * 1-5'
+    # 台北 22:40、23:10（週一至週五，當晚信用統計；兩次是因為 GitHub 排程常延後或略過）
+    - cron: '40 14 * * 1-5'
+    - cron: '10 15 * * 1-5'
+permissions:
+  contents: write
+concurrency:
+  group: official-collector
+  cancel-in-progress: false
+jobs:
+  collect-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate bundle builder
+        run: python -m unittest tests.test_official_import -v
+      - name: Collect official data and build bundle
+        run: scripts/run_official_collector.sh "$RUNNER_TEMP/official" "${{ inputs.sessions || '5' }}" "${{ inputs.statistics || 'auto' }}"
+      - name: Publish bundle (force-push, latest only)
+        if: ${{ inputs.publish != 'false' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/official/bundle"
+          generated=$(python -c "import json;print(json.load(open('manifest.json'))['generatedAt'])")
+          git init -q -b official-import
+          git add -A
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -qm "Official import bundle ${generated}"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:official-import
+      - name: Summary
+        if: always()
+        run: |
+          m="$RUNNER_TEMP/official/bundle/manifest.json"
+          {
+            echo '### Official import bundle'
+            if [ -f "$m" ]; then
+              python -c "import json,sys;m=json.load(open(sys.argv[1]));print('generatedAt',m['generatedAt'],'window',m['window']);print();[print('-',p['kind'],p['name'],p['bytes'],'bytes') for p in m['parts']];print();print('Collector errors:',len(m['errors']));[print('-',e['source'],':',e['error'][:200]) for e in m['errors']]" "$m"
+            else
+              echo 'No manifest was built.'
+            fi
+            echo
+            echo 'The Site imports this branch during its own patrol when RELAY_OFFICIAL_IMPORT_ENABLED=true; this workflow does not deploy or call the Site.'
+          } >> "$GITHUB_STEP_SUMMARY"
