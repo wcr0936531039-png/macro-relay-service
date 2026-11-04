@@ -4,3 +4,4 @@
 - SHA核對：本機暫換字面REDACTED_PROJECT_ID後build，後台ff8dfc94f54fa4aa0673dbe6f7d0ee69fdfe0c019da3e2a3dd627258d704a0c3完全吻合；已還原原檔並重build，工作樹乾淨。
 - 部署用後台39c504578c9faa9e0c7d728400719830d7c70021a715460829c82fae2ad3143c；HTML de5a6d6bd6b55b777985fb05b50b455b0db7c6ec8b4c476a6e8905211da37deb，差異已證明僅私人專案字串，沒有公開該字串。
 - 目前台北11/05 00時，尚未08:00；依交接不重跑日期邊界完整測試、不部署、不改程式／測試。正式仍v248，RELAY_OFFICIAL_IMPORT_ENABLED未設；v249～v252本機a09fea9已備妥。
+- 修訂後prompt已讀回逐字相同，原schedule一致、enabled=true；run_now回inline_run後實際POST HTTP202、run d6cfe6c4-5704-456f-92a2-f5eedb18fba4，status持續200，completedAt尚未出現，未預填保存結果。
