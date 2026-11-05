@@ -6,5 +6,5 @@
 - 實際部署後台39c504578c9faa9e0c7d728400719830d7c70021a715460829c82fae2ad3143c；單次原生部署succeeded，Sites版本249＝功能v249～v252，v248留回滾；環境RELAY_OFFICIAL_IMPORT_ENABLED=true（revision8）。
 - 已僅補prompt的版本辨識：以實際relayImport／officialImport欄位判定，避免原生249誤當功能未250；時段／enabled不變。run_now=inline_run，已按保存指令實跑。
 - 部署後POST202、reason=null，新run e8fa23c8-471c-48e4-977c-d8c655eec8b4；正在同身分10秒checkpoint，尚未completedAt／history驗收，不預填成功。
-- official-import已可讀：generatedAt=2026-11-05T01:52:12Z、5類資料；收集器曾下載中斷，行情／名冊缺項保留，BLS403使用官方API備援。
+- relayImport.status=ok：series／statistics／cpi／sources／news五組imported，market=not_in_bundle；manifest generatedAt=2026-11-05T01:52:12Z，BLS403有官方API備援。尚待run完成後比對officialImport與直接讀回。
 - 部署前五檔8299／5289／2404／5009／2330皆data_unavailable、無grade；部署後評級、Gate5／8不採用、信用previousDate、relay各組與參考價仍待本run讀回。
