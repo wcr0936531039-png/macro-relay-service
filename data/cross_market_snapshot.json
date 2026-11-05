@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-04T14:51:47.746051+00:00",
+  "generated_at": "2026-11-05T02:45:20.098750+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -311,7 +311,7 @@
       "unit": "index_points",
       "warnings": [],
       "status": "ok",
-      "fetched_at": "2026-11-04T14:51:47.746051+00:00"
+      "fetched_at": "2026-11-05T02:45:20.098750+00:00"
     },
     "SP500": {
       "history": [
@@ -1338,11 +1338,6 @@
     "SOX": {
       "history": [
         {
-          "date": "2026-06-12",
-          "value": 13371.4697265625,
-          "available_at": "2026-06-12T20:15:00+00:00"
-        },
-        {
           "date": "2026-06-15",
           "value": 14099.6201171875,
           "available_at": "2026-06-15T20:15:00+00:00"
@@ -1836,6 +1831,11 @@
           "date": "2026-11-03",
           "value": 10600.400390625,
           "available_at": "2026-11-03T21:15:00+00:00"
+        },
+        {
+          "date": "2026-11-04",
+          "value": 10268.654296875,
+          "available_at": "2026-11-04T21:15:00+00:00"
         }
       ],
       "source": "https://query1.finance.yahoo.com/v8/finance/chart/%5ESOX?range=6mo&interval=1d",
@@ -1846,7 +1846,7 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-11-04T14:51:47.746051+00:00"
+      "fetched_at": "2026-11-05T02:45:20.098750+00:00"
     }
   },
   "errors": [
