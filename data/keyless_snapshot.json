@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-04T20:57:36.367453+00:00",
+  "generated_at": "2026-11-05T06:59:38.493097+00:00",
   "series": {
     "SOFR": {
       "history": [
@@ -918,7 +918,7 @@
           "value": 48.831488314883146
         }
       ],
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "TW_NDC_SIGNAL": {
@@ -936,7 +936,7 @@
       "source": "https://data.gov.tw/dataset/6099",
       "method": "國發會原始月資料 ZIP，欄位「景氣對策信號綜合分數」及燈號；檔案 景氣指標與燈號.csv",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 120
     },
     "SP500": {
@@ -3099,7 +3099,7 @@
       "source": "https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A?lastNObservations=25&format=csvdata | https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A?lastNObservations=25&format=csvdata",
       "method": "ECB 同日 JPY/EUR ÷ USD/EUR；這是官方參考匯率交叉換算，不是即時外匯成交價。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 7
     },
     "WALCL": {
@@ -3282,11 +3282,11 @@
       "source": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=W&n=PET&s=WCESTUS1",
       "method": "EIA 官方週資料表；原始千桶除以 1,000 轉為百萬桶，不含 SPR。",
       "raw_thousand_barrels": 409760,
-      "page_sha256": "a431081c991dae5c815607ddc4ca85ec7fec7db725da2ccd0aaa7de913f467e2",
+      "page_sha256": "150bb3e1f83774b15033992a806a189ec3dca8234c2538ba19d23fd09b37704e",
       "release_date": "2026-11-04",
       "next_release_date": "2026-11-12",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 14
     },
     "NOCDFSA066MSFRBPHI": {
@@ -3392,16 +3392,20 @@
         {
           "date": "2026-11-04",
           "value": 42948.91
+        },
+        {
+          "date": "2026-11-05",
+          "value": 41574.72
         }
       ],
-      "date": "2026-11-04",
-      "value": 42948.91,
+      "date": "2026-11-05",
+      "value": 41574.72,
       "unit": "點",
       "provider": "臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV",
       "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?response=open_data",
       "method": "TWSE 官方每日市場統計原始 CSV；直接讀取「發行量加權股價指數」欄位，成交金額以新臺幣元換算億元。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "TWSE_TOTAL_TRADE_VALUE": {
@@ -3417,16 +3421,20 @@
         {
           "date": "2026-11-04",
           "value": 11769.30442854
+        },
+        {
+          "date": "2026-11-05",
+          "value": 9753.89949511
         }
       ],
-      "date": "2026-11-04",
-      "value": 11769.30442854,
+      "date": "2026-11-05",
+      "value": 9753.89949511,
       "unit": "億元",
       "provider": "臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV",
       "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?response=open_data",
       "method": "TWSE 官方每日市場統計原始 CSV；直接讀取「成交金額」欄位，成交金額以新臺幣元換算億元。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "TWSE_MARGIN_BALANCE_NTD": {
@@ -3442,9 +3450,10 @@
       "provider": "臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面",
       "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?date=20261104&response=html",
       "method": "融資金額(仟元) 欄位；億元；日增減以今日餘額減前日餘額計算。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-11-04T20:57:36.367453+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE credit observation date mismatch: requested 2026-11-05, returned missing"
     },
     "DRTSCILM": {
       "history": [
@@ -3501,9 +3510,10 @@
       "provider": "臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面",
       "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?date=20261104&response=html",
       "method": "融資金額(仟元) 欄位；億元；日增減以今日餘額減前日餘額計算。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-11-04T20:57:36.367453+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE credit observation date mismatch: requested 2026-11-05, returned missing"
     },
     "TWSE_MARGIN_BALANCE_UNITS": {
       "history": [
@@ -3518,9 +3528,10 @@
       "provider": "臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面",
       "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?date=20261104&response=html",
       "method": "融資(交易單位) 欄位；張；日增減以今日餘額減前日餘額計算。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-11-04T20:57:36.367453+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE credit observation date mismatch: requested 2026-11-05, returned missing"
     },
     "TWSE_SHORT_BALANCE": {
       "history": [
@@ -3535,9 +3546,10 @@
       "provider": "臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面",
       "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?date=20261104&response=html",
       "method": "融券(交易單位) 欄位；張；日增減以今日餘額減前日餘額計算。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-11-04T20:57:36.367453+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE credit observation date mismatch: requested 2026-11-05, returned missing"
     },
     "TWSE_SHORT_CHANGE": {
       "history": [
@@ -3552,29 +3564,30 @@
       "provider": "臺灣證券交易所｜信用交易統計（MI_MARGN）官方頁面",
       "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?date=20261104&response=html",
       "method": "融券(交易單位) 欄位；張；日增減以今日餘額減前日餘額計算。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-11-04T20:57:36.367453+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE credit observation date mismatch: requested 2026-11-05, returned missing"
     },
     "TWSE_BREADTH": {
       "history": [
         {
-          "date": "2026-11-04",
-          "value": 43.245403677058356
+          "date": "2026-11-05",
+          "value": 20.967741935483872
         }
       ],
-      "date": "2026-11-04",
-      "value": 43.245403677058356,
+      "date": "2026-11-05",
+      "value": 20.967741935483872,
       "unit": "%",
-      "advancers": 541,
-      "decliners": 710,
-      "unchanged": 139,
-      "included": 1390,
+      "advancers": 273,
+      "decliners": 1029,
+      "unchanged": 87,
+      "included": 1389,
       "provider": "臺灣證券交易所｜政府資料開放平台 STOCK_DAY_ALL CSV",
       "source": "https://www.twse.com.tw/exchangeReport/STOCK_DAY_ALL?response=open_data",
-      "method": "上市證券上漲占比 = 上漲 541 ÷（上漲 541 + 下跌 710）× 100%；平盤 139 家不放入分母。交易日與同日官方 FMTQIK 核對。",
+      "method": "上市證券上漲占比 = 上漲 273 ÷（上漲 273 + 下跌 1029）× 100%；平盤 87 家不放入分母。交易日與同日官方 FMTQIK 核對。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "DTWEXBGS": {
@@ -3670,103 +3683,103 @@
     "XAU": {
       "history": [
         {
-          "date": "2026-11-04",
-          "value": 4066.300049
+          "date": "2026-11-05",
+          "value": 4124.799805
         }
       ],
-      "date": "2026-11-04",
-      "value": 4066.300049,
+      "date": "2026-11-05",
+      "value": 4124.799805,
       "unit": "美元/金衡盎司",
       "provider": "Gold API｜XAU/USD 現貨參考價（第三方；非官方定盤價）",
       "source": "https://api.gold-api.com/price/XAU",
-      "method": "來源回傳 XAU/USD 報價 4066.300049，更新時間 2026-11-04T21:13:30+00:00；不是 LBMA 定盤價或即時交易所成交價。",
+      "method": "來源回傳 XAU/USD 報價 4124.799805，更新時間 2026-11-05T07:16:01+00:00；不是 LBMA 定盤價或即時交易所成交價。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 3
     },
     "TWSE_ELECTRONIC": {
       "history": [
         {
-          "date": "2026-11-04",
-          "value": 2651.32
+          "date": "2026-11-05",
+          "value": 2555.32
         }
       ],
-      "date": "2026-11-04",
-      "value": 2651.32,
+      "date": "2026-11-05",
+      "value": 2555.32,
       "unit": "點",
       "provider": "臺灣證券交易所｜電子工業類指數 每日收盤行情（指數）",
-      "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261104&type=IND&response=json",
-      "method": "TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 2026-11-04，與加權指數同日。",
+      "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261105&type=IND&response=json",
+      "method": "TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 2026-11-05，與加權指數同日。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "TWSE_SEMICONDUCTOR": {
       "history": [
         {
-          "date": "2026-11-04",
-          "value": 1431.09
+          "date": "2026-11-05",
+          "value": 1394.51
         }
       ],
-      "date": "2026-11-04",
-      "value": 1431.09,
+      "date": "2026-11-05",
+      "value": 1394.51,
       "unit": "點",
       "provider": "臺灣證券交易所｜半導體類指數 每日收盤行情（指數）",
-      "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261104&type=IND&response=json",
-      "method": "TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 2026-11-04，與加權指數同日。",
+      "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261105&type=IND&response=json",
+      "method": "TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 2026-11-05，與加權指數同日。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "TWSE_FINANCIAL": {
       "history": [
         {
-          "date": "2026-11-04",
-          "value": 3624.04
+          "date": "2026-11-05",
+          "value": 3638.85
         }
       ],
-      "date": "2026-11-04",
-      "value": 3624.04,
+      "date": "2026-11-05",
+      "value": 3638.85,
       "unit": "點",
       "provider": "臺灣證券交易所｜金融保險類指數 每日收盤行情（指數）",
-      "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261104&type=IND&response=json",
-      "method": "TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 2026-11-04，與加權指數同日。",
+      "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261105&type=IND&response=json",
+      "method": "TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 2026-11-05，與加權指數同日。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "TWSE_SHIPPING": {
       "history": [
         {
-          "date": "2026-11-04",
-          "value": 216.84
+          "date": "2026-11-05",
+          "value": 214.03
         }
       ],
-      "date": "2026-11-04",
-      "value": 216.84,
+      "date": "2026-11-05",
+      "value": 214.03,
       "unit": "點",
       "provider": "臺灣證券交易所｜航運類指數 每日收盤行情（指數）",
-      "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261104&type=IND&response=json",
-      "method": "TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 2026-11-04，與加權指數同日。",
+      "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261105&type=IND&response=json",
+      "method": "TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 2026-11-05，與加權指數同日。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "TWSE_STEEL": {
       "history": [
         {
-          "date": "2026-11-04",
-          "value": 121.92
+          "date": "2026-11-05",
+          "value": 119.92
         }
       ],
-      "date": "2026-11-04",
-      "value": 121.92,
+      "date": "2026-11-05",
+      "value": 119.92,
       "unit": "點",
       "provider": "臺灣證券交易所｜鋼鐵類指數 每日收盤行情（指數）",
-      "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261104&type=IND&response=json",
-      "method": "TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 2026-11-04，與加權指數同日。",
+      "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261105&type=IND&response=json",
+      "method": "TWSE 每日收盤行情 MI_INDEX（type=IND）價格指數表的收盤指數；觀測日 2026-11-05，與加權指數同日。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "TWSE_DAYTRADE": {
@@ -3783,9 +3796,10 @@
       "provider": "臺灣證券交易所｜TWTB4U 官方當沖統計",
       "source": "https://www.twse.com.tw/exchangeReport/TWTB4U?response=json&date=20261104&selectType=All",
       "method": "TWTB4U 官方當沖成交量占市場比重 24.73%；當沖成交股數 3859264000；觀測日 2026-11-04。",
-      "status": "ok",
+      "status": "stale",
       "fetched_at": "2026-11-04T20:57:36.367453+00:00",
-      "max_age_days": 5
+      "max_age_days": 5,
+      "error": "TWSE TWTB4U summary table/fields/data missing"
     },
     "NYFED_REPO": {
       "history": [
@@ -3805,7 +3819,7 @@
       "source": "https://markets.newyorkfed.org/api/rp/repo/all/results/last/8.json",
       "method": "同一操作日已公布 Repo 操作 accepted amount 合計 ÷ 1,000,000,000；觀測日 2026-11-03；與單一 RPONTSYD 序列口徑分開。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "NYFED_SRP": {
@@ -3834,24 +3848,24 @@
       "source": "https://markets.newyorkfed.org/api/rp/repo/all/results/last/8.json",
       "method": "僅合計 operationMethod=Full Allotment、term=Overnight 且已公布 Results 的操作；原始 accepted 美元 ÷ 1,000,000,000；觀測日 2026-11-04。零承作仍保留為有效 0；不含一般 Repo／Reverse Repo。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 5
     },
     "ICE_DXY": {
       "history": [
         {
-          "date": "2026-11-04",
-          "value": 101.51
+          "date": "2026-11-05",
+          "value": 101.21
         }
       ],
-      "date": "2026-11-04",
-      "value": 101.51,
+      "date": "2026-11-05",
+      "value": 101.21,
       "unit": "指數點",
       "provider": "Google Finance｜NYICDX:INDEXNYSEGIS（ICE U.S. Dollar Index 市場報價）",
       "source": "https://www.google.com/finance/quote/NYICDX:INDEXNYSEGIS?hl=en",
-      "method": "核對 Google Finance canonical NYICDX:INDEXNYSEGIS、頁面名稱 ICE U.S. Dollar Index；頁面報價時間 Nov 4, 3:53:39 PM GMT-5。這是該指數市場報價，不標作 ICE 官方結算值。",
+      "method": "核對 Google Finance canonical NYICDX:INDEXNYSEGIS、頁面名稱 ICE U.S. Dollar Index；頁面報價時間 Nov 5, 2:00:48 AM GMT-5。這是該指數市場報價，不標作 ICE 官方結算值。",
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 3
     },
     "TW_M1B_M2": {
@@ -3867,7 +3881,7 @@
       "m1b_yoy": 6.65,
       "m2_yoy": 7.24,
       "status": "ok",
-      "fetched_at": "2026-11-04T20:57:36.367453+00:00",
+      "fetched_at": "2026-11-05T06:59:38.493097+00:00",
       "max_age_days": 95
     },
     "DTWEXAFEGS": {
@@ -4197,10 +4211,34 @@
     {
       "id": "DTWEXAFEGS",
       "reason": "The read operation timed out"
+    },
+    {
+      "id": "TWSE_DAYTRADE",
+      "reason": "TWSE TWTB4U summary table/fields/data missing"
+    },
+    {
+      "id": "TWSE_MARGIN_BALANCE_NTD",
+      "reason": "TWSE credit observation date mismatch: requested 2026-11-05, returned missing"
+    },
+    {
+      "id": "TWSE_MARGIN_CHANGE_NTD",
+      "reason": "TWSE credit observation date mismatch: requested 2026-11-05, returned missing"
+    },
+    {
+      "id": "TWSE_MARGIN_BALANCE_UNITS",
+      "reason": "TWSE credit observation date mismatch: requested 2026-11-05, returned missing"
+    },
+    {
+      "id": "TWSE_SHORT_BALANCE",
+      "reason": "TWSE credit observation date mismatch: requested 2026-11-05, returned missing"
+    },
+    {
+      "id": "TWSE_SHORT_CHANGE",
+      "reason": "TWSE credit observation date mismatch: requested 2026-11-05, returned missing"
     }
   ],
   "coverage": {
-    "usable": 23,
+    "usable": 17,
     "expected": 61
   }
 }
