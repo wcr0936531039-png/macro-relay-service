@@ -1,7 +1,8 @@
-# hotfix10（11/05進行中；12行內）
-- 原排程enabled、06:30／22:30、environment=inherited；11/04最近平台run三秒no_update、網站無run，未進入可核實HTTP流程；內部跳過原因與11/01～11/04逐輪平台log不提供，未猜測根因。
-- 依授權僅改既有巡檢prompt：精簡為每次強制Sites→POST→同run輪詢→history，不依賴舊scratch、不能以no_update省略執行；原時段與啟用狀態不變。run_now已回inline_run，正照保存指令實跑，不冒充未來自動觸發驗收。
-- SHA核對：本機暫換字面REDACTED_PROJECT_ID後build，後台ff8dfc94f54fa4aa0673dbe6f7d0ee69fdfe0c019da3e2a3dd627258d704a0c3完全吻合；已還原原檔並重build，工作樹乾淨。
-- 部署用後台39c504578c9faa9e0c7d728400719830d7c70021a715460829c82fae2ad3143c；HTML de5a6d6bd6b55b777985fb05b50b455b0db7c6ec8b4c476a6e8905211da37deb，差異已證明僅私人專案字串，沒有公開該字串。
-- 目前台北11/05 00時，尚未08:00；依交接不重跑日期邊界完整測試、不部署、不改程式／測試。正式仍v248，RELAY_OFFICIAL_IMPORT_ENABLED未設；v249～v252本機a09fea9已備妥。
-- 修訂後prompt已讀回逐字相同，原schedule一致、enabled=true；run_now回inline_run後實際POST HTTP202、run d6cfe6c4-5704-456f-92a2-f5eedb18fba4，status持續200，completedAt尚未出現，未預填保存結果。
+# hotfix10（11/05 22時接續，進行中）
+- 新授權v253／中繼patch2已讀取；兩份SHA分別3767e66c69c1062e28002fa6638c9718ec7656333756c56938b0fd2edeb83011、89d4971f4c192746178ffb78154968e83369084569570d6d8582e0bc1b5b4e50，均核對相同。
+- 中繼從origin/main 261bc2a另開乾淨分支git am成功；47/47通過，正在推main。先前本機分支分歧已隔離，未覆寫遠端歷史。
+- 網站v249～v252原本機a09fea9保留，已疊v253並build；完整TZ=UTC npm test正在執行，尚未部署，正式仍v248。
+- 排程prompt已修為每輪強制Sites→POST→同run輪詢→history，原時段與enabled不變；11/01～11/04平台逐輪內部跳過原因未暴露，未猜測。
+- 11/05晨間已實際POST202接續凌晨run d6cfe6c4-5704-456f-92a2-f5eedb18fba4；16次status200、history200、06:40:37台北completedAt匹配、Gate5/5recorded，詳見automation-runs/20261105-morning.md。
+- 晨間來源仍partial：全市場timeout、FRED逾時／BLS403；當時v248未接relayImport，沒有以直接Master讀回倒填審計。
+- 待完成：v253後台匿名化SHA核對並還原、完整測試exit0、設定RELAY_OFFICIAL_IMPORT_ENABLED=true、單次部署、部署後首次巡檢與五檔評級／Gate5／8／參考價讀回。
