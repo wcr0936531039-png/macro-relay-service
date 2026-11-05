@@ -106,6 +106,64 @@ class BuildBundleTests(unittest.TestCase):
         self.assertEqual(len(manifest["errors"]), 2)
 
 
+class CollectorRetryTests(unittest.TestCase):
+    """擁有者 2026-11-05 21:54「好」：下載中斷（IncompleteRead、連線被重設）最多 4 次、間隔 5／10／20 秒；逾時與 HTTP 錯誤照舊 2 次、不等待。"""
+
+    def setUp(self):
+        import http.client
+        import types
+        import urllib.error
+        import urllib.parse
+        import urllib.request
+        src = (Path(__file__).resolve().parents[1] / "vendor" / "site-collector" / "scripts" / "collect-official-data.py").read_text(encoding="utf-8")
+        self.code = src[src.index("RETRY_WAITS = "):src.index("def save(")]
+        self.mods = types.SimpleNamespace(http=http, urllib=urllib, types=types)
+        self.inc = http.client.IncompleteRead(b"x" * 10, 5)
+
+    def run_fetch(self, outcomes, url="https://openapi.twse.com.tw/v1/opendata/t187ap03_L"):
+        sleeps, agents, it = [], [], iter(outcomes)
+
+        class Body:
+            def __init__(self, data):
+                self.data = data
+
+            def read(self):
+                return self.data
+
+        def fake_open(request, timeout):
+            agents.append(request.get_header("User-agent"))
+            item = next(it)
+            if isinstance(item, BaseException):
+                raise item
+            return Body(item)
+
+        urllib = self.mods.types.SimpleNamespace(parse=self.mods.urllib.parse, request=self.mods.types.SimpleNamespace(Request=self.mods.urllib.request.Request, urlopen=fake_open))
+        ns = {"urllib": urllib, "http": self.mods.http, "time": self.mods.types.SimpleNamespace(sleep=sleeps.append)}
+        exec(self.code, ns)
+        try:
+            return ns["fetch"](url), sleeps, agents
+        except Exception as exc:  # noqa: BLE001
+            return type(exc).__name__, sleeps, agents
+
+    def test_broken_download_is_retried_with_waits(self):
+        self.assertEqual(self.run_fetch([self.inc, self.inc, b"ok"])[:2], ("ok", [5, 10]))
+        result, sleeps, agents = self.run_fetch([self.inc] * 4)
+        self.assertEqual((result, sleeps, len(agents)), ("IncompleteRead", [5, 10, 20], 4))
+        self.assertEqual(self.run_fetch([self.mods.urllib.error.URLError(ConnectionResetError()), b"ok"])[:2], ("ok", [5]))
+
+    def test_timeouts_and_http_errors_keep_two_quick_attempts(self):
+        result, sleeps, agents = self.run_fetch([TimeoutError(), TimeoutError(), b"never"])
+        self.assertEqual((result, sleeps, len(agents)), ("TimeoutError", [], 2))
+        result, sleeps, agents = self.run_fetch([self.mods.urllib.error.HTTPError("u", 404, "nf", {}, None)] * 2 + [b"never"])
+        self.assertEqual((result, sleeps, len(agents)), ("HTTPError", [], 2))
+
+    def test_fred_alternates_default_and_named_user_agent(self):
+        result, _, agents = self.run_fetch([self.inc, self.inc, self.inc, b"ok"], "https://fred.stlouisfed.org/graph/fredgraph.csv?id=IORB")
+        self.assertEqual(result, "ok")
+        self.assertEqual(agents, [None, "TaiwanStockMaster/1.0", None, "TaiwanStockMaster/1.0"])
+        self.assertEqual(self.run_fetch([b"ok"])[2], ["TaiwanStockMaster/1.0"], "other sites keep the named agent")
+
+
 class VendoredCollectorTests(unittest.TestCase):
     def test_vendored_site_collector_files_exist_and_carry_no_credentials(self):
         root = Path(__file__).resolve().parents[1] / "vendor" / "site-collector"

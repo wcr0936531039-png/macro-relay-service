@@ -73,7 +73,7 @@ python -m py_compile scripts/sync_macro.py
 
 ## 官方資料收集套件（official-import 分支，2026-11-03）
 
-- `.github/workflows/official_collector.yml` 在台北約 05:55（每天）、16:20、22:40、23:10（週一至週五）跑 `vendor/site-collector/` 裡與網站 v250 相同的官方收集程式（TWSE／TPEx 行情與名冊、FRED 總經序列、證交所信用統計、BLS／FRED 核心 CPI、產業來源、官方新聞）。台北 12:00～20:59 略過信用統計（當晚才公布）。
+- `.github/workflows/official_collector.yml` 在台北約 05:55（每天）、16:20、22:40、23:10（週一至週五）跑 `vendor/site-collector/` 裡與網站 v253 相同的官方收集程式（TWSE／TPEx 行情與名冊、FRED 總經序列、證交所信用統計、BLS／FRED 核心 CPI、產業來源、官方新聞）。台北 12:00～20:59 略過信用統計（當晚才公布）。
 - `scripts/publish_official_import.py` 只把網站認得的部分檔與 `manifest.json`（每個檔的類別、大小、SHA-256、收集失敗項目）強制推到 `official-import` 分支，只保留最新一份；raw 原始檔、狀態檔不發布。格式不符、超過 3.9MB、只有失敗紀錄的 CPI／新聞都不發布，原因寫進清單。
 - 網站在環境變數 `RELAY_OFFICIAL_IMPORT_ENABLED=true` 時，巡檢開頭讀這個分支、核對雜湊後匯入；這裡不需要任何金鑰、不連網站、不部署。
 - `vendor/site-collector/` 要與網站原始碼同步：網站改了收集程式，同一份檔案要一起更新（`tests/test_official_import.py` 檢查檔案存在且不含任何憑證字樣）。
