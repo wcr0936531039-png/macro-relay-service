@@ -1,0 +1,9 @@
+# hotfix11｜2026-11-06（已授權，進行中）
+- 擁有者已在本對話明確授權中繼patch2與網站v253＋v254，其他程式修改不納入。
+- 三份SHA核對相同：中繼3767e66c69c1062e28002fa6638c9718ec7656333756c56938b0fd2edeb83011；v253 89d4971f4c192746178ffb78154968e83369084569570d6d8582e0bc1b5b4e50；v254 9f5da93cb360a3cd78d72a29e35c6bfb1bd0d72be77801590885e6acdbabea98。
+- 中繼git am於55da985成功、47/47通過；CLI推送缺登入，改GitHub連接器以相同樹e3d8b0453c238a5bd0e7083d6f210c2a6b6629cc發布main commit e8b375999c2d5c2972681110a5171fa2617f792e，非強推、未覆寫其他檔。
+- 網站現行a09fea9為基線，依序套v253→v254、build成功；完整TZ=UTC npm test執行中，尚未部署。
+- HTML de5a6d6bd6b55b777985fb05b50b455b0db7c6ec8b4c476a6e8905211da37deb；匿名化後台99f2ce82f426493402e5bd6784f989e6f2396d022d9c9aa7113e1ef22abf5944完全吻合；原始後台fd396541da546ee14e8579c5110a4d9bd22e73b52161a2e8ab603846e748d208。
+- 排程對照：11/05 22:30六秒failed無錯誤本文，無法證實原因；23:02實際工具曾回Automatic approval review failed／usage limit；手動22:41 HTTP成功。11/06晨間平台run已completed、網站同run Gate5/5保存；不把不同失敗事件混為同一根因。
+- 待：完整測試exit0、單次部署、信用七列讀回及巡檢prompt明確授權補充；原時段與啟用狀態保持。
+- 晨間新信用套件的時段治理缺口另已記錄，不在本次v253／v254兩包內；驗收不另匯入晨間新信用。
