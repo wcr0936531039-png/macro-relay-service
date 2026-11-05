@@ -1,10 +1,14 @@
-# 最新：2026-11-06 晨間巡檢接續中；發現中繼 morning 套件信用時段缺口
+# 最新：2026-11-06 06:50晨間接續完成，partial；Gate5/5；中繼信用時段缺口待修
 
-[本輪紀錄](automation-runs/20261106-morning.md)。POST202接續昨晚run 969d9ff0-7024-43b2-8a5c-46134e89707f，同身分status200正在推進，未宣稱完成。新套件window=morning、信用capturedAt為台北05:26，與上午保留既有信用快照規則不符；本run綁定舊manifest、statistics unchanged，未匯入該筆新信用，不另建run強行更新。程式與排程不變。
+[本輪紀錄](automation-runs/20261106-morning.md)｜[HTTP與逐項證據](automation-runs/20261106-morning-evidence.json)。
+
+POST202接續昨晚run 969d9ff0-7024-43b2-8a5c-46134e89707f，本晨37次status200至06:50:16 completedAt、history200同ID／時間匹配；Gate5/5 recorded，50格與直接讀回一致，latest_synced五檔。relayImport ok／officialImport automatic，五組unchanged、market缺包；晨間信用7列原日期與可讀時間保持，缺欄不冒充驗證。
+
+**新確認根因**：中繼auto只在12:00～20:59略過信用，上午及21:00後仍會收；最新morning套件的信用capturedAt為05:26。未另開run匯入該筆新信用；新套件雖已有11/05五日行情，本輪仍只讀到10/30舊全市場快照。未改程式／設定，需另行修正來源時段及匯入守門。總經55/55、擴展12/12、市場36/36、股指3/3、板塊11/11、公告3/3；跨市場2/4與全市場timeout保留。
 
 ---
 
-# 最新：2026-11-05 06:40台北晨間巡檢完成，partial；Gate審計5/5
+ 最新：2026-11-05 06:40台北晨間巡檢完成，partial；Gate審計5/5
 
 [本輪紀錄](automation-runs/20261105-morning.md)｜[HTTP與逐項讀回](automation-runs/20261105-morning-evidence.json)。
 
