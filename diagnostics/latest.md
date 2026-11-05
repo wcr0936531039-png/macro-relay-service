@@ -1,3 +1,9 @@
+# 最新：2026-11-06 晨間巡檢接續中；發現中繼 morning 套件信用時段缺口
+
+[本輪紀錄](automation-runs/20261106-morning.md)。POST202接續昨晚run 969d9ff0-7024-43b2-8a5c-46134e89707f，同身分status200正在推進，未宣稱完成。新套件window=morning、信用capturedAt為台北05:26，與上午保留既有信用快照規則不符；本run綁定舊manifest、statistics unchanged，未匯入該筆新信用，不另建run強行更新。程式與排程不變。
+
+---
+
 # 最新：2026-11-05 06:40台北晨間巡檢完成，partial；Gate審計5/5
 
 [本輪紀錄](automation-runs/20261105-morning.md)｜[HTTP與逐項讀回](automation-runs/20261105-morning-evidence.json)。
