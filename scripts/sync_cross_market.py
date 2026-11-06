@@ -53,10 +53,15 @@ def available_at(day, market):
 
 
 def fetch_text(url):
+    # FRED 在 GitHub 上會擋自訂 User-Agent（擁有者 2026-11-06「好」）：FRED 第一次用 Python 預設字串、第二次用原本字串；其他網站不變。
     last = None
+    fred = url.startswith("https://fred.stlouisfed.org/")
     for attempt in range(2):
         try:
-            req = Request(url, headers={"User-Agent": UA, "Accept": "application/json,text/csv,*/*", "Referer": "https://www.twse.com.tw/" if "twse.com" in url else "https://www.nasdaq.com/"})
+            headers = {"User-Agent": UA, "Accept": "application/json,text/csv,*/*", "Referer": "https://www.twse.com.tw/" if "twse.com" in url else "https://www.nasdaq.com/"}
+            if fred and attempt == 0:
+                del headers["User-Agent"], headers["Referer"]
+            req = Request(url, headers=headers)
             with urlopen(req, timeout=18) as response:
                 body = response.read(5_000_001)
             if len(body) > 5_000_000:

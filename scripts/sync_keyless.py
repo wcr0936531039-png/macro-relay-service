@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Sequential official public-feed ingestion; no provider API keys."""
-import csv, io, json, math, os, sys, zipfile
+import csv, http.client, io, json, math, os, sys, time, zipfile
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -26,12 +26,37 @@ OUT=Path('data/keyless_snapshot.json')
 NDC_OPEN_DATA_ZIP=('https://ws.ndc.gov.tw/Download.ashx?icon=.zip&n=5pmv5rCj5oyH5qiZ5Y%2BK54eI6JmfLnppcA%3D%3D'
  '&u=LzAwMS9hZG1pbmlzdHJhdG9yLzEwL3JlbGZpbGUvNTc4MS82MzkyL2VhMjM1YmQ5LWQwNTItNGE2OS1hYmZjLWQ1Yzc4NWQzZDBlMi56aXA%3D')
 
+RETRY_WAITS=(5,10,20)
+def broken_transfer(exc):
+    reason=getattr(exc,'reason',None)
+    return isinstance(exc,(http.client.IncompleteRead,ConnectionResetError)) or isinstance(reason,ConnectionResetError)
+
+def fetch_public(url,accept,limit,prefer_default_agent=False):
+    """擁有者 2026-11-06 17:27「好」：FRED 在 GitHub 上會擋自訂 User-Agent（11/06 14:59 VIX 抓取逾時；11/03 實測只有 Python 預設字串回 200），
+    所以 FRED 先用 Python 預設字串、再輪流用中繼原本字串；其他網站先用原本字串。下載中斷最多試 4 次、間隔 5／10／20 秒；
+    逾時與 HTTP 錯誤最多 2 次、不等待。"""
+    error=None
+    for attempt in range(4):
+        default=(attempt%2==0)==prefer_default_agent
+        headers={'Accept':accept}
+        if not default:headers['User-Agent']=legacy.USER_AGENT
+        try:
+            with urlopen(Request(url,headers=headers),timeout=25) as response:body=response.read(limit+1)
+        except Exception as exc:
+            error=exc
+            if broken_transfer(exc):
+                if attempt<3:time.sleep(RETRY_WAITS[attempt])
+                continue
+            if attempt>=1:break
+            continue
+        if len(body)>limit:raise ValueError('response too large')
+        return body
+    raise error
+
 def fred_csv(sid):
     since=(datetime.now(timezone.utc)-timedelta(days=650)).date().isoformat()
     url=f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}&cosd={since}'
-    with urlopen(Request(url,headers={'User-Agent':legacy.USER_AGENT,'Accept':'text/csv'}),timeout=25) as response:
-        body=response.read(2000001)
-    if len(body)>2000000:raise ValueError('CSV too large')
+    body=fetch_public(url,'text/csv',2000000,prefer_default_agent=True)
     reader=csv.DictReader(io.StringIO(body.decode('utf-8-sig')))
     if reader.fieldnames not in (['observation_date',sid],['DATE',sid]):raise ValueError('CSV series/header mismatch')
     rows={}
@@ -50,6 +75,33 @@ def fred_csv(sid):
         if legacy.month_number(b['date'])-legacy.month_number(a['date'])!=1:raise ValueError('Nonadjacent monthly observations')
         if sid=='RSAFS' and a['value']<=0:raise ValueError('Invalid retail denominator')
     return {'history':history[-HISTORY_KEEP.get(sid,20):],'source':url,'provider':f'FRED 官方公開 CSV｜{sid}'}
+
+# Cboe 自己的 VIX 每日收盤檔：美股收盤後當天就更新（11/06 實測 17:28 台北已有 11/05 收盤 28.18，FRED 還停在 11/04）。
+# FRED VIXCLS 是同一指數的轉載、晚約一天，只在 Cboe 抓不到或格式不符時當備援。
+CBOE_VIX_URL='https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv'
+
+def cboe_vix_history(body=None):
+    if body is None:body=fetch_public(CBOE_VIX_URL,'text/csv',3000000)
+    reader=csv.DictReader(io.StringIO(body.decode('utf-8-sig') if isinstance(body,bytes) else body))
+    if [str(f).strip().upper() for f in reader.fieldnames or []]!=['DATE','OPEN','HIGH','LOW','CLOSE']:raise ValueError('Cboe VIX CSV header mismatch')
+    rows={}
+    for row in reader:
+        try:
+            day=datetime.strptime(row['DATE'].strip(),'%m/%d/%Y').date().isoformat()
+            o,h,l,c=(float(row[k]) for k in ('OPEN','HIGH','LOW','CLOSE'))
+        except (ValueError,TypeError,AttributeError):continue
+        if all(math.isfinite(x) for x in (o,h,l,c)) and 0<l<=c<=h<200:rows[day]={'date':day,'value':c,'open':o,'high':h,'low':l}
+    history=sorted(rows.values(),key=lambda p:p['date'])[-20:]
+    if len(history)<5:raise ValueError('Cboe VIX history insufficient')
+    last=history[-1]
+    return {'history':[{'date':p['date'],'value':p['value']} for p in history],'source':CBOE_VIX_URL,'provider':'Cboe 官方 VIX 每日收盤｜VIX_History.csv',
+            'method':f"Cboe 官方每日收盤；{last['date']} 開 {last['open']:.2f}、高 {last['high']:.2f}、低 {last['low']:.2f}、收 {last['value']:.2f}。FRED VIXCLS 為同一指數轉載、晚約一天，作備援。"}
+
+def vix_metric():
+    try:return cboe_vix_history()
+    except Exception as cboe_error:
+        entry=fred_csv('VIXCLS')
+        return {**entry,'method':f'Cboe 官方收盤檔不可用（{str(cboe_error)[:120]}）；改用 FRED VIXCLS 轉載（晚約一天）。'}
 
 # 聯準會每天 16:30（美東）就公布「下一個營業日」的 IORB，FRED 會先列出未來日期（週五可到下週一）；這不是錯誤資料。
 FUTURE_DATED_DAYS={'IORB':4}
@@ -754,6 +806,7 @@ def main():
         if sid=='DEXJPUS':return ecb_usd_jpy_cross()
         if sid=='WCESTUS1':return eia_commercial_crude_stocks()
         if sid in ('ICE_DXY','XAU'):return yahoo_chart_metric(sid)
+        if sid=='VIXCLS':return vix_metric()
         return fred_csv(sid)
     tasks += [(sid,days,lambda sid=sid:additional_source(sid)) for sid,days in MORE_SPECS]
     def current_market_date():
