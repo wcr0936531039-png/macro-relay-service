@@ -9,6 +9,9 @@
 - 清單記錄每個檔的類別、位元組數與 SHA-256（網站讀到的內容雜湊不符就不匯入）。
 - 收集端失敗（狀態檔的 errors、收集程式結束碼）照實寫進 errors；一個部分檔都沒有就失敗結束，不發布空套件。
 - 這裡不連網站、不需要任何金鑰；GitHub 工作流程把套件強制推到 official-import 分支（只保留最新一份）。
+- 信用統計（2026-11-06 GPT 晨間回報的缺口）：和網站同一條規則，只發布台北 22:30～23:59 擷取的那份；
+  其他時間的擷取不發布。這次沒有新的夜間信用統計時，沿用上一份套件裡的夜間信用統計（原檔一個位元組都不改，
+  保留原觀測日與原核對時間），超過 30 小時就不再沿用（網站 36 小時後不收，留時間給巡檢延後）。
 """
 import argparse
 import datetime as dt
@@ -30,6 +33,9 @@ FIXED = {
 }
 MARKET = re.compile(r"^\d{4}-\d{2}-\d{2}\.json$")
 MAX_PART_BYTES = 3_900_000
+TPE = dt.timezone(dt.timedelta(hours=8))
+CREDIT_CAPTURE_FROM = (22, 30)  # 網站 taiwanCreditCaptureAllowed：台北時間 22:30 起才抓信用統計
+CARRY_MAX_HOURS = 30
 STATUS_FILES = [
     "collection-status.json",
     "macro-collection-status.json",
@@ -38,6 +44,25 @@ STATUS_FILES = [
     "source-collection-status.json",
     "news-collection-status.json",
 ]
+
+
+def credit_captured_at(data):
+    stats = data.get("marketStatistics") if isinstance(data, dict) else None
+    try:
+        captured = dt.datetime.fromisoformat(str((stats or {}).get("capturedAt")).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return captured if captured.tzinfo else None
+
+
+def credit_capture_problem(data):
+    captured = credit_captured_at(data)
+    if not captured:
+        return "信用統計沒有可辨識的擷取時間（需含時區）"
+    local = captured.astimezone(TPE)
+    if (local.hour, local.minute) < CREDIT_CAPTURE_FROM:
+        return f"信用統計擷取於台北 {local:%m/%d %H:%M}，早於 22:30（網站規則：22:30 前不重抓信用統計，保留原觀測日及原核對時間）"
+    return None
 
 
 def check_part(name, data):
@@ -58,7 +83,32 @@ def check_part(name, data):
         return "核心 CPI 沒有任何可用來源（只有失敗紀錄）"
     if key == "officialNewsCapture" and not any(isinstance(f, dict) and f.get("items") for f in (data[key] or {}).get("feeds") or []):
         return "官方新聞全部抓取失敗"
+    if key == "marketStatistics":
+        return credit_capture_problem(data)
     return None
+
+
+def carry_statistics(path, now):
+    """沿用上一份套件的夜間信用統計。回傳 (原始位元組, 說明) 或 (None, 不沿用的原因)。"""
+    path = Path(path)
+    if not path.exists() or not path.stat().st_size:
+        return None, "上一份套件沒有信用統計"
+    raw = path.read_bytes()
+    try:
+        data = json.loads(raw.decode("utf-8"))
+        problem = check_part("statistics.json", data)
+    except (ValueError, AttributeError, TypeError):
+        return None, "上一份信用統計不是 JSON"
+    if problem:
+        return None, "上一份" + problem
+    captured = credit_captured_at(data)
+    age = (now - captured).total_seconds() / 3600
+    if age < 0:
+        return None, "上一份信用統計的擷取時間晚於現在"
+    if age > CARRY_MAX_HOURS:
+        return None, f"上一份信用統計擷取於 {age:.0f} 小時前，超過 {CARRY_MAX_HOURS} 小時不再沿用"
+    stats = data["marketStatistics"]
+    return raw, {"name": "statistics.json", "date": stats.get("date"), "capturedAt": stats.get("capturedAt")}
 
 
 def collector_errors(src, exits):
@@ -90,7 +140,7 @@ def collector_errors(src, exits):
     return unique
 
 
-def build(src, out, window=None, keep_sessions=5, now=None, collector=None, exits=None):
+def build(src, out, window=None, keep_sessions=5, now=None, collector=None, exits=None, previous_statistics=None):
     src, out = Path(src), Path(out)
     if out.exists():
         shutil.rmtree(out)
@@ -111,6 +161,15 @@ def build(src, out, window=None, keep_sessions=5, now=None, collector=None, exit
             continue
         (out / name).write_bytes(raw)
         parts.append({"name": name, "kind": "market" if MARKET.match(name) else FIXED[name][0], "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw)})
+    carried, carry_note = [], None
+    if previous_statistics and not any(p["name"] == "statistics.json" for p in parts):
+        raw, note = carry_statistics(previous_statistics, now)
+        if raw:
+            (out / "statistics.json").write_bytes(raw)
+            parts.append({"name": "statistics.json", "kind": "statistics", "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw), "carried": True})
+            carried.append(note)
+        else:
+            carry_note = note
     errors = collector_errors(src, exits or {}) + errors
     manifest = {
         "schema_version": 1,
@@ -120,6 +179,10 @@ def build(src, out, window=None, keep_sessions=5, now=None, collector=None, exit
         "parts": parts,
         "errors": errors[:50],
     }
+    if carried:
+        manifest["carried"] = carried
+    if carry_note:
+        manifest["carryNote"] = carry_note
     (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     return manifest
 
@@ -131,11 +194,12 @@ def main(argv=None):
     ap.add_argument("--window")
     ap.add_argument("--keep-sessions", type=int, default=5)
     ap.add_argument("--exit", action="append", default=[], help="名稱=結束碼，例如 official=0")
+    ap.add_argument("--previous-statistics", help="上一份套件的 statistics.json；這次沒有新的夜間信用統計時沿用")
     args = ap.parse_args(argv)
     collector = {k: v for k, v in {"repo": os.environ.get("GITHUB_REPOSITORY"), "commit": os.environ.get("GITHUB_SHA"), "run": os.environ.get("GITHUB_RUN_ID"), "siteCollector": "v253"}.items() if v}
     exits = dict(item.split("=", 1) for item in args.exit if "=" in item)
-    manifest = build(args.src, args.out, args.window, args.keep_sessions, collector=collector, exits=exits)
-    print(json.dumps({"parts": [(p["name"], p["bytes"]) for p in manifest["parts"]], "errors": manifest["errors"]}, ensure_ascii=False))
+    manifest = build(args.src, args.out, args.window, args.keep_sessions, collector=collector, exits=exits, previous_statistics=args.previous_statistics)
+    print(json.dumps({"parts": [(p["name"], p["bytes"]) for p in manifest["parts"]], "carried": manifest.get("carried"), "carryNote": manifest.get("carryNote"), "errors": manifest["errors"]}, ensure_ascii=False))
     if not manifest["parts"]:
         print("NO_PARTS: 沒有可發布的部分檔，保留上一份套件", file=sys.stderr)
         return 1

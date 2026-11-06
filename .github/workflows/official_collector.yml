@@ -8,19 +8,20 @@ on:
         description: 'Trading sessions to (re)collect'
         default: '5'
       statistics:
-        description: 'Credit statistics: auto (skip 12:00-20:59 Taipei), on, off'
+        description: 'Credit statistics: auto (collect only 22:30-23:59 Taipei, else carry the last night capture), on, off'
         default: 'auto'
       publish:
         description: 'Push the bundle to the official-import branch (false = dry run)'
         default: 'true'
   schedule:
-    # 台北 05:55（每天，前一交易日收盤＋信用統計；週末也跑，讓清單不超過 36 小時）
+    # 台北 05:55（每天，前一交易日收盤；信用統計沿用前一晚 22:30 後收的那份；週末也跑，讓清單不超過 36 小時）
     - cron: '55 21 * * *'
     # 台北 16:20（週一至週五，當天收盤；信用統計略過）
     - cron: '20 8 * * 1-5'
-    # 台北 22:40、23:10（週一至週五，當晚信用統計；兩次是因為 GitHub 排程常延後或略過）
+    # 台北 22:40、23:10、23:35（週一至週五，當晚信用統計；只有 22:30～23:59 收的才發布。三次是因為 GitHub 排程常延後或略過）
     - cron: '40 14 * * 1-5'
     - cron: '10 15 * * 1-5'
+    - cron: '35 15 * * 1-5'
 permissions:
   contents: write
 concurrency:
@@ -61,7 +62,7 @@ jobs:
           {
             echo '### Official import bundle'
             if [ -f "$m" ]; then
-              python -c "import json,sys;m=json.load(open(sys.argv[1]));print('generatedAt',m['generatedAt'],'window',m['window']);print();[print('-',p['kind'],p['name'],p['bytes'],'bytes') for p in m['parts']];print();print('Collector errors:',len(m['errors']));[print('-',e['source'],':',e['error'][:200]) for e in m['errors']]" "$m"
+              python -c "import json,sys;m=json.load(open(sys.argv[1]));print('generatedAt',m['generatedAt'],'window',m['window']);print('Credit statistics carried:',m.get('carried') or m.get('carryNote') or 'new capture or none');print();[print('-',p['kind'],p['name'],p['bytes'],'bytes') for p in m['parts']];print();print('Collector errors:',len(m['errors']));[print('-',e['source'],':',e['error'][:200]) for e in m['errors']]" "$m"
             else
               echo 'No manifest was built.'
             fi

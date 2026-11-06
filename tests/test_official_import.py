@@ -106,6 +106,76 @@ class BuildBundleTests(unittest.TestCase):
         self.assertEqual(len(manifest["errors"]), 2)
 
 
+def statistics(captured_at, date="2026-11-05"):
+    return {"schema_version": 1, "marketStatistics": {"date": date, "capturedAt": captured_at, "margin": {"stat": "OK"}}}
+
+
+class CreditCaptureWindowTests(unittest.TestCase):
+    """GPT 2026-11-06 晨間回報：早上的套件帶了新抓的信用統計，和網站「22:30 前不重抓、保留原觀測日及原核對時間」不符。"""
+
+    MORNING = dt.datetime(2026, 11, 5, 22, 0, tzinfo=dt.timezone.utc)  # 台北 11/06 06:00
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        root = Path(self.tmp.name)
+        self.src, self.out, self.prev = root / "src", root / "out", root / "previous-statistics.json"
+        self.src.mkdir()
+        write(self.src, "series.json", {"schema_version": 1, "series": [{"id": "IORB"}]})
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_only_captures_from_2230_to_2359_taipei_are_published(self):
+        for captured, ok in [("2026-11-05T14:30:00+00:00", True), ("2026-11-05T15:59:59Z", True), ("2026-11-05T14:29:59+00:00", False),
+                             ("2026-11-05T21:26:51.318980+00:00", False), ("2026-11-06T01:50:50.160775+00:00", False), ("2026-11-05T16:00:05+00:00", False), ("2026-11-05T22:40:00", False)]:
+            write(self.src, "statistics.json", statistics(captured))
+            manifest = pub.build(self.src, self.out, "x", 5, now=self.MORNING)
+            names = [p["name"] for p in manifest["parts"]]
+            self.assertEqual("statistics.json" in names, ok, captured)
+            if not ok:
+                reason = {e["source"]: e["error"] for e in manifest["errors"]}["statistics.json"]
+                self.assertRegex(reason, "早於 22:30|擷取時間", captured)
+
+    def test_previous_night_capture_is_carried_byte_for_byte(self):
+        write(self.src, "macro-collection-status.json", {"errors": [{"source": "TWSE-statistics", "error": "skipped: --skip-statistics"}]})
+        self.prev.write_text(json.dumps(statistics("2026-11-05T14:41:07.5+00:00"), ensure_ascii=False, indent=1), encoding="utf-8")
+        manifest = pub.build(self.src, self.out, "morning-no-statistics", 5, now=self.MORNING, previous_statistics=self.prev)
+        part = next(p for p in manifest["parts"] if p["name"] == "statistics.json")
+        self.assertEqual((self.out / "statistics.json").read_bytes(), self.prev.read_bytes(), "原檔不改：保留原觀測日與原核對時間")
+        self.assertEqual(part["sha256"], hashlib.sha256(self.prev.read_bytes()).hexdigest())
+        self.assertEqual((part["kind"], part["carried"]), ("statistics", True))
+        self.assertEqual(manifest["carried"], [{"name": "statistics.json", "date": "2026-11-05", "capturedAt": "2026-11-05T14:41:07.5+00:00"}])
+        self.assertNotIn("carryNote", manifest)
+
+    def test_new_night_capture_wins_over_previous(self):
+        write(self.src, "statistics.json", statistics("2026-11-06T14:45:00+00:00", "2026-11-06"))
+        self.prev.write_text(json.dumps(statistics("2026-11-05T14:41:00+00:00")), encoding="utf-8")
+        manifest = pub.build(self.src, self.out, "night", 5, now=dt.datetime(2026, 11, 6, 14, 50, tzinfo=dt.timezone.utc), previous_statistics=self.prev)
+        self.assertEqual(json.loads((self.out / "statistics.json").read_text())["marketStatistics"]["date"], "2026-11-06")
+        self.assertNotIn("carried", manifest)
+
+    def test_morning_capture_or_old_capture_is_not_carried(self):
+        cases = [("2026-11-05T21:26:51+00:00", self.MORNING, "早於 22:30"),
+                 ("2026-11-04T14:41:00+00:00", self.MORNING, "超過 30 小時"),
+                 ("2026-11-05T14:41:00+00:00", dt.datetime(2026, 11, 5, 14, 0, tzinfo=dt.timezone.utc), "晚於現在")]
+        for captured, now, note in cases:
+            self.prev.write_text(json.dumps(statistics(captured)), encoding="utf-8")
+            manifest = pub.build(self.src, self.out, "morning-no-statistics", 5, now=now, previous_statistics=self.prev)
+            self.assertNotIn("statistics.json", [p["name"] for p in manifest["parts"]], captured)
+            self.assertFalse((self.out / "statistics.json").exists())
+            self.assertIn(note, manifest["carryNote"], captured)
+            self.assertNotIn("carried", manifest)
+        self.prev.unlink()
+        manifest = pub.build(self.src, self.out, "morning-no-statistics", 5, now=self.MORNING, previous_statistics=self.prev)
+        self.assertEqual(manifest["carryNote"], "上一份套件沒有信用統計")
+
+    def test_runner_collects_credit_statistics_only_from_2230(self):
+        text = (Path(__file__).resolve().parents[1] / "scripts" / "run_official_collector.sh").read_text(encoding="utf-8")
+        self.assertIn('[ "$stats" = auto ] && [ "$hm" -lt 2230 ]', text)
+        self.assertIn('git show FETCH_HEAD:statistics.json > "$previous"', text)
+        self.assertIn('--previous-statistics "$previous"', text)
+
+
 class CollectorRetryTests(unittest.TestCase):
     """擁有者 2026-11-05 21:54「好」：下載中斷（IncompleteRead、連線被重設）最多 4 次、間隔 5／10／20 秒；逾時與 HTTP 錯誤照舊 2 次、不等待。"""
 
