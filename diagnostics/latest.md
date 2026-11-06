@@ -1,6 +1,8 @@
-# 最新：2026-11-06 夜間巡檢進行中（22:30後已實際POST）
-
-[本輪紀錄](automation-runs/20261106-night.md)。POST202、run 2fe5384b-0f21-42d9-9fc9-556263822c2f，持續同身分status200推進；尚未completedAt／history驗收。六組自動匯入已完成，歷史80日，VIX已讀Cboe 11/05=28.18；全市場掃描仍timeout。statistics雖imported，來源capturedAt為台北09:50，不符合v254夜間驗收，未標完成。未改程式、時段、開關或門檻。
+# 最新：2026-11-06 夜間巡檢已完成（partial）
+[本輪報告](automation-runs/20261106-night.md)｜[HTTP與保存證據](automation-runs/20261106-night-evidence.json)
+POST202；39次status200；history200，同runId 2fe5384b-0f21-42d9-9fc9-556263822c2f，台北22:44:40完成；5/5 recorded:true，history計數5，latest_synced五檔。relayImport ok、officialImport automatic，六組imported。
+全市場scanner逾時；已有行情至11/05、80交易日，不稱本日更新完成。研究TPEx端點逾時；跨市場partial4/4。
+信用來自台北09:50舊包，v254合規夜間驗收仍未驗證；沒有造值、變更網站或排程。其餘細節見報告。
 
 ---
 
