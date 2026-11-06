@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-06T09:56:10.423134+00:00",
+  "generated_at": "2026-11-06T14:35:51.710393+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -325,7 +325,7 @@
       "unit": "index_points",
       "warnings": [],
       "status": "ok",
-      "fetched_at": "2026-11-06T09:56:10.423134+00:00"
+      "fetched_at": "2026-11-06T14:35:51.710393+00:00"
     },
     "SP500": {
       "history": [
@@ -835,7 +835,7 @@
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-11-06T09:56:10.423134+00:00"
+      "fetched_at": "2026-11-06T14:35:51.710393+00:00"
     },
     "NASDAQCOM": {
       "history": [
@@ -1345,7 +1345,7 @@
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-11-06T09:56:10.423134+00:00"
+      "fetched_at": "2026-11-06T14:35:51.710393+00:00"
     },
     "SOX": {
       "history": [
@@ -1858,7 +1858,7 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-11-06T09:56:10.423134+00:00"
+      "fetched_at": "2026-11-06T14:35:51.710393+00:00"
     }
   },
   "errors": [],
@@ -2028,24 +2028,25 @@
       },
       {
         "date": "2026-11-06",
-        "fetched_at": "2026-11-06T09:56:10.423134+00:00",
+        "fetched_at": "2026-11-06T14:35:51.710393+00:00",
         "totalValueTwd": 1321071858650.0,
-        "status": "partial",
+        "status": "ok",
         "sources": [
           "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261101&response=json",
           "https://www.twse.com.tw/fund/BFI82U?dayDate=20261106&type=day&response=json",
           "https://www.twse.com.tw/exchangeReport/TWTB4U?date=20261106&selectType=All&response=json"
         ],
         "scope": "TWSE_all_listed_securities",
-        "investmentTrustNetTwd": 26657595282.0,
+        "investmentTrustNetTwd": 26691208730.0,
         "foreignNetTwd": -91188249259.0,
-        "errors": [
-          "https://www.twse.com.tw/exchangeReport/TWTB4U?date=20261106&selectType=All&response=json: TWTB4U matched buy/sell amount columns absent"
-        ]
+        "dayTradeBuyTwd": 551956674690.0,
+        "dayTradeSellTwd": 557067170700.0,
+        "dayTradeValueTwd": 554511922695.0,
+        "nonDayTradeValueTwd": 766559935955.0
       }
     ],
     "scope": "TWSE_all_listed_securities",
     "method": "nonDayTradeValueTwd = FMTQIK total value minus (TWTB4U day-trade buy value + sell value)/2; institutions are BFI82U net TWD"
   },
-  "status": "partial"
+  "status": "ok"
 }
