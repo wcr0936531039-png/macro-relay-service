@@ -1,5 +1,8 @@
-# 最新：2026-11-07 晨間巡檢進行中
-[本輪紀錄](automation-runs/20261107-morning.md)：POST202，runId=5fc4818e-4429-476b-a4c8-6474b2e9e09c；status200，正在匯入官方中繼包，尚未完成保存核對。
+# 最新：2026-11-07 06:48 晨間巡檢完成（partial）
+[本輪報告](automation-runs/20261107-morning.md)｜[HTTP及跨夜比對證據](automation-runs/20261107-morning-evidence.json)
+POST202、40次status200、history200；同runId 5fc4818e-4429-476b-a4c8-6474b2e9e09c／completedAt吻合，Gate5/5 recorded:true，latest_synced五檔。
+relayImport ok，officialImport automatic；五組imported，statistics not_in_bundle。全市場已到11/06、81交易日、1,964/1,990檔；市場模組最終可用數齊全，既有Gate風險保留。
+信用七列與昨晚保存證據的值／觀測日／capturedAt／verifiedAt完全相同；來源仍為09:50，v254合規夜間新匯入驗收維持未驗證。沒有程式、部署或排程變更。
 
 ---
 # 最新：2026-11-06 夜間巡檢已完成（partial）
