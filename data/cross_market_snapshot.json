@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-05T14:56:42.590955+00:00",
+  "generated_at": "2026-11-06T02:48:41.098037+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -318,20 +318,10 @@
       "unit": "index_points",
       "warnings": [],
       "status": "ok",
-      "fetched_at": "2026-11-05T14:56:42.590955+00:00"
+      "fetched_at": "2026-11-06T02:48:41.098037+00:00"
     },
     "SP500": {
       "history": [
-        {
-          "date": "2026-06-11",
-          "value": 7394.3,
-          "available_at": "2026-06-11T20:15:00+00:00"
-        },
-        {
-          "date": "2026-06-12",
-          "value": 7431.46,
-          "available_at": "2026-06-12T20:15:00+00:00"
-        },
         {
           "date": "2026-06-15",
           "value": 7554.29,
@@ -821,28 +811,27 @@
           "date": "2026-11-02",
           "value": 7541.4,
           "available_at": "2026-11-02T21:15:00+00:00"
+        },
+        {
+          "date": "2026-11-03",
+          "value": 7568.92,
+          "available_at": "2026-11-03T21:15:00+00:00"
+        },
+        {
+          "date": "2026-11-04",
+          "value": 7688.62,
+          "available_at": "2026-11-04T21:15:00+00:00"
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-04-28",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-04-30",
       "provider": "FRED official published price-index history | SP500",
       "market": "US",
       "unit": "index_points",
-      "status": "stale",
-      "fetched_at": "2026-11-04T02:40:57.474754+00:00",
-      "error": "The read operation timed out"
+      "status": "ok",
+      "fetched_at": "2026-11-06T02:48:41.098037+00:00"
     },
     "NASDAQCOM": {
       "history": [
-        {
-          "date": "2026-06-11",
-          "value": 25809.66,
-          "available_at": "2026-06-11T20:15:00+00:00"
-        },
-        {
-          "date": "2026-06-12",
-          "value": 25888.84,
-          "available_at": "2026-06-12T20:15:00+00:00"
-        },
         {
           "date": "2026-06-15",
           "value": 26683.94,
@@ -1332,23 +1321,27 @@
           "date": "2026-11-02",
           "value": 25164.36,
           "available_at": "2026-11-02T21:15:00+00:00"
+        },
+        {
+          "date": "2026-11-03",
+          "value": 25372.01,
+          "available_at": "2026-11-03T21:15:00+00:00"
+        },
+        {
+          "date": "2026-11-04",
+          "value": 25736.51,
+          "available_at": "2026-11-04T21:15:00+00:00"
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-28",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-30",
       "provider": "FRED official published price-index history | NASDAQCOM",
       "market": "US",
       "unit": "index_points",
-      "status": "stale",
-      "fetched_at": "2026-11-04T02:40:57.474754+00:00",
-      "error": "The read operation timed out"
+      "status": "ok",
+      "fetched_at": "2026-11-06T02:48:41.098037+00:00"
     },
     "SOX": {
       "history": [
-        {
-          "date": "2026-06-15",
-          "value": 14099.6201171875,
-          "available_at": "2026-06-15T20:15:00+00:00"
-        },
         {
           "date": "2026-06-16",
           "value": 13294.2197265625,
@@ -1843,6 +1836,11 @@
           "date": "2026-11-04",
           "value": 10268.650390625,
           "available_at": "2026-11-04T21:15:00+00:00"
+        },
+        {
+          "date": "2026-11-05",
+          "value": 9011.1376953125,
+          "available_at": "2026-11-05T21:15:00+00:00"
         }
       ],
       "source": "https://query1.finance.yahoo.com/v8/finance/chart/%5ESOX?range=6mo&interval=1d",
@@ -1853,19 +1851,10 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-11-05T14:56:42.590955+00:00"
+      "fetched_at": "2026-11-06T02:48:41.098037+00:00"
     }
   },
-  "errors": [
-    {
-      "id": "SP500",
-      "error": "The read operation timed out"
-    },
-    {
-      "id": "NASDAQCOM",
-      "error": "The read operation timed out"
-    }
-  ],
+  "errors": [],
   "flows": {
     "history": [
       {
@@ -2052,5 +2041,5 @@
     "scope": "TWSE_all_listed_securities",
     "method": "nonDayTradeValueTwd = FMTQIK total value minus (TWTB4U day-trade buy value + sell value)/2; institutions are BFI82U net TWD"
   },
-  "status": "partial"
+  "status": "ok"
 }
