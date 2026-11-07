@@ -1,3 +1,7 @@
+# 最新：2026-11-07 夜間巡檢進行中
+[本輪紀錄](automation-runs/20261107-night.md)：POST202，runId=99dc09d7-9540-4387-84a0-e95dadb7b3d8；status200，正在匯入中繼包，尚未完成history保存核對。
+
+---
 # 最新：2026-11-07 06:48 晨間巡檢完成（partial）
 [本輪報告](automation-runs/20261107-morning.md)｜[HTTP及跨夜比對證據](automation-runs/20261107-morning-evidence.json)
 POST202、40次status200、history200；同runId 5fc4818e-4429-476b-a4c8-6474b2e9e09c／completedAt吻合，Gate5/5 recorded:true，latest_synced五檔。
