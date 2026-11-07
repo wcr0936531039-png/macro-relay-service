@@ -1,0 +1,2452 @@
+{
+  "runId": "fb30c578-e601-49f8-bed5-d0e3f630593e",
+  "status": "partial",
+  "startedAt": "2026-11-07T22:33:21.267Z",
+  "completedAt": "2026-11-07T22:46:04.985Z",
+  "watchlistSource": "latest_synced",
+  "watchlistSyncedAt": "2026-10-12T12:29:57.099Z",
+  "watchlist": [
+    {
+      "id": "8299",
+      "name": "群聯"
+    },
+    {
+      "id": "5289",
+      "name": "宜鼎"
+    },
+    {
+      "id": "2404",
+      "name": "漢唐"
+    },
+    {
+      "id": "5009",
+      "name": "榮剛"
+    },
+    {
+      "id": "2330",
+      "name": "台積電"
+    }
+  ],
+  "stockBatch": [
+    {
+      "id": "8299",
+      "name": "群聯",
+      "industry": "記憶體控制晶片"
+    },
+    {
+      "id": "5289",
+      "name": "宜鼎",
+      "industry": "工控記憶體／Edge AI"
+    },
+    {
+      "id": "2404",
+      "name": "漢唐",
+      "industry": "半導體廠務工程"
+    },
+    {
+      "id": "5009",
+      "name": "榮剛",
+      "industry": "航太／特殊鋼"
+    },
+    {
+      "id": "2330",
+      "name": "台積電",
+      "industry": "半導體業"
+    }
+  ],
+  "relayImport": {
+    "checkedAt": "2026-11-07T22:33:55.838Z",
+    "status": "ok",
+    "manifest": {
+      "generatedAt": "2026-11-07T01:19:45Z",
+      "window": "morning-no-statistics",
+      "collector": {
+        "repo": "wcr0936531039-png/macro-relay-service",
+        "commit": "7319d20a809e5157487ca04fb1d3b1b88c674d6f",
+        "run": "42323399776",
+        "siteCollector": "v253"
+      },
+      "parts": [
+        {
+          "name": "universe.json",
+          "kind": "universe",
+          "sha256": "bd0acc2aba518c07b6a4aa4d85bf8a409fd24ffc9abd52bb826b7d7d008e75db",
+          "bytes": 586332
+        },
+        {
+          "name": "series.json",
+          "kind": "series",
+          "sha256": "366c1f5ee9ba34a72cd8b3a6a9a706ce472522a792964fc3f076fe4e2b6a47d5",
+          "bytes": 20174
+        },
+        {
+          "name": "cpi.json",
+          "kind": "cpi",
+          "sha256": "a6746f723c55ab3074f8391bbb506d50fbd1282aa9028ff15a7878715b156305",
+          "bytes": 2556
+        },
+        {
+          "name": "sources.json",
+          "kind": "sources",
+          "sha256": "8b1a37c6558b7e91a1006c93b63d6126acdb1641e527fabb1cc6a91c365dc991",
+          "bytes": 846997
+        },
+        {
+          "name": "news.json",
+          "kind": "news",
+          "sha256": "5c06627852b9dcf6926c760797c391a6ca9338ea445f2e88bc07e3d1352a7313",
+          "bytes": 2154
+        },
+        {
+          "name": "2026-11-02.json",
+          "kind": "market",
+          "sha256": "a3ec6206610de4c0ef3de5892db032786516636f1653df70108437125f1c6ea0",
+          "bytes": 529096
+        },
+        {
+          "name": "2026-11-03.json",
+          "kind": "market",
+          "sha256": "09183eeb54ac10d37593026e51847e0c3b77807eacfc82bec50ce93190add3e9",
+          "bytes": 531013
+        },
+        {
+          "name": "2026-11-04.json",
+          "kind": "market",
+          "sha256": "7f4121b91aed43f84a830a79302fe183dec4145cedfb5f22eb7064fc86ce0477",
+          "bytes": 530096
+        },
+        {
+          "name": "2026-11-05.json",
+          "kind": "market",
+          "sha256": "f458132ee5887ed7fd6960e8af0e27025135e837b77aec30ad08cec100ba609a",
+          "bytes": 530634
+        },
+        {
+          "name": "2026-11-06.json",
+          "kind": "market",
+          "sha256": "31be13907aa80c4f9d8c6acdbc6c3f7bc47f5613c6a34fe99a81d6d1c91816b6",
+          "bytes": 531512
+        }
+      ],
+      "collectorErrors": [
+        {
+          "source": "TWSE-statistics",
+          "error": "skipped: --skip-statistics"
+        },
+        {
+          "source": "BLS-core-CPI",
+          "error": "BLS Current: HTTP Error 403: Forbidden; official API fallback used"
+        }
+      ]
+    },
+    "groups": [
+      {
+        "id": "market",
+        "parts": [
+          "universe.json",
+          "2026-11-02.json",
+          "2026-11-03.json",
+          "2026-11-04.json",
+          "2026-11-05.json",
+          "2026-11-06.json"
+        ],
+        "status": "unchanged"
+      },
+      {
+        "id": "series",
+        "parts": [
+          "series.json"
+        ],
+        "status": "unchanged"
+      },
+      {
+        "id": "statistics",
+        "parts": [],
+        "status": "not_in_bundle"
+      },
+      {
+        "id": "cpi",
+        "parts": [
+          "cpi.json"
+        ],
+        "status": "unchanged"
+      },
+      {
+        "id": "sources",
+        "parts": [
+          "sources.json"
+        ],
+        "status": "unchanged"
+      },
+      {
+        "id": "news",
+        "parts": [
+          "news.json"
+        ],
+        "status": "unchanged"
+      }
+    ],
+    "error": null
+  },
+  "coverage": [
+    {
+      "id": "macro",
+      "label": "總經五大維度與既有風險判讀",
+      "status": "automatic",
+      "detail": "取數、計算與既有判斷摘要保存；保留灰燈與風險預算規則。"
+    },
+    {
+      "id": "market",
+      "label": "美股指數、美元、利率、能源、信用、台股市場與貴金屬",
+      "status": "automatic",
+      "detail": "保存觀測值、觀測日、來源、有效狀態；金銀比每日累積。"
+    },
+    {
+      "id": "stocks",
+      "label": "追蹤清單行情、營收、財報品質、估值與市場活動",
+      "status": "automatic",
+      "detail": "逐檔更新並保存快照；依來源更新頻率與快取期限。"
+    },
+    {
+      "id": "sourceResearch",
+      "label": "依股票代號取得公司公告／產業報告",
+      "status": "source_error",
+      "detail": "已保存原始來源與發布日期；未接入的產業及事前 EPS 共識缺項另列，不自動升級 Gate。"
+    },
+    {
+      "id": "gateAudit",
+      "label": "逐檔 Gate 判讀與原始證據快照",
+      "status": "automatic",
+      "detail": "已保存 5/5 檔；保存成功不等於 Gate 通過。"
+    },
+    {
+      "id": "guidance",
+      "label": "Gate 5A 法說指引與已公布實績",
+      "status": "not_used",
+      "detail": "不列入評級（擁有者 2026-11-03 決定）；來源搜尋結果只作參考。"
+    },
+    {
+      "id": "epsConsensus",
+      "label": "Gate 5B／Gate 8 分析師共識與 EPS surprise",
+      "status": "not_used",
+      "detail": "不列入評級（擁有者 2026-11-03 決定：市場分析與投顧報告差異太大）；已讀到的共識只作參考。"
+    },
+    {
+      "id": "officialImport",
+      "label": "GitHub 中繼官方資料自動匯入（行情、名冊、總經、信用、CPI、產業來源、新聞）",
+      "status": "automatic",
+      "detail": "中繼收集時間 2026-11-07T01:19:45Z；行情＋名冊沒變（不重匯）、總經序列沒變（不重匯）、信用統計這次沒收到、核心 CPI沒變（不重匯）、產業來源沒變（不重匯）、官方新聞沒變（不重匯）；收集端回報 2 項失敗。"
+    },
+    {
+      "id": "fullMarketScanner",
+      "label": "全市場產業廣度、A/D 歷史線、20/60 日擴散與全市場掃描",
+      "status": "history_ready",
+      "detail": "已保存 2026-11-06 全市場快照 1964/1990 檔（上市 1089/1093、上櫃 875/897）；A/D 210/1688，類股有效 42 組；累積 81/60 個交易日，MA20 1955 檔、RVOL20 1945 檔、MA60 1935 檔、C2 初篩 48 檔。當日無收盤價 26 檔，皆為官方狀態、不補價：零成交 18、只有零股成交 1、未列入當日行情表 7（多為停止買賣）。已核實新掛牌 7 檔另列暖機，不混入成熟母體；其個股 RVOL 不計算。另有 1 檔因官方零成交日缺收盤價；成交量與均線樣本分開核對。歷史筆數不足的股票不計入對應指標；候選仍待融資、法人、價格效率與 T+1 核實，不代表通過選股 Gate。"
+    }
+  ],
+  "http": [
+    {
+      "at": "2026-11-07T22:33:23.210Z",
+      "path": "/api/automation/refresh-all",
+      "method": "POST",
+      "http": 202,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:33:40.029Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:33:57.679Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:34:14.252Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:34:31.052Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:34:47.088Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:35:04.065Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:35:20.369Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:35:37.550Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:35:56.530Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:36:14.053Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:36:31.196Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:36:48.701Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:37:05.634Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:37:23.453Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:37:48.140Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:38:05.257Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:38:23.449Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:38:41.394Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:39:01.193Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:39:19.566Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:39:36.173Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:40:05.191Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:40:33.123Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:40:52.320Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:41:19.301Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:41:37.800Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:42:07.157Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:42:29.390Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:42:51.157Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:43:11.013Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:43:31.084Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:43:48.313Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:44:04.649Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:44:21.689Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:44:37.954Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:44:58.865Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:45:16.096Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:45:32.815Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:45:49.337Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:46:07.830Z",
+      "path": "/api/automation/status",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    },
+    {
+      "at": "2026-11-07T22:46:08.149Z",
+      "path": "/api/automation/history",
+      "method": "GET",
+      "http": 200,
+      "reason": null
+    }
+  ],
+  "historyHTTP": 200,
+  "history": {
+    "runId": "fb30c578-e601-49f8-bed5-d0e3f630593e",
+    "completedAt": "2026-11-07T22:46:04.985Z",
+    "status": "partial",
+    "stockCount": 5,
+    "gateAuditCount": 5,
+    "watchlistSource": "latest_synced",
+    "moduleCounts": {
+      "macro": "ok",
+      "expandedMacro": "ok",
+      "marketAndPreciousMetals": "ok",
+      "usIndices": "ok",
+      "crossMarket": "partial",
+      "usSectors": "ok",
+      "officialNews": "ok"
+    },
+    "relayImport": {
+      "status": "ok",
+      "generatedAt": "2026-11-07T01:19:45Z",
+      "groups": {
+        "market": "unchanged",
+        "series": "unchanged",
+        "statistics": "not_in_bundle",
+        "cpi": "unchanged",
+        "sources": "unchanged",
+        "news": "unchanged"
+      }
+    }
+  },
+  "officialImport": {
+    "id": "officialImport",
+    "label": "GitHub 中繼官方資料自動匯入（行情、名冊、總經、信用、CPI、產業來源、新聞）",
+    "status": "automatic",
+    "detail": "中繼收集時間 2026-11-07T01:19:45Z；行情＋名冊沒變（不重匯）、總經序列沒變（不重匯）、信用統計這次沒收到、核心 CPI沒變（不重匯）、產業來源沒變（不重匯）、官方新聞沒變（不重匯）；收集端回報 2 項失敗。"
+  },
+  "gateAudits": [
+    {
+      "symbol": "8299",
+      "status": "valuation_divergence",
+      "auditStatus": "blocked",
+      "recorded": true,
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "warning",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "not_used",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 6,
+          "status": "warning",
+          "dataState": "verified"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "not_used",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 9,
+          "status": "conditional",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    },
+    {
+      "symbol": "5289",
+      "status": "valuation_divergence",
+      "auditStatus": "blocked",
+      "recorded": true,
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "warning",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "not_used",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 6,
+          "status": "warning",
+          "dataState": "verified"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "not_used",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 9,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    },
+    {
+      "symbol": "2404",
+      "status": "valuation_divergence",
+      "auditStatus": "blocked",
+      "recorded": true,
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "not_used",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 6,
+          "status": "partial",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "not_used",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 9,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    },
+    {
+      "symbol": "5009",
+      "status": "degraded",
+      "auditStatus": "blocked",
+      "recorded": true,
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "warning",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "not_used",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 6,
+          "status": "warning",
+          "dataState": "verified"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "not_used",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 9,
+          "status": "conditional",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    },
+    {
+      "symbol": "2330",
+      "status": "valuation_divergence",
+      "auditStatus": "blocked",
+      "recorded": true,
+      "gates": [
+        {
+          "id": 1,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 2,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 3,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 4,
+          "status": "warning",
+          "dataState": "partial"
+        },
+        {
+          "id": 5,
+          "status": "not_used",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 6,
+          "status": "warning",
+          "dataState": "verified"
+        },
+        {
+          "id": 7,
+          "status": "evaluated",
+          "dataState": "verified"
+        },
+        {
+          "id": 8,
+          "status": "not_used",
+          "dataState": "not_applicable"
+        },
+        {
+          "id": 9,
+          "status": "partial",
+          "dataState": "partial"
+        },
+        {
+          "id": 10,
+          "status": "evaluated",
+          "dataState": "verified"
+        }
+      ]
+    }
+  ],
+  "research": [
+    {
+      "symbol": "8299",
+      "status": "partial",
+      "errors": [
+        {
+          "source": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O",
+          "error": "The operation was aborted due to timeout",
+          "stale": true
+        }
+      ]
+    },
+    {
+      "symbol": "5289",
+      "status": "partial",
+      "errors": [
+        {
+          "source": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O",
+          "error": "The operation was aborted due to timeout",
+          "stale": true
+        }
+      ]
+    },
+    {
+      "symbol": "2404",
+      "status": "partial",
+      "errors": []
+    },
+    {
+      "symbol": "5009",
+      "status": "partial",
+      "errors": [
+        {
+          "source": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O",
+          "error": "The operation was aborted due to timeout",
+          "stale": true
+        }
+      ]
+    },
+    {
+      "symbol": "2330",
+      "status": "partial",
+      "errors": []
+    }
+  ],
+  "modules": {
+    "macro": {
+      "status": "ok",
+      "usable": 55,
+      "total": 55,
+      "latestObservation": "2026-11-07",
+      "checkedAt": "2026-11-07T22:36:14.133Z",
+      "judgment": [
+        "融資訊號待確認／未定燈號",
+        "可用 55/55",
+        "環境觀測：核心 CPI 3M 年化 3.41%；年增率 2.57%（BLS／FRED 官方雙來源核對・D1 保存）；初領 4W 平均 194,750 人。成長與通膨位階仍須 PMI 等確認。",
+        "融資核對：SOFR−IORB 2 基點（2026-11-05）；同時出現高收益債利差走闊，需核對回購功能；尚未確認失序。一般隔夜 Repo（非 SRF 專屬） 0（2026-11-06）；紐約聯儲隔夜逆回購操作量 0.15（2026-11-06）；聖路易聯儲金融壓力指數 -0.52（2026-10-30）；紐約聯儲 Repo 操作承作額（操作日合計） 0.01（2026-11-03）。",
+        "市場變化：美元兌日圓參考匯率（FRED H.10；ECB 備援） -0.23%（2026-10-30）；WTI 原油現貨價格（Cushing） -0.42%（2026-11-03）；Henry Hub 天然氣現貨價格 +3.54%（2026-11-03）；標普 500 -4.36%（2026-11-05）；發行量加權股價指數 單日 -4.51%（2026-11-06）。證交所盤後：成交值 13,210.72 億元；融資餘額 5,340.53 億元（單日 -423.56 億元）；融券 242,766 張（單日 -34,285 張）；上市漲跌家數比 9.84%；上櫃漲跌家數比 12.43%；融資／市值 0.41%；信用交易成交值 1,425.53 億元（2026-11-06）。當沖／非當沖量：30.91%（2026-11-06）。",
+        "市場參照：標普 500 7,353.73（2026-11-05）；道瓊工業指數 51,285.73（2026-11-06）；那斯達克綜合指數 24,579.42（2026-11-06）；發行量加權股價指數 39,701.64（2026-11-06）。CNN Fear & Greed 22.08/100（extreme fear，2026-11-06）；作為風險偏好放大器觀察，不單獨改變燈號或風險預算。",
+        "風險預算：暫不因資料補齊而增加；升級／解除仍須融資、信用及波動共同確認。",
+        "未接入：全美 ISM 製造業新訂單｜目前無可在本儀表板免費再發布的官方序列；已列費城、紐約、達拉斯聯儲區域新訂單作為明確標示的區域參照，不能代稱 ISM。、MOVE／JPY CVOL｜ICE／CME 授權指數，沒有可核實且允許此處免費再發布的完整數列；現有 VIX 與美元兌日圓即期各自保留原名，不冒充波動率指數。、油期曲線／跨月價差、LNG 現貨、裂解價差與運價｜現有 WTI、Brent、天然氣行情及 EIA 庫存均是不同口徑；免費可靠的全期限合約／現貨數列尚未找到，故不以近月價差代填。、S&P PMI／CME FedWatch｜原始調查與衍生機率受資料授權限制，目前沒有可核實的免費官方 API 再發布來源；不可用 ISM 區域參照或政策利率本身代填。"
+      ],
+      "httpStatus": 200,
+      "observations": [
+        {
+          "id": "SP500",
+          "name": "標普 500",
+          "value": 7353.73,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜SP500｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2025-01-26"
+        },
+        {
+          "id": "DJIA",
+          "name": "道瓊工業指數",
+          "value": 51285.73,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜DJIA｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DJIA&cosd=2025-01-26"
+        },
+        {
+          "id": "NASDAQCOM",
+          "name": "那斯達克綜合指數",
+          "value": 24579.42,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜NASDAQCOM｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2025-01-26"
+        },
+        {
+          "id": "TWSE_TAIEX",
+          "name": "發行量加權股價指數",
+          "value": 39701.64,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:36:12.734Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_TOTAL_TRADE_VALUE",
+          "name": "集中市場成交值",
+          "value": 13210.7185865,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV｜外部排程快照",
+          "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?response=open_data"
+        },
+        {
+          "id": "TWSE_MARGIN_BALANCE_NTD",
+          "name": "融資餘額",
+          "value": 5340.52632,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+          "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+        },
+        {
+          "id": "TWSE_MARGIN_CHANGE_NTD",
+          "name": "融資增減金額",
+          "value": -423.56407,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+          "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+        },
+        {
+          "id": "TWSE_MARGIN_BALANCE_UNITS",
+          "name": "融資餘額",
+          "value": 9037948,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+          "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+        },
+        {
+          "id": "TWSE_SHORT_BALANCE",
+          "name": "融券餘額",
+          "value": 242766,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+          "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+        },
+        {
+          "id": "TWSE_SHORT_CHANGE",
+          "name": "融券餘額日增減",
+          "value": -34285,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+          "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+        },
+        {
+          "id": "TWSE_BREADTH",
+          "name": "台股上市證券漲跌家數",
+          "value": 9.836065573770492,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜政府資料開放平台 STOCK_DAY_ALL CSV｜外部排程快照",
+          "source": "https://www.twse.com.tw/exchangeReport/STOCK_DAY_ALL?response=open_data"
+        },
+        {
+          "id": "TWSE_DAYTRADE",
+          "name": "台股當沖比／非當沖量",
+          "value": 30.91,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜TWTB4U 官方當沖統計｜外部排程快照",
+          "source": "https://www.twse.com.tw/exchangeReport/TWTB4U?response=json&date=20261106&selectType=All"
+        },
+        {
+          "id": "ICE_DXY",
+          "name": "ICE 美元指數 DXY（市場報價）",
+          "value": 102.28,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "Google Finance｜NYICDX:INDEXNYSEGIS（ICE U.S. Dollar Index 市場報價）｜外部排程快照",
+          "source": "https://www.google.com/finance/quote/NYICDX:INDEXNYSEGIS?hl=en"
+        },
+        {
+          "id": "DTWEXBGS",
+          "name": "聯準會廣義貿易加權美元指數（非 ICE DXY）",
+          "value": 121.6656,
+          "date": "2026-10-30",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜DTWEXBGS｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTWEXBGS&cosd=2025-01-26"
+        },
+        {
+          "id": "DCOILWTICO",
+          "name": "WTI 原油現貨價格（Cushing）",
+          "value": 99.64,
+          "date": "2026-11-03",
+          "verifiedAt": "2026-11-07T01:19:16.251556+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILWTICO&cosd=2026-09-23"
+        },
+        {
+          "id": "DCOILBRENTEU",
+          "name": "Brent 布蘭特原油現貨價格",
+          "value": 107.03,
+          "date": "2026-11-03",
+          "verifiedAt": "2026-11-07T01:19:13.751601+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILBRENTEU&cosd=2026-09-23"
+        },
+        {
+          "id": "DHHNGSP",
+          "name": "Henry Hub 天然氣現貨價格",
+          "value": 2.63,
+          "date": "2026-11-03",
+          "verifiedAt": "2026-11-07T01:19:14.447926+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DHHNGSP&cosd=2026-09-23"
+        },
+        {
+          "id": "T5YIE",
+          "name": "5 年損益兩平通膨（FRED 官方）",
+          "value": 2.29,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜T5YIE｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T5YIE&cosd=2025-01-26"
+        },
+        {
+          "id": "T10YIE",
+          "name": "10 年損益兩平通膨",
+          "value": 2.23,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜T10YIE｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE&cosd=2025-01-26"
+        },
+        {
+          "id": "DFII10",
+          "name": "10 年實質殖利率",
+          "value": 2.6,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜DFII10｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10&cosd=2025-01-26"
+        },
+        {
+          "id": "CPILFESL",
+          "name": "核心 CPI（季調）",
+          "value": 338.896,
+          "date": "2026-09-01",
+          "verifiedAt": "2026-11-07T14:36:28.560Z",
+          "status": "snapshot",
+          "reason": null,
+          "provider": "BLS CPI 官方 API｜外部排程原始快照｜D1 已保存、12 小時內完成雙來源核對",
+          "source": "https://api.bls.gov/publicAPI/v1/timeseries/data/"
+        },
+        {
+          "id": "PCEPILFE",
+          "name": "核心 PCE（季調）",
+          "value": 130.902,
+          "date": "2026-09-01",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜PCEPILFE｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCEPILFE&cosd=2025-01-26"
+        },
+        {
+          "id": "BAMLH0A0HYM2",
+          "name": "高收益債利差",
+          "value": 3.48,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜BAMLH0A0HYM2｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=2025-01-26"
+        },
+        {
+          "id": "BAMLC0A0CM",
+          "name": "投資級債利差",
+          "value": 0.93,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜BAMLC0A0CM｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=2025-01-26"
+        },
+        {
+          "id": "SLOOS_CI_STANDARDS",
+          "name": "SLOOS｜C&I 貸款標準淨緊縮比例",
+          "value": 1.7,
+          "date": "2026-10-01",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜DRTSCILM｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DRTSCILM&cosd=2025-01-26"
+        },
+        {
+          "id": "SOFR",
+          "name": "擔保隔夜融資利率",
+          "value": 3.92,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜SOFR｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SOFR&cosd=2025-01-26"
+        },
+        {
+          "id": "IORB",
+          "name": "準備金餘額利率",
+          "value": 3.9,
+          "date": "2026-11-07",
+          "verifiedAt": "2026-11-07T01:19:16.896754+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=IORB&cosd=2026-09-23"
+        },
+        {
+          "id": "RPONTSYD",
+          "name": "一般隔夜 Repo（非 SRF 專屬）",
+          "value": 0,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜RPONTSYD｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RPONTSYD&cosd=2025-01-26"
+        },
+        {
+          "id": "NYFED_REPO",
+          "name": "紐約聯儲 Repo 操作承作額（操作日合計）",
+          "value": 0.005,
+          "date": "2026-11-03",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "紐約聯邦準備銀行｜Repo Operations 官方 JSON｜外部排程快照",
+          "source": "https://markets.newyorkfed.org/api/rp/repo/all/results/last/8.json"
+        },
+        {
+          "id": "NYFED_SRP",
+          "name": "紐約聯儲 Standing Repo 隔夜承作額（Full Allotment）",
+          "value": 0,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "紐約聯邦準備銀行｜Standing Repo（Full Allotment 隔夜操作）官方 JSON｜外部排程快照",
+          "source": "https://markets.newyorkfed.org/api/rp/repo/all/results/last/8.json"
+        },
+        {
+          "id": "RRPONTSYD",
+          "name": "紐約聯儲隔夜逆回購操作量",
+          "value": 0.15,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜RRPONTSYD｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RRPONTSYD&cosd=2025-01-26"
+        },
+        {
+          "id": "STLFSI4",
+          "name": "聖路易聯儲金融壓力指數",
+          "value": -0.5224,
+          "date": "2026-10-30",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜STLFSI4｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=STLFSI4&cosd=2025-01-26"
+        },
+        {
+          "id": "ICSA",
+          "name": "初領失業金（季調）",
+          "value": 189000,
+          "date": "2026-10-31",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜ICSA｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=ICSA&cosd=2025-01-26"
+        },
+        {
+          "id": "CCSA",
+          "name": "續領失業金（季調）",
+          "value": 1718000,
+          "date": "2026-10-24",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜CCSA｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CCSA&cosd=2025-01-26"
+        },
+        {
+          "id": "INDPRO",
+          "name": "工業生產（季調）",
+          "value": 103.9506,
+          "date": "2026-09-01",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜INDPRO｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=INDPRO&cosd=2025-01-26"
+        },
+        {
+          "id": "RRSFS",
+          "name": "實質零售（季調）",
+          "value": 221536,
+          "date": "2026-09-01",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜RRSFS｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RRSFS&cosd=2025-01-26"
+        },
+        {
+          "id": "US3M",
+          "name": "13 週期美國國庫券折現殖利率（DTB3）",
+          "value": 4,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T01:19:18.301552+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3&cosd=2026-09-23"
+        },
+        {
+          "id": "US10Y",
+          "name": "10 年期美債官方殖利率（DGS10）",
+          "value": 4.84,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T01:19:19.080862+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10&cosd=2026-09-23"
+        },
+        {
+          "id": "US30Y",
+          "name": "30 年期美債官方殖利率（DGS30）",
+          "value": 5.25,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T01:19:19.749248+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS30&cosd=2026-09-23"
+        },
+        {
+          "id": "US10Y3M",
+          "name": "10Y−3M 公債利差",
+          "value": 67,
+          "date": "2026-11-06",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方｜T10Y3M（10Y−3M CMT）",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y3M&cosd=2025-01-26"
+        },
+        {
+          "id": "T10Y3M",
+          "name": "10Y−3M 每日現券利差（FRED）",
+          "value": 0.67,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜T10Y3M｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y3M&cosd=2025-01-26"
+        },
+        {
+          "id": "T10Y2Y",
+          "name": "10Y−2Y 名目殖利率利差（FRED 官方）",
+          "value": 0.35,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜T10Y2Y｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y2Y&cosd=2025-01-26"
+        },
+        {
+          "id": "VIXCLS",
+          "name": "VIX 波動指數",
+          "value": 25.64,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "Cboe 官方 VIX 每日收盤｜VIX_History.csv｜外部排程快照",
+          "source": "https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv"
+        },
+        {
+          "id": "CNN_FEAR_GREED",
+          "name": "CNN Fear & Greed Index",
+          "value": 22.0792756539235,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:36:12.426Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "CNN Business｜頁面資料介面（非正式 API）",
+          "source": "https://www.cnn.com/markets/fear-and-greed"
+        },
+        {
+          "id": "DEXJPUS",
+          "name": "美元兌日圓參考匯率（FRED H.10；ECB 備援）",
+          "value": 157.47,
+          "date": "2026-10-30",
+          "verifiedAt": "2026-11-07T01:19:15.692638+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DEXJPUS&cosd=2026-06-15"
+        },
+        {
+          "id": "WALCL",
+          "name": "聯準會總資產",
+          "value": 6748145,
+          "date": "2026-11-04",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜WALCL｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=WALCL&cosd=2025-01-26"
+        },
+        {
+          "id": "TWSE_ELECTRONIC",
+          "name": "電子工業類指數",
+          "value": 2429.32,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:36:12.734Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_SEMICONDUCTOR",
+          "name": "半導體類指數",
+          "value": 1328.81,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:36:12.734Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_FINANCIAL",
+          "name": "金融保險類指數",
+          "value": 3523.97,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:36:12.734Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_SHIPPING",
+          "name": "航運類指數",
+          "value": 205.33,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:36:12.734Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_STEEL",
+          "name": "鋼鐵類指數",
+          "value": 116.89,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:36:12.734Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TPEX_BREADTH",
+          "name": "台股上櫃漲跌家數（TPEx）",
+          "value": 12.425328554360812,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "櫃買中心 TPEx OpenAPI｜外部排程快照",
+          "source": "https://www.tpex.org.tw/openapi/v1/tpex_mainborad_highlight"
+        },
+        {
+          "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+          "name": "融資餘額占市值比",
+          "value": 0.41054476080856095,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN + MI_MARGN_TREND",
+          "source": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN_TREND?response=json&date=20261106&days=30"
+        },
+        {
+          "id": "TWSE_CREDIT_TRADE_VALUE",
+          "name": "信用交易成交值",
+          "value": 1425.5275332,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜BFIJ3U 信用交易摘要",
+          "source": "https://www.twse.com.tw/rwd/zh/marginTrading/BFIJ3U?response=json&date=20261106"
+        },
+        {
+          "id": "XAU",
+          "name": "黃金現貨參考價（XAU/USD）",
+          "value": 4072.100098,
+          "date": "2026-11-07",
+          "verifiedAt": "2026-11-07T22:36:13.922Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "Gold API + Standard Bullion + Swissquote｜三來源快照核對",
+          "source": "https://api.gold-api.com/price/XAU"
+        }
+      ]
+    },
+    "expandedMacro": {
+      "status": "ok",
+      "usable": 12,
+      "total": 12,
+      "latestObservation": "2026-11-05",
+      "checkedAt": "2026-11-07T22:36:29.987Z",
+      "httpStatus": 200,
+      "observations": [
+        {
+          "id": "PAYEMS",
+          "name": "非農就業人數（總量）",
+          "value": 159293,
+          "date": "2026-10-01",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜PAYEMS｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PAYEMS&cosd=2025-01-26"
+        },
+        {
+          "id": "UNRATE",
+          "name": "美國失業率",
+          "value": 4.1,
+          "date": "2026-10-01",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜UNRATE｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE&cosd=2025-01-26"
+        },
+        {
+          "id": "SAHMREALTIME",
+          "name": "Sahm Rule 官方指標",
+          "value": 0,
+          "date": "2026-10-01",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜SAHMREALTIME｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SAHMREALTIME&cosd=2025-01-26"
+        },
+        {
+          "id": "RSAFS",
+          "name": "美國零售銷售（名目）",
+          "value": 745021,
+          "date": "2026-09-01",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜RSAFS｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=RSAFS&cosd=2025-01-26"
+        },
+        {
+          "id": "NOCDFSA066MSFRBPHI",
+          "name": "費城聯儲製造業新訂單（區域參照）",
+          "value": 4.3,
+          "date": "2026-10-01",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜NOCDFSA066MSFRBPHI｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NOCDFSA066MSFRBPHI&cosd=2025-01-26"
+        },
+        {
+          "id": "NYFED_EMPIRE_ORDERS",
+          "name": "紐約聯儲 Empire State 新訂單（區域參照）",
+          "value": 23.2,
+          "date": "2026-10-01",
+          "status": "ok",
+          "reason": null,
+          "provider": "Federal Reserve Bank of New York｜Empire State Manufacturing Survey",
+          "source": "https://www.newyorkfed.org/survey/empire/empiresurvey_overview.html"
+        },
+        {
+          "id": "DALLAS_TMOS_ORDERS",
+          "name": "達拉斯聯儲德州新訂單（區域參照）",
+          "value": 9.3,
+          "date": "2026-10-01",
+          "status": "ok",
+          "reason": null,
+          "provider": "Federal Reserve Bank of Dallas｜Texas Manufacturing Outlook Survey",
+          "source": "https://www.dallasfed.org/research/surveys/tmos/2026/2610"
+        },
+        {
+          "id": "GDPNOW",
+          "name": "Atlanta Fed GDPNow（nowcast）",
+          "value": 3.4,
+          "date": "2026-11-04",
+          "status": "ok",
+          "reason": null,
+          "provider": "Federal Reserve Bank of Atlanta｜GDPNow 官方頁面",
+          "source": "https://www.atlantafed.org/research-and-data/data/gdpnow"
+        },
+        {
+          "id": "BAMLH0A0HYM2",
+          "name": "高收益債利差",
+          "value": 3.48,
+          "date": "2026-11-05",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜BAMLH0A0HYM2｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=2025-01-26"
+        },
+        {
+          "id": "TW_EXPORT_ORDERS",
+          "name": "外銷訂單動向指數（國發會，以家數計）",
+          "value": 48.71,
+          "date": "2026-09-01",
+          "status": "ok",
+          "reason": null,
+          "provider": "國家發展委員會｜景氣指標及燈號（政府資料開放平台）",
+          "source": "https://data.gov.tw/dataset/6099"
+        },
+        {
+          "id": "TW_NDC_SIGNAL",
+          "name": "國發會景氣對策信號",
+          "value": 41,
+          "date": "2026-09-01",
+          "status": "ok",
+          "reason": null,
+          "provider": "國家發展委員會｜政府資料開放平台「景氣指標及燈號」｜外部排程快照",
+          "source": "https://data.gov.tw/dataset/6099"
+        },
+        {
+          "id": "TW_M1B_M2",
+          "name": "M1B−M2 年增率差",
+          "value": -0.59,
+          "date": "2026-09-01",
+          "status": "ok",
+          "reason": null,
+          "provider": "中央銀行｜貨幣總計數（日平均）｜外部排程快照",
+          "source": "https://www.cbc.gov.tw/app.asp?xdUrl=AppT1.asp"
+        }
+      ]
+    },
+    "marketAndPreciousMetals": {
+      "status": "ok",
+      "usable": 36,
+      "total": 36,
+      "latestObservation": "2026-11-07",
+      "checkedAt": "2026-11-07T22:42:05.284Z",
+      "judgment": [
+        "黃金現貨參考價（XAU/USD）：4072.100098 美元/金衡盎司；2026-11-07；ok；2/3 來源可用，核對通過（價差 0.0016%、時間差 0.22 分鐘）",
+        "白銀現貨參考價（XAG/USD）：52.070999 美元/金衡盎司；2026-11-07；ok；2/3 來源可用，核對通過（價差 0.2009%、時間差 0.22 分鐘）",
+        "黃金／白銀比（XAU/XAG）：78.2028418160366 倍；2026-11-07；ok；金價 2/3 來源可用、銀價 2/3 來源可用，核對通過；歷史 29 點"
+      ],
+      "httpStatus": 200,
+      "observations": [
+        {
+          "id": "XAU",
+          "name": "黃金現貨參考價（XAU/USD）",
+          "value": 4072.100098,
+          "date": "2026-11-07",
+          "verifiedAt": "2026-11-07T22:42:05.284Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "Gold API + Standard Bullion + Swissquote｜三來源快照核對",
+          "source": "https://api.gold-api.com/price/XAU"
+        },
+        {
+          "id": "XAG",
+          "name": "白銀現貨參考價（XAG/USD）",
+          "value": 52.070999,
+          "date": "2026-11-07",
+          "verifiedAt": "2026-11-07T22:42:05.284Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "Gold API + Standard Bullion + Swissquote｜三來源快照核對",
+          "source": "https://api.gold-api.com/price/XAG"
+        },
+        {
+          "id": "XAU_XAG",
+          "name": "黃金／白銀比（XAU/XAG）",
+          "value": 78.2028418160366,
+          "date": "2026-11-07",
+          "verifiedAt": "2026-11-07T22:42:05.284Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "Gold API + Standard Bullion + Swissquote｜三來源 2/3 核實後 XAU/USD ÷ XAG/USD",
+          "source": "https://gold-api.com/assets/"
+        },
+        {
+          "id": "NYFED_REPO",
+          "name": "紐約聯儲 Repo 操作承作額（操作日合計）",
+          "value": 0.005,
+          "date": "2026-11-03",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "紐約聯邦準備銀行｜Repo Operations 官方 JSON｜外部排程快照",
+          "source": "https://markets.newyorkfed.org/api/rp/repo/all/results/last/8.json"
+        },
+        {
+          "id": "TWSE_TAIEX",
+          "name": "發行量加權股價指數",
+          "value": 39701.64,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:42:00.441Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_ELECTRONIC",
+          "name": "電子工業類指數",
+          "value": 2429.32,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:42:00.441Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_SEMICONDUCTOR",
+          "name": "半導體類指數",
+          "value": 1328.81,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:42:00.441Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_FINANCIAL",
+          "name": "金融保險類指數",
+          "value": 3523.97,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:42:00.441Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_SHIPPING",
+          "name": "航運類指數",
+          "value": 205.33,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:42:00.441Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_STEEL",
+          "name": "鋼鐵類指數",
+          "value": 116.89,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:42:00.441Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜最新盤後 MI_INDEX",
+          "source": "https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20261106&type=ALLBUT0999&response=json"
+        },
+        {
+          "id": "TWSE_TOTAL_TRADE_VALUE",
+          "name": "集中市場成交值",
+          "value": 13210.7185865,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜政府資料開放平台每日市場成交資訊 CSV｜外部排程快照",
+          "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?response=open_data"
+        },
+        {
+          "id": "TWSE_MARGIN_BALANCE_NTD",
+          "name": "融資餘額",
+          "value": 5340.52632,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+          "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+        },
+        {
+          "id": "TWSE_MARGIN_CHANGE_NTD",
+          "name": "融資增減金額",
+          "value": -423.56407,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+          "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+        },
+        {
+          "id": "TWSE_MARGIN_BALANCE_UNITS",
+          "name": "融資餘額",
+          "value": 9037948,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+          "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+        },
+        {
+          "id": "TWSE_SHORT_BALANCE",
+          "name": "融券餘額",
+          "value": 242766,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+          "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+        },
+        {
+          "id": "TWSE_SHORT_CHANGE",
+          "name": "融券餘額日增減",
+          "value": -34285,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+          "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+        },
+        {
+          "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+          "name": "融資餘額占市值比",
+          "value": 0.41054476080856095,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜MI_MARGN + MI_MARGN_TREND",
+          "source": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN_TREND?response=json&date=20261106&days=30"
+        },
+        {
+          "id": "TWSE_CREDIT_TRADE_VALUE",
+          "name": "信用交易成交值",
+          "value": 1425.5275332,
+          "date": "2026-11-06",
+          "capturedAt": "2026-11-07T14:53:02.399Z",
+          "verifiedAt": "2026-11-07T14:53:02.573Z",
+          "captureDeferred": true,
+          "status": "snapshot",
+          "reason": null,
+          "provider": "臺灣證券交易所｜BFIJ3U 信用交易摘要",
+          "source": "https://www.twse.com.tw/rwd/zh/marginTrading/BFIJ3U?response=json&date=20261106"
+        },
+        {
+          "id": "TWSE_BREADTH",
+          "name": "台股上市證券漲跌家數",
+          "value": 9.836065573770492,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜政府資料開放平台 STOCK_DAY_ALL CSV｜外部排程快照",
+          "source": "https://www.twse.com.tw/exchangeReport/STOCK_DAY_ALL?response=open_data"
+        },
+        {
+          "id": "TPEX_BREADTH",
+          "name": "台股上櫃漲跌家數（TPEx）",
+          "value": 12.425328554360812,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "櫃買中心 TPEx OpenAPI｜外部排程快照",
+          "source": "https://www.tpex.org.tw/openapi/v1/tpex_mainborad_highlight"
+        },
+        {
+          "id": "TWSE_DAYTRADE",
+          "name": "台股當沖比／非當沖量",
+          "value": 30.91,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "臺灣證券交易所｜TWTB4U 官方當沖統計｜外部排程快照",
+          "source": "https://www.twse.com.tw/exchangeReport/TWTB4U?response=json&date=20261106&selectType=All"
+        },
+        {
+          "id": "NYFED_SRP",
+          "name": "紐約聯儲 Standing Repo 隔夜承作額（Full Allotment）",
+          "value": 0,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "紐約聯邦準備銀行｜Standing Repo（Full Allotment 隔夜操作）官方 JSON｜外部排程快照",
+          "source": "https://markets.newyorkfed.org/api/rp/repo/all/results/last/8.json"
+        },
+        {
+          "id": "ICE_DXY",
+          "name": "ICE 美元指數 DXY（市場報價）",
+          "value": 102.28,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "Google Finance｜NYICDX:INDEXNYSEGIS（ICE U.S. Dollar Index 市場報價）｜外部排程快照",
+          "source": "https://www.google.com/finance/quote/NYICDX:INDEXNYSEGIS?hl=en"
+        },
+        {
+          "id": "DTWEXBGS",
+          "name": "聯準會廣義貿易加權美元指數（非 ICE DXY）",
+          "value": 121.6656,
+          "date": "2026-10-30",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜DTWEXBGS｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTWEXBGS&cosd=2025-01-26"
+        },
+        {
+          "id": "DCOILWTICO",
+          "name": "WTI 原油現貨價格（Cushing）",
+          "value": 99.64,
+          "date": "2026-11-03",
+          "verifiedAt": "2026-11-07T01:19:16.251556+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILWTICO&cosd=2026-09-23"
+        },
+        {
+          "id": "DCOILBRENTEU",
+          "name": "Brent 布蘭特原油現貨價格",
+          "value": 107.03,
+          "date": "2026-11-03",
+          "verifiedAt": "2026-11-07T01:19:13.751601+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILBRENTEU&cosd=2026-09-23"
+        },
+        {
+          "id": "DHHNGSP",
+          "name": "Henry Hub 天然氣現貨價格",
+          "value": 2.63,
+          "date": "2026-11-03",
+          "verifiedAt": "2026-11-07T01:19:14.447926+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DHHNGSP&cosd=2026-09-23"
+        },
+        {
+          "id": "DEXJPUS",
+          "name": "美元兌日圓參考匯率（FRED H.10；ECB 備援）",
+          "value": 157.47,
+          "date": "2026-10-30",
+          "verifiedAt": "2026-11-07T01:19:15.692638+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DEXJPUS&cosd=2026-06-15"
+        },
+        {
+          "id": "US3M",
+          "name": "13 週期美國國庫券折現殖利率（DTB3）",
+          "value": 4,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T01:19:18.301552+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3&cosd=2026-09-23"
+        },
+        {
+          "id": "US10Y",
+          "name": "10 年期美債官方殖利率（DGS10）",
+          "value": 4.84,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T01:19:19.080862+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10&cosd=2026-09-23"
+        },
+        {
+          "id": "US30Y",
+          "name": "30 年期美債官方殖利率（DGS30）",
+          "value": 5.25,
+          "date": "2026-11-05",
+          "verifiedAt": "2026-11-07T01:19:19.749248+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS30&cosd=2026-09-23"
+        },
+        {
+          "id": "VIXCLS",
+          "name": "VIX 波動指數",
+          "value": 25.64,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T21:59:29.718817+00:00",
+          "status": "ok",
+          "reason": null,
+          "provider": "Cboe 官方 VIX 每日收盤｜VIX_History.csv｜外部排程快照",
+          "source": "https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv"
+        },
+        {
+          "id": "WCESTUS1",
+          "name": "美國商業原油庫存（不含 SPR）",
+          "value": 409.76,
+          "date": "2026-10-30",
+          "verifiedAt": "2026-11-07T22:42:05.284Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "U.S. Energy Information Administration｜Weekly Petroleum Status Report",
+          "source": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=W&n=PET&s=WCESTUS1"
+        },
+        {
+          "id": "US10Y3M",
+          "name": "10Y−3M 公債利差",
+          "value": 67,
+          "date": "2026-11-06",
+          "verifiedAt": "2026-11-07T22:42:05.284Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方｜T10Y3M（10Y−3M CMT）",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y3M&cosd=2025-01-26"
+        },
+        {
+          "id": "JPY_HV20",
+          "name": "日圓匯率歷史波動率（20 日）",
+          "value": 4.177076609750298,
+          "date": "2026-10-30",
+          "verifiedAt": "2026-11-07T22:42:05.284Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存；按日對數報酬年化標準差計算",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DEXJPUS&cosd=2026-06-15"
+        },
+        {
+          "id": "JPY_HV60",
+          "name": "日圓匯率歷史波動率（60 日）",
+          "value": 7.707747090660755,
+          "date": "2026-10-30",
+          "verifiedAt": "2026-11-07T22:42:05.284Z",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED／原始官方提供者｜經外部抓取並保存；按日對數報酬年化標準差計算",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DEXJPUS&cosd=2026-06-15"
+        }
+      ]
+    },
+    "usIndices": {
+      "status": "ok",
+      "usable": 3,
+      "total": 3,
+      "latestObservation": "2026-11-06",
+      "checkedAt": "2026-11-07T22:37:03.078Z",
+      "httpStatus": 200,
+      "observations": [
+        {
+          "id": "SP500",
+          "name": "標普 500",
+          "value": 7353.73,
+          "date": "2026-11-05",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜SP500｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2025-01-26"
+        },
+        {
+          "id": "DJIA",
+          "name": "道瓊工業指數",
+          "value": 51285.73,
+          "date": "2026-11-06",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜DJIA｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DJIA&cosd=2025-01-26"
+        },
+        {
+          "id": "NASDAQCOM",
+          "name": "那斯達克綜合指數",
+          "value": 24579.42,
+          "date": "2026-11-06",
+          "status": "ok",
+          "reason": null,
+          "provider": "FRED 官方公開 CSV｜NASDAQCOM｜外部排程快照",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2025-01-26"
+        }
+      ]
+    },
+    "crossMarket": {
+      "status": "partial",
+      "usable": 3,
+      "total": 4,
+      "checkedAt": "2026-11-07T02:21:27.988742+00:00",
+      "judgment": [
+        "四個指數歷史來源 3/4；上市資金歷史 10/10 日。資料取得狀態不等於健康脫鉤；個股Forward EPS前後共識另行核驗。"
+      ],
+      "error": null,
+      "httpStatus": 200,
+      "observations": [
+        {
+          "id": "TWSE_TAIEX",
+          "name": "台股加權",
+          "value": 39701.64,
+          "date": "2026-11-06",
+          "status": "stale",
+          "provider": "TWSE official FMTQIK | TAIEX price index",
+          "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261101&response=json"
+        },
+        {
+          "id": "SP500",
+          "name": "S&P 500",
+          "value": 7353.73,
+          "date": "2026-11-05",
+          "status": "ok",
+          "provider": "FRED official published price-index history | SP500",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-05-01"
+        },
+        {
+          "id": "NASDAQCOM",
+          "name": "NASDAQ",
+          "value": 24315,
+          "date": "2026-11-05",
+          "status": "ok",
+          "provider": "FRED official published price-index history | NASDAQCOM",
+          "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-05-01"
+        },
+        {
+          "id": "SOX",
+          "name": "費半",
+          "value": 9390.25,
+          "date": "2026-11-06",
+          "status": "ok",
+          "provider": "Yahoo Finance | delayed SOX price-index history (third party)",
+          "source": "https://query1.finance.yahoo.com/v8/finance/chart/%5ESOX?range=6mo&interval=1d"
+        }
+      ]
+    },
+    "usSectors": {
+      "status": "ok",
+      "usable": 11,
+      "total": 11,
+      "checkedAt": "2026-11-07T22:37:39.227Z",
+      "judgment": [
+        "美股板塊 OK／多板塊相對領先：2026-11-06（資料池最新 2026-11-06）；來源 12/12，板塊有效 11/11；SPY 5D／10D／20D -2.70%／-3.25%／-5.56%。相對 SPY 三個期間皆領先：XLC、XLY、XLP、XLF、XLV、XLB、XLU、XLRE；皆落後：XLK。ETF 價格輪動參考，採 USD 調整收盤價格報酬，來源為 Tiingo與ETF追蹤誤差；成分股廣度、資金流與 EPS 修正尚無資料，新增評分0。 Tiingo 主要來源，完整 adjClose 歷史獨立重算。美股寬度 7/11 有效類股在200日線上（涵蓋11/11）；RSP/SPY 20日變化 7.38%；全球 4/10 個有效市場在200日線上（涵蓋10/10；缺無）。"
+      ],
+      "error": null,
+      "httpStatus": 200
+    },
+    "officialNews": {
+      "status": "ok",
+      "usable": 3,
+      "total": 3,
+      "latestObservation": null,
+      "checkedAt": "2026-11-07T01:19:45.569Z",
+      "httpStatus": 200,
+      "observations": []
+    }
+  },
+  "creditRows": [
+    {
+      "id": "TWSE_MARGIN_BALANCE_NTD",
+      "name": "融資餘額",
+      "value": 5340.52632,
+      "date": "2026-11-06",
+      "capturedAt": "2026-11-07T14:53:02.399Z",
+      "verifiedAt": "2026-11-07T14:53:02.573Z",
+      "captureDeferred": true,
+      "status": "snapshot",
+      "reason": null,
+      "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+      "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+    },
+    {
+      "id": "TWSE_MARGIN_CHANGE_NTD",
+      "name": "融資增減金額",
+      "value": -423.56407,
+      "date": "2026-11-06",
+      "capturedAt": "2026-11-07T14:53:02.399Z",
+      "verifiedAt": "2026-11-07T14:53:02.573Z",
+      "captureDeferred": true,
+      "status": "snapshot",
+      "reason": null,
+      "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+      "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+    },
+    {
+      "id": "TWSE_MARGIN_BALANCE_UNITS",
+      "name": "融資餘額",
+      "value": 9037948,
+      "date": "2026-11-06",
+      "capturedAt": "2026-11-07T14:53:02.399Z",
+      "verifiedAt": "2026-11-07T14:53:02.573Z",
+      "captureDeferred": true,
+      "status": "snapshot",
+      "reason": null,
+      "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+      "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+    },
+    {
+      "id": "TWSE_SHORT_BALANCE",
+      "name": "融券餘額",
+      "value": 242766,
+      "date": "2026-11-06",
+      "capturedAt": "2026-11-07T14:53:02.399Z",
+      "verifiedAt": "2026-11-07T14:53:02.573Z",
+      "captureDeferred": true,
+      "status": "snapshot",
+      "reason": null,
+      "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+      "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+    },
+    {
+      "id": "TWSE_SHORT_CHANGE",
+      "name": "融券餘額日增減",
+      "value": -34285,
+      "date": "2026-11-06",
+      "capturedAt": "2026-11-07T14:53:02.399Z",
+      "verifiedAt": "2026-11-07T14:53:02.573Z",
+      "captureDeferred": true,
+      "status": "snapshot",
+      "reason": null,
+      "provider": "臺灣證券交易所｜MI_MARGN 市場信用彙總",
+      "source": "https://www.twse.com.tw/exchangeReport/MI_MARGN?response=json&date=20261106&selectType=MS"
+    },
+    {
+      "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+      "name": "融資餘額占市值比",
+      "value": 0.41054476080856095,
+      "date": "2026-11-06",
+      "capturedAt": "2026-11-07T14:53:02.399Z",
+      "verifiedAt": "2026-11-07T14:53:02.573Z",
+      "captureDeferred": true,
+      "status": "snapshot",
+      "reason": null,
+      "provider": "臺灣證券交易所｜MI_MARGN + MI_MARGN_TREND",
+      "source": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN_TREND?response=json&date=20261106&days=30"
+    },
+    {
+      "id": "TWSE_CREDIT_TRADE_VALUE",
+      "name": "信用交易成交值",
+      "value": 1425.5275332,
+      "date": "2026-11-06",
+      "capturedAt": "2026-11-07T14:53:02.399Z",
+      "verifiedAt": "2026-11-07T14:53:02.573Z",
+      "captureDeferred": true,
+      "status": "snapshot",
+      "reason": null,
+      "provider": "臺灣證券交易所｜BFIJ3U 信用交易摘要",
+      "source": "https://www.twse.com.tw/rwd/zh/marginTrading/BFIJ3U?response=json&date=20261106"
+    }
+  ],
+  "fullMarketScanner": {
+    "status": "scan_ready",
+    "date": "2026-11-06",
+    "checkedAt": "2026-11-07T01:19:41.871388+00:00",
+    "captured": {
+      "twse": 1089,
+      "tpex": 875,
+      "total": 1964
+    },
+    "universe": {
+      "twse": 1093,
+      "tpex": 897,
+      "total": 1990
+    },
+    "sessions": 81,
+    "coveragePercent": 98.69346733668341,
+    "missingBreakdown": {
+      "noTrade": 18,
+      "volumeOnly": 1,
+      "notQuoted": 7,
+      "total": 26,
+      "note": "零成交＝當日成交股數 0；只有量＝只有零股成交、整股無收盤價；未列入＝名冊有、當日行情表沒有（多為停止買賣或暫停交易）。都不補價。"
+    },
+    "historyCoverage": {
+      "warmup": 7,
+      "needsReview": 12
+    }
+  },
+  "v254Acceptance": {
+    "verified": false,
+    "statisticsGroup": "not_in_bundle",
+    "reason": "statistics not_in_bundle; saved credit rows have captureDeferred=true. Contract requires statistics=imported and captureDeferred=false."
+  },
+  "policy": "Only POST refresh-all and GET status/history were used after Sites access confirmation. No code, deployment, schedule, weights or thresholds changed. Gate5/8 remain not_used.",
+  "overnightSavedComparison": {
+    "previousEvidence": "diagnostics/automation-runs/20261107-night-evidence.json",
+    "comparedFields": [
+      "value",
+      "date",
+      "capturedAt",
+      "verifiedAt",
+      "captureDeferred"
+    ],
+    "rows": [
+      {
+        "id": "TWSE_MARGIN_BALANCE_NTD",
+        "priorFound": true,
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "captureDeferred": false
+        },
+        "allMatch": false
+      },
+      {
+        "id": "TWSE_MARGIN_CHANGE_NTD",
+        "priorFound": true,
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "captureDeferred": false
+        },
+        "allMatch": false
+      },
+      {
+        "id": "TWSE_MARGIN_BALANCE_UNITS",
+        "priorFound": true,
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "captureDeferred": false
+        },
+        "allMatch": false
+      },
+      {
+        "id": "TWSE_SHORT_BALANCE",
+        "priorFound": true,
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "captureDeferred": false
+        },
+        "allMatch": false
+      },
+      {
+        "id": "TWSE_SHORT_CHANGE",
+        "priorFound": true,
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "captureDeferred": false
+        },
+        "allMatch": false
+      },
+      {
+        "id": "TWSE_MARGIN_MARKET_CAP_RATIO",
+        "priorFound": true,
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "captureDeferred": false
+        },
+        "allMatch": false
+      },
+      {
+        "id": "TWSE_CREDIT_TRADE_VALUE",
+        "priorFound": true,
+        "matches": {
+          "value": true,
+          "date": true,
+          "capturedAt": true,
+          "verifiedAt": true,
+          "captureDeferred": false
+        },
+        "allMatch": false
+      }
+    ],
+    "stableFields": [
+      "value",
+      "date",
+      "capturedAt",
+      "verifiedAt"
+    ],
+    "changedOrMissingField": "captureDeferred was absent in prior saved evidence and is true in this run; it is not treated as false.",
+    "allSevenStableOnCoreFields": true,
+    "allSevenExactMatch": false
+  }
+}
