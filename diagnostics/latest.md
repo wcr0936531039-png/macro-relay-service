@@ -1,7 +1,9 @@
-# 最新：2026-11-08 晨間巡檢進行中
-[本輪紀錄](automation-runs/20261108-morning.md)：POST202，runId=fb30c578-e601-49f8-bed5-d0e3f630593e；尚未完成history保存核對。
+# 最新：2026-11-08 06:46 晨間巡檢完成（partial）
+[本輪報告](automation-runs/20261108-morning.md)｜[完整證據](automation-runs/20261108-morning-evidence.json)
+POST202、40次status200、history200；同runId／completedAt吻合，Gate 5/5 recorded:true，latest_synced五檔。relayImport ok、officialImport automatic；statistics not_in_bundle，未觸發外部備援。模組僅crossMarket 3/4 partial；五檔Gate審計blocked，Gate5／8維持not_used。七項信用核心欄位跨夜一致，但保存讀回captureDeferred=true；v254未驗證，hotfix11未改。
 
 ---
+
 # 最新：2026-11-07 22:55 夜間巡檢完成（partial）
 [本輪報告](automation-runs/20261107-night.md)｜[HTTP及信用前後證據](automation-runs/20261107-night-evidence.json)
 POST202、61次status200、history200；同runId 99dc09d7-9540-4387-84a0-e95dadb7b3d8／completedAt吻合，Gate5/5 recorded:true，latest_synced五檔。
