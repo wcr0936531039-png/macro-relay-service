@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-06T14:35:51.710393+00:00",
+  "generated_at": "2026-11-07T02:21:27.988742+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -324,16 +324,12 @@
       "market": "TW",
       "unit": "index_points",
       "warnings": [],
-      "status": "ok",
-      "fetched_at": "2026-11-06T14:35:51.710393+00:00"
+      "status": "stale",
+      "fetched_at": "2026-11-06T14:35:51.710393+00:00",
+      "error": "only 0/21 completed closes"
     },
     "SP500": {
       "history": [
-        {
-          "date": "2026-06-15",
-          "value": 7554.29,
-          "available_at": "2026-06-15T20:15:00+00:00"
-        },
         {
           "date": "2026-06-16",
           "value": 7511.35,
@@ -828,14 +824,19 @@
           "date": "2026-11-04",
           "value": 7688.62,
           "available_at": "2026-11-04T21:15:00+00:00"
+        },
+        {
+          "date": "2026-11-05",
+          "value": 7353.73,
+          "available_at": "2026-11-05T21:15:00+00:00"
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-04-30",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-05-01",
       "provider": "FRED official published price-index history | SP500",
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-11-06T14:35:51.710393+00:00"
+      "fetched_at": "2026-11-07T02:21:27.988742+00:00"
     },
     "NASDAQCOM": {
       "history": [
@@ -1340,20 +1341,15 @@
           "available_at": "2026-11-05T21:15:00+00:00"
         }
       ],
-      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-04-30",
+      "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQCOM&cosd=2026-05-01",
       "provider": "FRED official published price-index history | NASDAQCOM",
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-11-06T14:35:51.710393+00:00"
+      "fetched_at": "2026-11-07T02:21:27.988742+00:00"
     },
     "SOX": {
       "history": [
-        {
-          "date": "2026-06-16",
-          "value": 13294.2197265625,
-          "available_at": "2026-06-16T20:15:00+00:00"
-        },
         {
           "date": "2026-06-17",
           "value": 13477.0703125,
@@ -1848,6 +1844,11 @@
           "date": "2026-11-05",
           "value": 9011.1396484375,
           "available_at": "2026-11-05T21:15:00+00:00"
+        },
+        {
+          "date": "2026-11-06",
+          "value": 9390.25,
+          "available_at": "2026-11-06T21:15:00+00:00"
         }
       ],
       "source": "https://query1.finance.yahoo.com/v8/finance/chart/%5ESOX?range=6mo&interval=1d",
@@ -1858,10 +1859,15 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-11-06T14:35:51.710393+00:00"
+      "fetched_at": "2026-11-07T02:21:27.988742+00:00"
     }
   },
-  "errors": [],
+  "errors": [
+    {
+      "id": "TWSE_TAIEX",
+      "error": "only 0/21 completed closes"
+    }
+  ],
   "flows": {
     "history": [
       {
@@ -2048,5 +2054,5 @@
     "scope": "TWSE_all_listed_securities",
     "method": "nonDayTradeValueTwd = FMTQIK total value minus (TWTB4U day-trade buy value + sell value)/2; institutions are BFI82U net TWD"
   },
-  "status": "ok"
+  "status": "partial"
 }
