@@ -19,7 +19,10 @@ MORE_SPECS = [
  ('DTB3',7),('DGS10',7),('DGS30',7),('T10Y3M',7),('VIXCLS',7),('DEXJPUS',7),
  ('WALCL',14),('WCESTUS1',14),('NOCDFSA066MSFRBPHI',45),('DRTSCILM',120),('DTWEXBGS',10),
  # 網站「美元指數零軸」用的先進經濟體美元指數（聯準會 H.10 每週一更新，最新觀測最多約 10 天前）；零軸要 26 筆以上，多留歷史
- ('DTWEXAFEGS',12)
+ ('DTWEXAFEGS',12),
+ # 擁有者 2026-11-10 21:01「好」：U-6 廣義失業率（BLS 月報，FRED U6RATE；含想做全職卻只能兼職、暫時放棄找工作者），
+ # 和 UNRATE 同樣是月資料、同樣 85 天。網站只顯示、不進任何評分或門檻。
+ ('U6RATE',85)
 ]
 HISTORY_KEEP={'DTWEXAFEGS':40}
 OUT=Path('data/keyless_snapshot.json')
