@@ -85,3 +85,25 @@ class DollarIndexRelay(unittest.TestCase):
         self.assertEqual(entry["history"][-1]["date"], "2026-10-23")
         with _patch.object(keyless, "urlopen", lambda *a, **k: R(body.replace(b"DTWEXAFEGS", b"DTWEXBGS"))):
             self.assertEqual(len(keyless.fred_csv("DTWEXBGS")["history"]), 20)
+
+
+class U6RateRelay(unittest.TestCase):
+    """擁有者 2026-11-10 21:01「好」：加 U-6 廣義失業率（FRED U6RATE），只顯示、不進評分。"""
+
+    def test_u6rate_is_collected_monthly_from_fred(self):
+        import io as _io
+        from unittest.mock import patch as _patch
+        self.assertIn(('U6RATE', 85), keyless.MORE_SPECS)
+        self.assertNotIn('U6RATE', [sid for sid, _ in keyless.SPECS], "只加一次")
+        body = b"observation_date,U6RATE\n2026-08-01,7.7\n2026-09-01,7.6\n2026-10-01,7.9\n"
+
+        class R(_io.BytesIO):
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+        with _patch.object(keyless, "urlopen", lambda *a, **k: R(body)):
+            entry = keyless.fred_csv("U6RATE")
+        self.assertEqual(entry["history"][-1], {"date": "2026-10-01", "value": 7.9})
+        self.assertEqual(entry["provider"], "FRED 官方公開 CSV｜U6RATE")
+        with _patch.object(keyless, "urlopen", lambda *a, **k: R(body.replace(b"U6RATE", b"UNRATE"))):
+            with self.assertRaises(ValueError):
+                keyless.fred_csv("U6RATE")
