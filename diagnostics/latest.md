@@ -1,3 +1,7 @@
+# 最新：11/12 00:35 夜巡檢 完成｜Gate 5/5
+runId a14175b1-b8e3-442d-bbd6-51e8e83a5de5｜completedAt 2026-11-11T16:35:25.806Z｜查詢 58 次｜relayImport ok（market=imported、series=imported、statistics=not_in_bundle、cpi=imported、sources=imported、news=imported）
+異常：sourceResearch:source_error、fullMarketScanner:source_error
+
 # 最新：2026-11-08 06:46 晨間巡檢完成（partial）
 [本輪報告](automation-runs/20261108-morning.md)｜[完整證據](automation-runs/20261108-morning-evidence.json)
 POST202、40次status200、history200；同runId／completedAt吻合，Gate 5/5 recorded:true，latest_synced五檔。relayImport ok、officialImport automatic；statistics not_in_bundle，未觸發外部備援。模組僅crossMarket 3/4 partial；五檔Gate審計blocked，Gate5／8維持not_used。七項信用核心欄位跨夜一致，但保存讀回captureDeferred=true；v254未驗證，hotfix11未改。
