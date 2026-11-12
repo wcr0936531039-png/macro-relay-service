@@ -176,6 +176,16 @@ class CreditCaptureWindowTests(unittest.TestCase):
         self.assertIn('--previous-statistics "$previous"', text)
 
 
+class EveningScheduleTests(unittest.TestCase):
+    """擁有者 2026-11-13 00:01：晚上 22:30 巡檢前要有當天行情與 6 小時內的產業來源，下午到傍晚多排三次。"""
+
+    def test_evening_runs_are_scheduled_on_weekdays(self):
+        text = (Path(__file__).resolve().parents[1] / ".github" / "workflows" / "official_collector.yml").read_text(encoding="utf-8")
+        for cron in ("'50 6 * * 1-5'", "'50 8 * * 1-5'", "'50 10 * * 1-5'", "'20 8 * * 1-5'", "'55 21 * * *'", "'40 14 * * 1-5'"):
+            self.assertIn("- cron: " + cron, text)
+        self.assertIn("cancel-in-progress: false", text)
+
+
 class CollectorRetryTests(unittest.TestCase):
     """擁有者 2026-11-05 21:54「好」：下載中斷（IncompleteRead、連線被重設）最多 4 次、間隔 5／10／20 秒；逾時與 HTTP 錯誤照舊 2 次、不等待。"""
 
