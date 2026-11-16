@@ -1,0 +1,4 @@
+授權：擁有者本對話授權中繼 relay-calendar-year 與網站 v258＋v259；三包 SHA-256 全符合交接，未改巡檢指令或排程。
+中繼：main 8f95a586bfa655768529ed0c878ca846d43a1a7f；64/64 測試通過；collector／publish／run／test blobs＝47519d027dec8b507c4409725241b3a8fd67102f／000c38d0055c377cd711a4e05a21749794bc6e15／84d5d26721aff9e388281695f204cc166a73b8fb（100755）／8e31d3bd02f33ef411d9ab84cc5934862e6f597b；Git push 無認證，改連接器提交並核對。
+網站：v257 基線 c22de88086a3ea549cb4fdf20dcc4d2aa1fa182a 保留回滾；v258→v259 建置、完整 TZ=UTC npm test exit 0（末組101/101）；source 3cc372119c89890664ae0ddd37259c0eaba653c4 部署一次 succeeded；HTML de5a6d6bd6b55b777985fb05b50b455b0db7c6ec8b4c476a6e8905211da37deb；匿名後台 d29c20618ac0d11a52dc18af835dc34c1aa1f1baa576d2a97f0cfbd480fda524，均相符。
+讀回：第3項尚待部署後首次含夜間信用套件的實際巡檢；未另建run，尚不宣稱 statistics=imported 或來源異常解除。
