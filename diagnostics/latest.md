@@ -1,3 +1,6 @@
+# 最新：11/17 06:29 早巡檢 未完成｜Gate -/-
+runId 無｜completedAt 無｜查詢 0 次｜relayImport 未執行（market=未執行、series=未執行、statistics=未執行、cpi=未執行、sources=未執行、news=未執行）
+異常：停在 POST 前｜No usable execution environment is available. Wait for an environment to become available before using this tool.
 # 最新：11/17 00:20 晚巡檢 完成｜Gate 5/5
 runId 1cb19076-3aae-4083-ae6f-b1404405d9a4｜completedAt 2026-11-16T16:20:54.726Z｜查詢 40 次｜relayImport ok（market=imported、series=imported、statistics=not_in_bundle、cpi=imported、sources=imported、news=imported）
 異常：fullMarketScanner:source_error
