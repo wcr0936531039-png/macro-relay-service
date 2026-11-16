@@ -56,7 +56,8 @@ def collect_statistics():
     failures=[]
     for attempt in range(3):
         try:
-            calendar_url='https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json'
+            # v258：不帶年份的休市表在 11 月起會回明年（2026-11-13 實測 queryYear=2027），網站就驗不過；改指定交易日那一年。
+            calendar_url='https://www.twse.com.tw/rwd/zh/holidaySchedule/holidaySchedule?date='+date_key[:4]+'0101&response=json'
             dates_url='https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK'
             calendar=json.loads(fetch(calendar_url));dates=json.loads(fetch(dates_url))
             last=max(str(row['Date']) for row in dates)

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 在 GitHub 上跑網站的官方資料收集程式（vendor/site-collector，與網站 v253 相同），整理成匯入套件。
+# 在 GitHub 上跑網站的官方資料收集程式（vendor/site-collector，與網站 v258 相同），整理成匯入套件。
 # 用法：scripts/run_official_collector.sh <工作資料夾> [交易日數，預設 5] [信用統計 auto|on|off，預設 auto]
 # auto：只在台北 22:30～23:59 收信用統計（和網站規則相同：22:30 前不重抓，保留原觀測日及原核對時間）；
 #       其他時間略過，改沿用上一份套件裡的夜間信用統計（原檔不改，30 小時內；publish_official_import.py 再核對一次）。

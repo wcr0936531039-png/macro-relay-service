@@ -196,7 +196,7 @@ def main(argv=None):
     ap.add_argument("--exit", action="append", default=[], help="名稱=結束碼，例如 official=0")
     ap.add_argument("--previous-statistics", help="上一份套件的 statistics.json；這次沒有新的夜間信用統計時沿用")
     args = ap.parse_args(argv)
-    collector = {k: v for k, v in {"repo": os.environ.get("GITHUB_REPOSITORY"), "commit": os.environ.get("GITHUB_SHA"), "run": os.environ.get("GITHUB_RUN_ID"), "siteCollector": "v253"}.items() if v}
+    collector = {k: v for k, v in {"repo": os.environ.get("GITHUB_REPOSITORY"), "commit": os.environ.get("GITHUB_SHA"), "run": os.environ.get("GITHUB_RUN_ID"), "siteCollector": "v258"}.items() if v}
     exits = dict(item.split("=", 1) for item in args.exit if "=" in item)
     manifest = build(args.src, args.out, args.window, args.keep_sessions, collector=collector, exits=exits, previous_statistics=args.previous_statistics)
     print(json.dumps({"parts": [(p["name"], p["bytes"]) for p in manifest["parts"]], "carried": manifest.get("carried"), "carryNote": manifest.get("carryNote"), "errors": manifest["errors"]}, ensure_ascii=False))

@@ -245,6 +245,12 @@ class CollectorRetryTests(unittest.TestCase):
 
 
 class VendoredCollectorTests(unittest.TestCase):
+    def test_holiday_calendar_is_requested_for_the_session_year(self):
+        # 2026-11-13：不帶年份的休市表在 11 月起回明年（queryYear=2027），網站匯入時信用統計全被擋；收集端要指定交易日那一年（網站 v258）。
+        text = (Path(__file__).resolve().parents[1] / "vendor" / "site-collector" / "scripts" / "collect-official-data.py").read_text(encoding="utf-8")
+        self.assertIn("rwd/zh/holidaySchedule/holidaySchedule?date='+date_key[:4]+'0101&response=json", text)
+        self.assertNotIn("calendar_url='https://www.twse.com.tw/holidaySchedule/holidaySchedule?response=json'", text)
+
     def test_vendored_site_collector_files_exist_and_carry_no_credentials(self):
         root = Path(__file__).resolve().parents[1] / "vendor" / "site-collector"
         files = ["scripts/collect-official-data.py", "scripts/collect-source-research.mjs", "worker/source-research.js", "worker/official-news.js"]
