@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-17T04:46:31.417712+00:00",
+  "generated_at": "2026-11-17T16:28:04.808265+00:00",
   "basis": "local_currency_price_index",
   "markets": {
     "TWSE_TAIEX": {
@@ -354,6 +354,13 @@
           "totalValueTwd": 903115129889.0,
           "available_at": "2026-11-16T05:30:00+00:00",
           "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261101&response=json"
+        },
+        {
+          "date": "2026-11-17",
+          "value": 40092.11,
+          "totalValueTwd": 1012867829864.0,
+          "available_at": "2026-11-17T05:30:00+00:00",
+          "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261101&response=json"
         }
       ],
       "source": "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261101&response=json",
@@ -367,7 +374,7 @@
       "unit": "index_points",
       "warnings": [],
       "status": "ok",
-      "fetched_at": "2026-11-17T04:46:31.417712+00:00"
+      "fetched_at": "2026-11-17T16:28:04.808265+00:00"
     },
     "SP500": {
       "history": [
@@ -877,7 +884,7 @@
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-11-17T04:46:31.417712+00:00"
+      "fetched_at": "2026-11-17T16:28:04.808265+00:00"
     },
     "NASDAQCOM": {
       "history": [
@@ -1387,7 +1394,7 @@
       "market": "US",
       "unit": "index_points",
       "status": "ok",
-      "fetched_at": "2026-11-17T04:46:31.417712+00:00"
+      "fetched_at": "2026-11-17T16:28:04.808265+00:00"
     },
     "SOX": {
       "history": [
@@ -1888,7 +1895,7 @@
         },
         {
           "date": "2026-11-16",
-          "value": 9610.65234375,
+          "value": 9610.650390625,
           "available_at": "2026-11-16T21:15:00+00:00"
         }
       ],
@@ -1900,30 +1907,12 @@
         "https://api.nasdaq.com/api/quote/SOX/historical?assetclass=index&limit=120: Nasdaq SOX symbol mismatch"
       ],
       "status": "ok",
-      "fetched_at": "2026-11-17T04:46:31.417712+00:00"
+      "fetched_at": "2026-11-17T16:28:04.808265+00:00"
     }
   },
   "errors": [],
   "flows": {
     "history": [
-      {
-        "date": "2026-11-03",
-        "fetched_at": "2026-11-03T14:38:56.581847+00:00",
-        "totalValueTwd": 1002035660990.0,
-        "status": "ok",
-        "sources": [
-          "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261101&response=json",
-          "https://www.twse.com.tw/fund/BFI82U?dayDate=20261103&type=day&response=json",
-          "https://www.twse.com.tw/exchangeReport/TWTB4U?date=20261103&selectType=All&response=json"
-        ],
-        "scope": "TWSE_all_listed_securities",
-        "investmentTrustNetTwd": 18460158558.0,
-        "foreignNetTwd": -107306720357.0,
-        "dayTradeBuyTwd": 363905774390.0,
-        "dayTradeSellTwd": 364836685490.0,
-        "dayTradeValueTwd": 364371229940.0,
-        "nonDayTradeValueTwd": 637664431050.0
-      },
       {
         "date": "2026-11-04",
         "fetched_at": "2026-11-04T14:51:47.746051+00:00",
@@ -2085,6 +2074,24 @@
         "dayTradeSellTwd": 321491441030.0,
         "dayTradeValueTwd": 321417731750.0,
         "nonDayTradeValueTwd": 581697398139.0
+      },
+      {
+        "date": "2026-11-17",
+        "fetched_at": "2026-11-17T16:28:04.808265+00:00",
+        "totalValueTwd": 1012867829864.0,
+        "status": "ok",
+        "sources": [
+          "https://www.twse.com.tw/exchangeReport/FMTQIK?date=20261101&response=json",
+          "https://www.twse.com.tw/fund/BFI82U?dayDate=20261117&type=day&response=json",
+          "https://www.twse.com.tw/exchangeReport/TWTB4U?date=20261117&selectType=All&response=json"
+        ],
+        "scope": "TWSE_all_listed_securities",
+        "investmentTrustNetTwd": -3820722349.0,
+        "foreignNetTwd": -38093637437.0,
+        "dayTradeBuyTwd": 447646086900.0,
+        "dayTradeSellTwd": 448844485400.0,
+        "dayTradeValueTwd": 448245286150.0,
+        "nonDayTradeValueTwd": 564622543714.0
       }
     ],
     "scope": "TWSE_all_listed_securities",
