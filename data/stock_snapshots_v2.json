@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-19T21:00:04.713Z",
+  "generated_at": "2026-11-20T20:45:30.163Z",
   "stocks": {
     "2404": {
       "schema_version": 2,
       "ticker": "2404",
-      "updated_at": "2026-11-19T21:00:04.713Z",
+      "updated_at": "2026-11-20T20:45:30.163Z",
       "observations": [
         {
           "ticker": "2404",
@@ -426,19 +426,49 @@
           "source": "TWSE official",
           "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&stockNo=2404&response=json",
           "status": "ok"
+        },
+        {
+          "ticker": "2404",
+          "metric": "close",
+          "value": 817,
+          "observed_at": "2026-11-20",
+          "period": "daily",
+          "source": "TWSE official",
+          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&stockNo=2404&response=json",
+          "status": "ok"
+        },
+        {
+          "ticker": "2404",
+          "metric": "volume_shares",
+          "value": 2720620,
+          "observed_at": "2026-11-20",
+          "period": "daily",
+          "source": "TWSE official",
+          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&stockNo=2404&response=json",
+          "status": "ok"
+        },
+        {
+          "ticker": "2404",
+          "metric": "turnover_twd",
+          "value": 2263900513,
+          "observed_at": "2026-11-20",
+          "period": "daily",
+          "source": "TWSE official",
+          "source_url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&stockNo=2404&response=json",
+          "status": "ok"
         }
       ]
     },
     "5009": {
       "schema_version": 2,
       "ticker": "5009",
-      "updated_at": "2026-11-19T21:00:04.713Z",
+      "updated_at": "2026-11-20T20:45:30.163Z",
       "observations": [
         {
           "ticker": "5009",
           "metric": "close",
-          "value": 28.1,
-          "observed_at": "2026-11-19",
+          "value": 27.45,
+          "observed_at": "2026-11-20",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -447,8 +477,8 @@
         {
           "ticker": "5009",
           "metric": "volume_shares",
-          "value": 1834170,
-          "observed_at": "2026-11-19",
+          "value": 5103926,
+          "observed_at": "2026-11-20",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -457,8 +487,8 @@
         {
           "ticker": "5009",
           "metric": "turnover_twd",
-          "value": 51921153,
-          "observed_at": "2026-11-19",
+          "value": 139237469,
+          "observed_at": "2026-11-20",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -469,13 +499,13 @@
     "5289": {
       "schema_version": 2,
       "ticker": "5289",
-      "updated_at": "2026-11-19T21:00:04.713Z",
+      "updated_at": "2026-11-20T20:45:30.163Z",
       "observations": [
         {
           "ticker": "5289",
           "metric": "close",
-          "value": 772,
-          "observed_at": "2026-11-19",
+          "value": 706,
+          "observed_at": "2026-11-20",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -484,8 +514,8 @@
         {
           "ticker": "5289",
           "metric": "volume_shares",
-          "value": 2981835,
-          "observed_at": "2026-11-19",
+          "value": 3344776,
+          "observed_at": "2026-11-20",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -494,8 +524,8 @@
         {
           "ticker": "5289",
           "metric": "turnover_twd",
-          "value": 2342060319,
-          "observed_at": "2026-11-19",
+          "value": 2385545180,
+          "observed_at": "2026-11-20",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -506,13 +536,13 @@
     "8299": {
       "schema_version": 2,
       "ticker": "8299",
-      "updated_at": "2026-11-19T21:00:04.713Z",
+      "updated_at": "2026-11-20T20:45:30.163Z",
       "observations": [
         {
           "ticker": "8299",
           "metric": "close",
-          "value": 1455,
-          "observed_at": "2026-11-19",
+          "value": 1320,
+          "observed_at": "2026-11-20",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -521,8 +551,8 @@
         {
           "ticker": "8299",
           "metric": "volume_shares",
-          "value": 6657469,
-          "observed_at": "2026-11-19",
+          "value": 8912509,
+          "observed_at": "2026-11-20",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
@@ -531,8 +561,8 @@
         {
           "ticker": "8299",
           "metric": "turnover_twd",
-          "value": 9766561140,
-          "observed_at": "2026-11-19",
+          "value": 12166845925,
+          "observed_at": "2026-11-20",
           "period": "daily",
           "source": "TPEx official",
           "source_url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes",
