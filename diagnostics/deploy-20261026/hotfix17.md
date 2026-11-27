@@ -1,0 +1,4 @@
+授權：2026-11-27 擁有者核准 v260＋v261 一次部署；基線 v259 3cc3721（匯出 ZIP 179 檔一致），保留回滾；patch SHA-256：v260 8f5c7d0ee378e68ec0e3bcdb6d53d2110dcb04d8e4079c4ccbba29d0dc6b5fa9、v261 3fb973e9e6eebe390a2480b613056f335597f563fa86f1332d9fc0182a65720c，均符合。
+部署：一次成功；source 9483a7f7c5dfac6a7de015bc7c9290c10ffb5557；HTML SHA-256 902fd1420f8e88dc6805643c19d5e8ed4d4f1db3b540a8dbe34d6426b6cd8a7c；匿名化後台 SHA-256 28980c0b9d3e09e8f290cdbb8d51db87463903a9e5d7dba47b5f68514c6a7e93，均符合。
+測試：v259 匿名化後台 9038804cc9be7c8e5565079f23aec1727a27526ebd158bd6a8836d398851bc9c 符合；node build.mjs exit 0；完整 TZ=UTC npm test 僅跑一次，exit 0（末組 111/111）。
+第一次巡檢：2026-11-27 21:47 台北完成；runId c02f3a88-3814-48da-b6f8-802201887931；POST 202／status 200／history 200，runId、completedAt 相符；batch=1 查詢 15 次（原 40 次，少 62.5%）；最後 status summary Gate 5/5；狀態 partial，異常 fullMarketScanner:source_error。

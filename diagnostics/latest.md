@@ -1,3 +1,6 @@
+# 最新：11/27 21:47 晚巡檢 完成｜Gate 5/5
+runId c02f3a88-3814-48da-b6f8-802201887931｜completedAt 2026-11-27T13:47:18.633Z｜查詢 15 次｜relayImport ok（market=imported、series=imported、statistics=not_in_bundle、cpi=imported、sources=imported、news=imported）
+異常：fullMarketScanner:source_error
 # 最新：11/27 06:48 早巡檢 完成｜Gate 5/未提供
 runId 1e0168f2-0c1e-4641-a135-8d74ef03a490｜completedAt 2026-11-26T22:48:27.606Z｜查詢 40 次｜relayImport ok（market=imported、series=imported、statistics=not_in_bundle、cpi=imported、sources=imported、news=imported）
 異常：無
