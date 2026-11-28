@@ -1,0 +1,84 @@
+{
+ "schema_version": 1,
+ "generatedAt": "2026-11-28T03:36:06Z",
+ "window": "morning-no-statistics",
+ "collector": {
+  "repo": "wcr0936531039-png/macro-relay-service",
+  "commit": "6078bf825a76dcd0e6d8f459966bdad4da865128",
+  "run": "46103590593",
+  "siteCollector": "v258"
+ },
+ "parts": [
+  {
+   "name": "universe.json",
+   "kind": "universe",
+   "sha256": "510c4ff8c805346bccc868721b235936fbfc07f84584996a31e699f5303eacd5",
+   "bytes": 586565
+  },
+  {
+   "name": "series.json",
+   "kind": "series",
+   "sha256": "fb00aa89841515fe097e3458523c0857be4b9bc4e025b19410e663bffebd9d9e",
+   "bytes": 20118
+  },
+  {
+   "name": "cpi.json",
+   "kind": "cpi",
+   "sha256": "1349739cb96953d0f92494ab940eec773413bae8b6b565905de37ef1fe7b0524",
+   "bytes": 2552
+  },
+  {
+   "name": "sources.json",
+   "kind": "sources",
+   "sha256": "a24e0e71e828978f6ad9c7c9eeb682d75aa78c5254f8e35cd4e51ee40cf66058",
+   "bytes": 302512
+  },
+  {
+   "name": "news.json",
+   "kind": "news",
+   "sha256": "7f3eaef5f2bb3bc1903c89d84e801406160096b282f5e5949e26200a6816debd",
+   "bytes": 2170
+  },
+  {
+   "name": "2026-11-23.json",
+   "kind": "market",
+   "sha256": "8747d12986b38fb3510753a27f034fa034e7919abd32e8df62ca99078c0cd7dc",
+   "bytes": 529840
+  },
+  {
+   "name": "2026-11-24.json",
+   "kind": "market",
+   "sha256": "d0183c20bb4e178b1fe6ac21582dd3803eb73c058de2b523816d8e6167931b62",
+   "bytes": 528615
+  },
+  {
+   "name": "2026-11-25.json",
+   "kind": "market",
+   "sha256": "0c9494689b26b8d2f4be4c003a225920f36238c3531cd7247f0f75765ffa02be",
+   "bytes": 530814
+  },
+  {
+   "name": "2026-11-26.json",
+   "kind": "market",
+   "sha256": "87e300383a9ca289cc992a35593e49e396f03b551eb443a09dedc139cefbb1a3",
+   "bytes": 528761
+  },
+  {
+   "name": "2026-11-27.json",
+   "kind": "market",
+   "sha256": "2f1dd05e59bcd060727be2eac2bb3a963742d0f9186460b5ab5a4ee9bccf87db",
+   "bytes": 529145
+  }
+ ],
+ "errors": [
+  {
+   "source": "TWSE-statistics",
+   "error": "skipped: --skip-statistics"
+  },
+  {
+   "source": "BLS-core-CPI",
+   "error": "BLS Current: HTTP Error 403: Forbidden; official API fallback used"
+  }
+ ],
+ "carryNote": "上一份套件沒有信用統計"
+}
